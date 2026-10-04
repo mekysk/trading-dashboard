@@ -1,0 +1,434 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+/* ==================================================================
+   ฟอนต์ — ชุดเดียวกับ stocksbreakout
+   เนื้อหา  : IBM Plex Sans + IBM Plex Sans Thai
+   หัวข้อ   : Space Grotesk (ภาษาไทยตกไปใช้ Plex Thai อัตโนมัติ)
+   ตัวเลข   : IBM Plex Mono
+   ถ้าโหลดฟอนต์ไม่ได้ (ออฟไลน์) จะตกไปใช้ฟอนต์ระบบ หน้าเว็บยังใช้งานได้ปกติ
+   ================================================================== */
+body,input,select,textarea,button{
+  font-family:'IBM Plex Sans','IBM Plex Sans Thai',-apple-system,'Segoe UI',
+    'Leelawadee UI','Noto Sans Thai',Tahoma,sans-serif;
+}
+.logo,.brand,.ph,.sectitle,.eyebrow,h1,h2,h3,.hcard .vl,.stat b,.big,.sblock .nm,.card h3{
+  font-family:'Space Grotesk','IBM Plex Sans Thai','IBM Plex Sans',
+    -apple-system,'Segoe UI','Leelawadee UI',sans-serif;
+}
+.mono,.sc,.kpi b,input.n,input.mini,
+td.mono,th,code,pre{
+  font-family:'IBM Plex Mono',ui-monospace,'Cascadia Mono',Consolas,monospace;
+  font-variant-numeric:tabular-nums;
+}
+/* Plex Thai เส้นบางกว่าฟอนต์ระบบเล็กน้อย ชดเชยด้วยขนาดและระยะบรรทัด */
+body{ font-size:14.5px; line-height:1.6; }
+
+/* ==================================================================
+   ชุดธีมกลาง — โหลดหลัง CSS เดิมของแต่ละหน้า จึงเขียนทับได้
+   เปลี่ยนแค่หน้าตา ไม่แตะตรรกะหรือโครงสร้างใดๆ
+   ================================================================== */
+
+/* ---------- 1) ชุดสี 6 แบบ ---------- */
+:root,
+html[data-theme="obsidian"]{
+  --bg:#0a0d13; --bg2:#10151e; --bg3:#161d29; --line:#222c3d;
+  --tx:#e8eef8; --tx2:#96a3b8; --tx3:#5c6a80;
+  --accent:#f5b942; --accent2:#ffd479; --acc:#3b82f6;
+  --glow:245,185,66;
+  /* เขียว/แดงแบบหม่น ใช้กับทุกธีม — สดน้อยลงแต่ดูสุขุมขึ้นมาก */
+  --up:#34C27D; --dn:#E5645A;
+}
+html[data-theme="emerald"]{
+  --bg:#070f0c; --bg2:#0d1814; --bg3:#12211b; --line:#1e3329;
+  --tx:#e6f5ee; --tx2:#8fb3a3; --tx3:#587566;
+  --accent:#34d399; --accent2:#6ee7b7; --acc:#10b981;
+  --glow:52,211,153;
+}
+html[data-theme="royal"]{
+  --bg:#0b0813; --bg2:#14101f; --bg3:#1c1729; --line:#2e2444;
+  --tx:#ede9fb; --tx2:#a79ec4; --tx3:#6e6490;
+  --accent:#a78bfa; --accent2:#c4b5fd; --acc:#8b5cf6;
+  --glow:167,139,250;
+}
+html[data-theme="platinum"]{
+  --bg:#0c0e11; --bg2:#141821; --bg3:#1c212b; --line:#2b3340;
+  --tx:#eef2f7; --tx2:#9aa5b4; --tx3:#67717f;
+  --accent:#cbd5e1; --accent2:#f1f5f9; --acc:#64748b;
+  --glow:203,213,225;
+}
+html[data-theme="neon"]{
+  --bg:#06080f; --bg2:#0c1320; --bg3:#111b2c; --line:#1d2e47;
+  --tx:#e4f2ff; --tx2:#8aa8c8; --tx3:#54718f;
+  --accent:#22d3ee; --accent2:#67e8f9; --acc:#0ea5e9;
+  --glow:34,211,238;
+}
+html[data-theme="crimson"]{
+  --bg:#0d0809; --bg2:#170f11; --bg3:#1f1518; --line:#3a242a;
+  --tx:#f7eaec; --tx2:#c09aa2; --tx3:#8a6670;
+  --accent:#fb7185; --accent2:#fda4af; --acc:#e11d48;
+  --glow:251,113,133;
+}
+:root{ --gold:var(--accent); --pur:var(--accent2); }
+
+/* ---------- 2) พื้นหลังมีมิติ ไม่ใช่สีเรียบ ---------- */
+body{
+  background:
+    radial-gradient(1200px 600px at 15% -8%, rgba(var(--glow),.055), transparent 60%),
+    radial-gradient(900px 500px at 88% 4%, rgba(var(--glow),.035), transparent 55%),
+    var(--bg);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  letter-spacing:.005em;
+}
+
+/* ---------- 3) การ์ดมีความลึก ---------- */
+.card,.hcard,.stat,.half{
+  background:linear-gradient(180deg, rgba(255,255,255,.028), rgba(255,255,255,0) 42%), var(--bg2);
+  border:1px solid var(--line);
+  box-shadow:0 1px 0 rgba(255,255,255,.045) inset, 0 8px 22px -14px rgba(0,0,0,.85);
+  transition:border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+.card:hover{
+  border-color:rgba(var(--glow),.26);
+  box-shadow:0 1px 0 rgba(255,255,255,.06) inset, 0 12px 30px -14px rgba(0,0,0,.9);
+}
+.stat{
+  background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,0) 60%), var(--bg3);
+  border:1px solid rgba(255,255,255,.045);
+}
+
+/* ---------- 4) ลำดับตัวอักษรชัดขึ้น ---------- */
+.ph{
+  background:linear-gradient(180deg, rgba(var(--glow),.10), rgba(var(--glow),.02));
+  border:1px solid rgba(var(--glow),.22);
+  font-size:13px; font-weight:800; letter-spacing:.22em;
+  color:var(--accent);
+  text-shadow:0 0 22px rgba(var(--glow),.45);
+  padding:13px 18px;
+  position:relative; overflow:hidden;
+}
+.ph::after{
+  content:''; position:absolute; left:0; right:0; bottom:0; height:1px;
+  background:linear-gradient(90deg, transparent, rgba(var(--glow),.75), transparent);
+}
+.card h3{ font-size:10.5px; letter-spacing:.14em; color:var(--tx2); }
+.card h3::before{
+  content:''; display:inline-block; width:3px; height:12px; border-radius:2px;
+  background:linear-gradient(180deg, var(--accent), transparent);
+  margin-right:2px; flex:none;
+}
+.hcard .vl{ letter-spacing:-.02em; }
+.stat b{ letter-spacing:-.02em; }
+
+/* ตัวเลขเด่นให้เรืองแสงจางๆ */
+.hcard .vl, .stat b, .sblock .sc, .big{
+  text-shadow:0 0 18px rgba(var(--glow),.16);
+}
+.up{ text-shadow:0 0 14px rgba(34,197,94,.22); }
+.dn{ text-shadow:0 0 14px rgba(239,68,68,.22); }
+
+/* ---------- 5) หัวข้อแบบนิตยสาร (eyebrow + title) ---------- */
+.eyebrow{
+  font-size:10px; font-weight:700; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--accent); opacity:.85; margin-bottom:3px;
+}
+.sectitle{
+  font-size:19px; font-weight:800; letter-spacing:-.015em; margin-bottom:4px;
+}
+.secdesc{
+  font-size:12.5px; color:var(--tx2); line-height:1.75; max-width:70ch; margin-bottom:12px;
+}
+
+/* ---------- 6) ปุ่มและช่องกรอก ---------- */
+.btn{
+  border-radius:8px; transition:all .16s ease;
+  background:linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,0)), var(--bg3);
+}
+.btn:hover{ border-color:rgba(var(--glow),.45); color:var(--tx); transform:translateY(-1px); }
+.btn:active{ transform:translateY(0); }
+.btn.go{
+  background:linear-gradient(180deg, var(--acc), color-mix(in srgb, var(--acc) 78%, #000));
+  border-color:transparent; color:#fff; font-weight:600;
+  box-shadow:0 3px 14px -4px rgba(var(--glow),.5);
+}
+.btn.go:hover{ filter:brightness(1.1); }
+input,select,textarea{ border-radius:7px; transition:border-color .15s, box-shadow .15s; }
+input:focus,select:focus,textarea:focus{
+  border-color:rgba(var(--glow),.55) !important;
+  box-shadow:0 0 0 3px rgba(var(--glow),.10);
+}
+
+/* ---------- 7) เมนูและหัวเว็บ ---------- */
+header{ border-bottom:1px solid var(--line); }
+header::after{
+  content:''; display:block; height:1px;
+  background:linear-gradient(90deg, transparent, rgba(var(--glow),.5), transparent);
+}
+.logo span{ text-shadow:0 0 16px rgba(var(--glow),.55); }
+nav a,.sitenav a{ transition:all .15s ease; letter-spacing:.06em; }
+nav a.on,.sitenav a.on{
+  background:linear-gradient(180deg, rgba(var(--glow),.16), rgba(var(--glow),.05));
+  color:var(--accent); box-shadow:inset 0 0 0 1px rgba(var(--glow),.22);
+}
+nav a:hover,.sitenav a:hover{ color:var(--tx); background:rgba(255,255,255,.035); }
+nav button.active{ border-bottom-color:var(--accent) !important; }
+
+/* ---------- 8) ตารางอ่านง่ายขึ้น ---------- */
+th{ letter-spacing:.1em; }
+tbody tr{ transition:background .13s ease; }
+tbody tr:hover{ background:rgba(var(--glow),.045); }
+tfoot td{ border-top-color:rgba(var(--glow),.3) !important; }
+
+/* ---------- 9) กล่องเตือน ---------- */
+.warnbox,.danger,.note,.read{ border-radius:9px; }
+.note{ border-left-width:2px; border-left-color:rgba(var(--glow),.4); }
+
+/* ---------- 10) ตัวสลับธีม ---------- */
+.themebtn{ position:relative; }
+.themepop{
+  position:absolute; right:0; top:calc(100% + 8px); z-index:200;
+  background:var(--bg2); border:1px solid var(--line); border-radius:11px;
+  padding:9px; min-width:186px;
+  box-shadow:0 18px 44px -14px rgba(0,0,0,.92);
+}
+.themepop .ttl{
+  font-size:9.5px; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--tx3); margin:0 4px 7px; font-weight:700;
+}
+.themepop button{
+  display:flex; align-items:center; gap:9px; width:100%;
+  background:none; border:none; color:var(--tx2);
+  padding:7px 8px; border-radius:7px; font-size:12.5px; text-align:left;
+}
+.themepop button:hover{ background:var(--bg3); color:var(--tx); }
+.themepop button.on{ color:var(--accent); background:rgba(var(--glow),.10); }
+.swatch{
+  width:15px; height:15px; border-radius:5px; flex:none;
+  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 10px -1px currentColor;
+}
+
+/* ---------- 11) เข้าหน้าอย่างนุ่มนวล ---------- */
+@media (prefers-reduced-motion:no-preference){
+  main>*{ animation:rise .34s cubic-bezier(.22,.8,.3,1) backwards; }
+  main>*:nth-child(2){ animation-delay:.03s }
+  main>*:nth-child(3){ animation-delay:.06s }
+  main>*:nth-child(4){ animation-delay:.09s }
+  @keyframes rise{ from{ opacity:0; transform:translateY(9px) } to{ opacity:1; transform:none } }
+}
+
+/* ---------- 12) แถบเลื่อน ---------- */
+*::-webkit-scrollbar{ width:9px; height:9px }
+*::-webkit-scrollbar-track{ background:var(--bg) }
+*::-webkit-scrollbar-thumb{ background:var(--line); border-radius:5px }
+*::-webkit-scrollbar-thumb:hover{ background:rgba(var(--glow),.4) }
+
+/* ==================================================================
+   2 ธีมเพิ่ม — ถอดค่าสีจริงจาก stocksbreakout
+   สังเกตว่าเขียว/แดง/ทองของเขา "หม่น" กว่าสีมาตรฐาน
+   นี่คือเหตุผลหลักที่หน้าตาดูสุขุมกว่า ไม่ใช่เพราะเอฟเฟกต์
+   ================================================================== */
+html[data-theme="sbdark"]{
+  --bg:#0B0E17; --bg2:#14161E; --bg3:#1E212C; --line:rgba(255,255,255,.11);
+  --tx:#ECEEF4; --tx2:#9AA1B4; --tx3:#6B7384;
+  --accent:#D7A23E; --accent2:#E8BC66; --acc:#6E97D6;
+  --glow:217,162,62;
+  --up:#34C27D; --dn:#E5645A; --warn:#D7A23E; --pur:#6E97D6;
+}
+/* โหมดกระดาษ — ลายเซ็นของเว็บเขาจริงๆ */
+html[data-theme="paper"]{
+  --bg:#EAEBE3; --bg2:#F2F2EC; --bg3:#E3E4DA; --line:rgba(27,30,43,.14);
+  --tx:#1B1E2B; --tx2:#4A5063; --tx3:#7C8295;
+  --accent:#B07D1A; --accent2:#8A6210; --acc:#3C6BB0;
+  --glow:176,125,26;
+  --up:#1F8F58; --dn:#C4453A; --warn:#B07D1A; --pur:#3C6BB0;
+}
+
+/* ---------- ปรับส่วนที่สมมติว่าพื้นมืด ให้ใช้กับโหมดสว่างได้ ---------- */
+html[data-theme="paper"] body{
+  background:
+    radial-gradient(1100px 560px at 12% -10%, rgba(var(--glow),.07), transparent 62%),
+    var(--bg);
+}
+html[data-theme="paper"] .card,
+html[data-theme="paper"] .hcard,
+html[data-theme="paper"] .stat,
+html[data-theme="paper"] .half{
+  background:linear-gradient(180deg,#fff,rgba(255,255,255,0) 60%), var(--bg2);
+  box-shadow:0 1px 2px rgba(0,0,0,.06), 0 6px 16px -10px rgba(0,0,0,.28);
+}
+html[data-theme="paper"] .card:hover{
+  box-shadow:0 1px 2px rgba(0,0,0,.08), 0 10px 22px -10px rgba(0,0,0,.34);
+}
+html[data-theme="paper"] .btn{
+  background:linear-gradient(180deg,#fff,rgba(255,255,255,0)), var(--bg2);
+  box-shadow:0 1px 3px rgba(0,0,0,.08);
+}
+html[data-theme="paper"] .btn.go{ color:#fff; }
+html[data-theme="paper"] header{ background:rgba(242,242,236,.94); }
+html[data-theme="paper"] .ph{
+  background:linear-gradient(180deg, rgba(var(--glow),.14), rgba(var(--glow),.04));
+  text-shadow:none;
+}
+html[data-theme="paper"] .hcard .vl,
+html[data-theme="paper"] .stat b,
+html[data-theme="paper"] .sblock .sc,
+html[data-theme="paper"] .big,
+html[data-theme="paper"] .logo span,
+html[data-theme="paper"] .up,
+html[data-theme="paper"] .dn{ text-shadow:none; }
+html[data-theme="paper"] .ph::after,
+html[data-theme="paper"] header::after{ opacity:.45; }
+html[data-theme="paper"] tbody tr:hover{ background:rgba(27,30,43,.045); }
+html[data-theme="paper"] *::-webkit-scrollbar-track{ background:var(--bg3) }
+html[data-theme="paper"] *::-webkit-scrollbar-thumb{ background:rgba(27,30,43,.22) }
+
+/* ---------- ลดความจัดของสีกำไร/ขาดทุนในทุกธีม ---------- */
+.up{ color:var(--up,#34C27D) !important; }
+.dn{ color:var(--dn,#E5645A) !important; }
+
+/* ---------- มุมโค้งและเงาแบบเดียวกับเขา ---------- */
+.card,.hcard,.box,.half,.warnbox,.danger,.themepop{ border-radius:10px; }
+.btn{ border-radius:10px; }
+.stat{ border-radius:9px; }
+
+/* ==================================================================
+   โหมดสว่างของเราเอง — แยกเป็น 2 มิติ
+     data-theme = ชุดสี (8 แบบ)   ·  data-mode = มืด/สว่าง
+   พื้นเป็นขาวเย็นสะอาด ไม่ใช่กระดาษอุ่นแบบของเขา
+   สีเน้นถูกทำให้เข้มลงทุกชุด เพราะสีสว่างบนพื้นขาวจะอ่านไม่ออก
+   ================================================================== */
+html[data-mode="light"]{
+  --bg:#F5F7FA; --bg2:#FFFFFF; --bg3:#EDF1F6; --line:rgba(15,23,42,.13);
+  --tx:#0F172A; --tx2:#475569; --tx3:#7A8699;
+  --up:#117A4B; --dn:#C0392F;
+}
+html[data-mode="light"][data-theme="obsidian"]{ --accent:#A9740A; --accent2:#8A5E06; --acc:#2563EB; --glow:169,116,10; }
+html[data-mode="light"][data-theme="emerald"] { --accent:#0F7B52; --accent2:#0B5F3F; --acc:#059669; --glow:15,123,82; }
+html[data-mode="light"][data-theme="royal"]   { --accent:#6D3FD4; --accent2:#5327B0; --acc:#7C3AED; --glow:109,63,212; }
+html[data-mode="light"][data-theme="platinum"]{ --accent:#475569; --accent2:#334155; --acc:#64748B; --glow:71,85,105; }
+html[data-mode="light"][data-theme="neon"]    { --accent:#0E7490; --accent2:#0A5C73; --acc:#0284C7; --glow:14,116,144; }
+html[data-mode="light"][data-theme="crimson"] { --accent:#BE2B46; --accent2:#9A1F36; --acc:#E11D48; --glow:190,43,70; }
+html[data-mode="light"][data-theme="sbdark"]  { --accent:#9A7020; --accent2:#7C5A18; --acc:#3C6BB0; --glow:154,112,32; }
+/* ธีมกระดาษเป็นโหมดสว่างอยู่แล้ว ไม่ต้องแปลงซ้ำ */
+html[data-mode="light"][data-theme="paper"]{
+  --bg:#EAEBE3; --bg2:#F2F2EC; --bg3:#E3E4DA; --line:rgba(27,30,43,.14);
+  --tx:#1B1E2B; --tx2:#4A5063; --tx3:#7C8295;
+  --accent:#B07D1A; --accent2:#8A6210; --acc:#3C6BB0; --glow:176,125,26;
+  --up:#1F8F58; --dn:#C4453A;
+}
+/* ธีมกระดาษถ้าสลับเป็นมืด ให้ใช้โทนมืดของเขาแทน */
+html[data-mode="dark"][data-theme="paper"]{
+  --bg:#0B0E17; --bg2:#14161E; --bg3:#1E212C; --line:rgba(255,255,255,.11);
+  --tx:#ECEEF4; --tx2:#9AA1B4; --tx3:#6B7384;
+  --accent:#D7A23E; --accent2:#E8BC66; --acc:#6E97D6; --glow:217,162,62;
+  --up:#34C27D; --dn:#E5645A;
+}
+
+/* ---------- ส่วนที่ต้องแก้เมื่อพื้นเป็นสว่าง ---------- */
+html[data-mode="light"] body{
+  background:
+    radial-gradient(1100px 560px at 12% -10%, rgba(var(--glow),.08), transparent 62%),
+    radial-gradient(900px 480px at 88% 2%, rgba(var(--glow),.05), transparent 58%),
+    var(--bg);
+}
+html[data-mode="light"] .card,
+html[data-mode="light"] .hcard,
+html[data-mode="light"] .stat,
+html[data-mode="light"] .half,
+html[data-mode="light"] .box{
+  background:var(--bg2);
+  box-shadow:0 1px 2px rgba(15,23,42,.06), 0 6px 16px -10px rgba(15,23,42,.22);
+}
+html[data-mode="light"] .card:hover{
+  border-color:rgba(var(--glow),.4);
+  box-shadow:0 1px 2px rgba(15,23,42,.08), 0 10px 22px -10px rgba(15,23,42,.3);
+}
+html[data-mode="light"] .stat{ background:var(--bg3); border-color:var(--line); }
+html[data-mode="light"] .btn{
+  background:var(--bg2); box-shadow:0 1px 2px rgba(15,23,42,.08);
+}
+html[data-mode="light"] .btn:hover{ background:var(--bg3); }
+html[data-mode="light"] .btn.go{ color:#fff; box-shadow:0 2px 8px -2px rgba(var(--glow),.5); }
+html[data-mode="light"] header{ background:rgba(255,255,255,.93); }
+html[data-mode="light"] aside{ background:var(--bg2); }
+html[data-mode="light"] .ph{
+  background:linear-gradient(180deg, rgba(var(--glow),.13), rgba(var(--glow),.03));
+  text-shadow:none;
+}
+/* แสงเรืองใช้ได้เฉพาะพื้นมืด บนพื้นขาวจะทำให้ตัวอักษรเบลอ */
+html[data-mode="light"] .hcard .vl,
+html[data-mode="light"] .stat b,
+html[data-mode="light"] .sblock .sc,
+html[data-mode="light"] .big,
+html[data-mode="light"] .kpi b,
+html[data-mode="light"] .logo span,
+html[data-mode="light"] .up,
+html[data-mode="light"] .dn{ text-shadow:none; }
+html[data-mode="light"] .ph::after,
+html[data-mode="light"] header::after{ opacity:.4; }
+html[data-mode="light"] tbody tr:hover{ background:rgba(15,23,42,.04); }
+html[data-mode="light"] .themepop{ box-shadow:0 18px 44px -16px rgba(15,23,42,.35); }
+html[data-mode="light"] *::-webkit-scrollbar-track{ background:var(--bg3) }
+html[data-mode="light"] *::-webkit-scrollbar-thumb{ background:rgba(15,23,42,.2) }
+html[data-mode="light"] input,
+html[data-mode="light"] select,
+html[data-mode="light"] textarea{ background:var(--bg2); }
+html[data-mode="light"] .ld,
+html[data-mode="light"] .note{ color:var(--tx3); }
+html[data-mode="light"] .swatch{ box-shadow:0 0 0 1px rgba(15,23,42,.18); }
+
+/* ==================================================================
+   เมนูด้านซ้าย — สร้างโดย theme.js
+   ไฟล์ html ไม่ต้องแก้ เมนูเดิมบนหัวเว็บจะถูกซ่อนอัตโนมัติ
+   ================================================================== */
+#sidenav{
+  position:fixed; left:0; top:0; width:224px; height:100vh; z-index:80;
+  background:var(--bg2); border-right:1px solid var(--line);
+  overflow-y:auto; padding:14px 0;
+  transition:transform .22s cubic-bezier(.22,.8,.3,1);
+}
+#sidenav .sbrand{
+  padding:0 16px 13px; font-weight:700; font-size:14px; letter-spacing:.05em;
+  border-bottom:1px solid var(--line); margin-bottom:8px;
+  font-family:'Space Grotesk','IBM Plex Sans Thai',sans-serif;
+}
+#sidenav .sbrand span{ color:var(--accent); text-shadow:0 0 16px rgba(var(--glow),.5); }
+#sidenav .sgrp{
+  font-size:9px; letter-spacing:.2em; text-transform:uppercase; color:var(--tx3);
+  font-weight:700; padding:13px 16px 5px;
+}
+#sidenav a{
+  display:flex; align-items:center; gap:9px; padding:7px 16px;
+  font-size:12.8px; color:var(--tx2); border-left:2px solid transparent;
+  text-decoration:none; transition:all .14s ease;
+}
+#sidenav a:hover{ background:rgba(255,255,255,.035); color:var(--tx); }
+#sidenav a.on{
+  color:var(--accent); background:rgba(var(--glow),.10);
+  border-left-color:var(--accent); font-weight:600;
+}
+#sidenav a i{ width:16px; text-align:center; font-style:normal; opacity:.85; flex:none; }
+#sidenav .stag{
+  margin-left:auto; font-size:8.5px; padding:1px 6px; border-radius:20px;
+  background:var(--bg3); color:var(--tx3);
+}
+html[data-mode="light"] #sidenav a:hover{ background:rgba(15,23,42,.04); }
+
+/* ขยับเนื้อหาให้พ้น sidebar */
+body.hasnav{ padding-left:224px; }
+body.hasnav header{ left:224px; }
+/* ซ่อนเมนูเดิมบนหัวเว็บ (เฉพาะที่เป็นลิงก์ข้ามหน้า ไม่แตะแท็บภายใน) */
+body.hasnav .logo, body.hasnav .sitenav, body.hasnav nav.sitelinks{ display:none !important; }
+
+#navToggle{ display:none; }
+@media(max-width:900px){
+  body.hasnav{ padding-left:0; }
+  #sidenav{ transform:translateX(-100%); box-shadow:0 0 40px rgba(0,0,0,.6); }
+  #sidenav.open{ transform:none; }
+  #navToggle{ display:inline-flex; }
+  body.hasnav .logo{ display:block !important; }
+  #navScrim{
+    position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:70; display:none;
+  }
+  #navScrim.on{ display:block; }
+}

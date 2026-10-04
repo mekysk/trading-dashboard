@@ -1,0 +1,382 @@
+<!DOCTYPE html><html lang="th"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Money Flow — Trading Dashboard</title>
+<style>
+:root{--bg:#0a0d13;--bg2:#10151e;--bg3:#161d29;--line:#222c3d;--tx:#e8eef8;
+--tx2:#96a3b8;--tx3:#5c6a80;--accent:#f5b942;--glow:245,185,66;--acc:#3b82f6;
+--up:#34C27D;--dn:#E5645A;--warn:#f59e0b;--pur:#a78bfa}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-size:14px;line-height:1.55;padding-bottom:40px;
+font-family:-apple-system,'Segoe UI','Leelawadee UI','Noto Sans Thai',Tahoma,sans-serif}
+.mono{font-family:ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+.up{color:var(--up)}.dn{color:var(--dn)}.fl{color:var(--tx2)}
+button{font-family:inherit;cursor:pointer}a{color:var(--acc);text-decoration:none}
+header{position:sticky;top:0;z-index:50;background:rgba(10,13,19,.96);
+backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.hbar{display:flex;align-items:center;gap:12px;padding:9px 16px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:15px}.logo span{color:var(--accent)}
+nav{display:flex;gap:2px;margin-left:6px;flex-wrap:wrap}
+nav a{color:var(--tx3);padding:6px 12px;font-size:12.5px;font-weight:600;border-radius:7px}
+nav a.on{color:var(--tx);background:var(--bg3)}
+.right{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{background:var(--bg3);border:1px solid var(--line);color:var(--tx2);
+padding:5px 11px;border-radius:7px;font-size:12px}
+.btn.go{background:var(--acc);border-color:var(--acc);color:#fff}
+main{padding:18px;max-width:1420px;margin:0 auto}
+h1{font-size:27px;font-weight:800;letter-spacing:-.02em}
+.lead{font-size:12.5px;color:var(--tx2);margin:3px 0 14px;max-width:80ch;line-height:1.7}
+.sub{font-size:11px;color:var(--tx3);font-weight:400}
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:16px;margin-bottom:12px}
+.card h3{font-size:13px;font-weight:700;margin-bottom:11px;display:flex;align-items:center;gap:8px}
+.gauge{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.gnum{font-size:46px;font-weight:800;letter-spacing:-.04em;line-height:1;
+font-family:ui-monospace,monospace}
+.gbar{flex:1;min-width:200px}
+.gtrack{height:11px;border-radius:6px;overflow:hidden;
+background:linear-gradient(90deg,var(--dn),#7d8596 50%,var(--up))}
+.gmark{position:relative;height:13px;margin-top:3px}
+.gmark i{position:absolute;top:0;width:2px;height:9px;background:var(--tx);border-radius:1px}
+.glab{display:flex;justify-content:space-between;font-size:10px;color:var(--tx3)}
+.ratios{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:9px}
+.rt{background:var(--bg3);border:1px solid var(--line);border-radius:9px;padding:10px 11px}
+.rt .rn{font-size:11.5px;font-weight:700;margin-bottom:1px}
+.rt .rd{font-size:10px;color:var(--tx3);line-height:1.5;margin-bottom:6px;min-height:30px}
+.rt .rv{display:flex;align-items:baseline;gap:7px;flex-wrap:wrap}
+.rt .rv b{font-size:16px;font-family:ui-monospace,monospace;font-weight:700}
+.rt .rs2{font-size:11px;font-weight:700}
+.rt svg{display:block;margin-top:6px}
+.pill{font-size:9.5px;padding:1px 7px;border-radius:20px;font-weight:700}
+.p-on{background:rgba(52,194,125,.16);color:var(--up)}
+.p-off{background:rgba(229,100,90,.16);color:var(--dn)}
+.p-na{background:rgba(148,163,184,.14);color:var(--tx2)}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{text-align:right;font-size:10px;color:var(--tx3);font-weight:600;padding:7px 6px;
+border-bottom:1px solid var(--line);text-transform:uppercase;letter-spacing:.07em;
+cursor:pointer;white-space:nowrap}
+th:hover{color:var(--tx2)}th.srt{color:var(--accent)}
+th:first-child,td:first-child{text-align:left}
+td{padding:7px 6px;border-bottom:1px solid rgba(34,44,61,.5);text-align:right;white-space:nowrap}
+tbody tr:hover{background:rgba(255,255,255,.025)}
+.hm{display:inline-block;width:38px;height:13px;border-radius:3px;vertical-align:middle}
+.ld{color:var(--tx3);text-align:center;padding:26px 0;font-size:12.5px;line-height:1.9}
+.warnbox{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.28);
+border-radius:9px;padding:12px 14px;font-size:11.5px;color:var(--warn);line-height:1.8;margin-bottom:12px}
+.warnbox b{color:#ffd37a}
+.note{font-size:10.5px;color:var(--tx3);line-height:1.75;margin-top:11px;
+padding-top:10px;border-top:1px dashed var(--line)}
+@media(max-width:700px){main{padding:12px}h1{font-size:22px}.gnum{font-size:36px}}
+</style>
+<link rel="stylesheet" href="theme.css">
+</head><body>
+
+<header><div class="hbar">
+  <div class="logo">TRADING <span>DASHBOARD</span></div>
+  <nav>
+    <a href="brief.html">BRIEF</a><a href="scanner.html">SCANNER</a>
+    <a href="flow.html" class="on">FLOW</a><a href="weekly.html">WEEKLY</a>
+    <a href="index.html">PORT</a><a href="trade.html">TRADE</a>
+    <a href="macro.html">MACRO</a><a href="bot.html">BOT</a><a href="market.html">MARKET</a>
+  </nav>
+  <div class="right">
+    <span id="msg" class="sub"></span>
+    <button class="btn go" id="bLoad">↻ ดึงข้อมูล</button>
+  </div>
+</div></header>
+
+<main>
+  <h1>⇄ Money Flow</h1>
+  <div class="lead">เงินกำลังเอียงไปทางเสี่ยงหรือหลบ · กลุ่มไหนกำลังถูกสะสม — วัดจากราคาและวอลุ่ม</div>
+
+  <div class="warnbox">
+    <b>อ่านตรงนี้ก่อน — คำว่า Money Flow ถูกใช้ปนกันสองความหมาย</b><br>
+    <b>1. เงินไหลเข้าจริง (Fund Flow)</b> คือมีคนเอาเงินใหม่มาซื้อหน่วยลงทุนเพิ่ม
+    วัดจากจำนวนหน่วยของกองทุนที่เปลี่ยนไป ไม่ใช่จากราคา<br>
+    <b>2. แรงซื้อขายที่ฝังอยู่ในราคา</b> คำนวณจากราคาและวอลุ่ม<br>
+    <u>หน้านี้คือแบบที่ 2 ทั้งหมด</u> เพราะข้อมูลแบบที่ 1 ไม่มีแหล่งฟรีที่เชื่อถือได้ —
+    <b>ETF ราคาขึ้นไม่ได้แปลว่าเงินไหลเข้า</b> ราคาขึ้นเพราะของข้างในขึ้นก็ได้
+    ทั้งที่คนกำลังขายกองทิ้ง สองอย่างนี้สวนทางกันได้บ่อย
+  </div>
+
+  <div class="card">
+    <h3>🌡 มาตรวัดความกล้าเสี่ยง <span class="sub" id="gMeta"></span></h3>
+    <div class="gauge" id="gauge"></div>
+    <div id="gText" style="margin-top:12px;font-size:12.5px;line-height:1.85;color:var(--tx2)"></div>
+    <div class="note">นับจากอัตราส่วนด้านล่างว่ามีกี่คู่ที่เอียงไปทางกล้าเสี่ยง
+      (ยืนเหนือค่าเฉลี่ย 50 วันของตัวอัตราส่วนเอง) — คู่ที่ข้อมูลไม่พอจะไม่ถูกนับทั้งเศษและส่วน
+      ไม่ใช่นับเป็นกลางๆ</div>
+  </div>
+
+  <div class="card">
+    <h3>⚖ อัตราส่วนเสี่ยง · หลบ <span class="sub">เส้นเล็กคือ 1 ปีย้อนหลังของอัตราส่วนนั้น</span></h3>
+    <div class="ratios" id="ratios"></div>
+  </div>
+
+  <div class="card">
+    <h3>🔄 การหมุนเซกเตอร์ <span class="sub">11 กลุ่มของ S&amp;P 500 · เทียบกับ SPY</span></h3>
+    <div id="sec"></div>
+  </div>
+
+  <div class="card">
+    <h3>💵 แรงซื้อขายรายตัว <span class="sub">คลิกหัวคอลัมน์เพื่อเรียง</span></h3>
+    <div id="flow"></div>
+  </div>
+</main>
+
+<script src="engine.js"></script>
+<script>
+/* ============================================================
+   Money Flow — ทั้งหมดคำนวณจากราคา+วอลุ่ม ไม่ใช่เงินเข้าออกกองทุนจริง
+   ============================================================ */
+const E=SCANENG, CKEY='flow_cache_v1';
+const PROX=[u=>'https://api.allorigins.win/raw?url='+encodeURIComponent(u),
+  u=>'https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent(u),
+  u=>'https://corsproxy.io/?url='+encodeURIComponent(u)];
+
+/* คู่อัตราส่วน: on=true แปลว่าค่าสูงขึ้น = กล้าเสี่ยงมากขึ้น */
+const RATIOS=[
+  {a:'RSP',b:'SPY', n:'RSP ÷ SPY', on:true,
+   d:'ถ่วงน้ำหนักเท่ากัน เทียบ ตามขนาด — ลงเรื่อยๆ แปลว่าดัชนีขึ้นเพราะหุ้นใหญ่ไม่กี่ตัว'},
+  {a:'IWM',b:'SPY', n:'IWM ÷ SPY', on:true, d:'หุ้นเล็กนำหรือตามหุ้นใหญ่'},
+  {a:'XLY',b:'XLP', n:'XLY ÷ XLP', on:true, d:'ของฟุ่มเฟือย เทียบ ของจำเป็น — มาตรวัดความอยากเสี่ยงคลาสสิก'},
+  {a:'HYG',b:'LQD', n:'HYG ÷ LQD', on:true, d:'บอนด์เสี่ยงสูง เทียบ เกรดลงทุน — มักส่งสัญญาณก่อนหุ้น'},
+  {a:'SPHB',b:'SPLV',n:'SPHB ÷ SPLV',on:true, d:'หุ้นเหวี่ยงแรง เทียบ หุ้นนิ่ง'},
+  {a:'XLK',b:'SPY', n:'XLK ÷ SPY', on:true, d:'เทคนำตลาดอยู่ไหม'},
+  {a:'QQQ',b:'SPY', n:'QQQ ÷ SPY', on:true, d:'หุ้นเติบโต เทียบ ตลาดรวม'},
+  {a:'GLD',b:'SPY', n:'GLD ÷ SPY', on:false,d:'ทองคำ เทียบ หุ้น — ขึ้น = เงินหลบเข้าที่ปลอดภัย'},
+  {a:'TLT',b:'SPY', n:'TLT ÷ SPY', on:false,d:'พันธบัตรยาว เทียบ หุ้น — ขึ้น = เงินหลบ'}
+];
+const SECT=[
+  {s:'XLK', n:'เทคโนโลยี'},   {s:'XLV', n:'สุขภาพ'},
+  {s:'XLF', n:'การเงิน'},     {s:'XLY', n:'ฟุ่มเฟือย'},
+  {s:'XLP', n:'ของจำเป็น'},   {s:'XLE', n:'พลังงาน'},
+  {s:'XLI', n:'อุตสาหกรรม'},  {s:'XLB', n:'วัตถุดิบ'},
+  {s:'XLU', n:'สาธารณูปโภค'}, {s:'XLRE',n:'อสังหา'},
+  {s:'XLC', n:'สื่อสาร'}
+];
+const BIG=['AAPL','MSFT','NVDA','GOOGL','AMZN','META','TSLA','AVGO','AMD','JPM',
+           'LLY','XOM','WMT','COST','NFLX','ORCL','CRM','UNH','V','MA'];
+const NEED=[...new Set([].concat(
+  RATIOS.map(r=>r.a),RATIOS.map(r=>r.b),SECT.map(x=>x.s),BIG,['SPY']))];
+
+const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+  .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const pc=v=>v==null?'—':(v>=0?'+':'')+v.toFixed(1)+'%';
+const cl2=v=>v==null?'fl':v>0?'up':v<0?'dn':'fl';
+const nm=(v,d)=>v==null?'—':Number(v).toLocaleString('en-US',
+  {minimumFractionDigits:d==null?2:d,maximumFractionDigits:d==null?2:d});
+const big=v=>v==null?'—':v>=1e9?(v/1e9).toFixed(1)+'B':v>=1e6?(v/1e6).toFixed(0)+'M':
+  v>=1e3?(v/1e3).toFixed(0)+'K':String(Math.round(v));
+let D=null, SORT={k:'cmf',d:-1};
+
+/* ---------- ดึงข้อมูล ---------- */
+async function csv(sym){
+  const url='https://stooq.com/q/d/l/?s='+E.stooqSym(sym)+'&i=d';
+  const t=await Promise.any(PROX.map(f=>fetch(f(url),{cache:'no-store'})
+    .then(r=>r.ok?r.text():Promise.reject(new Error('x')))));
+  return E.parseCsv(t);
+}
+async function load(){
+  const m=document.getElementById('msg'), b=document.getElementById('bLoad');
+  b.disabled=true;
+  const q=NEED.slice(), data={}, bad=[]; let n=0;
+  async function w(){
+    while(q.length){
+      const s=q.shift();
+      try{ const r=await csv(s); if(r)data[s]=r; else bad.push(s) }
+      catch(e){ bad.push(s) }
+      n++; m.textContent='ดึง '+n+'/'+NEED.length;
+    }
+  }
+  await Promise.all([w(),w(),w()]);
+  b.disabled=false; m.textContent='';
+  if(!data.SPY){
+    m.innerHTML='<span style="color:var(--warn)">ดึง SPY ไม่สำเร็จ '
+      +'ซึ่งเป็นตัวตั้งต้นของแทบทุกการเทียบ ลองใหม่อีกครั้ง</span>';
+    return;
+  }
+  D={t:Date.now(),data,bad};
+  try{localStorage.setItem(CKEY,JSON.stringify(D))}catch(e){}
+  render();
+}
+
+/* ---------- เส้นกราฟเล็ก ---------- */
+function spark(vals,pos){
+  if(!vals||vals.length<2)return '';
+  const W=190,H=30,mn=Math.min(...vals),mx=Math.max(...vals),rg=(mx-mn)||1;
+  const pts=vals.map((v,i)=>
+    (i/(vals.length-1)*W).toFixed(1)+','+(H-(v-mn)/rg*H).toFixed(1)).join(' ');
+  const col=pos?'var(--up)':'var(--dn)';
+  return '<svg width="100%" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none" height="30">'
+    +'<polyline points="'+pts+'" fill="none" stroke="'+col+'" stroke-width="1.4"/></svg>';
+}
+function hm(v,lo,hi){      /* แถบสีไล่จากแดงไปเขียว */
+  if(v==null)return '';
+  const t=Math.max(0,Math.min(1,(v-lo)/(hi-lo)));
+  const r=Math.round(229+(52-229)*t), g=Math.round(100+(194-100)*t),
+        b=Math.round(90+(125-90)*t);
+  return '<span class="hm" style="background:rgba('+r+','+g+','+b+',.55)"></span>';
+}
+
+/* ---------- แสดงผล ---------- */
+function render(){
+  if(!D){
+    document.getElementById('gauge').innerHTML=
+      '<div class="ld" style="width:100%">กด <b>↻ ดึงข้อมูล</b> มุมขวาบนเพื่อเริ่ม</div>';
+    ['ratios','sec','flow'].forEach(i=>
+      document.getElementById(i).innerHTML='<div class="ld">—</div>');
+    return;
+  }
+  const data=D.data, bars=s=>data[s]||null;
+
+  /* --- อัตราส่วน --- */
+  const rs=RATIOS.map(r=>{
+    const st=E.ratioStat(bars(r.a),bars(r.b));
+    let risk=null;
+    if(st&&st.aboveMA!=null)risk=r.on?st.aboveMA:!st.aboveMA;
+    return Object.assign({},r,{st,risk});
+  });
+  const known=rs.filter(x=>x.risk!=null);
+  const onCnt=known.filter(x=>x.risk).length;
+  const score=known.length?Math.round(onCnt/known.length*100):null;
+
+  /* --- มาตรวัด --- */
+  const g=document.getElementById('gauge');
+  if(score==null){
+    g.innerHTML='<div class="ld" style="width:100%">ข้อมูลไม่พอคำนวณมาตรวัด</div>';
+    document.getElementById('gText').textContent='';
+    document.getElementById('gMeta').textContent='';
+  }else{
+    const lab=score>=70?'กล้าเสี่ยงชัดเจน':score>=55?'เอียงไปทางเสี่ยง'
+      :score>40?'ก้ำกึ่ง':score>30?'เอียงไปทางหลบ':'หลบความเสี่ยงชัดเจน';
+    const col=score>=55?'var(--up)':score<=40?'var(--dn)':'var(--tx2)';
+    g.innerHTML='<div class="gnum" style="color:'+col+'">'+score+'</div>'
+      +'<div class="gbar"><div class="gtrack"></div>'
+      +'<div class="gmark"><i style="left:calc('+score+'% - 1px)"></i></div>'
+      +'<div class="glab"><span>หลบความเสี่ยง</span><span>ก้ำกึ่ง</span>'
+      +'<span>กล้าเสี่ยง</span></div></div>'
+      +'<div style="font-size:16px;font-weight:700;color:'+col+'">'+lab+'</div>';
+    document.getElementById('gMeta').textContent=
+      'นับได้ '+known.length+' จาก '+RATIOS.length+' คู่';
+    const onN=rs.filter(x=>x.risk===true).map(x=>x.n);
+    const offN=rs.filter(x=>x.risk===false).map(x=>x.n);
+    document.getElementById('gText').innerHTML=
+      (onN.length?'<b style="color:var(--up)">เอียงไปทางเสี่ยง '+onN.length+' คู่</b> — '
+        +esc(onN.join(' · '))+'<br>':'')
+      +(offN.length?'<b style="color:var(--dn)">เอียงไปทางหลบ '+offN.length+' คู่</b> — '
+        +esc(offN.join(' · ')):'')
+      +(known.length<RATIOS.length
+        ?'<br><span class="sub">ข้อมูลไม่พอ '+(RATIOS.length-known.length)
+         +' คู่ จึงไม่ถูกนับเลย</span>':'');
+  }
+
+  document.getElementById('ratios').innerHTML=rs.map(r=>{
+    if(!r.st)return '<div class="rt"><div class="rn">'+esc(r.n)+'</div>'
+      +'<div class="rd">'+esc(r.d)+'</div>'
+      +'<div class="ld" style="padding:10px 0">ข้อมูลไม่พอ</div></div>';
+    const s=r.st;
+    return '<div class="rt"><div class="rn">'+esc(r.n)
+      +' <span class="pill '+(r.risk===true?'p-on':r.risk===false?'p-off':'p-na')+'">'
+      +(r.risk===true?'เสี่ยง':r.risk===false?'หลบ':'—')+'</span></div>'
+      +'<div class="rd">'+esc(r.d)+'</div>'
+      +'<div class="rv"><b>'+nm(s.val,3)+'</b>'
+      +'<span class="rs2 '+cl2(s.m1)+'">1ด '+pc(s.m1)+'</span>'
+      +'<span class="rs2 '+cl2(s.m3)+'">3ด '+pc(s.m3)+'</span></div>'
+      +spark(s.series,s.aboveMA)+'</div>';
+  }).join('');
+
+  /* --- เซกเตอร์ --- */
+  const spy=bars('SPY');
+  const sec=SECT.map(x=>{
+    const b=bars(x.s);
+    if(!b)return {n:x.n,s:x.s,miss:true};
+    const c=b.map(z=>z.c);
+    const rel=E.ratioStat(b,spy);
+    const dv20=E.dollarVol(b,20), dv60=E.dollarVol(b,60);
+    return {n:x.n,s:x.s,
+      r5:E.ret(c,5), r21:E.ret(c,21), r63:E.ret(c,63),
+      rel21:rel?rel.m1:null, rel63:rel?rel.m3:null, lead:rel?rel.aboveMA:null,
+      cmf:E.cmf(b,20), mfi:E.mfi(b,14),
+      dvr:(dv20!=null&&dv60)?dv20/dv60:null};
+  });
+  const okSec=sec.filter(x=>!x.miss).sort((a,b)=>(b.rel21??-999)-(a.rel21??-999));
+  document.getElementById('sec').innerHTML= okSec.length
+    ? '<table><thead><tr><th>กลุ่ม</th><th>1 สัปดาห์</th><th>1 เดือน</th><th>3 เดือน</th>'
+      +'<th>แรงกว่า SPY 1ด</th><th>3ด</th><th>CMF</th><th>MFI</th>'
+      +'<th>มูลค่าซื้อขาย</th></tr></thead><tbody>'
+      +okSec.map(x=>'<tr><td><b>'+esc(x.n)+'</b> <span class="sub">'+x.s+'</span>'
+        +(x.lead===true?' <span class="pill p-on">นำ</span>':'')+'</td>'
+        +'<td class="mono '+cl2(x.r5)+'">'+pc(x.r5)+'</td>'
+        +'<td class="mono '+cl2(x.r21)+'">'+pc(x.r21)+'</td>'
+        +'<td class="mono '+cl2(x.r63)+'">'+pc(x.r63)+'</td>'
+        +'<td class="mono '+cl2(x.rel21)+'">'+pc(x.rel21)+'</td>'
+        +'<td class="mono '+cl2(x.rel63)+'">'+pc(x.rel63)+'</td>'
+        +'<td class="mono">'+(x.cmf==null?'—':x.cmf.toFixed(2))+' '+hm(x.cmf,-0.2,0.2)+'</td>'
+        +'<td class="mono '+(x.mfi==null?'fl':x.mfi>70?'up':x.mfi<30?'dn':'fl')+'">'
+        +(x.mfi==null?'—':x.mfi.toFixed(0))+'</td>'
+        +'<td class="mono '+(x.dvr==null?'fl':x.dvr>1.25?'up':x.dvr<0.8?'dn':'fl')+'">'
+        +(x.dvr==null?'—':x.dvr.toFixed(2)+'x')+'</td></tr>').join('')
+      +'</tbody></table>'
+      +'<div class="note"><b>แรงกว่า SPY</b> = ผลตอบแทนของอัตราส่วนกลุ่มนั้นหารด้วย SPY '
+      +'บวก = ชนะตลาด · <b>CMF</b> −1 ถึง +1 บวก = ปิดค่อนไปทางไฮพร้อมวอลุ่ม '
+      +'· <b>MFI</b> 0-100 เหมือน RSI แต่ถ่วงด้วยวอลุ่ม '
+      +'· <b>มูลค่าซื้อขาย</b> = เฉลี่ย 20 วัน หารด้วย เฉลี่ย 60 วัน มากกว่า 1 = คึกคักขึ้น'
+      +(sec.length-okSec.length ? '<br>ดึงไม่ได้ '+(sec.length-okSec.length)+' กลุ่ม: '
+        +esc(sec.filter(x=>x.miss).map(x=>x.s).join(' ')) : '')+'</div>'
+    : '<div class="ld">ดึงข้อมูลเซกเตอร์ไม่สำเร็จ</div>';
+
+  /* --- รายตัว --- */
+  let rows=BIG.map(s=>{
+    const b=bars(s); if(!b)return null;
+    const c=b.map(z=>z.c), v=b.map(z=>z.v);
+    const dv20=E.dollarVol(b,20), dv60=E.dollarVol(b,60);
+    return {s, c:c[c.length-1], r5:E.ret(c,5), r21:E.ret(c,21),
+      cmf:E.cmf(b,20), mfi:E.mfi(b,14), obv:E.obvSlope(c,v,21),
+      dv20, dvr:(dv20!=null&&dv60)?dv20/dv60:null};
+  }).filter(Boolean);
+  const k=SORT.k;
+  rows.sort((a,b)=>{
+    if(k==='s')return SORT.d*a.s.localeCompare(b.s);
+    const x=a[k],y=b[k];
+    if(x==null&&y==null)return 0;
+    if(x==null)return 1; if(y==null)return -1;   /* ไม่มีข้อมูล ไปท้ายเสมอ */
+    return SORT.d*(x-y);
+  });
+  const C=[['s','หุ้น'],['c','ราคา'],['r5','1 สัปดาห์'],['r21','1 เดือน'],
+    ['cmf','CMF'],['mfi','MFI'],['obv','OBV'],['dvr','มูลค่าซื้อขาย'],['dv20','มูลค่า/วัน']];
+  document.getElementById('flow').innerHTML= rows.length
+    ? '<table><thead><tr>'+C.map(c=>'<th data-k="'+c[0]+'" class="'
+      +(SORT.k===c[0]?'srt':'')+'">'+c[1]+(SORT.k===c[0]?(SORT.d<0?' ▼':' ▲'):'')
+      +'</th>').join('')+'</tr></thead><tbody>'
+      +rows.map(r=>'<tr><td><b>'+r.s+'</b></td>'
+        +'<td class="mono">'+nm(r.c)+'</td>'
+        +'<td class="mono '+cl2(r.r5)+'">'+pc(r.r5)+'</td>'
+        +'<td class="mono '+cl2(r.r21)+'">'+pc(r.r21)+'</td>'
+        +'<td class="mono">'+(r.cmf==null?'—':r.cmf.toFixed(2))+' '+hm(r.cmf,-0.2,0.2)+'</td>'
+        +'<td class="mono '+(r.mfi==null?'fl':r.mfi>70?'up':r.mfi<30?'dn':'fl')+'">'
+        +(r.mfi==null?'—':r.mfi.toFixed(0))+'</td>'
+        +'<td class="mono '+cl2(r.obv)+'">'+(r.obv==null?'—':r.obv.toFixed(2))+'</td>'
+        +'<td class="mono '+(r.dvr==null?'fl':r.dvr>1.25?'up':r.dvr<0.8?'dn':'fl')+'">'
+        +(r.dvr==null?'—':r.dvr.toFixed(2)+'x')+'</td>'
+        +'<td class="mono">'+big(r.dv20)+'</td></tr>').join('')
+      +'</tbody></table>'
+      +'<div class="note">ราคาและวอลุ่มเป็นข้อมูลรายวัน ไม่ใช่เรียลไทม์ · '
+      +'ช่อง “—” คือข้อมูลไม่พอคำนวณ ไม่ใช่ศูนย์ · '
+      +'<b>ตัวเลขพวกนี้บอกว่าแรงซื้อขายเอียงไปทางไหน ไม่ได้บอกว่าควรซื้อหรือขาย</b> '
+      +'และไม่ใช่คำแนะนำการลงทุน'
+      +(D.bad&&D.bad.length?'<br>ดึงไม่สำเร็จ '+D.bad.length+' ตัว: '
+        +esc(D.bad.join(' ')):'')+'</div>'
+    : '<div class="ld">ไม่มีข้อมูล</div>';
+}
+
+document.getElementById('flow').addEventListener('click',e=>{
+  const th=e.target.closest('th'); if(!th||!th.dataset.k)return;
+  if(SORT.k===th.dataset.k)SORT.d*=-1; else {SORT.k=th.dataset.k;SORT.d=-1}
+  render();
+});
+document.getElementById('bLoad').onclick=load;
+try{const c=JSON.parse(localStorage.getItem(CKEY));
+  if(c&&Date.now()-c.t<18*3600*1000)D=c}catch(e){}
+render();
+</script>
+<script src="theme.js"></script>
+</body></html>

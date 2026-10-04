@@ -1,0 +1,557 @@
+<!DOCTYPE html><html lang="th"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>วิเคราะห์พอร์ต · แผนลงทุน — Trading Dashboard</title>
+<style>
+:root{--bg:#0a0d13;--bg2:#10151e;--bg3:#161d29;--line:#222c3d;--tx:#e8eef8;
+--tx2:#96a3b8;--tx3:#5c6a80;--accent:#f5b942;--glow:245,185,66;--acc:#3b82f6;
+--up:#34C27D;--dn:#E5645A;--warn:#f59e0b;--pur:#a78bfa}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-size:14px;line-height:1.55;padding-bottom:40px;
+font-family:-apple-system,'Segoe UI','Leelawadee UI','Noto Sans Thai',Tahoma,sans-serif}
+.mono{font-family:ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+.up{color:var(--up)}.dn{color:var(--dn)}.fl{color:var(--tx2)}
+button{font-family:inherit;cursor:pointer}a{color:var(--acc);text-decoration:none}
+header{position:sticky;top:0;z-index:50;background:rgba(10,13,19,.96);
+backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.hbar{display:flex;align-items:center;gap:12px;padding:9px 16px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:15px}.logo span{color:var(--accent)}
+nav{display:flex;gap:2px;margin-left:6px;flex-wrap:wrap}
+nav a{color:var(--tx3);padding:6px 12px;font-size:12.5px;font-weight:600;border-radius:7px}
+nav a.on{color:var(--tx);background:var(--bg3)}
+.right{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{background:var(--bg3);border:1px solid var(--line);color:var(--tx2);
+padding:5px 11px;border-radius:7px;font-size:12px}
+.btn:hover{color:var(--tx)}
+.btn.go{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn.on{background:rgba(var(--glow),.16);border-color:var(--accent);color:var(--accent);font-weight:600}
+.btn.sm{padding:2px 7px;font-size:11px}
+main{padding:18px;max-width:1420px;margin:0 auto}
+h1{font-size:27px;font-weight:800;letter-spacing:-.02em}
+.lead{font-size:12.5px;color:var(--tx2);margin:3px 0 14px;max-width:80ch;line-height:1.7}
+.sub{font-size:11px;color:var(--tx3);font-weight:400}
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:16px;margin-bottom:12px}
+.card h3{font-size:13px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:9px;margin-bottom:12px}
+.kpi{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:11px 13px}
+.kpi .n{font-size:10px;color:var(--tx3);text-transform:uppercase;letter-spacing:.08em}
+.kpi .v{font-size:23px;font-weight:800;letter-spacing:-.03em;line-height:1.2;
+font-family:ui-monospace,monospace}
+.kpi .s{font-size:10px;color:var(--tx3)}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{text-align:right;font-size:10px;color:var(--tx3);font-weight:600;padding:7px 6px;
+border-bottom:1px solid var(--line);text-transform:uppercase;letter-spacing:.07em;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+td{padding:7px 6px;border-bottom:1px solid rgba(34,44,61,.5);text-align:right;white-space:nowrap}
+tbody tr.clk{cursor:pointer}
+tbody tr:hover{background:rgba(255,255,255,.025)}
+tr.det td{background:var(--bg3);border-top:1px solid var(--line)}
+.tag{display:inline-block;font-size:9.5px;padding:1px 7px;border-radius:4px;font-weight:700;margin-right:3px}
+.t-buy{background:rgba(52,194,125,.18);color:var(--up)}
+.t-sell{background:rgba(229,100,90,.18);color:var(--dn)}
+.t-ok{background:rgba(148,163,184,.14);color:var(--tx2)}
+.t-w{background:rgba(245,158,11,.18);color:var(--warn)}
+.t-p{background:rgba(167,139,250,.18);color:var(--pur)}
+input,select{background:var(--bg3);border:1px solid var(--line);color:var(--tx);
+border-radius:6px;padding:5px 9px;font-family:inherit;font-size:12.5px}
+.frm{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:11px}
+.frm label{display:flex;flex-direction:column;gap:3px;font-size:10px;color:var(--tx3);
+text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:11px}
+.bar{height:7px;background:var(--bg3);border-radius:4px;overflow:hidden;width:110px;
+display:inline-block;vertical-align:middle;position:relative}
+.bar i{display:block;height:100%;position:absolute;left:0;top:0}
+.bar u{position:absolute;top:-2px;width:2px;height:11px;background:var(--tx);border-radius:1px}
+.ld{color:var(--tx3);text-align:center;padding:26px 0;font-size:12.5px;line-height:1.9}
+.warnbox{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.28);
+border-radius:9px;padding:12px 14px;font-size:11.5px;color:var(--warn);line-height:1.8;margin-bottom:12px}
+.warnbox b{color:#ffd37a}
+.infobox{background:rgba(59,130,246,.07);border:1px solid rgba(59,130,246,.25);
+border-radius:9px;padding:11px 13px;font-size:11.5px;color:var(--tx2);line-height:1.75;margin-bottom:12px}
+.note{font-size:10.5px;color:var(--tx3);line-height:1.75;margin-top:11px;
+padding-top:10px;border-top:1px dashed var(--line)}
+.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:12px}
+.ded{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:9px;padding:4px 0}
+.ded div{font-size:11px}
+.ded div b{display:block;font-size:14px;font-family:ui-monospace,monospace;margin-top:1px}
+@media(max-width:700px){main{padding:12px}h1{font-size:22px}}
+</style>
+<link rel="stylesheet" href="theme.css">
+</head><body>
+
+<header><div class="hbar">
+  <div class="logo">TRADING <span>DASHBOARD</span></div>
+  <nav>
+    <a href="index.html">PORT</a><a href="plan.html" class="on">แผนลงทุน</a>
+    <a href="journal.html">JOURNAL</a><a href="bot.html">BOT</a>
+    <a href="breadth.html">BREADTH</a><a href="sentiment.html">SENTIMENT</a>
+    <a href="flow.html">FLOW</a><a href="scanner.html">SCANNER</a>
+    <a href="theme-matrix.html">THEMES</a><a href="macro.html">MACRO</a>
+  </nav>
+  <div class="right">
+    <span id="msg" class="sub"></span>
+    <button class="btn" id="bScan">↻ ดึงผลสแกน</button>
+    <button class="btn go" id="bReload">↻ อ่านพอร์ตใหม่</button>
+  </div>
+</div></header>
+
+<main>
+  <h1>🧭 วิเคราะห์พอร์ต · แผนลงทุน</h1>
+  <div class="lead">ใช้ข้อมูลพอร์ตชุดเดียวกับหน้า PORT — ปรับสมดุล แบ่งเงิน DCA และดูว่าพอร์ตกระจุกตรงไหน</div>
+
+  <div id="status"></div>
+  <div class="kpis" id="kpis"></div>
+
+  <div class="card">
+    <h3>⚖️ ปรับสมดุล <span class="sub">คำนวณจากเป้า % ที่คุณตั้งไว้เองในหน้า PORT</span></h3>
+    <div class="frm">
+      <label>เงินที่จะเติม<input id="cash" type="number" step="any" value="0" style="width:120px"></label>
+      <label>วิธี<select id="mode" style="width:190px">
+        <option value="add">เติมเงินอย่างเดียว (ไม่ขาย)</option>
+        <option value="full">ซื้อขายปรับเต็ม</option></select></label>
+      <label>ปัดเป็นจำนวนเต็ม<select id="whole" style="width:110px">
+        <option value="1">ปัด</option><option value="0">ไม่ปัด</option></select></label>
+      <button class="btn" id="bMin">เติมเท่าไหร่ถึงไม่ต้องขาย</button>
+    </div>
+    <div id="rbWarn"></div>
+    <div style="overflow:auto"><div id="rb"></div></div>
+    <div class="note" id="rbNote"></div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <h3>🎯 ความกระจุกตัว</h3>
+      <div id="conc"></div>
+    </div>
+    <div class="card">
+      <h3>📉 เส้นมูลค่าพอร์ต <span class="sub" id="histMeta"></span></h3>
+      <div id="hist"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🔍 รายตัว <span class="sub">คลิกแถวเพื่อดูข้อมูลจากผลสแกน</span></h3>
+    <div style="overflow:auto"><div id="hold"></div></div>
+    <div class="note" id="holdNote"></div>
+  </div>
+</main>
+
+<script src="engine.js"></script>
+<script>
+/* ============================================================
+   วิเคราะห์พอร์ต · แผนลงทุน
+   อ่านพอร์ตจาก localStorage ชุดเดียวกับหน้า PORT (pro_pf, pro_px, ...)
+   ไม่มีการเขียนทับพอร์ต หน้านี้อ่านอย่างเดียว
+   ============================================================ */
+const E=SCANENG;
+const K={pf:'pro_pf',px:'pro_px',cur:'pro_cur',fx:'pro_fx',sec:'pro_sec',hist:'pro_hist'};
+const ld=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v}
+  catch(e){return d}};
+let PF=[], PX={}, SEC={}, CUR='USD', FXC={}, HIST=[], SCAN=null, OPEN=null;
+
+const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+  .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const n2=v=>(v==null||!isFinite(v))?'—':Number(v).toLocaleString('en-US',
+  {minimumFractionDigits:2,maximumFractionDigits:2});
+const pctS=v=>(v==null||!isFinite(v))?'—':(v>=0?'+':'')+v.toFixed(2)+'%';
+const cl2=v=>v==null?'fl':v>0?'up':v<0?'dn':'fl';
+const RATE=()=>(FXC&&FXC.fx&&FXC.fx.usdthb)?FXC.fx.usdthb:null;
+function money(v){
+  if(v==null||!isFinite(v))return '—';
+  if(CUR==='THB'){const r=RATE();if(!r)return '—';
+    const b=v*r;return (b<0?'-฿':'฿')+Math.abs(b).toLocaleString('en-US',{maximumFractionDigits:0})}
+  return (v<0?'-$':'$')+Math.abs(v).toLocaleString('en-US',{maximumFractionDigits:2});
+}
+function loadPF(){
+  PF=ld(K.pf,[]); PX=ld(K.px,{}); SEC=ld(K.sec,{});
+  CUR=localStorage.getItem(K.cur)||'USD';
+  FXC=ld(K.fx,{fx:{usdthb:null}}); HIST=ld(K.hist,[]);
+}
+function priceOf(h){
+  if(h.type==='cash')return 1;
+  if(h.manual!=null&&h.manual!==''&&isFinite(h.manual))return Number(h.manual);
+  const p=PX[(h.sym||'').toUpperCase()];
+  return (p&&isFinite(p.price))?p.price:null;
+}
+function rows(){
+  return PF.map((h,i)=>{
+    const price=priceOf(h), qty=Number(h.qty)||0;
+    const cost=(Number(h.cost)||0)*qty;
+    const val=price!=null?price*qty:null;
+    const tgt=(h.tgt!=null&&h.tgt!=='')?Number(h.tgt):null;
+    return {i,h,sym:(h.sym||'').toUpperCase(),type:h.type,price,qty,cost,val,
+      tgt:(tgt!=null&&isFinite(tgt))?tgt:null,
+      pl:val!=null?val-cost:null,
+      plPct:(val!=null&&cost)?(val-cost)/cost*100:null};
+  });
+}
+const totalOf=rs=>rs.reduce((a,r)=>a+(r.val||0),0);
+
+/* ============================================================
+   ปรับสมดุล
+   โหมด "เติมเงินอย่างเดียว" จะไม่สั่งขายเลย เพราะการขายมีต้นทุนจริง
+   ทั้งค่าธรรมเนียมและภาษีกำไร การเติมเงินเข้าตัวที่ยังขาด
+   มักเป็นวิธีที่ถูกกว่าในการกลับเข้าเป้า
+   ============================================================ */
+function rebalance(rs,cash,mode,whole){
+  const priced=rs.filter(r=>r.val!=null);
+  const noPrice=rs.filter(r=>r.val==null);
+  const total=totalOf(priced);
+  const withT=priced.filter(r=>r.tgt!=null&&r.tgt>0);
+  const noT=priced.filter(r=>r.tgt==null);
+  const sumT=withT.reduce((a,r)=>a+r.tgt,0);
+  const newTotal=total+(cash||0);
+  const out={total,newTotal,sumT,noPrice,noT,rows:[],cash:cash||0,
+    needed:0,used:0,leftover:0,minCash:null,ok:withT.length>0};
+  if(!withT.length)return out;
+
+  /* เงินขั้นต่ำที่ทำให้ทุกตัวเข้าเป้าได้โดยไม่ต้องขายอะไรเลย */
+  let minCash=0;
+  withT.forEach(r=>{
+    const need=r.val*100/r.tgt-total;      /* ต้องให้พอร์ตโตเท่านี้ ตัวนี้ถึงจะไม่เกินเป้า */
+    if(need>minCash)minCash=need;
+  });
+  out.minCash=minCash;
+
+  const list=withT.map(r=>{
+    const want=newTotal*r.tgt/100;
+    const diff=want-r.val;
+    return {r,want,diff};
+  });
+  if(mode==='add'){
+    const needs=list.filter(x=>x.diff>0);
+    const need=needs.reduce((a,x)=>a+x.diff,0);
+    out.needed=need;
+    const budget=Math.max(0,cash||0);
+    const scale=need>0?Math.min(1,budget/need):0;
+    list.forEach(x=>{ x.act = x.diff>0 ? x.diff*scale : 0 });
+    out.used=list.reduce((a,x)=>a+x.act,0);
+    out.leftover=budget-out.used;
+    out.partial=need>budget;
+  }else{
+    list.forEach(x=>{ x.act=x.diff });
+    out.needed=list.filter(x=>x.diff>0).reduce((a,x)=>a+x.diff,0);
+    out.used=list.reduce((a,x)=>a+Math.max(0,x.act),0);
+    out.sells=-list.filter(x=>x.act<0).reduce((a,x)=>a+x.act,0);
+  }
+  list.forEach(x=>{
+    const p=x.r.price;
+    let sh=null, amt=x.act;
+    if(p!=null&&p>0&&x.r.type!=='cash'){
+      sh = whole ? (x.act>=0?Math.floor(x.act/p):-Math.floor(-x.act/p)) : x.act/p;
+      if(whole)amt=sh*p;             /* ปัดแล้วยอดเงินต้องเปลี่ยนตาม ไม่งั้นตัวเลขไม่ตรงกัน */
+    }
+    out.rows.push({r:x.r,want:x.want,diff:x.diff,act:x.act,shares:sh,amt,
+      nowPct:total?x.r.val/total*100:null,
+      afterPct:newTotal?(x.r.val+amt)/newTotal*100:null});
+  });
+  /* สรุปยอดเงินใหม่หลังปัดเศษ — ต้องคิดจาก amt ที่ปัดแล้ว ไม่ใช่ยอดก่อนปัด
+     ไม่งั้นจะรายงานว่าใช้เงินมากกว่าที่ใช้จริง และบอกว่าไม่มีเงินเหลือทั้งที่เหลือ */
+  out.used  = out.rows.reduce((a,x)=>a+Math.max(0,x.amt),0);
+  out.sells = -out.rows.reduce((a,x)=>a+Math.min(0,x.amt),0);
+  if(mode==='add')out.leftover=Math.max(0,(cash||0))-out.used;
+  out.rows.sort((a,b)=>Math.abs(b.diff)-Math.abs(a.diff));
+  return out;
+}
+
+/* ความกระจุกตัว — จำนวนตัวที่ "เทียบเท่า" ถ้าถือเท่ากันทุกตัว */
+function concentration(vals){
+  const t=vals.reduce((a,v)=>a+v,0);
+  if(!(t>0))return null;
+  const w=vals.map(v=>v/t);
+  const hhi=w.reduce((a,x)=>a+x*x,0);
+  return {hhi:hhi*10000, eff:1/hhi, top:Math.max(...w)*100,
+    top3:w.slice().sort((a,b)=>b-a).slice(0,3).reduce((a,x)=>a+x,0)*100};
+}
+function ddOf(h){
+  if(!h||h.length<2)return null;
+  let peak=-Infinity,mx=0,at=null;
+  h.forEach(x=>{ if(x.v>peak)peak=x.v;
+    const d=peak>0?(peak-x.v)/peak*100:0;
+    if(d>mx){mx=d;at=x.d} });
+  return {dd:mx,at};
+}
+
+/* ---------- ผลสแกน ---------- */
+async function loadScan(){
+  const m=document.getElementById('msg');
+  m.textContent='กำลังโหลด...';
+  try{
+    const r=await fetch('scan.json?t='+Date.now(),{cache:'no-store'});
+    if(!r.ok)throw new Error('ไม่พบ scan.json');
+    const j=await r.json();
+    SCAN={}; (j.rows||[]).forEach(x=>SCAN[x.s]=x);
+    SCAN.__meta={asof:j.asof,scanned:j.scanned};
+    m.textContent='';
+  }catch(e){ SCAN=null; m.textContent='' }
+  render();
+}
+
+/* ---------- วาดหน้า ---------- */
+function render(){
+  const rs=rows();
+  const priced=rs.filter(r=>r.val!=null);
+  const total=totalOf(priced);
+
+  /* --- สถานะ --- */
+  let st='';
+  if(!PF.length){
+    st='<div class="infobox"><b>ยังไม่มีพอร์ต</b> — '
+      +'ไปที่หน้า <a href="index.html">PORT</a> ใส่สินทรัพย์ก่อน '
+      +'แล้วกลับมาที่หน้านี้ ข้อมูลใช้ร่วมกันอยู่แล้ว ไม่ต้องกรอกซ้ำ<br>'
+      +'หน้านี้<b>อ่านอย่างเดียว</b> ไม่เขียนทับพอร์ตของคุณ</div>';
+    document.getElementById('status').innerHTML=st;
+    document.getElementById('kpis').innerHTML='';
+    ['rb','conc','hist','hold'].forEach(i=>
+      document.getElementById(i).innerHTML='<div class="ld">—</div>');
+    ['rbWarn','rbNote','holdNote','histMeta'].forEach(i=>
+      document.getElementById(i).innerHTML='');
+    return;
+  }
+  const noPrice=rs.filter(r=>r.val==null);
+  st='<div class="infobox">พอร์ต '+PF.length+' รายการ · มูลค่ารวม <b>'+money(total)+'</b>'
+    +(noPrice.length?' · <span style="color:var(--warn)">ไม่มีราคา '+noPrice.length
+      +' ตัว ('+esc(noPrice.map(r=>r.sym||'ไม่มีชื่อ').join(' '))
+      +') จึงไม่ถูกนับในทุกการคำนวณ</span>':'')
+    +(SCAN?' · ผลสแกนวันที่ '+esc(SCAN.__meta.asof):'')
+    +'</div>';
+  document.getElementById('status').innerHTML=st;
+
+  /* --- ตัวเลขสรุป --- */
+  const cost=priced.reduce((a,r)=>a+r.cost,0);
+  const pl=total-cost;
+  const c=concentration(priced.map(r=>r.val));
+  const dd=ddOf(HIST);
+  const K2=[
+    ['มูลค่ารวม',money(total),priced.length+' รายการที่มีราคา','var(--tx)'],
+    ['กำไรขาดทุน',money(pl),cost?pctS(pl/cost*100):'',pl>=0?'var(--up)':'var(--dn)'],
+    ['กระจายเทียบเท่า',c?c.eff.toFixed(1)+' ตัว':'—','ถ้าถือเท่ากันทุกตัว',
+      c?(c.eff>=8?'var(--up)':c.eff>=4?'var(--warn)':'var(--dn)'):'var(--tx2)'],
+    ['ตัวใหญ่สุด',c?c.top.toFixed(0)+'%':'—',c?'สามตัวแรกรวม '+c.top3.toFixed(0)+'%':'',
+      c?(c.top<=25?'var(--up)':c.top<=40?'var(--warn)':'var(--dn)'):'var(--tx2)'],
+    ['ขาดทุนสูงสุด',dd?'-'+dd.dd.toFixed(1)+'%':'—',
+      dd?'จากจุดสูงสุด · '+esc(dd.at||''):'ต้องมีประวัติอย่างน้อย 2 วัน','var(--dn)']
+  ];
+  document.getElementById('kpis').innerHTML=K2.map(k=>
+    '<div class="kpi"><div class="n">'+k[0]+'</div>'
+    +'<div class="v" style="color:'+k[3]+'">'+k[1]+'</div>'
+    +'<div class="s">'+esc(k[2])+'</div></div>').join('');
+
+  /* --- ปรับสมดุล --- */
+  const cash=Number(document.getElementById('cash').value)||0;
+  const mode=document.getElementById('mode').value;
+  const whole=document.getElementById('whole').value==='1';
+  const R=rebalance(rs,cash,mode,whole);
+  let w='';
+  if(!R.ok){
+    w='<div class="warnbox"><b>ยังไม่ได้ตั้งเป้า %</b> — '
+      +'ไปที่หน้า <a href="index.html">PORT</a> ใส่ตัวเลขเป้าหมายในคอลัมน์เป้า % '
+      +'ของแต่ละรายการก่อน หน้านี้จะคำนวณให้เอง</div>';
+  }else{
+    if(Math.abs(R.sumT-100)>0.5)
+      w+='<div class="warnbox"><b>เป้ารวมกันได้ '+R.sumT.toFixed(1)+'% ไม่ใช่ 100%</b> — '
+        +'ผมไม่ปรับให้อัตโนมัติ เพราะไม่รู้ว่าคุณตั้งใจให้ตัวไหนมากน้อย '
+        +(R.sumT<100?'ส่วนที่ขาดจะกลายเป็นเงินเหลือที่ไม่มีเป้า'
+                    :'เป้ารวมเกิน 100% จึงเติมให้ครบทุกตัวพร้อมกันไม่ได้')
+        +' — แก้ตัวเลขเป้าในหน้า PORT ให้รวมเป็น 100% ก่อน ตัวเลขข้างล่างถึงจะใช้ได้จริง</div>';
+    if(R.noT.length)
+      w+='<div class="warnbox">มี '+R.noT.length+' รายการที่ไม่ได้ตั้งเป้า ('
+        +esc(R.noT.map(r=>r.sym).join(' '))+') — '
+        +'<b>มูลค่าของมันยังถูกนับในพอร์ตรวม</b> แต่ไม่ถูกจัดสรรเงินให้ '
+        +'ถ้าตั้งใจให้ถือต่อโดยไม่เพิ่ม ก็ถูกแล้ว</div>';
+    if(mode==='add'&&R.partial)
+      w+='<div class="warnbox">ด้วยเงิน '+money(R.cash)+' ยังปรับเข้าเป้าไม่ครบ '
+        +'(ต้องใช้ '+money(R.needed)+') ตัวเลขข้างล่างจึงเป็นการ<b>แบ่งตามสัดส่วนที่ขาด</b> '
+        +'ให้เข้าใกล้เป้าที่สุดเท่าที่เงินมี</div>';
+  }
+  document.getElementById('rbWarn').innerHTML=w;
+
+  document.getElementById('rb').innerHTML = R.ok&&R.rows.length
+    ? '<table><thead><tr><th>สินทรัพย์</th><th>ตอนนี้</th><th>เป้า</th><th>ส่วนต่าง</th>'
+      +'<th>สัดส่วนตอนนี้ → หลังปรับ</th><th>ทำอะไร</th><th>จำนวน</th><th>เป็นเงิน</th>'
+      +'</tr></thead><tbody>'
+      +R.rows.map(x=>{
+        const act=x.amt;
+        const kind=Math.abs(act)<0.005?'ok':act>0?'buy':'sell';
+        return '<tr><td><b>'+esc(x.r.sym||'—')+'</b></td>'
+        +'<td class="mono">'+money(x.r.val)+'</td>'
+        +'<td class="mono fl">'+x.r.tgt.toFixed(1)+'%</td>'
+        +'<td class="mono '+cl2(x.diff)+'">'+money(x.diff)+'</td>'
+        +'<td><span class="mono" style="font-size:11.5px">'
+          +(x.nowPct==null?'—':x.nowPct.toFixed(1)+'%')+' → '
+          +(x.afterPct==null?'—':x.afterPct.toFixed(1)+'%')+'</span>'
+          +'<span class="bar" style="margin-left:7px"><i style="width:'
+          +Math.min(100,x.afterPct||0)+'%;background:'+(kind==='sell'?'var(--dn)':'var(--acc)')
+          +'"></i><u style="left:calc('+Math.min(100,x.r.tgt)+'% - 1px)"></u></span></td>'
+        +'<td>'+(kind==='ok'?'<span class="tag t-ok">ตรงเป้าแล้ว</span>'
+            :kind==='buy'?'<span class="tag t-buy">ซื้อเพิ่ม</span>'
+            :'<span class="tag t-sell">ขายออก</span>')+'</td>'
+        +'<td class="mono">'+(x.shares==null
+            ? (x.r.type==='cash'?'<span class="fl">เงินสด</span>'
+               :'<span class="fl">ไม่มีราคา</span>')
+            : (whole?Math.abs(x.shares):Math.abs(x.shares).toFixed(4)))+'</td>'
+        +'<td class="mono '+cl2(act)+'">'+money(Math.abs(act)<0.005?0:act)+'</td></tr>';
+      }).join('')+'</tbody></table>'
+    : (R.ok?'<div class="ld">ไม่มีรายการที่ตั้งเป้าไว้</div>':'<div class="ld">—</div>');
+
+  document.getElementById('rbNote').innerHTML = R.ok
+    ? (mode==='add'
+        ? 'ใช้เงิน <b>'+money(R.used)+'</b> จาก '+money(R.cash)
+          +(R.leftover>0.005?' · เหลือ '+money(R.leftover)
+            +(whole?' (ส่วนหนึ่งเพราะปัดเป็นจำนวนเต็ม)':''):'')
+          +'<br><b>โหมดนี้ไม่สั่งขายอะไรเลย</b> เพราะการขายมีต้นทุนจริงทั้งค่าธรรมเนียมและภาษีกำไร '
+          +'การเติมเงินเข้าตัวที่ยังขาดมักถูกกว่าในการกลับเข้าเป้า'
+        : 'ต้องซื้อรวม <b>'+money(R.used)+'</b> และขายรวม <b>'+money(R.sells||0)+'</b>'
+          +'<br><b>โหมดนี้สั่งขายด้วย</b> — การขายอาจมีภาษีกำไรและค่าธรรมเนียม '
+          +'ซึ่งหน้านี้ไม่ได้คิดให้ ตัวเลขจึงเป็นยอดก่อนต้นทุนเหล่านั้น')
+      +'<br>' + (R.minCash!=null&&R.minCash>0
+        ? 'ถ้าอยากเข้าเป้าครบโดย<b>ไม่ขายอะไรเลย</b> ต้องเติมอย่างน้อย <b>'
+          +money(R.minCash)+'</b>'
+        : 'ตอนนี้ไม่มีตัวไหนเกินเป้า จึงเติมเงินเข้าเป้าได้โดยไม่ต้องขาย')
+      +'<br><span class="sub">ตัวเลขทั้งหมดเป็นเลขคณิตจากเป้าที่<b>คุณตั้งเอง</b> '
+      +'ไม่ใช่คำแนะนำว่าควรถืออะไรเท่าไหร่</span>'
+    : '';
+
+  /* --- ความกระจุกตัว --- */
+  if(c){
+    const bySec={};
+    priced.forEach(r=>{ const s=SEC[r.sym]||'ไม่ระบุ'; bySec[s]=(bySec[s]||0)+r.val });
+    const byType={};
+    priced.forEach(r=>{ const t=r.type||'ไม่ระบุ'; byType[t]=(byType[t]||0)+r.val });
+    const mk=(obj,title)=>{
+      const e=Object.entries(obj).sort((a,b)=>b[1]-a[1]);
+      const t=e.reduce((a,x)=>a+x[1],0);
+      return '<div style="margin-top:11px"><div class="sub" style="margin-bottom:5px">'
+        +title+'</div>'+e.slice(0,6).map(x=>
+        '<div style="display:flex;justify-content:space-between;gap:9px;font-size:12px;padding:2px 0">'
+        +'<span>'+esc(x[0])+'</span><span class="mono">'+(x[1]/t*100).toFixed(1)+'%'
+        +'<span class="bar" style="margin-left:7px;width:80px"><i style="width:'
+        +(x[1]/t*100).toFixed(1)+'%;background:var(--accent)"></i></span></span></div>').join('')
+        +'</div>';
+    };
+    const lvl=c.eff>=10?['กระจายดี','var(--up)']:c.eff>=5?['ปานกลาง','var(--warn)']
+      :['กระจุกตัวสูง','var(--dn)'];
+    document.getElementById('conc').innerHTML=
+      '<div class="ded"><div>กระจายเทียบเท่า<b style="color:'+lvl[1]+'">'
+      +c.eff.toFixed(1)+' ตัว</b></div>'
+      +'<div>ตัวใหญ่สุด<b>'+c.top.toFixed(1)+'%</b></div>'
+      +'<div>สามตัวแรก<b>'+c.top3.toFixed(1)+'%</b></div>'
+      +'<div>จำนวนที่ถือจริง<b>'+priced.length+' ตัว</b></div></div>'
+      +'<div style="margin-top:7px;font-size:12px;color:'+lvl[1]+';font-weight:700">'+lvl[0]+'</div>'
+      +mk(byType,'ตามประเภทสินทรัพย์')
+      +mk(bySec,'ตามกลุ่มอุตสาหกรรม')
+      +'<div class="note"><b>กระจายเทียบเท่า</b> แปลว่าพอร์ตนี้เสี่ยงพอๆ กับการถือหุ้นกี่ตัวแบบเท่ากันหมด '
+      +'ถือ 20 ตัวแต่ตัวเดียวหนัก 60% ก็อาจเทียบเท่าแค่ 3 ตัว<br>'
+      +'ตัวเลขนี้<b>ไม่ได้ดูว่าของที่ถือเคลื่อนไหวไปทางเดียวกันไหม</b> — '
+      +'ถือหุ้นเทค 10 ตัวจะดูกระจายดี ทั้งที่มันขึ้นลงพร้อมกันเกือบหมด</div>';
+  }else document.getElementById('conc').innerHTML='<div class="ld">ยังไม่มีมูลค่า</div>';
+
+  /* --- เส้นมูลค่า --- */
+  if(HIST.length>=2){
+    const v=HIST.map(x=>x.v);
+    const W=900,H=170,P=26;
+    const mn=Math.min(...v),mx=Math.max(...v),rg=(mx-mn)||1;
+    const X=i=>P+i/(v.length-1)*(W-P*2);
+    const Y=x=>H-P-(x-mn)/rg*(H-P*2);
+    const pts=v.map((x,i)=>X(i).toFixed(1)+','+Y(x).toFixed(1)).join(' ');
+    document.getElementById('hist').innerHTML=
+      '<svg viewBox="0 0 '+W+' '+H+'" width="100%" height="170" preserveAspectRatio="none" '
+      +'style="display:block"><polyline points="'+pts+'" fill="none" stroke="var(--accent)" '
+      +'stroke-width="2"/></svg>';
+    document.getElementById('histMeta').textContent=
+      HIST.length+' วัน · '+HIST[0].d+' ถึง '+HIST[HIST.length-1].d;
+  }else{
+    document.getElementById('hist').innerHTML=
+      '<div class="ld">ยังไม่มีประวัติ — เปิดหน้า PORT ไว้สักวันละครั้ง '
+      +'ระบบจะบันทึกมูลค่าพอร์ตของวันนั้นให้เอง<br>'
+      +'<span class="sub">ประวัติเริ่มนับจากวันแรกที่ใช้ ย้อนหลังไปก่อนหน้านั้นไม่ได้</span></div>';
+    document.getElementById('histMeta').textContent='';
+  }
+
+  /* --- รายตัว --- */
+  const hs=priced.slice().sort((a,b)=>b.val-a.val);
+  document.getElementById('hold').innerHTML= hs.length
+    ? '<table><thead><tr><th>สินทรัพย์</th><th>จำนวน</th><th>ราคา</th><th>มูลค่า</th>'
+      +'<th>สัดส่วน</th><th>ต้นทุน</th><th>กำไรขาดทุน</th><th>RS</th><th>สัญญาณ</th>'
+      +'</tr></thead><tbody>'
+      +hs.map(r=>{
+        const sc=SCAN?SCAN[r.sym]:null;
+        const open=OPEN===r.sym;
+        let h='<tr class="clk" data-s="'+esc(r.sym)+'">'
+          +'<td><b>'+esc(r.sym||'—')+'</b> <span class="sub">'+esc(r.type||'')+'</span></td>'
+          +'<td class="mono">'+n2(r.qty)+'</td>'
+          +'<td class="mono">'+money(r.price)+'</td>'
+          +'<td class="mono">'+money(r.val)+'</td>'
+          +'<td class="mono">'+(total?(r.val/total*100).toFixed(1)+'%':'—')+'</td>'
+          +'<td class="mono fl">'+money(r.cost)+'</td>'
+          +'<td class="mono '+cl2(r.pl)+'">'+money(r.pl)
+            +' <span style="font-size:11px">'+pctS(r.plPct)+'</span></td>'
+          +'<td class="mono">'+(sc&&sc.rs!=null?sc.rs:'<span class="fl">—</span>')+'</td>'
+          +'<td>'+(sc&&sc.f
+            ? ((sc.f.bo?'<span class="tag t-buy">เบรก</span>':'')
+              +(sc.f.np?'<span class="tag t-w">จ่อ pivot</span>':'')
+              +(sc.f.vcp?'<span class="tag t-p">VCP</span>':'')
+              +(sc.f.os?'<span class="tag t-sell">ขายมากเกิน</span>':'')
+              ||'<span class="fl">—</span>')
+            : '<span class="fl">—</span>')+'</td></tr>';
+        if(open){
+          h+='<tr class="det"><td colspan="9">'+(sc
+            ? '<div class="ded">'
+              +'<div>1 สัปดาห์<b class="'+cl2(sc.c5)+'">'+pctS(sc.c5)+'</b></div>'
+              +'<div>1 เดือน<b class="'+cl2(sc.c21)+'">'+pctS(sc.c21)+'</b></div>'
+              +'<div>3 เดือน<b class="'+cl2(sc.c63)+'">'+pctS(sc.c63)+'</b></div>'
+              +'<div>1 ปี<b class="'+cl2(sc.c252)+'">'+pctS(sc.c252)+'</b></div>'
+              +'<div>ห่างจากไฮ<b class="'+cl2(sc.fh)+'">'+pctS(sc.fh)+'</b></div>'
+              +'<div>เหนือ MA50<b>'+(sc.m50==null||sc.c==null?'—'
+                :(sc.c>sc.m50?'ใช่':'ไม่'))+'</b></div>'
+              +'<div>เหนือ MA200<b>'+(sc.m200==null||sc.c==null?'—'
+                :(sc.c>sc.m200?'ใช่':'ไม่'))+'</b></div>'
+              +'<div>RSI<b>'+(sc.rsi==null?'—':sc.rsi.toFixed(0))+'</b></div>'
+              +'<div>Trend Template<b>'+(sc.ttk?sc.ttp+'/'+sc.ttk:'—')+'</b></div>'
+              +'</div>'
+              +'<div class="sub" style="margin-top:7px">ข้อมูลราคา ณ '+esc(sc.d||'')
+              +' · <a href="https://www.tradingview.com/symbols/'+esc(r.sym)
+              +'/" target="_blank" rel="noopener noreferrer">เปิดกราฟ</a>'
+              +' · <a href="scanner.html">ดูในสแกนเนอร์</a></div>'
+            : '<div class="sub">ไม่มี '+esc(r.sym)+' ในผลสแกน — '
+              +(SCAN?'อาจไม่ได้อยู่ในรายชื่อ 536 ตัวที่สแกน หรือเป็นสินทรัพย์นอกตลาดหุ้นสหรัฐฯ'
+                   :'ยังไม่ได้โหลดผลสแกน กดปุ่ม ↻ ดึงผลสแกน มุมขวาบน')
+              +'</div>')
+            +'</td></tr>';
+        }
+        return h;
+      }).join('')+'</tbody></table>'
+    : '<div class="ld">ยังไม่มีรายการที่มีราคา</div>';
+  document.getElementById('holdNote').innerHTML=
+    'คลิกแถวเพื่อกาง/ปิดรายละเอียด · RS และสัญญาณมาจาก <b>scan.json</b> '
+    +'ซึ่งครอบคลุมเฉพาะหุ้นสหรัฐฯ ในรายชื่อที่สแกน — '
+    +'ทองคำ คริปโต กองทุนไทย และหุ้นนอกรายชื่อจะไม่มีข้อมูลส่วนนี้<br>'
+    +'ราคาในพอร์ตมาจากหน้า PORT ส่วนตัวเลขในรายละเอียดมาจากผลสแกนรายคืน '
+    +'<b>สองอย่างนี้อาจเป็นคนละวันกัน</b>';
+}
+
+/* ---------- เหตุการณ์ ---------- */
+const g=id=>document.getElementById(id);
+['cash','mode','whole'].forEach(i=>g(i).addEventListener('input',render));
+g('mode').addEventListener('change',render);
+g('whole').addEventListener('change',render);
+g('bMin').onclick=()=>{
+  const R=rebalance(rows(),0,'add',false);
+  if(R.minCash==null){ alert('ต้องตั้งเป้า % ในหน้า PORT ก่อน'); return }
+  g('cash').value=Math.ceil(Math.max(0,R.minCash));
+  render();
+};
+g('bReload').onclick=()=>{ loadPF(); render() };
+g('bScan').onclick=loadScan;
+g('hold').addEventListener('click',e=>{
+  if(e.target.closest('a'))return;
+  const tr=e.target.closest('tr.clk'); if(!tr)return;
+  OPEN = OPEN===tr.dataset.s ? null : tr.dataset.s;
+  render();
+});
+
+loadPF();
+render();
+loadScan();
+</script>
+<script src="theme.js"></script>
+</body></html>

@@ -1,0 +1,382 @@
+<!DOCTYPE html><html lang="th"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Heat Map — Trading Dashboard</title>
+<style>
+:root{--bg:#0a0d13;--bg2:#10151e;--bg3:#161d29;--line:#222c3d;--tx:#e8eef8;
+--tx2:#96a3b8;--tx3:#5c6a80;--accent:#f5b942;--glow:245,185,66;--acc:#3b82f6;
+--up:#34C27D;--dn:#E5645A;--warn:#f59e0b;--pur:#a78bfa}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-size:14px;line-height:1.55;padding-bottom:40px;
+font-family:-apple-system,'Segoe UI','Leelawadee UI','Noto Sans Thai',Tahoma,sans-serif}
+.mono{font-family:ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+.up{color:var(--up)}.dn{color:var(--dn)}.fl{color:var(--tx2)}
+button{font-family:inherit;cursor:pointer}a{color:var(--acc);text-decoration:none}
+header{position:sticky;top:0;z-index:50;background:rgba(10,13,19,.96);
+backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.hbar{display:flex;align-items:center;gap:12px;padding:9px 16px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:15px}.logo span{color:var(--accent)}
+nav{display:flex;gap:2px;margin-left:6px;flex-wrap:wrap}
+nav a{color:var(--tx3);padding:6px 12px;font-size:12.5px;font-weight:600;border-radius:7px}
+nav a.on{color:var(--tx);background:var(--bg3)}
+.right{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{background:var(--bg3);border:1px solid var(--line);color:var(--tx2);
+padding:5px 11px;border-radius:7px;font-size:12px}
+.btn:hover{color:var(--tx)}
+.btn.go{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn.on{background:rgba(var(--glow),.16);border-color:var(--accent);color:var(--accent);font-weight:600}
+main{padding:18px;max-width:1500px;margin:0 auto}
+h1{font-size:27px;font-weight:800;letter-spacing:-.02em}
+.lead{font-size:12.5px;color:var(--tx2);margin:3px 0 14px;max-width:80ch;line-height:1.7}
+.sub{font-size:11px;color:var(--tx3);font-weight:400}
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:16px;margin-bottom:12px}
+.card h3{font-size:13px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;align-items:center}
+.chips .lb{font-size:10px;color:var(--tx3);text-transform:uppercase;letter-spacing:.09em;
+font-weight:700;margin-right:3px}
+input,select{background:var(--bg3);border:1px solid var(--line);color:var(--tx);
+border-radius:6px;padding:5px 9px;font-family:inherit;font-size:12.5px}
+.secblk{margin-bottom:14px}
+.sechd{display:flex;align-items:baseline;gap:9px;margin-bottom:5px;flex-wrap:wrap}
+.sechd b{font-size:12.5px}
+.sechd .m{font-size:11px;font-family:ui-monospace,monospace;font-weight:700}
+.grid{display:flex;flex-wrap:wrap;gap:3px}
+.cellw{position:relative}
+.cell{display:flex;flex-direction:column;align-items:center;justify-content:center;
+border-radius:4px;overflow:hidden;cursor:pointer;color:#fff;
+text-shadow:0 1px 2px rgba(0,0,0,.55);transition:outline .1s}
+.cell:hover{outline:2px solid var(--tx)}
+.cell b{font-weight:800;line-height:1.05;letter-spacing:-.02em}
+.cell i{font-style:normal;font-family:ui-monospace,monospace;line-height:1.1;opacity:.95}
+.tip{position:fixed;z-index:99;background:var(--bg3);border:1px solid var(--line);
+border-radius:9px;padding:10px 12px;font-size:12px;pointer-events:none;
+box-shadow:0 8px 28px rgba(0,0,0,.5);min-width:200px;display:none}
+.tip b{font-size:13px}
+.tip .r{display:flex;justify-content:space-between;gap:12px;font-size:11.5px;padding:1px 0}
+.tip .r span{color:var(--tx3)}
+.tip .r i{font-style:normal;font-family:ui-monospace,monospace}
+.scale{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--tx3);margin-top:10px}
+.scale .g{flex:1;max-width:280px;height:9px;border-radius:5px;
+background:linear-gradient(90deg,#E5645A,#7d8596,#34C27D)}
+.ld{color:var(--tx3);text-align:center;padding:26px 0;font-size:12.5px;line-height:1.9}
+.warnbox{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.28);
+border-radius:9px;padding:12px 14px;font-size:11.5px;color:var(--warn);line-height:1.8;margin-bottom:12px}
+.warnbox b{color:#ffd37a}
+.infobox{background:rgba(59,130,246,.07);border:1px solid rgba(59,130,246,.25);
+border-radius:9px;padding:11px 13px;font-size:11.5px;color:var(--tx2);line-height:1.75;margin-bottom:12px}
+.note{font-size:10.5px;color:var(--tx3);line-height:1.75;margin-top:11px;
+padding-top:10px;border-top:1px dashed var(--line)}
+@media(max-width:700px){main{padding:12px}h1{font-size:22px}}
+</style>
+<link rel="stylesheet" href="theme.css">
+</head><body>
+
+<header><div class="hbar">
+  <div class="logo">TRADING <span>DASHBOARD</span></div>
+  <nav>
+    <a href="brief.html">BRIEF</a><a href="heatmap.html" class="on">HEATMAP</a>
+    <a href="breadth.html">BREADTH</a><a href="sentiment.html">SENTIMENT</a>
+    <a href="flow.html">FLOW</a><a href="scanner.html">SCANNER</a>
+    <a href="theme-matrix.html">THEMES</a><a href="trade.html">TRADE</a>
+    <a href="index.html">PORT</a><a href="macro.html">MACRO</a>
+  </nav>
+  <div class="right">
+    <span id="msg" class="sub"></span>
+    <button class="btn go" id="bLoad">↻ โหลดผลสแกน</button>
+  </div>
+</div></header>
+
+<main>
+  <h1>🔥 Heat Map</h1>
+  <div class="lead">เห็นทั้งตลาดในหน้าจอเดียว — ใครร้อน ใครเย็น กลุ่มไหนไปด้วยกันทั้งกลุ่ม</div>
+
+  <div id="status"></div>
+
+  <div class="card">
+    <div class="chips">
+      <span class="lb">ระบายสีตาม</span>
+      <button class="btn on" data-c="c1">วันนี้</button>
+      <button class="btn" data-c="c5">1 สัปดาห์</button>
+      <button class="btn" data-c="c21">1 เดือน</button>
+      <button class="btn" data-c="c63">3 เดือน</button>
+      <button class="btn" data-c="c252">1 ปี</button>
+      <button class="btn" data-c="rs">RS</button>
+      <button class="btn" data-c="fh">ห่างจากไฮ</button>
+      <button class="btn" data-c="rsi">RSI</button>
+    </div>
+    <div class="chips">
+      <span class="lb">ขนาดช่อง</span>
+      <button class="btn on" data-z="eq">เท่ากันหมด</button>
+      <button class="btn" data-z="dv">ตามมูลค่าซื้อขาย</button>
+      <span class="lb" style="margin-left:10px">จัดกลุ่ม</span>
+      <button class="btn on" data-g="1">ตามอุตสาหกรรม</button>
+      <button class="btn" data-g="0">ไม่จัดกลุ่ม</button>
+      <input id="q" placeholder="ค้นหา..." style="width:130px;margin-left:10px">
+      <span class="sub" id="cnt"></span>
+    </div>
+    <div id="map"></div>
+    <div class="scale" id="scale"></div>
+    <div class="note" id="note"></div>
+  </div>
+
+  <div class="card">
+    <h3>🗺 Heat Map ของ TradingView <span class="sub">ถ่วงตามมูลค่าตลาดจริง</span></h3>
+    <div id="tv"></div>
+    <div class="note">ของ TradingView ขนาดช่องสะท้อน<b>มูลค่าตลาด</b>จริง
+      ซึ่งข้อมูลนี้ไม่มีแหล่งฟรีให้ผมคำนวณเอง — ใช้เทียบกันได้
+      แต่ชุดหุ้นและวันที่อาจไม่ตรงกับด้านบน</div>
+  </div>
+</main>
+
+<div class="tip" id="tip"></div>
+
+<script src="engine.js"></script>
+<script>
+/* ============================================================
+   Heat Map จากผลสแกนรายคืน
+   ขนาดช่องเลือกได้ว่าเท่ากันหมด หรือตามมูลค่าซื้อขาย
+   ============================================================ */
+const MODES={
+  c1:  {n:'วันนี้',      s:3,  u:'%'},
+  c5:  {n:'1 สัปดาห์',   s:6,  u:'%'},
+  c21: {n:'1 เดือน',     s:12, u:'%'},
+  c63: {n:'3 เดือน',     s:22, u:'%'},
+  c252:{n:'1 ปี',        s:45, u:'%'},
+  rs:  {n:'RS',          s:49, u:'',  mid:50, lo:1, hi:99},
+  fh:  {n:'ห่างจากไฮ',   s:25, u:'%', mid:-12.5, lo:-50, hi:0},
+  rsi: {n:'RSI',         s:25, u:'',  mid:50, lo:20, hi:80}
+};
+let SC=null, ROWS=[], COL='c1', SIZE='eq', GROUP=true;
+
+const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+  .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const pcS=v=>v==null?'—':(v>=0?'+':'')+v.toFixed(1)+'%';
+const big=v=>v==null?'—':v>=1e9?(v/1e9).toFixed(1)+'B':v>=1e6?(v/1e6).toFixed(0)+'M':
+  v>=1e3?(v/1e3).toFixed(0)+'K':String(Math.round(v));
+
+/* สีตรงกลางของโหมดนั้นคือ "กลางๆ" ไม่ใช่ศูนย์เสมอไป
+   RS กลางคือ 50 ไม่ใช่ 0 · ห่างจากไฮกลางคือติดลบอยู่แล้ว
+   ถ้าใช้ศูนย์เป็นกลางทุกโหมด RS ทุกตัวจะเขียวหมดทั้งจอ ซึ่งไม่บอกอะไรเลย */
+function color(v,mode){
+  const M=MODES[mode];
+  if(v==null||!isFinite(v))return {bg:'rgba(148,163,184,.10)',fg:'var(--tx3)'};
+  const mid=M.mid!=null?M.mid:0;
+  const t=Math.max(-1,Math.min(1,(v-mid)/M.s));
+  const a=Math.abs(t)*0.62+0.10;
+  const c=t>=0?'52,194,125':'229,100,90';
+  return {bg:'rgba('+c+','+a.toFixed(2)+')',fg:'#fff'};
+}
+function val(r,mode){ return mode==='rs'?r.rs:r[mode] }
+function fmt(v,mode){
+  if(v==null)return '—';
+  return MODES[mode].u==='%' ? pcS(v) : String(Math.round(v));
+}
+
+async function load(){
+  const m=document.getElementById('msg');
+  m.textContent='กำลังโหลด...';
+  try{
+    const r=await fetch('scan.json?t='+Date.now(),{cache:'no-store'});
+    if(!r.ok)throw new Error('ไม่พบไฟล์ (HTTP '+r.status+')');
+    const j=await r.json();
+    if(!j.rows||!j.rows.length)throw new Error('ไฟล์ไม่มีข้อมูล');
+    SC=j; ROWS=j.rows; m.textContent='';
+  }catch(e){
+    SC=null;ROWS=[];m.textContent='';
+    document.getElementById('status').innerHTML=
+      '<div class="infobox"><b>ยังไม่มีผลสแกน</b> — '+esc(String(e.message||e))+'<br>'
+      +'หน้านี้ต้องใช้ไฟล์ <b>scan.json</b> ที่ GitHub Actions สแกนให้ทุกคืน '
+      +'วิธีตั้งอยู่ในไฟล์ <b>ตั้งค่าสแกนเนอร์.txt</b><br>'
+      +'ถ้าตั้งไว้แล้วแต่ยังขึ้นแบบนี้ ให้อัป <b>scripts/scan.mjs</b> และ '
+      +'<b>scripts/universe.txt</b> เวอร์ชันล่าสุด แล้วกด Run workflow อีกครั้ง '
+      +'เพราะเวอร์ชันเก่ายังไม่ได้ติดกลุ่มอุตสาหกรรมให้หุ้น</div>';
+    document.getElementById('map').innerHTML='<div class="ld">—</div>';
+    return;
+  }
+  render();
+}
+
+function render(){
+  if(!ROWS.length)return;
+  const M=MODES[COL];
+  const q=document.getElementById('q').value.trim().toUpperCase();
+  let L=ROWS.filter(r=>!q||r.s.indexOf(q)>=0);
+
+  /* --- สถานะ --- */
+  const noSec=(SC.noSector||[]).length;
+  const age=(Date.now()-new Date(SC.generated).getTime())/36e5;
+  let st='';
+  if(age>72)st+='<div class="warnbox">ผลสแกนเก่า '+Math.round(age/24)
+    +' วันแล้ว — GitHub Actions อาจหยุดทำงาน</div>';
+  st+='<div class="infobox">ข้อมูลวันที่ <b>'+esc(SC.asof||'—')+'</b> · '
+    +'หุ้น '+ROWS.length+' ตัว'
+    +(SC.sectors?' · '+SC.sectors.length+' กลุ่ม':'')
+    +(noSec?' · <span style="color:var(--warn)">ยังไม่ได้ติดกลุ่ม '+noSec+' ตัว</span>':'')
+    +'</div>';
+  if(!SC.sectors)st+='<div class="warnbox">ผลสแกนนี้ยังไม่มีข้อมูลกลุ่มอุตสาหกรรม — '
+    +'อัป <b>scripts/scan.mjs</b> และ <b>scripts/universe.txt</b> เวอร์ชันล่าสุด '
+    +'แล้วรันใหม่ จึงจะจัดกลุ่มได้</div>';
+  document.getElementById('status').innerHTML=st;
+
+  /* --- ขนาดช่อง --- */
+  const dvs=L.map(r=>r.dv).filter(x=>x!=null&&x>0).sort((a,b)=>a-b);
+  const dvMax=dvs.length?dvs[Math.floor(dvs.length*0.97)]:null;   /* ตัดหางบนกันตัวเดียวกินจอ */
+  function dims(r){
+    if(SIZE==='eq')return {w:62,h:46,fs:11,vs:9.5};
+    const d=r.dv;
+    if(d==null||!dvMax)return {w:44,h:34,fs:9.5,vs:8.5};
+    const t=Math.min(1,Math.sqrt(d/dvMax));
+    const w=40+t*78, h=30+t*48;
+    return {w:Math.round(w),h:Math.round(h),
+      fs:Math.max(8.5,Math.min(15,w/5.2)),vs:Math.max(7.5,Math.min(12,w/7))};
+  }
+  function cells(list){
+    return list.map(r=>{
+      const v=val(r,COL), c=color(v,COL), d=dims(r);
+      return '<div class="cell" data-s="'+esc(r.s)+'" style="background:'+c.bg
+        +';color:'+c.fg+';width:'+d.w+'px;height:'+d.h+'px">'
+        +'<b style="font-size:'+d.fs+'px">'+esc(r.s)+'</b>'
+        +'<i style="font-size:'+d.vs+'px">'+fmt(v,COL)+'</i></div>';
+    }).join('');
+  }
+  const sortFn=(a,b)=>{
+    const x=val(a,COL), y=val(b,COL);
+    if(x==null&&y==null)return 0;
+    if(x==null)return 1; if(y==null)return -1;   /* ไม่มีค่า ไปท้ายเสมอ */
+    return y-x;
+  };
+
+  let html='';
+  if(GROUP&&SC.sectors){
+    const by={};
+    L.forEach(r=>{ const s=r.sec||'ไม่ระบุกลุ่ม'; (by[s]=by[s]||[]).push(r) });
+    const order=Object.keys(by).map(k=>{
+      const vs=by[k].map(r=>val(r,COL)).filter(x=>x!=null&&isFinite(x));
+      return {k,n:by[k].length,avg:vs.length?vs.reduce((a,x)=>a+x,0)/vs.length:null,known:vs.length};
+    }).sort((a,b)=>{
+      if(a.avg==null&&b.avg==null)return 0;
+      if(a.avg==null)return 1; if(b.avg==null)return -1;
+      return b.avg-a.avg;
+    });
+    html=order.map(o=>{
+      const c=color(o.avg,COL);
+      return '<div class="secblk"><div class="sechd">'
+        +'<b>'+esc(o.k)+'</b>'
+        +'<span class="m" style="color:'+(o.avg==null?'var(--tx3)'
+          :o.avg>=(MODES[COL].mid!=null?MODES[COL].mid:0)?'var(--up)':'var(--dn)')+'">'
+        +fmt(o.avg,COL)+'</span>'
+        +'<span class="sub">'+o.n+' ตัว'
+        +(o.known<o.n?' · มีข้อมูล '+o.known:'')+'</span></div>'
+        +'<div class="grid">'+cells(by[o.k].slice().sort(sortFn))+'</div></div>';
+    }).join('');
+  }else{
+    html='<div class="grid">'+cells(L.slice().sort(sortFn))+'</div>';
+  }
+  document.getElementById('map').innerHTML=html||'<div class="ld">ไม่พบหุ้นที่ค้นหา</div>';
+  document.getElementById('cnt').textContent=L.length+' ตัว';
+
+  const mid=M.mid!=null?M.mid:0;
+  document.getElementById('scale').innerHTML=
+    '<span>'+fmt(mid-M.s,COL)+'</span><span class="g"></span><span>'+fmt(mid+M.s,COL)+'</span>'
+    +'<span style="margin-left:10px">กลาง = '+fmt(mid,COL)+'</span>';
+
+  document.getElementById('note').innerHTML=
+    'ระบายสีตาม <b>'+M.n+'</b> · สีเข้มสุดที่ '+fmt(mid-M.s,COL)+' และ '+fmt(mid+M.s,COL)
+    +' เกินจากนั้นสีไม่เข้มขึ้นอีก<br>'
+    +'<b>จุดกลางของแต่ละโหมดไม่เท่ากัน</b> — ผลตอบแทนกลางคือ 0% แต่ RS กลางคือ 50 '
+    +'และ “ห่างจากไฮ” กลางคือ −12.5% เพราะหุ้นส่วนใหญ่ไม่ได้อยู่ติดไฮตลอดเวลา '
+    +'ถ้าใช้ 0 เป็นกลางทุกโหมด จอจะเขียวหรือแดงทั้งหมดจนไม่บอกอะไร<br>'
+    +(SIZE==='dv'
+      ? '<b>ขนาดช่องสะท้อนมูลค่าซื้อขายเฉลี่ย ไม่ใช่มูลค่าตลาด</b> — '
+        +'สองอย่างนี้ต่างกัน หุ้นเล็กที่คนเทรดกันหนาแน่นจะดูใหญ่กว่าหุ้นใหญ่ที่ซื้อขายเบาบาง '
+        +'ข้อมูลมูลค่าตลาดไม่มีแหล่งฟรี ผมจึงใช้ตัวนี้แทนและบอกไว้ตรงนี้'
+      : 'ตอนนี้ทุกช่องขนาดเท่ากัน — ทุกตัวมีน้ำหนักทางสายตาเท่ากัน ไม่ว่าจะใหญ่หรือเล็ก')
+    +'<br>คลิกช่องเพื่อเปิดกราฟใน TradingView · ช่องสีเทาคือไม่มีข้อมูลสำหรับโหมดนี้';
+}
+
+/* ---------- ทูลทิป ---------- */
+const tip=document.getElementById('tip');
+function showTip(sym,x,y){
+  const r=ROWS.find(z=>z.s===sym); if(!r)return;
+  const row=(l,v,c)=>'<div class="r"><span>'+l+'</span><i'+(c?' class="'+c+'"':'')+'>'+v+'</i></div>';
+  const cl=v=>v==null?'fl':v>0?'up':'dn';
+  tip.innerHTML='<b>'+esc(r.s)+'</b> <span class="sub">'+esc(r.sec||'')+'</span>'
+    +'<div style="margin-top:6px">'
+    +row('ราคา',r.c==null?'—':r.c.toFixed(2))
+    +row('วันนี้',pcS(r.c1),cl(r.c1))
+    +row('1 สัปดาห์',pcS(r.c5),cl(r.c5))
+    +row('1 เดือน',pcS(r.c21),cl(r.c21))
+    +row('3 เดือน',pcS(r.c63),cl(r.c63))
+    +row('1 ปี',pcS(r.c252),cl(r.c252))
+    +row('RS',r.rs==null?'—':r.rs)
+    +row('ห่างจากไฮ',pcS(r.fh),cl(r.fh))
+    +row('RSI',r.rsi==null?'—':r.rsi.toFixed(0))
+    +row('มูลค่าซื้อขาย/วัน',big(r.dv))
+    +'</div>'
+    +((r.f&&(r.f.bo||r.f.np||r.f.vcp||r.f.os))
+      ? '<div style="margin-top:6px;font-size:11px;color:var(--accent)">'
+        +(r.f.bo?'เบรก ':'')+(r.f.np?'จ่อ pivot ':'')+(r.f.vcp?'VCP ':'')
+        +(r.f.os?'ขายมากเกิน':'')+'</div>' : '');
+  tip.style.display='block';
+  const w=tip.offsetWidth, h=tip.offsetHeight;
+  tip.style.left=Math.min(window.innerWidth-w-10,Math.max(8,x+14))+'px';
+  tip.style.top=Math.min(window.innerHeight-h-10,Math.max(8,y+14))+'px';
+}
+document.getElementById('map').addEventListener('mouseover',e=>{
+  const c=e.target.closest('.cell'); if(!c)return;
+  showTip(c.dataset.s,e.clientX,e.clientY);
+});
+document.getElementById('map').addEventListener('mousemove',e=>{
+  if(tip.style.display==='block'){
+    const w=tip.offsetWidth,h=tip.offsetHeight;
+    tip.style.left=Math.min(window.innerWidth-w-10,Math.max(8,e.clientX+14))+'px';
+    tip.style.top=Math.min(window.innerHeight-h-10,Math.max(8,e.clientY+14))+'px';
+  }
+});
+document.getElementById('map').addEventListener('mouseout',e=>{
+  if(!e.relatedTarget||!e.relatedTarget.closest('.cell'))tip.style.display='none';
+});
+document.getElementById('map').addEventListener('click',e=>{
+  const c=e.target.closest('.cell'); if(!c)return;
+  window.open('https://www.tradingview.com/symbols/'+encodeURIComponent(c.dataset.s)+'/',
+    '_blank','noopener');
+});
+
+/* ---------- ปุ่ม ---------- */
+function setBtns(attr,val){
+  document.querySelectorAll('['+attr+']').forEach(b=>
+    b.classList.toggle('on',b.getAttribute(attr)===String(val)));
+}
+document.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{
+  COL=b.dataset.c; setBtns('data-c',COL); render();
+});
+document.querySelectorAll('[data-z]').forEach(b=>b.onclick=()=>{
+  SIZE=b.dataset.z; setBtns('data-z',SIZE); render();
+});
+document.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>{
+  GROUP=b.dataset.g==='1'; setBtns('data-g',GROUP?'1':'0'); render();
+});
+document.getElementById('q').addEventListener('input',render);
+document.getElementById('bLoad').onclick=load;
+
+/* ---------- วิดเจ็ตเทียบ ---------- */
+(function(){
+  const host=document.getElementById('tv');
+  const w=document.createElement('div');
+  w.className='tradingview-widget-container';
+  const inner=document.createElement('div');
+  inner.className='tradingview-widget-container__widget';
+  w.appendChild(inner);
+  const sc=document.createElement('script');
+  sc.type='text/javascript'; sc.async=true;
+  sc.src='https://s3.tradingview.com/external-embedding/embed-widget-stock-heatmap.js';
+  sc.innerHTML=JSON.stringify({dataSource:'SPX500',blockSize:'market_cap_basic',
+    blockColor:'change',grouping:'sector',locale:'th',symbolUrl:'',colorTheme:'dark',
+    hasTopBar:true,isDataSetEnabled:true,isZoomEnabled:true,isMonoSize:false,
+    width:'100%',height:520});
+  w.appendChild(sc); host.appendChild(w);
+})();
+
+load();
+</script>
+<script src="theme.js"></script>
+</body></html>

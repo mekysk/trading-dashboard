@@ -1,0 +1,473 @@
+<!DOCTYPE html><html lang="th"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Thematic Matrix — Trading Dashboard</title>
+<style>
+:root{--bg:#0a0d13;--bg2:#10151e;--bg3:#161d29;--line:#222c3d;--tx:#e8eef8;
+--tx2:#96a3b8;--tx3:#5c6a80;--accent:#f5b942;--glow:245,185,66;--acc:#3b82f6;
+--up:#34C27D;--dn:#E5645A;--warn:#f59e0b;--pur:#a78bfa}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-size:14px;line-height:1.55;padding-bottom:40px;
+font-family:-apple-system,'Segoe UI','Leelawadee UI','Noto Sans Thai',Tahoma,sans-serif}
+.mono{font-family:ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+.up{color:var(--up)}.dn{color:var(--dn)}.fl{color:var(--tx2)}
+button{font-family:inherit;cursor:pointer}a{color:var(--acc);text-decoration:none}
+header{position:sticky;top:0;z-index:50;background:rgba(10,13,19,.96);
+backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.hbar{display:flex;align-items:center;gap:12px;padding:9px 16px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:15px}.logo span{color:var(--accent)}
+nav{display:flex;gap:2px;margin-left:6px;flex-wrap:wrap}
+nav a{color:var(--tx3);padding:6px 12px;font-size:12.5px;font-weight:600;border-radius:7px}
+nav a.on{color:var(--tx);background:var(--bg3)}
+.right{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{background:var(--bg3);border:1px solid var(--line);color:var(--tx2);
+padding:5px 11px;border-radius:7px;font-size:12px}
+.btn:hover{color:var(--tx)}
+.btn.go{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn.on{background:rgba(var(--glow),.16);border-color:var(--accent);color:var(--accent);font-weight:600}
+main{padding:18px;max-width:1500px;margin:0 auto}
+h1{font-size:27px;font-weight:800;letter-spacing:-.02em}
+.lead{font-size:12.5px;color:var(--tx2);margin:3px 0 14px;max-width:80ch;line-height:1.7}
+.sub{font-size:11px;color:var(--tx3);font-weight:400}
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:16px;margin-bottom:12px}
+.card h3{font-size:13px;font-weight:700;margin-bottom:11px;display:flex;align-items:center;gap:8px}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{text-align:right;font-size:10px;color:var(--tx3);font-weight:600;padding:7px 6px;
+border-bottom:1px solid var(--line);text-transform:uppercase;letter-spacing:.07em;
+cursor:pointer;white-space:nowrap}
+th:hover{color:var(--tx2)}th.srt{color:var(--accent)}
+th:first-child,td:first-child{text-align:left}
+td{padding:6px;border-bottom:1px solid rgba(34,44,61,.5);text-align:right;white-space:nowrap}
+tbody tr.th-row{cursor:pointer}
+tbody tr.th-row:hover{background:rgba(255,255,255,.035)}
+.cel{display:inline-block;min-width:58px;padding:3px 7px;border-radius:5px;
+font-family:ui-monospace,monospace;font-weight:700;font-size:12px}
+.nmcell{display:flex;align-items:center;gap:8px}
+.nmcell .ic{font-size:15px}
+.nmcell .ar{color:var(--tx3);font-size:10px;width:9px}
+.bar{height:5px;background:var(--bg3);border-radius:3px;overflow:hidden;width:54px;
+display:inline-block;vertical-align:middle;margin-left:6px}
+.bar i{display:block;height:100%}
+.mem{background:var(--bg3);border-top:1px solid var(--line)}
+.mem td{padding:0}
+.mem .inner{padding:11px 14px}
+.mem table{font-size:12px}
+.mem th{background:transparent;position:static}
+.tag{display:inline-block;font-size:9.5px;padding:1px 6px;border-radius:4px;font-weight:700;margin-right:3px}
+.t-up{background:rgba(52,194,125,.18);color:var(--up)}
+.t-dn{background:rgba(229,100,90,.18);color:var(--dn)}
+.t-na{background:rgba(148,163,184,.14);color:var(--tx2)}
+.t-vcp{background:rgba(167,139,250,.18);color:var(--pur)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:11px}
+input{background:var(--bg3);border:1px solid var(--line);color:var(--tx);
+border-radius:6px;padding:5px 9px;font-family:inherit;font-size:12.5px}
+.ld{color:var(--tx3);text-align:center;padding:26px 0;font-size:12.5px;line-height:1.9}
+.warnbox{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.28);
+border-radius:9px;padding:12px 14px;font-size:11.5px;color:var(--warn);line-height:1.8;margin-bottom:12px}
+.warnbox b{color:#ffd37a}
+.infobox{background:rgba(59,130,246,.07);border:1px solid rgba(59,130,246,.25);
+border-radius:9px;padding:11px 13px;font-size:11.5px;color:var(--tx2);line-height:1.75;margin-bottom:12px}
+.note{font-size:10.5px;color:var(--tx3);line-height:1.75;margin-top:11px;
+padding-top:10px;border-top:1px dashed var(--line)}
+.lead2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.lb{background:var(--bg3);border:1px solid var(--line);border-radius:9px;padding:11px 13px}
+.lb .h{font-size:11px;color:var(--tx3);margin-bottom:7px;font-weight:700;
+letter-spacing:.1em;text-transform:uppercase}
+.lb .r{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;padding:3px 0}
+.lb .r b{font-weight:600}
+@media(max-width:700px){main{padding:12px}h1{font-size:22px}}
+</style>
+<link rel="stylesheet" href="theme.css">
+</head><body>
+
+<header><div class="hbar">
+  <div class="logo">TRADING <span>DASHBOARD</span></div>
+  <nav>
+    <a href="brief.html">BRIEF</a><a href="events.html">EVENTS</a>
+    <a href="theme-matrix.html" class="on">THEMES</a><a href="scanner.html">SCANNER</a>
+    <a href="flow.html">FLOW</a><a href="weekly.html">WEEKLY</a>
+    <a href="index.html">PORT</a><a href="trade.html">TRADE</a>
+    <a href="macro.html">MACRO</a><a href="bot.html">BOT</a><a href="market.html">MARKET</a>
+  </nav>
+  <div class="right">
+    <span id="msg" class="sub"></span>
+    <button class="btn" id="bBrowser">ดึงเอง (ช้า)</button>
+    <button class="btn go" id="bLoad">↻ โหลดผลสแกน</button>
+  </div>
+</div></header>
+
+<main>
+  <h1>🧩 Thematic Matrix</h1>
+  <div class="lead">เงินกำลังเข้าธีมไหน — จัดหุ้นเป็นกลุ่มตามเรื่องราว แล้วดูว่ากลุ่มไหนนำ กลุ่มไหนตก</div>
+
+  <div id="status"></div>
+
+  <div class="card">
+    <h3>🏆 ธีมที่นำและตาม <span class="sub" id="lbMeta"></span></h3>
+    <div class="lead2" id="leader"></div>
+  </div>
+
+  <div class="card">
+    <h3>🧩 ตารางธีม <span class="sub">คลิกแถวเพื่อดูหุ้นในธีม</span></h3>
+    <div class="chips" id="chips"></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+      <input id="q" placeholder="ค้นหาธีมหรือหุ้น..." style="width:190px">
+      <span class="sub" style="align-self:center">แสดง <b id="n" style="color:var(--accent);font-size:14px">0</b> ธีม</span>
+    </div>
+    <div style="overflow:auto"><div id="tbl"></div></div>
+    <div class="note" id="foot"></div>
+  </div>
+</main>
+
+<script src="engine.js"></script>
+<script>
+/* ============================================================
+   Thematic Matrix
+   ใช้ scan.json ที่ GitHub Actions สแกนไว้เป็นหลัก (เร็ว + RS ของจริง)
+   ถ้ายังไม่มี ให้ดึงเฉพาะหุ้นในธีมจากเบราว์เซอร์แทน
+   ============================================================ */
+const E=SCANENG, CKEY='thm_px_v1';
+const PROX=[u=>'https://api.allorigins.win/raw?url='+encodeURIComponent(u),
+  u=>'https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent(u),
+  u=>'https://corsproxy.io/?url='+encodeURIComponent(u)];
+
+/* กลุ่มธีม — จัดด้วยมือ ไม่ใช่การจัดกลุ่มมาตรฐานของตลาด
+   หุ้นหนึ่งตัวอยู่ได้หลายธีม เช่น NVDA อยู่ทั้ง AI และเซมิคอนดักเตอร์ */
+const THEMES=[
+ {id:'ai',     n:'AI · โครงสร้างพื้นฐาน', i:'🤖',
+  s:['NVDA','AMD','AVGO','SMCI','MU','MRVL','ARM','PLTR','DELL','ANET','VRT','MSFT','GOOGL','META']},
+ {id:'semi',   n:'เซมิคอนดักเตอร์', i:'🔌',
+  s:['NVDA','AMD','AVGO','TXN','QCOM','MU','ADI','MCHP','NXPI','ON','MPWR','SWKS','INTC','ARM','MRVL']},
+ {id:'semieq', n:'เครื่องจักรผลิตชิป', i:'⚙️',
+  s:['AMAT','LRCX','KLAC','TER','ASML','ENTG','AMKR']},
+ {id:'cloud',  n:'คลาวด์ · ซอฟต์แวร์', i:'☁️',
+  s:['MSFT','AMZN','GOOGL','ORCL','CRM','NOW','SNOW','MDB','DDOG','NET','TEAM','WDAY','HUBS','VEEV']},
+ {id:'cyber',  n:'ความปลอดภัยไซเบอร์', i:'🛡',
+  s:['PANW','CRWD','FTNT','ZS','OKTA','S','CYBR','QLYS']},
+ {id:'fintech',n:'ฟินเทค · ชำระเงิน', i:'💳',
+  s:['V','MA','PYPL','SQ','FI','GPN','COIN','HOOD','AXP','SOFI','AFRM']},
+ {id:'crypto', n:'คริปโต · ขุดเหรียญ', i:'₿',
+  s:['COIN','MSTR','MARA','RIOT','CLSK','HUT','HOOD','BITF']},
+ {id:'goldm',  n:'เหมืองทอง', i:'🥇',
+  s:['NEM','GOLD','AEM','WPM','FNV','KGC','AU','GFI','PAAS','HL']},
+ {id:'ecom',   n:'อีคอมเมิร์ซ · ท่องเที่ยว', i:'🛒',
+  s:['AMZN','SHOP','MELI','EBAY','ETSY','CHWY','DASH','ABNB','BKNG','SE']},
+ {id:'retail', n:'ค้าปลีก', i:'🏬',
+  s:['WMT','COST','TGT','HD','LOW','TJX','ROST','DG','DLTR','BBY','ULTA']},
+ {id:'media',  n:'สื่อ · บันเทิง · เกม', i:'🎬',
+  s:['NFLX','DIS','WBD','PARA','SPOT','RBLX','EA','TTWO','LYV','ROKU']},
+ {id:'energy', n:'น้ำมัน · ก๊าซ', i:'🛢',
+  s:['XOM','CVX','COP','EOG','SLB','PSX','MPC','VLO','OXY','HAL','DVN','FANG']},
+ {id:'nuclear',n:'นิวเคลียร์ · ไฟฟ้า AI', i:'⚛️',
+  s:['CEG','VST','NRG','SMR','OKLO','LEU','CCJ','BWXT','TLN']},
+ {id:'clean',  n:'พลังงานสะอาด', i:'🌱',
+  s:['ENPH','FSLR','RUN','PLUG','NEE','SEDG','BE','ARRY']},
+ {id:'ev',     n:'ยานยนต์ · EV', i:'🚗',
+  s:['TSLA','RIVN','LCID','GM','F','APTV','ALB','NIO','LI','XPEV']},
+ {id:'defense',n:'กลาโหม', i:'✈️',
+  s:['LMT','RTX','NOC','GD','LHX','HII','LDOS','BA','HWM','TXT']},
+ {id:'space',  n:'อวกาศ', i:'🚀',
+  s:['RKLB','ASTS','LUNR','PL','SPCE','BA','LMT']},
+ {id:'quantum',n:'ควอนตัม', i:'🧪',
+  s:['IONQ','RGTI','QBTS','IBM','GOOGL','HON']},
+ {id:'biotech',n:'ไบโอเทค', i:'🧬',
+  s:['VRTX','REGN','MRNA','BIIB','AMGN','GILD','ILMN','INCY','ALNY','BMRN','NBIX','SRPT']},
+ {id:'obesity',n:'ยาลดน้ำหนัก', i:'💊',
+  s:['LLY','NVO','VKTX','AMGN','PFE']},
+ {id:'bank',   n:'ธนาคาร', i:'🏦',
+  s:['JPM','BAC','WFC','C','GS','MS','USB','PNC','TFC','SCHW','COF']},
+ {id:'reit',   n:'อสังหา · REIT', i:'🏢',
+  s:['PLD','AMT','CCI','EQIX','SPG','O','PSA','WELL','DLR','VTR','IRM','EXR']},
+ {id:'air',    n:'สายการบิน', i:'🛫',
+  s:['DAL','UAL','LUV','AAL','ALK','JBLU']},
+ {id:'staples',n:'สินค้าจำเป็น', i:'🧺',
+  s:['PG','KO','PEP','PM','MO','CL','KMB','GIS','MDLZ','HSY','K','STZ']}
+];
+
+const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+  .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const pc=v=>v==null?'—':(v>=0?'+':'')+v.toFixed(1)+'%';
+const cl2=v=>v==null?'fl':v>0?'up':v<0?'dn':'fl';
+const nm=(v,d)=>v==null?'—':Number(v).toLocaleString('en-US',
+  {minimumFractionDigits:d==null?2:d,maximumFractionDigits:d==null?2:d});
+let MAP=null, META=null, SRC='', SORT={k:'c21',d:-1}, OPEN=null, MINMEM=3;
+
+/* ค่าเฉลี่ยของรายการที่มีค่าจริงเท่านั้น — ตัวที่เป็น null ไม่ถูกนับทั้งเศษและส่วน */
+function avg(a){
+  const v=a.filter(x=>x!=null&&isFinite(x));
+  return v.length?{v:v.reduce((s,x)=>s+x,0)/v.length,n:v.length}:{v:null,n:0};
+}
+function share(a,test){      /* สัดส่วนที่ผ่านเงื่อนไข จากตัวที่มีข้อมูลเท่านั้น */
+  const known=a.filter(x=>x!=null);
+  if(!known.length)return {v:null,n:0};
+  return {v:known.filter(test).length/known.length*100,n:known.length};
+}
+
+/* ============================================================
+   สรุปหนึ่งธีม
+   ผลตอบแทนธีม = ค่าเฉลี่ยของสมาชิกแบบถ่วงน้ำหนักเท่ากันทุกตัว
+   ไม่ใช่ดัชนีที่ซื้อได้จริง และต่างจากการถ่วงตามมูลค่าตลาด
+   ============================================================ */
+function build(t){
+  const mem=t.s.map(s=>MAP[s]).filter(Boolean);
+  const miss=t.s.filter(s=>!MAP[s]);
+  if(mem.length<MINMEM)return {t,mem,miss,thin:true,nMem:mem.length};
+  const g=k=>mem.map(m=>m[k]);
+  const o={t,mem,miss,nMem:mem.length,thin:false};
+  ['c5','c21','c63','c252'].forEach(k=>{ const a=avg(g(k)); o[k]=a.v; o[k+'_n']=a.n });
+  const rs=avg(g('rs')); o.rs=rs.v==null?null:Math.round(rs.v); o.rs_n=rs.n;
+  o.above50 =share(mem.map(m=>m.m50 ==null||m.c==null?null:m.c>m.m50 ),x=>x).v;
+  o.above200=share(mem.map(m=>m.m200==null||m.c==null?null:m.c>m.m200),x=>x).v;
+  o.strong  =share(g('rs'),x=>x>=70).v;
+  const obv=avg(g('obv')); o.obv=obv.v;
+  o.lead=mem.filter(m=>m.rs!=null).sort((a,b)=>b.rs-a.rs)[0]||null;
+  o.lag =mem.filter(m=>m.rs!=null).sort((a,b)=>a.rs-b.rs)[0]||null;
+  o.sig=mem.filter(m=>m.f&&(m.f.bo||m.f.np||m.f.vcp)).length;
+  return o;
+}
+
+/* ---------- โหลดผลสแกน ---------- */
+async function loadFile(){
+  const m=document.getElementById('msg');
+  m.textContent='กำลังโหลด...';
+  try{
+    const r=await fetch('scan.json?t='+Date.now(),{cache:'no-store'});
+    if(!r.ok)throw new Error('ไม่พบไฟล์ (HTTP '+r.status+')');
+    const j=await r.json();
+    if(!j.rows||!j.rows.length)throw new Error('ไฟล์ไม่มีข้อมูล');
+    MAP={}; j.rows.forEach(x=>MAP[x.s]=x);
+    META={asof:j.asof,generated:j.generated,scanned:j.scanned,universe:j.universe,
+      withRS:j.withRS};
+    SRC='file'; m.textContent='';
+  }catch(e){
+    MAP=null; META=null; SRC='none'; m.textContent='';
+    noFile(String(e.message||e));
+    return;
+  }
+  render();
+}
+function noFile(why){
+  const need=[...new Set(THEMES.flatMap(t=>t.s))].length;
+  document.getElementById('status').innerHTML=
+    '<div class="infobox"><b>ยังไม่มีผลสแกน</b> — '+esc(why)+'<br><br>'
+    +'<b>1. ตั้ง GitHub Actions</b> (แนะนำ) — สแกนทั้งยูนิเวิร์สทุกคืน '
+    +'หน้านี้โหลดเสร็จทันที และ RS เป็นอันดับเทียบทั้งตลาดที่สแกน '
+    +'วิธีตั้งอยู่ในไฟล์ <b>ตั้งค่าสแกนเนอร์.txt</b><br>'
+    +'<b>2. กด “ดึงเอง (ช้า)”</b> — ดึงหุ้นในธีมทั้ง '+need+' ตัวจากเบราว์เซอร์ '
+    +'ใช้เวลาหลายนาที และ RS จะเทียบกันเฉพาะใน '+need+' ตัวนี้</div>';
+  ['leader','tbl'].forEach(i=>document.getElementById(i).innerHTML='<div class="ld">—</div>');
+  document.getElementById('n').textContent='0';
+  document.getElementById('foot').textContent='';
+}
+/* ---------- ดึงเองจากเบราว์เซอร์ ---------- */
+async function csv(sym){
+  const url='https://stooq.com/q/d/l/?s='+E.stooqSym(sym)+'&i=d';
+  const t=await Promise.any(PROX.map(f=>fetch(f(url),{cache:'no-store'})
+    .then(r=>r.ok?r.text():Promise.reject(new Error('x')))));
+  return E.parseCsv(t);
+}
+async function scanBrowser(){
+  const syms=[...new Set(THEMES.flatMap(t=>t.s))];
+  const m=document.getElementById('msg'), b=document.getElementById('bBrowser');
+  b.disabled=true;
+  const q=syms.slice(), got=[], bad=[]; let n=0;
+  async function w(){
+    while(q.length){
+      const s=q.shift();
+      try{
+        const bars=await csv(s);
+        const mm=bars?E.metrics(bars):null;
+        if(mm){ mm.sym=s; got.push(mm) } else bad.push(s);
+      }catch(e){ bad.push(s) }
+      n++; m.textContent='ดึง '+n+'/'+syms.length;
+    }
+  }
+  await Promise.all([w(),w(),w()]);
+  b.disabled=false; m.textContent='';
+  if(got.length<30){ noFile('ดึงได้แค่ '+got.length+' ตัว น้อยเกินกว่าจะจัดอันดับได้'); return }
+  E.addRank(got);
+  MAP={};
+  got.forEach(x=>MAP[x.sym]={s:x.sym,c:x.close,rs:x.rs,
+    c5:x.chg5,c21:x.chg21,c63:x.chg63,c252:x.chg252,
+    m50:x.ma50,m200:x.ma200,obv:x.obv,
+    f:{bo:x.breakout,np:x.nearPivot,vcp:x.vcp}});
+  const cnt={}; got.forEach(x=>cnt[x.date]=(cnt[x.date]||0)+1);
+  META={asof:Object.keys(cnt).sort().pop(),generated:new Date().toISOString(),
+    scanned:got.length,universe:syms.length,withRS:got.filter(x=>x.rs!=null).length,bad};
+  SRC='browser';
+  render();
+}
+
+/* ---------- สี ---------- */
+function cell(v,scale){
+  if(v==null)return '<span class="cel fl" style="background:rgba(148,163,184,.08)">—</span>';
+  const t=Math.max(-1,Math.min(1,v/scale));
+  const a=Math.abs(t)*0.42+0.06;
+  const c=t>=0?'52,194,125':'229,100,90';
+  return '<span class="cel" style="background:rgba('+c+','+a.toFixed(2)+');color:'
+    +(t>=0?'var(--up)':'var(--dn)')+'">'+(v>=0?'+':'')+v.toFixed(1)+'</span>';
+}
+function pbar(v){
+  if(v==null)return '<span class="fl">—</span>';
+  const c=v>=60?'var(--up)':v<=35?'var(--dn)':'var(--tx2)';
+  return '<span class="mono" style="color:'+c+'">'+Math.round(v)+'%</span>'
+    +'<span class="bar"><i style="width:'+v+'%;background:'+c+'"></i></span>';
+}
+
+/* ---------- วาดหน้า ---------- */
+function render(){
+  if(!MAP){ noFile('ยังไม่ได้โหลด'); return }
+
+  /* --- สถานะ --- */
+  const age=META.generated?(Date.now()-new Date(META.generated).getTime())/36e5:null;
+  let st='';
+  if(SRC==='browser'){
+    st+='<div class="warnbox"><b>กำลังดูข้อมูลที่ดึงจากเบราว์เซอร์ '+META.scanned+' ตัว</b><br>'
+      +'เลข RS ที่เห็นคืออันดับใน '+META.scanned+' ตัวนี้เท่านั้น <u>ไม่ใช่</u>อันดับในตลาด — '
+      +'และหุ้นชุดนี้เป็นหุ้นที่ถูกเลือกมาเข้าธีมอยู่แล้ว ซึ่งเอียงไปทางหุ้นที่มีเรื่องราว '
+      +'RS จึงยิ่งเทียบกันเองในกลุ่มที่ไม่ได้เป็นตัวแทนตลาด</div>';
+  }else if(age!=null&&age>72){
+    st+='<div class="warnbox">ผลสแกนเก่า '+Math.round(age/24)+' วันแล้ว — '
+      +'GitHub Actions อาจหยุดทำงาน ลองดูที่แท็บ Actions ใน repo</div>';
+  }
+  st+='<div class="infobox">ข้อมูลวันที่ <b>'+esc(META.asof||'—')+'</b> · '
+    +'หุ้นในฐานข้อมูล '+META.scanned+' ตัว · จัดอันดับ RS ได้ '+META.withRS+' ตัว'
+    +(META.bad&&META.bad.length?' · ดึงไม่ได้ '+META.bad.length+' ตัว':'')+'</div>';
+  st+='<div class="warnbox"><b>การจัดธีมเป็นการตีความ ไม่ใช่มาตรฐานของตลาด</b> — '
+    +'ผมจัดหุ้นเข้ากลุ่มเองตามเรื่องราวของธุรกิจ คนละอย่างกับการจัดกลุ่มอุตสาหกรรมทางการ '
+    +'หุ้นตัวเดียวอยู่ได้หลายธีม (NVDA อยู่ทั้ง AI และเซมิคอนดักเตอร์) '
+    +'ตัวเลขของธีมจึงขึ้นกับว่าใครอยู่ในธีม ถ้าไม่เห็นด้วยกับการจัดกลุ่ม ตัวเลขก็เปลี่ยน<br>'
+    +'<b>ผลตอบแทนธีม = ค่าเฉลี่ยของสมาชิกแบบให้น้ำหนักเท่ากันทุกตัว</b> '
+    +'ไม่ใช่ดัชนีที่ซื้อได้จริง และต่างจากกองทุนธีมที่มักถ่วงตามมูลค่าตลาด — '
+    +'หุ้นเล็กในธีมจึงมีอิทธิพลเท่าหุ้นใหญ่</div>';
+  document.getElementById('status').innerHTML=st;
+
+  /* --- คำนวณทุกธีม --- */
+  const all=THEMES.map(build);
+  const ok=all.filter(x=>!x.thin);
+
+  /* --- ธีมนำ/ตาม --- */
+  const by=(k,d)=>ok.filter(x=>x[k]!=null).sort((a,b)=>d*(a[k]-b[k])).slice(0,5);
+  function box(h,L,k){
+    return '<div class="lb"><div class="h">'+h+'</div>'
+      +(L.length?L.map(x=>'<div class="r"><b>'+x.t.i+' '+esc(x.t.n)+'</b>'
+        +'<span class="mono '+cl2(x[k])+'">'+pc(x[k])+'</span></div>').join('')
+        :'<div class="sub">ไม่มีข้อมูล</div>')+'</div>';
+  }
+  document.getElementById('lbMeta').textContent=
+    'คำนวณได้ '+ok.length+' จาก '+THEMES.length+' ธีม';
+  document.getElementById('leader').innerHTML=
+    box('นำใน 1 เดือน',by('c21',-1),'c21')
+    +box('ตามใน 1 เดือน',by('c21',1),'c21')
+    +box('นำใน 3 เดือน',by('c63',-1),'c63');
+
+  /* --- ตาราง --- */
+  const FS=[['all','ทุกธีม'],['strong','ธีมที่แข็ง'],['weak','ธีมที่อ่อน'],['sig','มีสัญญาณเบรก']];
+  document.getElementById('chips').innerHTML=FS.map(f=>
+    '<button class="btn'+(FILT===f[0]?' on':'')+'" data-fl="'+f[0]+'">'+f[1]+'</button>').join('');
+  const q=document.getElementById('q').value.trim().toUpperCase();
+  let L=all.filter(x=>{
+    if(q){
+      const hit=x.t.n.toUpperCase().indexOf(q)>=0||x.t.s.some(s=>s.indexOf(q)>=0);
+      if(!hit)return false;
+    }
+    if(x.thin)return FILT==='all';
+    if(FILT==='strong')return x.above50!=null&&x.above50>=60&&x.c21!=null&&x.c21>0;
+    if(FILT==='weak')return x.above50!=null&&x.above50<=35;
+    if(FILT==='sig')return x.sig>0;
+    return true;
+  });
+  const k=SORT.k;
+  L.sort((a,b)=>{
+    if(k==='n')return SORT.d*a.t.n.localeCompare(b.t.n);
+    const x=a[k],y=b[k];
+    if(x==null&&y==null)return 0;
+    if(x==null)return 1; if(y==null)return -1;    /* ธีมที่ข้อมูลไม่พอ ไปท้ายเสมอ */
+    return SORT.d*(x-y);
+  });
+  document.getElementById('n').textContent=L.length;
+
+  const C=[['n','ธีม'],['c5','1 สัปดาห์'],['c21','1 เดือน'],['c63','3 เดือน'],
+    ['c252','1 ปี'],['rs','RS เฉลี่ย'],['above50','ยืนเหนือ MA50'],
+    ['strong','RS ≥ 70'],['sig','สัญญาณ'],['nMem','สมาชิก']];
+  document.getElementById('tbl').innerHTML= L.length
+    ? '<table><thead><tr>'+C.map(c=>'<th data-k="'+c[0]+'" class="'
+      +(SORT.k===c[0]?'srt':'')+'">'+c[1]+(SORT.k===c[0]?(SORT.d<0?' ▼':' ▲'):'')
+      +'</th>').join('')+'</tr></thead><tbody>'
+      +L.map(x=>{
+        if(x.thin)return '<tr><td><div class="nmcell"><span class="ar"></span>'
+          +'<span class="ic">'+x.t.i+'</span><b>'+esc(x.t.n)+'</b></div></td>'
+          +'<td colspan="8" class="fl" style="text-align:left">'
+          +'ข้อมูลไม่พอ — มีสมาชิกแค่ '+x.nMem+' ตัวจาก '+x.t.s.length
+          +' (ต้องการอย่างน้อย '+MINMEM+')</td>'
+          +'<td class="mono fl">'+x.nMem+'/'+x.t.s.length+'</td></tr>';
+        const open=OPEN===x.t.id;
+        let h='<tr class="th-row" data-id="'+x.t.id+'">'
+          +'<td><div class="nmcell"><span class="ar">'+(open?'▾':'▸')+'</span>'
+          +'<span class="ic">'+x.t.i+'</span><b>'+esc(x.t.n)+'</b></div></td>'
+          +'<td>'+cell(x.c5,6)+'</td><td>'+cell(x.c21,14)+'</td>'
+          +'<td>'+cell(x.c63,25)+'</td><td>'+cell(x.c252,50)+'</td>'
+          +'<td class="mono">'+(x.rs==null?'<span class="fl">—</span>':x.rs)+'</td>'
+          +'<td>'+pbar(x.above50)+'</td>'
+          +'<td>'+pbar(x.strong)+'</td>'
+          +'<td class="mono">'+(x.sig?'<span class="tag t-vcp">'+x.sig+'</span>':'<span class="fl">—</span>')+'</td>'
+          +'<td class="mono fl">'+x.nMem+'/'+x.t.s.length+'</td></tr>';
+        if(open){
+          const mm=x.mem.slice().sort((a,b)=>(b.rs??-1)-(a.rs??-1));
+          h+='<tr class="mem"><td colspan="10"><div class="inner">'
+            +'<table><thead><tr><th>หุ้น</th><th>ราคา</th><th>1 สัปดาห์</th><th>1 เดือน</th>'
+            +'<th>3 เดือน</th><th>RS</th><th>เหนือ MA50</th><th>สัญญาณ</th></tr></thead><tbody>'
+            +mm.map(m=>'<tr><td><b>'+esc(m.s)+'</b></td>'
+              +'<td class="mono">'+nm(m.c)+'</td>'
+              +'<td class="mono '+cl2(m.c5)+'">'+pc(m.c5)+'</td>'
+              +'<td class="mono '+cl2(m.c21)+'">'+pc(m.c21)+'</td>'
+              +'<td class="mono '+cl2(m.c63)+'">'+pc(m.c63)+'</td>'
+              +'<td class="mono">'+(m.rs==null?'<span class="fl">—</span>'
+                :m.rs+'<span class="bar"><i style="width:'+m.rs+'%;background:var(--accent)"></i></span>')+'</td>'
+              +'<td>'+(m.m50==null||m.c==null?'<span class="fl">—</span>'
+                :m.c>m.m50?'<span class="tag t-up">ใช่</span>':'<span class="tag t-dn">ไม่</span>')+'</td>'
+              +'<td>'+((m.f&&(m.f.bo||m.f.np||m.f.vcp))
+                ? (m.f.bo?'<span class="tag t-up">เบรก</span>':'')
+                 +(m.f.np?'<span class="tag t-na">จ่อ pivot</span>':'')
+                 +(m.f.vcp?'<span class="tag t-vcp">VCP</span>':'')
+                : '<span class="fl">—</span>')+'</td></tr>').join('')
+            +'</tbody></table>'
+            +(x.miss.length?'<div class="sub" style="margin-top:7px">ไม่มีข้อมูล '
+              +x.miss.length+' ตัว: '+esc(x.miss.join(' '))+'</div>':'')
+            +'</div></td></tr>';
+        }
+        return h;
+      }).join('')+'</tbody></table>'
+    : '<div class="ld">ไม่มีธีมที่ตรงเงื่อนไข</div>';
+
+  document.getElementById('foot').innerHTML=
+    '<b>ตัวเลขผลตอบแทน</b> = ค่าเฉลี่ยของสมาชิกที่มีข้อมูล ตัวที่ไม่มีข้อมูลไม่ถูกนับทั้งเศษและส่วน '
+    +'ไม่ใช่นับเป็นศูนย์ · <b>ยืนเหนือ MA50</b> และ <b>RS ≥ 70</b> คือความกว้างของธีม '
+    +'บอกว่าแรงมาจากทั้งกลุ่มหรือมาจากหุ้นไม่กี่ตัว — ธีมที่ขึ้นแรงแต่ความกว้างต่ำ '
+    +'แปลว่ามีตัวนำไม่กี่ตัวลากทั้งกลุ่ม<br>'
+    +'<b>สัญญาณ</b> = จำนวนสมาชิกที่กำลังเบรก จ่อ pivot หรือเป็นฐาน VCP · '
+    +'ช่อง “—” คือข้อมูลไม่พอคำนวณ ไม่ใช่ศูนย์ · '
+    +'ธีมที่มีสมาชิกน้อยกว่า '+MINMEM+' ตัวจะไม่คำนวณ เพราะค่าเฉลี่ยจากไม่กี่ตัวไม่มีความหมาย<br>'
+    +'หน้านี้เป็นเครื่องมือสำรวจ ไม่ใช่คำแนะนำการลงทุน';
+}
+let FILT='all';
+
+document.getElementById('tbl').addEventListener('click',e=>{
+  const th=e.target.closest('th');
+  if(th&&th.dataset.k){
+    if(SORT.k===th.dataset.k)SORT.d*=-1; else {SORT.k=th.dataset.k;SORT.d=-1}
+    render(); return;
+  }
+  const tr=e.target.closest('tr.th-row');
+  if(tr&&tr.dataset.id){ OPEN=OPEN===tr.dataset.id?null:tr.dataset.id; render() }
+});
+document.getElementById('chips').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b||!b.dataset.fl)return;
+  FILT=b.dataset.fl; render();
+});
+document.getElementById('q').addEventListener('input',render);
+document.getElementById('bLoad').onclick=loadFile;
+document.getElementById('bBrowser').onclick=scanBrowser;
+loadFile();
+</script>
+<script src="theme.js"></script>
+</body></html>

@@ -1,0 +1,397 @@
+<!DOCTYPE html><html lang="th"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Quant Scanner — Trading Dashboard</title>
+<style>
+:root{--bg:#0a0d13;--bg2:#10151e;--bg3:#161d29;--line:#222c3d;--tx:#e8eef8;
+--tx2:#96a3b8;--tx3:#5c6a80;--accent:#f5b942;--glow:245,185,66;--acc:#3b82f6;
+--up:#34C27D;--dn:#E5645A;--warn:#f59e0b;--pur:#a78bfa}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-size:14px;line-height:1.55;padding-bottom:40px;
+font-family:-apple-system,'Segoe UI','Leelawadee UI','Noto Sans Thai',Tahoma,sans-serif}
+.mono{font-family:ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+.up{color:var(--up)}.dn{color:var(--dn)}.fl{color:var(--tx2)}
+button{font-family:inherit;cursor:pointer}a{color:var(--acc);text-decoration:none}
+header{position:sticky;top:0;z-index:50;background:rgba(10,13,19,.96);
+backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.hbar{display:flex;align-items:center;gap:12px;padding:9px 16px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:15px}.logo span{color:var(--accent)}
+nav{display:flex;gap:2px;margin-left:6px;flex-wrap:wrap}
+nav a{color:var(--tx3);padding:6px 12px;font-size:12.5px;font-weight:600;border-radius:7px}
+nav a.on{color:var(--tx);background:var(--bg3)}
+.right{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{background:var(--bg3);border:1px solid var(--line);color:var(--tx2);
+padding:5px 11px;border-radius:7px;font-size:12px}
+.btn:hover{color:var(--tx)}
+.btn.go{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn.on{background:rgba(var(--glow),.16);border-color:var(--accent);color:var(--accent);font-weight:600}
+main{padding:18px;max-width:1500px;margin:0 auto}
+h1{font-size:27px;font-weight:800;letter-spacing:-.02em}
+.lead{font-size:12.5px;color:var(--tx2);margin:3px 0 14px;max-width:80ch;line-height:1.7}
+.sub{font-size:11px;color:var(--tx3);font-weight:400}
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:15px;margin-bottom:12px}
+.card h3{font-size:13px;font-weight:700;margin-bottom:10px}
+.grp{margin-bottom:11px}
+.grp .gl{font-size:10px;color:var(--tx3);letter-spacing:.14em;text-transform:uppercase;
+font-weight:700;margin-bottom:6px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.rowf{display:flex;gap:14px;flex-wrap:wrap;align-items:center;font-size:12px;color:var(--tx2)}
+.rowf label{display:flex;gap:6px;align-items:center}
+input[type=number],input[type=text],select{background:var(--bg3);border:1px solid var(--line);
+color:var(--tx);border-radius:6px;padding:4px 8px;font-family:inherit;font-size:12px;width:78px}
+input[type=text]{width:130px}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{text-align:right;font-size:10px;color:var(--tx3);font-weight:600;padding:7px 6px;
+border-bottom:1px solid var(--line);text-transform:uppercase;letter-spacing:.07em;
+cursor:pointer;white-space:nowrap;position:sticky;top:0;background:var(--bg2)}
+th:hover{color:var(--tx2)}th.srt{color:var(--accent)}
+th:first-child,td:first-child{text-align:left}
+td{padding:6px;border-bottom:1px solid rgba(34,44,61,.5);text-align:right;white-space:nowrap}
+tbody tr:hover{background:rgba(255,255,255,.025)}
+.tag{display:inline-block;font-size:9.5px;padding:1px 6px;border-radius:4px;margin-right:3px;
+font-weight:700;background:var(--bg3);color:var(--tx2)}
+.t-vcp{background:rgba(167,139,250,.18);color:var(--pur)}
+.t-bo{background:rgba(52,194,125,.18);color:var(--up)}
+.t-np{background:rgba(245,185,66,.18);color:var(--accent)}
+.t-vdu{background:rgba(59,130,246,.18);color:var(--acc)}
+.t-os{background:rgba(229,100,90,.18);color:var(--dn)}
+.scroll{overflow:auto;max-height:68vh}
+.ld{color:var(--tx3);text-align:center;padding:26px 0;font-size:12.5px;line-height:1.9}
+.warnbox{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.28);
+border-radius:9px;padding:11px 13px;font-size:11.5px;color:var(--warn);line-height:1.75;margin-bottom:12px}
+.infobox{background:rgba(59,130,246,.07);border:1px solid rgba(59,130,246,.25);
+border-radius:9px;padding:11px 13px;font-size:11.5px;color:var(--tx2);line-height:1.75;margin-bottom:12px}
+.note{font-size:10.5px;color:var(--tx3);line-height:1.75;margin-top:11px;
+padding-top:10px;border-top:1px dashed var(--line)}
+.cnt{font-size:12px;color:var(--tx2)}.cnt b{color:var(--accent);font-size:15px}
+.bar{height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;width:46px;display:inline-block;
+vertical-align:middle;margin-left:5px}
+.bar i{display:block;height:100%;background:var(--accent)}
+@media(max-width:700px){main{padding:12px}h1{font-size:22px}}
+</style>
+<link rel="stylesheet" href="theme.css">
+</head><body>
+
+<header><div class="hbar">
+  <div class="logo">TRADING <span>DASHBOARD</span></div>
+  <nav>
+    <a href="brief.html">BRIEF</a><a href="scanner.html" class="on">SCANNER</a>
+    <a href="weekly.html">WEEKLY</a><a href="index.html">PORT</a>
+    <a href="trade.html">TRADE</a><a href="macro.html">MACRO</a>
+    <a href="bot.html">BOT</a><a href="market.html">MARKET</a>
+  </nav>
+  <div class="right">
+    <span id="msg" class="sub"></span>
+    <button class="btn" id="bBrowser">สแกนจากเบราว์เซอร์</button>
+    <button class="btn go" id="bFile">↻ โหลดผลสแกน</button>
+  </div>
+</div></header>
+
+<main>
+  <h1>⚡ Quant Scanner</h1>
+  <div class="lead">คัดหุ้นด้วยเงื่อนไขเชิงตัวเลข — ไม่ใช่คำแนะนำซื้อขาย ผลที่ได้คือรายชื่อให้ไปดูกราฟต่อเอง</div>
+
+  <div id="status"></div>
+
+  <div class="card">
+    <h3>ตัวกรอง <span class="sub" id="preset"></span></h3>
+
+    <div class="grp"><div class="gl">สูตรสำเร็จ</div><div class="chips">
+      <button class="btn" data-pre="trend">หุ้นแรงตามเทรนด์</button>
+      <button class="btn" data-pre="base">ฐานแน่น จ่อเบรก</button>
+      <button class="btn" data-pre="bo">เพิ่งเบรกพร้อมวอลุ่ม</button>
+      <button class="btn" data-pre="rev">กลับตัวจากการขายหนัก</button>
+      <button class="btn" data-pre="clear">ล้างทั้งหมด</button>
+    </div></div>
+
+    <div class="grp"><div class="gl">โมเมนตัม</div><div class="chips">
+      <button class="btn" data-f="ttf">ผ่าน Trend Template ครบ 8</button>
+      <button class="btn" data-f="up200">MA200 ชี้ขึ้น</button>
+      <button class="btn" data-f="above50">ยืนเหนือ MA50</button>
+      <button class="btn" data-f="stack">MA เรียงตัว 50&gt;150&gt;200</button>
+    </div></div>
+
+    <div class="grp"><div class="gl">ฐานและเบรก</div><div class="chips">
+      <button class="btn" data-f="vcp">VCP ฐานบีบ</button>
+      <button class="btn" data-f="vdu">VDU วอลุ่มแห้ง</button>
+      <button class="btn" data-f="ppbp">PPBP ย่อแล้วกลับ</button>
+      <button class="btn" data-f="np">จ่อใต้ pivot</button>
+      <button class="btn" data-f="bo">ทะลุ pivot แล้ว</button>
+    </div></div>
+
+    <div class="grp"><div class="gl">วอลุ่มผิดปกติ</div><div class="chips">
+      <button class="btn" data-f="vu">วอลุ่มพุ่ง ≥2 เท่า</button>
+      <button class="btn" data-f="vd">วอลุ่มแห้ง &lt;0.6 เท่า</button>
+      <button class="btn" data-f="obv">OBV ชันขึ้น</button>
+    </div></div>
+
+    <div class="grp"><div class="gl">กลับตัว</div><div class="chips">
+      <button class="btn" data-f="os">ขายมากเกิน RSI&lt;30</button>
+      <button class="btn" data-f="bc">เด้งจาก MA50</button>
+      <button class="btn" data-f="dd">ห่างจากไฮ &gt;25%</button>
+    </div></div>
+
+    <div class="rowf">
+      <label>RS ตั้งแต่ <input type="number" id="fRS" min="1" max="99" placeholder="—"></label>
+      <label>สภาพคล่องตั้งแต่ <input type="number" id="fLiq" min="1" max="99" placeholder="—"></label>
+      <label>ราคาตั้งแต่ <input type="number" id="fPx" min="0" placeholder="—"></label>
+      <label>ค้นหา <input type="text" id="fQ" placeholder="ชื่อย่อ"></label>
+      <span class="cnt" style="margin-left:auto">พบ <b id="n">0</b> ตัว</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="scroll"><div id="tbl"></div></div>
+    <div class="note" id="foot"></div>
+  </div>
+</main>
+
+<script src="engine.js"></script>
+<script>
+/* ============================================================
+   Quant Scanner — สองทางเข้า
+   1) scan.json ที่ GitHub Actions สแกนไว้ทั้งยูนิเวิร์ส (แนะนำ)
+   2) สแกนสดจากเบราว์เซอร์ ยูนิเวิร์สเล็ก สำหรับตอนยังไม่ได้ตั้ง Actions
+   ============================================================ */
+const E=SCANENG, CKEY='scan_browser_v1';
+const PROX=[u=>'https://api.allorigins.win/raw?url='+encodeURIComponent(u),
+  u=>'https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent(u),
+  u=>'https://corsproxy.io/?url='+encodeURIComponent(u)];
+/* ยูนิเวิร์สเล็กสำหรับสแกนสดจากเบราว์เซอร์ */
+const MINI=('AAPL MSFT NVDA AVGO GOOGL AMZN META TSLA AMD ORCL CRM ADBE NFLX '+
+'QCOM TXN MU INTC AMAT LRCX PANW ANET NOW INTU CRWD PLTR UBER COIN ABNB '+
+'JPM BAC GS MS BRK.B V MA AXP BLK SPGI UNH LLY JNJ ABBV MRK TMO ABT PFE '+
+'ISRG VRTX REGN XOM CVX COP EOG SLB CAT BA HON GE DE UNP RTX LMT '+
+'WMT COST PG KO PEP MCD HD LOW NKE SBUX DIS LIN SHW FCX NEM NEE DUK SO '+
+'PLD AMT EQIX SPY QQQ IWM RSP').split(/\s+/);
+
+const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+  .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const pc=v=>v==null?'—':(v>=0?'+':'')+v.toFixed(1)+'%';
+const cl2=v=>v==null?'fl':v>0?'up':v<0?'dn':'fl';
+const nm=(v,d)=>v==null?'—':Number(v).toLocaleString('en-US',
+  {minimumFractionDigits:d==null?2:d,maximumFractionDigits:d==null?2:d});
+const big=v=>v==null?'—':v>=1e9?(v/1e9).toFixed(1)+'B':v>=1e6?(v/1e6).toFixed(0)+'M':
+  v>=1e3?(v/1e3).toFixed(0)+'K':String(Math.round(v));
+
+let ROWS=[], META=null, SRC='', SORT={k:'rs',d:-1};
+const ON=new Set();
+
+/* ---------- ตัวกรอง: ชื่อ -> ฟังก์ชันตัดสิน ---------- */
+const FILT={
+  ttf:  r=>r.ttf===true,
+  up200:r=>r.up200===true,
+  above50:r=>r.m50!=null&&r.c>r.m50,
+  stack:r=>r.m50!=null&&r.m150!=null&&r.m200!=null&&r.m50>r.m150&&r.m150>r.m200,
+  vcp:  r=>r.f.vcp, vdu:r=>r.f.vdu, ppbp:r=>r.f.ppbp,
+  np:   r=>r.f.np,  bo: r=>r.f.bo,
+  vu:   r=>r.f.vu,  vd: r=>r.f.vd,
+  obv:  r=>r.obv!=null&&r.obv>0.1,
+  os:   r=>r.f.os,  bc: r=>r.f.bc,
+  dd:   r=>r.fh!=null&&r.fh<-25
+};
+const PRESETS={
+  trend:['ttf','up200'], base:['vcp','np'], bo:['bo','vu'], rev:['os','bc'], clear:[]
+};
+
+/* ---------- โหลดผลสแกนจากไฟล์ ---------- */
+async function loadFile(){
+  const m=document.getElementById('msg');
+  m.textContent='กำลังโหลด...';
+  try{
+    const r=await fetch('scan.json?t='+Date.now(),{cache:'no-store'});
+    if(!r.ok)throw new Error('ไม่พบไฟล์ (HTTP '+r.status+')');
+    const j=await r.json();
+    if(!j.rows||!j.rows.length)throw new Error('ไฟล์ไม่มีข้อมูล');
+    ROWS=j.rows; META=j; SRC='file'; m.textContent='';
+    render();
+  }catch(e){
+    m.textContent='';
+    META=null; SRC='none'; ROWS=[];
+    showNoFile(String(e.message||e));
+  }
+}
+
+/* ---------- สแกนสดจากเบราว์เซอร์ ---------- */
+async function csv(sym){
+  const url='https://stooq.com/q/d/l/?s='+E.stooqSym(sym)+'&i=d';
+  const t=await Promise.any(PROX.map(f=>fetch(f(url),{cache:'no-store'})
+    .then(r=>r.ok?r.text():Promise.reject(new Error('x')))));
+  return E.parseCsv(t);
+}
+async function scanBrowser(){
+  const m=document.getElementById('msg');
+  const b=document.getElementById('bBrowser'); b.disabled=true;
+  const q=MINI.slice(); const got=[]; const bad=[]; let n=0;
+  async function w(){
+    while(q.length){
+      const s=q.shift();
+      try{
+        const bars=await csv(s);
+        const mm=bars?E.metrics(bars):null;
+        if(mm){mm.sym=s;got.push(mm)} else bad.push(s);
+      }catch(e){bad.push(s)}
+      n++; m.textContent='สแกน '+n+'/'+MINI.length;
+    }
+  }
+  await Promise.all([w(),w(),w()]);
+  b.disabled=false; m.textContent='';
+  if(got.length<20){
+    showNoFile('สแกนได้แค่ '+got.length+' ตัว น้อยเกินกว่าจะจัดอันดับได้');
+    return;
+  }
+  E.addRank(got);
+  const cnt={}; got.forEach(x=>cnt[x.date]=(cnt[x.date]||0)+1);
+  const asof=Object.keys(cnt).sort().pop();
+  ROWS=got.map(x=>({s:x.sym,d:x.date,c:x.close,b:x.bars,w:x.win,rs:x.rs,liq:x.liq,
+    c1:x.chg1,c5:x.chg5,c21:x.chg21,c63:x.chg63,c252:x.chg252,
+    fh:x.fromHigh,al:x.aboveLow,m50:x.ma50,m150:x.ma150,m200:x.ma200,
+    up200:x.ma200up,ttp:x.ttPass,ttk:x.ttKnown,ttf:x.ttFull,
+    vs:x.volSpike,dv:x.avgDollarVol50,obv:x.obv,rsi:x.rsi,
+    pv:x.pivot,tp:x.toPivot,
+    f:{vcp:x.vcp,vdu:x.vdu,ppbp:x.ppbp,np:x.nearPivot,bo:x.breakout,
+       os:x.oversold,bc:x.bounce,vd:x.volDry,vu:x.volSurge}}));
+  ROWS.sort((a,b2)=>(b2.rs??-1)-(a.rs??-1));
+  META={generated:new Date().toISOString(),asof,universe:MINI.length,
+    scanned:got.length,withRS:got.filter(x=>x.rs!=null).length,
+    staleSymbols:[],failed:bad.map(s=>({sym:s,why:'ดึงไม่สำเร็จ'}))};
+  SRC='browser';
+  render();
+}
+
+function showNoFile(why){
+  document.getElementById('status').innerHTML=
+    '<div class="infobox"><b>ยังไม่มีผลสแกน</b> — '+esc(why)+'<br><br>'
+    +'มีสองทางให้เลือก:<br>'
+    +'<b>1. ตั้ง GitHub Actions</b> (แนะนำ) — สแกน 467 ตัวทุกคืน หน้านี้โหลดเสร็จใน 1 วินาที '
+    +'และ RS เป็นอันดับเทียบ 467 ตัวจริง<br>'
+    +'<b>2. กด “สแกนจากเบราว์เซอร์”</b> — ใช้ได้เลยตอนนี้ แต่รอ 30-60 วินาที '
+    +'และ RS เทียบกันแค่ใน '+MINI.length+' ตัวเท่านั้น</div>';
+  document.getElementById('tbl').innerHTML='<div class="ld">—</div>';
+  document.getElementById('foot').textContent='';
+  document.getElementById('n').textContent='0';
+}
+
+/* ---------- แสดงผล ---------- */
+function statusBox(){
+  if(!META)return '';
+  const age=(Date.now()-new Date(META.generated).getTime())/36e5;
+  let s='';
+  if(SRC==='browser'){
+    s+='<div class="warnbox"><b>กำลังดูผลสแกนจากเบราว์เซอร์ '+META.scanned+' ตัว</b><br>'
+      +'เลข RS ที่เห็นแปลว่า “อันดับใน '+META.scanned+' ตัวนี้” <u>ไม่ใช่</u>อันดับในตลาดทั้งหมด — '
+      +'RS 99 ที่นี่อาจเป็นแค่อันดับกลางๆ ของตลาดจริง ถ้าจะใช้เลือกหุ้นจริง ควรตั้ง GitHub Actions '
+      +'ให้สแกนทั้ง 467 ตัวก่อน</div>';
+  }else if(age>72){
+    s+='<div class="warnbox">ผลสแกนนี้เก่า '+Math.round(age/24)+' วันแล้ว — '
+      +'GitHub Actions อาจหยุดทำงาน ลองเข้าไปดูที่แท็บ Actions ใน repo</div>';
+  }
+  const fail=META.failed?META.failed.length:0;
+  const stale=META.staleSymbols?META.staleSymbols.length:0;
+  s+='<div class="infobox">ข้อมูลวันที่ <b>'+esc(META.asof||'—')+'</b> · '
+    +'สแกน '+META.scanned+'/'+META.universe+' ตัว · '
+    +'จัดอันดับ RS ได้ '+META.withRS+' ตัว (ต้องมีข้อมูลครบ 1 ปี)'
+    +(fail?' · ดึงไม่ได้ '+fail+' ตัว':'')
+    +(stale?' · <span style="color:var(--warn)">ข้อมูลค้างไม่ทันวันล่าสุด '+stale+' ตัว</span>':'')
+    +'</div>';
+  return s;
+}
+const COLS=[
+  {k:'s',  t:'หุ้น',    f:r=>'<b>'+esc(r.s)+'</b>'},
+  {k:'rs', t:'RS',     f:r=>r.rs==null?'<span class="fl">—</span>'
+      :r.rs+'<span class="bar"><i style="width:'+r.rs+'%"></i></span>'},
+  {k:'c',  t:'ราคา',   f:r=>'<span class="mono">'+nm(r.c)+'</span>'},
+  {k:'c1', t:'1 วัน',  f:r=>'<span class="mono '+cl2(r.c1)+'">'+pc(r.c1)+'</span>'},
+  {k:'c21',t:'1 เดือน',f:r=>'<span class="mono '+cl2(r.c21)+'">'+pc(r.c21)+'</span>'},
+  {k:'c252',t:'1 ปี',  f:r=>'<span class="mono '+cl2(r.c252)+'">'+pc(r.c252)+'</span>'},
+  {k:'fh', t:'ห่างไฮ', f:r=>'<span class="mono '+(r.fh!=null&&r.fh>-5?'up':'fl')+'">'+pc(r.fh)+'</span>'},
+  {k:'ttp',t:'TT',     f:r=>r.ttk?('<span class="'+(r.ttf?'up':'fl')+'">'+r.ttp+'/'+r.ttk+'</span>'):'—'},
+  {k:'vs', t:'วอลุ่ม', f:r=>'<span class="mono '+(r.vs!=null&&r.vs>=2?'up':r.vs!=null&&r.vs<0.6?'dn':'fl')
+      +'">'+(r.vs==null?'—':r.vs.toFixed(2)+'x')+'</span>'},
+  {k:'dv', t:'มูลค่า/วัน',f:r=>'<span class="mono">'+big(r.dv)+'</span>'},
+  {k:'rsi',t:'RSI',    f:r=>'<span class="mono '+(r.rsi==null?'fl':r.rsi<30?'dn':r.rsi>70?'up':'fl')
+      +'">'+(r.rsi==null?'—':r.rsi.toFixed(0))+'</span>'},
+  {k:'tp', t:'ถึง pivot',f:r=>'<span class="mono '+cl2(r.tp)+'">'+pc(r.tp)+'</span>'},
+  {k:'_tag',t:'สัญญาณ',f:r=>{
+    const T=[];
+    if(r.f.bo)T.push('<span class="tag t-bo">เบรก</span>');
+    if(r.f.np)T.push('<span class="tag t-np">จ่อ pivot</span>');
+    if(r.f.vcp)T.push('<span class="tag t-vcp">VCP</span>');
+    if(r.f.vdu)T.push('<span class="tag t-vdu">VDU</span>');
+    if(r.f.ppbp)T.push('<span class="tag">PPBP</span>');
+    if(r.f.os)T.push('<span class="tag t-os">ขายมากเกิน</span>');
+    if(r.f.bc)T.push('<span class="tag">เด้ง MA50</span>');
+    return T.join('')||'<span class="fl">—</span>';
+  }}
+];
+function pass(r){
+  for(const k of ON) if(!FILT[k](r))return false;
+  const rs=+document.getElementById('fRS').value;
+  const lq=+document.getElementById('fLiq').value;
+  const px=+document.getElementById('fPx').value;
+  const q=document.getElementById('fQ').value.trim().toUpperCase();
+  if(document.getElementById('fRS').value!==''&&(r.rs==null||r.rs<rs))return false;
+  if(document.getElementById('fLiq').value!==''&&(r.liq==null||r.liq<lq))return false;
+  if(document.getElementById('fPx').value!==''&&(r.c==null||r.c<px))return false;
+  if(q&&r.s.indexOf(q)<0)return false;
+  return true;
+}
+function render(){
+  document.getElementById('status').innerHTML=statusBox();
+  document.querySelectorAll('[data-f]').forEach(b=>
+    b.classList.toggle('on',ON.has(b.dataset.f)));
+  let L=ROWS.filter(pass);
+  const k=SORT.k;
+  L.sort((a,b)=>{
+    if(k==='s')return SORT.d*a.s.localeCompare(b.s);
+    const x=a[k],y=b[k];
+    if(x==null&&y==null)return 0;
+    if(x==null)return 1;            /* ไม่มีข้อมูล ไปท้ายเสมอ ไม่ว่าจะเรียงทางไหน */
+    if(y==null)return -1;
+    return SORT.d*(x-y);
+  });
+  document.getElementById('n').textContent=L.length;
+  document.getElementById('tbl').innerHTML=
+    L.length? '<table><thead><tr>'+COLS.map(c=>
+      '<th data-k="'+c.k+'" class="'+(SORT.k===c.k?'srt':'')+'">'+c.t
+      +(SORT.k===c.k?(SORT.d<0?' ▼':' ▲'):'')+'</th>').join('')+'</tr></thead><tbody>'
+      +L.slice(0,300).map(r=>'<tr>'+COLS.map(c=>'<td>'+c.f(r)+'</td>').join('')+'</tr>').join('')
+      +'</tbody></table>'
+      +(L.length>300?'<div class="ld">แสดง 300 แถวแรกจาก '+L.length+' — ใส่ตัวกรองเพิ่มเพื่อให้แคบลง</div>':'')
+    : '<div class="ld">ไม่มีตัวไหนผ่านเงื่อนไขนี้<br><span class="sub">ลองถอดตัวกรองออกบ้าง — '
+      +'ไม่เจอเลยก็เป็นข้อมูลอย่างหนึ่ง แปลว่าตลาดตอนนี้ไม่มีของแบบที่กำลังหา</span></div>';
+  document.getElementById('foot').innerHTML=
+    '<b>TT</b> = Trend Template ของ Minervini 8 ข้อ (ผ่าน/ที่คำนวณได้) · '
+    +'<b>วอลุ่ม</b> = เทียบค่าเฉลี่ย 50 วันก่อนหน้า ไม่รวมวันนี้ · '
+    +'<b>RS</b> = อันดับ 1-99 เทียบเฉพาะหุ้นในชุดที่สแกน ต้องมีราคาครบ 1 ปีจึงจะมีอันดับ · '
+    +'<b>pivot</b> = จุดสูงสุด 30 วันก่อนหน้า<br>'
+    +'ช่องที่เป็น “—” คือข้อมูลไม่พอคำนวณ ไม่ใช่ศูนย์ · '
+    +'ตัวเลขทั้งหมดมาจากราคาปิดรายวัน ไม่ใช่ราคาเรียลไทม์ และนี่ไม่ใช่คำแนะนำการลงทุน';
+}
+
+/* ---------- เหตุการณ์ ---------- */
+document.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{
+  const k=b.dataset.f; ON.has(k)?ON.delete(k):ON.add(k); render();
+});
+document.querySelectorAll('[data-pre]').forEach(b=>b.onclick=()=>{
+  ON.clear(); PRESETS[b.dataset.pre].forEach(k=>ON.add(k));
+  if(b.dataset.pre==='clear'){
+    ['fRS','fLiq','fPx','fQ'].forEach(i=>document.getElementById(i).value='');
+  }
+  document.getElementById('preset').textContent=
+    b.dataset.pre==='clear'?'':'· '+b.textContent;
+  render();
+});
+['fRS','fLiq','fPx','fQ'].forEach(i=>
+  document.getElementById(i).addEventListener('input',render));
+document.getElementById('tbl').addEventListener('click',e=>{
+  const th=e.target.closest('th'); if(!th)return;
+  const k=th.dataset.k;
+  if(SORT.k===k)SORT.d*=-1; else {SORT.k=k;SORT.d=-1}
+  render();
+});
+document.getElementById('bFile').onclick=loadFile;
+document.getElementById('bBrowser').onclick=scanBrowser;
+loadFile();
+</script>
+<script src="theme.js"></script>
+</body></html>

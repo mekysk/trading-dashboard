@@ -1,0 +1,726 @@
+<!DOCTYPE html><html lang="th"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Agent — Trading Dashboard</title>
+<style>
+:root{--bg:#0a0d13;--bg2:#10151e;--bg3:#161d29;--line:#222c3d;--tx:#e8eef8;
+--tx2:#96a3b8;--tx3:#5c6a80;--accent:#f5b942;--glow:245,185,66;--acc:#3b82f6;
+--up:#34C27D;--dn:#E5645A;--warn:#f59e0b;--pur:#a78bfa}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-size:14px;line-height:1.55;padding-bottom:40px;
+font-family:-apple-system,'Segoe UI','Leelawadee UI','Noto Sans Thai',Tahoma,sans-serif}
+.mono{font-family:ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+.up{color:var(--up)}.dn{color:var(--dn)}.fl{color:var(--tx2)}
+button{font-family:inherit;cursor:pointer}a{color:var(--acc);text-decoration:none}
+header{position:sticky;top:0;z-index:50;background:rgba(10,13,19,.96);
+backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.hbar{display:flex;align-items:center;gap:12px;padding:9px 16px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:15px}.logo span{color:var(--accent)}
+nav{display:flex;gap:2px;margin-left:6px;flex-wrap:wrap}
+nav a{color:var(--tx3);padding:6px 12px;font-size:12.5px;font-weight:600;border-radius:7px}
+nav a.on{color:var(--tx);background:var(--bg3)}
+.right{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{background:var(--bg3);border:1px solid var(--line);color:var(--tx2);
+padding:5px 11px;border-radius:7px;font-size:12px}
+.btn:hover{color:var(--tx)}
+.btn.go{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn.gold{background:rgba(var(--glow),.16);border-color:var(--accent);color:var(--accent);font-weight:600}
+main{padding:18px;max-width:1420px;margin:0 auto}
+h1{font-size:27px;font-weight:800;letter-spacing:-.02em}
+.lead{font-size:12.5px;color:var(--tx2);margin:3px 0 14px;max-width:80ch;line-height:1.7}
+.sub{font-size:11px;color:var(--tx3);font-weight:400}
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:16px;margin-bottom:12px}
+.card h3{font-size:13px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.team{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:11px}
+.ag{background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:14px;
+display:flex;flex-direction:column;gap:9px}
+.ag.att{border-color:rgba(245,158,11,.45)}
+.ag.off{opacity:.62}
+.aghd{display:flex;align-items:flex-start;gap:10px}
+.aghd .av{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;
+font-size:19px;flex:none;background:var(--bg3);border:1px solid var(--line)}
+.aghd .nm{font-size:13.5px;font-weight:700;line-height:1.25}
+.aghd .rl{font-size:10.5px;color:var(--tx3);line-height:1.5}
+.aghd .st{margin-left:auto;flex:none}
+.pill{display:inline-block;font-size:9.5px;padding:2px 8px;border-radius:20px;font-weight:700}
+.p-ok{background:rgba(52,194,125,.16);color:var(--up)}
+.p-att{background:rgba(245,158,11,.18);color:var(--warn)}
+.p-q{background:rgba(148,163,184,.14);color:var(--tx2)}
+.p-off{background:rgba(229,100,90,.16);color:var(--dn)}
+.agbody{font-size:12.5px;line-height:1.75;color:var(--tx2)}
+.agbody .hl{color:var(--tx);font-weight:600;font-size:13px}
+.it{display:flex;gap:8px;align-items:flex-start;font-size:12px;padding:3px 0;line-height:1.6}
+.it i{font-style:normal;flex:none}
+.agfoot{margin-top:auto;padding-top:9px;border-top:1px dashed var(--line);
+font-size:10.5px;color:var(--tx3);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+textarea{width:100%;min-height:230px;background:var(--bg3);border:1px solid var(--line);
+color:var(--tx);border-radius:8px;padding:11px;font-family:ui-monospace,Consolas,monospace;
+font-size:11.5px;line-height:1.65;resize:vertical}
+.ld{color:var(--tx3);text-align:center;padding:26px 0;font-size:12.5px;line-height:1.9}
+.warnbox{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.28);
+border-radius:9px;padding:12px 14px;font-size:11.5px;color:var(--warn);line-height:1.8;margin-bottom:12px}
+.warnbox b{color:#ffd37a}
+.infobox{background:rgba(59,130,246,.07);border:1px solid rgba(59,130,246,.25);
+border-radius:9px;padding:11px 13px;font-size:11.5px;color:var(--tx2);line-height:1.75;margin-bottom:12px}
+.note{font-size:10.5px;color:var(--tx3);line-height:1.75;margin-top:11px;
+padding-top:10px;border-top:1px dashed var(--line)}
+.room{background:#0d1018;border:1px solid var(--line);border-radius:9px;overflow:hidden;
+line-height:0}
+.room canvas{width:100%;height:auto;display:block;cursor:pointer;
+image-rendering:pixelated;image-rendering:crisp-edges}
+.rlg{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--tx2);margin-top:9px}
+.rlg span{display:flex;align-items:center;gap:6px}
+.rlg i{width:9px;height:9px;border-radius:2px;display:inline-block;flex:none}
+.steps{counter-reset:s;display:flex;flex-direction:column;gap:9px}
+.step{display:flex;gap:11px;align-items:flex-start;font-size:12.5px;line-height:1.75}
+.step::before{counter-increment:s;content:counter(s);width:22px;height:22px;flex:none;
+border-radius:50%;background:var(--bg3);border:1px solid var(--line);color:var(--accent);
+display:grid;place-items:center;font-size:11px;font-weight:700}
+@media(max-width:700px){main{padding:12px}h1{font-size:22px}}
+</style>
+<link rel="stylesheet" href="theme.css">
+</head><body>
+
+<header><div class="hbar">
+  <div class="logo">TRADING <span>DASHBOARD</span></div>
+  <nav>
+    <a href="agents.html" class="on">AGENTS</a><a href="brief.html">BRIEF</a>
+    <a href="heatmap.html">HEATMAP</a><a href="breadth.html">BREADTH</a>
+    <a href="scanner.html">SCANNER</a><a href="index.html">PORT</a>
+    <a href="plan.html">แผนลงทุน</a><a href="journal.html">JOURNAL</a>
+    <a href="botlab.html">BOT LAB</a><a href="macro.html">MACRO</a>
+  </nav>
+  <div class="right">
+    <span id="msg" class="sub"></span>
+    <button class="btn go" id="bLoad">↻ โหลดผลงานเอเจนต์</button>
+  </div>
+</div></header>
+
+<main>
+  <h1>🤖 ทีม AI Agent</h1>
+  <div class="lead">กระดานรวมงานอัตโนมัติทั้งทีม — ใครทำอะไร รันล่าสุดเมื่อไหร่ เจออะไรมาบ้าง</div>
+
+  <div id="status"></div>
+
+  <div class="card">
+    <h3>🏢 ห้องทำงานของทีม <span class="sub">ท่าทางของแต่ละคนบอกสถานะจริง ไม่ใช่แค่ภาพประกอบ</span></h3>
+    <div class="room"><canvas id="room" width="320" height="200"></canvas></div>
+    <div class="rlg" id="roomLegend"></div>
+    <div class="note" id="roomNote"></div>
+  </div>
+
+  <div class="team" id="team"></div>
+
+  <div class="card" style="margin-top:12px">
+    <h3>📦 ส่งข้อมูลให้เอเจนต์ <span class="sub">ทำสัปดาห์ละครั้งก็พอ</span></h3>
+    <div class="infobox" style="margin-bottom:11px">
+      <b>ทำไมต้องมีขั้นนี้</b> — เอเจนต์รันใน Claude บนเครื่องคุณ <b>อ่านไฟล์ในโฟลเดอร์ได้
+      แต่อ่านข้อมูลในเบราว์เซอร์ไม่ได้</b> พอร์ตกับ journal เก็บอยู่ในเบราว์เซอร์
+      จึงต้องส่งออกมาเป็นไฟล์ให้เอเจนต์อ่าน
+    </div>
+    <div class="steps">
+      <div class="step"><span>กดปุ่มข้างล่าง ไฟล์ <b>agent-data.json</b> จะถูกดาวน์โหลด</span></div>
+      <div class="step"><span>ย้ายไฟล์ไปไว้ในโฟลเดอร์ <b>TRADING DASHBOARD</b> (โฟลเดอร์หลัก ไม่ใช่ UPLOAD-ME)</span></div>
+      <div class="step"><span>เอเจนต์ที่ต้องใช้พอร์ตและ journal จะอ่านไฟล์นี้ในรอบถัดไป</span></div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;align-items:center">
+      <button class="btn gold" id="bExport">⬇ ส่งออก agent-data.json</button>
+      <span class="sub" id="expInfo"></span>
+    </div>
+    <div class="note">ไฟล์นี้มีแต่ข้อมูลของคุณเอง ไม่มีรหัสผ่านหรือข้อมูลส่วนตัว
+      และ<b>ห้ามอัปขึ้น GitHub</b> เพราะมันจะกลายเป็นข้อมูลสาธารณะ —
+      ให้วางไว้ในโฟลเดอร์บนเครื่องเท่านั้น</div>
+  </div>
+
+  <div class="card">
+    <h3>🧾 แฟ้มสรุปสำหรับถาม Claude <span class="sub">คัดลอกไปวางได้เลย</span></h3>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;align-items:center">
+      <button class="btn gold" id="bBuild">🧩 ประกอบแฟ้มสรุป</button>
+      <button class="btn" id="bCopy">📋 คัดลอก</button>
+      <span class="sub" id="pkInfo"></span>
+    </div>
+    <textarea id="pk" placeholder="กด “ประกอบแฟ้มสรุป” แล้วข้อความจะขึ้นตรงนี้"></textarea>
+    <div class="note"><b>ทำไมต้องมีแฟ้มนี้</b> — ถ้าถาม AI ด้วยภาพหน้าจอ มันต้องเดาตัวเลขจากภาพ
+      แต่ถ้าให้ตัวเลขจริงแบบมีโครงสร้าง คำตอบจะแม่นกว่ามาก<br>
+      แฟ้มนี้รวมสภาพตลาด ความกว้าง หุ้นที่มีสัญญาณ พอร์ต และสถิติการเทรดของคุณ
+      ไว้ในข้อความเดียว · ไม่มีการส่งข้อมูลออกไปไหนเอง คุณเป็นคนกดคัดลอกเอง</div>
+  </div>
+</main>
+
+<script src="engine.js"></script>
+<script>
+/* ============================================================
+   ห้องควบคุมทีมเอเจนต์
+   "เอเจนต์" คืองานอัตโนมัติที่รันใน Claude บนเครื่องผู้ใช้
+   ไม่ใช่ AI ที่รันอยู่ในหน้าเว็บนี้ — หน้านี้แค่อ่านไฟล์ที่เอเจนต์เขียนไว้
+   ============================================================ */
+const E=SCANENG;
+const AGENTS=[
+ {id:'morning-brief-thai', f:'agent-morning.json', av:'📰',
+  nm:'นักข่าวเช้า', rl:'สรุปข่าวคืนที่ผ่านมาเป็นภาษาไทย',
+  sched:'ทุกเช้า 05:00 (จันทร์-เสาร์)', alt:'brief-latest.json'},
+ {id:'us-events-tracker', f:'agent-events.json', av:'📅',
+  nm:'คนเฝ้าปฏิทิน', rl:'กำหนดการงบและเหตุการณ์ที่ขยับราคา',
+  sched:'เย็นวันอาทิตย์', alt:'events-latest.json'},
+ {id:'scan-watcher', f:'agent-scan.json', av:'🔭',
+  nm:'คนเฝ้าสแกน', rl:'แจ้งเมื่อหุ้นที่ติดตามมีสัญญาณ',
+  sched:'ทุกเช้า 06:30 (อังคาร-เสาร์)'},
+ {id:'risk-watcher', f:'agent-risk.json', av:'🛡',
+  nm:'คนเฝ้าความเสี่ยง', rl:'เตือนเมื่อสภาวะตลาดเปลี่ยน',
+  sched:'ทุกเช้า 06:45 (อังคาร-เสาร์)'},
+ {id:'journal-coach', f:'agent-coach.json', av:'🎓',
+  nm:'โค้ชวินัย', rl:'อ่าน journal หารูปแบบที่เกิดซ้ำ',
+  sched:'เย็นวันอาทิตย์', needs:'agent-data.json'},
+ {id:'portfolio-weekly-review', f:'agent-port.json', av:'💼',
+  nm:'คนตรวจพอร์ต', rl:'ทบทวนพอร์ตรายสัปดาห์',
+  sched:'เย็นวันอาทิตย์', needs:'agent-data.json'}
+];
+const KPF='pro_pf', KPX='pro_px', KSEC='pro_sec', KHIST='pro_hist';
+const KJ='bt_trades_v1', KJC='bt_cfg_v1', KWL='ev_wl_v1';
+
+const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+  .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const ld=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v}
+  catch(e){return d}};
+const n2=v=>(v==null||!isFinite(v))?'—':Number(v).toLocaleString('en-US',
+  {minimumFractionDigits:2,maximumFractionDigits:2});
+const pc=v=>v==null||!isFinite(v)?'—':(v>=0?'+':'')+v.toFixed(1)+'%';
+const g=id=>document.getElementById(id);
+let OUT={}, SCAN=null;
+
+function hoursAgo(iso){
+  if(!iso)return null;
+  const t=new Date(iso).getTime();
+  if(!isFinite(t))return null;
+  return (Date.now()-t)/36e5;
+}
+function ageText(h){
+  if(h==null)return 'ไม่รู้เวลา';
+  if(h<1)return 'เมื่อไม่ถึงชั่วโมงก่อน';
+  if(h<24)return 'เมื่อ '+Math.round(h)+' ชั่วโมงก่อน';
+  return 'เมื่อ '+Math.round(h/24)+' วันก่อน';
+}
+/* เอเจนต์เงียบนานแค่ไหนถึงเรียกว่าผิดปกติ — ขึ้นกับรอบของมันเอง */
+function staleLimit(a){ return /อาทิตย์/.test(a.sched)?24*10 : 24*3 }
+
+async function loadAll(){
+  g('msg').textContent='กำลังโหลด...';
+  const jobs=AGENTS.map(async a=>{
+    for(const f of [a.f,a.alt].filter(Boolean)){
+      try{
+        const r=await fetch(f+'?t='+Date.now(),{cache:'no-store'});
+        if(!r.ok)continue;
+        const j=await r.json();
+        OUT[a.id]={file:f,data:j,legacy:f===a.alt};
+        return;
+      }catch(e){}
+    }
+    OUT[a.id]=null;
+  });
+  const sc=fetch('scan.json?t='+Date.now(),{cache:'no-store'})
+    .then(r=>r.ok?r.json():null).then(j=>{SCAN=j}).catch(()=>{SCAN=null});
+  await Promise.all(jobs.concat([sc]));
+  g('msg').textContent='';
+  render();
+}
+
+function render(){
+  const have=AGENTS.filter(a=>OUT[a.id]).length;
+  let st='<div class="infobox"><b>เอเจนต์คืองานอัตโนมัติที่รันใน Claude บนเครื่องคุณ '
+    +'ไม่ใช่ AI ที่รันอยู่ในหน้าเว็บนี้</b><br>'
+    +'หน้านี้อ่านไฟล์ผลงานที่เอเจนต์เขียนไว้เท่านั้น — '
+    +'มีผลงาน '+have+' จาก '+AGENTS.length+' ตัว</div>';
+  st+='<div class="warnbox"><b>ถ้าเปิดหน้านี้จาก GitHub Pages แล้วการ์ดว่าง '
+    +'ไม่ได้แปลว่าเอเจนต์ไม่ทำงาน</b> — เอเจนต์เขียนไฟล์ลงเครื่องคุณ '
+    +'ต้องอัปไฟล์ <b>agent-*.json</b> ขึ้น GitHub ด้วย หน้าเว็บถึงจะเห็น<br>'
+    +'ถ้าเปิดจากเครื่องตัวเองโดยตรง จะเห็นทันทีไม่ต้องอัป</div>';
+  g('status').innerHTML=st;
+
+  g('team').innerHTML=AGENTS.map(a=>{
+    const o=OUT[a.id];
+    const d=o?o.data:null;
+    const h=d?hoursAgo(d.generated||d.date):null;
+    const lim=staleLimit(a);
+    let cls='p-q', lab='ยังไม่มีผลงาน', box='';
+    if(!o){ cls='p-off'; lab='ยังไม่เคยรัน'; }
+    else if(h!=null&&h>lim){ cls='p-off'; lab='เงียบไป '+Math.round(h/24)+' วัน'; }
+    else if((d.status||'')==='attention'){ cls='p-att'; lab='มีเรื่องต้องดู'; }
+    else { cls='p-ok'; lab='ปกติ'; }
+
+    if(o&&d){
+      const items=Array.isArray(d.items)?d.items:[];
+      box='<div class="agbody">'
+        +(d.headline?'<div class="hl">'+esc(d.headline)+'</div>':'')
+        +(items.length
+          ? items.slice(0,5).map(x=>'<div class="it"><i>'
+              +(x.s==='warn'?'⚠️':x.s==='ok'?'✅':'•')+'</i><span>'+esc(x.t)
+              +(x.d?' <span class="sub">'+esc(x.d)+'</span>':'')+'</span></div>').join('')
+            +(items.length>5?'<div class="sub">และอีก '+(items.length-5)+' รายการ</div>':'')
+          : (o.legacy
+             ? '<div class="sub">ไฟล์รุ่นเก่ายังไม่มีรายการย่อย — '
+               +'รอบหน้าที่เอเจนต์รันจะเขียนรูปแบบใหม่ให้</div>'
+             : '<div class="sub">ไม่มีรายการในรอบล่าสุด</div>'))
+        +'</div>';
+    }else{
+      box='<div class="agbody"><span class="sub">ยังไม่พบไฟล์ <b>'+esc(a.f)+'</b> — '
+        +'ถ้าเพิ่งตั้งเอเจนต์ ให้รอรอบแรก หรือกด Run now ในหน้า Scheduled '
+        +'แล้วอย่าลืมอัปไฟล์ขึ้น GitHub</span></div>';
+    }
+    const att=(o&&(OUT[a.id].data.status==='attention'));
+    return '<div class="ag'+(att?' att':'')+(!o?' off':'')+'">'
+      +'<div class="aghd"><div class="av">'+a.av+'</div>'
+      +'<div><div class="nm">'+esc(a.nm)+'</div>'
+      +'<div class="rl">'+esc(a.rl)+'</div></div>'
+      +'<div class="st"><span class="pill '+cls+'">'+esc(lab)+'</span></div></div>'
+      +box
+      +'<div class="agfoot"><span>⏱ '+esc(a.sched)+'</span>'
+      +(o?'<span>· อัปเดต'+esc(ageText(h))+'</span>':'')
+      +(a.needs?'<span>· ต้องใช้ '+esc(a.needs)+'</span>':'')
+      +'</div></div>';
+  }).join('');
+
+  if(typeof renderRoom==='function')renderRoom();
+
+  const pf=ld(KPF,[]), tr=ld(KJ,[]);
+  g('expInfo').textContent= (pf.length||tr.length)
+    ? 'จะส่งออก: พอร์ต '+pf.length+' รายการ · ไม้ใน journal '+tr.length+' ไม้'
+    : 'ยังไม่มีพอร์ตหรือ journal ในเบราว์เซอร์นี้';
+}
+
+/* ---------- ส่งออกข้อมูลให้เอเจนต์ ---------- */
+function exportData(){
+  const pf=ld(KPF,[]), px=ld(KPX,{}), sec=ld(KSEC,{}), hist=ld(KHIST,[]);
+  const tr=ld(KJ,[]), cfg=ld(KJC,{}), wl=ld(KWL,[]);
+  const rows=pf.map(h=>{
+    const sym=(h.sym||'').toUpperCase();
+    const p=h.type==='cash'?1:(h.manual!=null&&h.manual!==''&&isFinite(h.manual)
+      ? Number(h.manual) : ((px[sym]&&isFinite(px[sym].price))?px[sym].price:null));
+    const qty=Number(h.qty)||0;
+    return {sym,type:h.type||null,qty,costPerUnit:Number(h.cost)||0,
+      price:p, value:p!=null?p*qty:null,
+      targetPct:(h.tgt!=null&&h.tgt!=='')?Number(h.tgt):null,
+      sector:sec[sym]||null};
+  });
+  const total=rows.reduce((a,r)=>a+(r.value||0),0);
+  const data={
+    exportedAt:new Date().toISOString(),
+    note:'ไฟล์นี้ส่งออกจากหน้า AI Agent เพื่อให้งานอัตโนมัติอ่าน ห้ามอัปขึ้นที่สาธารณะ',
+    portfolio:{holdings:rows,totalValue:total,
+      pricedCount:rows.filter(r=>r.value!=null).length,
+      history:hist.slice(-400)},
+    journal:{trades:tr,contractValues:cfg},
+    watchlist:wl
+  };
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='agent-data.json';
+  a.click(); URL.revokeObjectURL(a.href);
+  g('expInfo').innerHTML='<span style="color:var(--up)">ส่งออกแล้ว — '
+    +'ย้ายไฟล์ไปไว้ในโฟลเดอร์ TRADING DASHBOARD</span>';
+}
+
+/* ============================================================
+   ประกอบแฟ้มสรุป
+   รวมเฉพาะตัวเลขที่มีจริง ตัวไหนไม่มีให้เขียนว่าไม่มี
+   ไม่เติมค่าแทน เพราะ AI จะเอาค่าที่เราแต่งขึ้นไปวิเคราะห์ต่อ
+   ============================================================ */
+function buildPacket(){
+  const L=[];
+  const now=new Date();
+  L.push('# แฟ้มสรุปสถานะ ณ '+now.toLocaleString('th-TH',{timeZone:'Asia/Bangkok'}));
+  L.push('(ส่งออกจาก Trading Dashboard — ตัวเลขทั้งหมดคำนวณจากราคาปิดรายวัน)');
+  L.push('');
+
+  /* --- ตลาด --- */
+  L.push('## สภาพตลาด');
+  if(SCAN&&SCAN.breadth&&SCAN.breadth.dates&&SCAN.breadth.dates.length){
+    const B=SCAN.breadth, i=B.dates.length-1;
+    const prev=k=>i-21>=0?B[k][i-21]:null;
+    L.push('ข้อมูลวันที่ '+B.dates[i]+' จากหุ้นใหญ่สหรัฐฯ '+B.n[i]+' ตัว (ไม่ใช่ทั้งตลาด)');
+    L.push('- หุ้นยืนเหนือ MA50: '+(B.a50[i]==null?'ไม่มีข้อมูล':Math.round(B.a50[i])+'%')
+      +(prev('a50')!=null?' (เดือนก่อน '+Math.round(prev('a50'))+'%)':''));
+    L.push('- หุ้นยืนเหนือ MA200: '+(B.a200[i]==null?'ไม่มีข้อมูล':Math.round(B.a200[i])+'%')
+      +(prev('a200')!=null?' (เดือนก่อน '+Math.round(prev('a200'))+'%)':''));
+    L.push('- นิวไฮ 52 สัปดาห์ '+B.nh[i]+' ตัว / นิวโลว์ '+B.nl[i]+' ตัว');
+    L.push('- วันล่าสุด หุ้นขึ้น '+B.adv[i]+' ลง '+B.dec[i]);
+  }else L.push('ไม่มีข้อมูลความกว้างตลาด (ยังไม่ได้ตั้ง GitHub Actions หรือไฟล์ยังไม่อัป)');
+  L.push('');
+
+  /* --- หุ้นเด่น --- */
+  if(SCAN&&SCAN.rows&&SCAN.rows.length){
+    const R=SCAN.rows;
+    L.push('## หุ้นที่มีสัญญาณ (จาก '+R.length+' ตัวที่สแกน ข้อมูล '+(SCAN.asof||'—')+')');
+    const bo=R.filter(r=>r.f&&r.f.bo).sort((a,b)=>(b.rs??0)-(a.rs??0)).slice(0,8);
+    const np=R.filter(r=>r.f&&r.f.np&&r.rs>=70).sort((a,b)=>(b.rs??0)-(a.rs??0)).slice(0,8);
+    const strong=R.filter(r=>r.ttf).sort((a,b)=>(b.rs??0)-(a.rs??0)).slice(0,10);
+    const line=r=>r.s+' (RS '+(r.rs==null?'—':r.rs)+', 1 เดือน '+pc(r.c21)
+      +', ห่างไฮ '+pc(r.fh)+(r.sec?', '+r.sec:'')+')';
+    L.push('- เพิ่งเบรก: '+(bo.length?bo.map(line).join(' | '):'ไม่มี'));
+    L.push('- จ่อ pivot และ RS≥70: '+(np.length?np.map(line).join(' | '):'ไม่มี'));
+    L.push('- ผ่าน Trend Template ครบ 8 ข้อ: '
+      +(strong.length?strong.map(line).join(' | '):'ไม่มี'));
+    /* กลุ่มที่แรง */
+    const bySec={};
+    R.forEach(r=>{ if(!r.sec||r.c21==null)return;
+      (bySec[r.sec]=bySec[r.sec]||[]).push(r.c21) });
+    const secs=Object.entries(bySec).map(([k,v])=>
+      [k,v.reduce((a,b)=>a+b,0)/v.length,v.length]).sort((a,b)=>b[1]-a[1]);
+    if(secs.length)L.push('- กลุ่มที่แรงสุด 1 เดือน: '
+      +secs.slice(0,3).map(x=>x[0]+' '+pc(x[1])).join(' | ')
+      +' / อ่อนสุด: '+secs.slice(-3).map(x=>x[0]+' '+pc(x[1])).join(' | '));
+    L.push('');
+  }
+
+  /* --- พอร์ต --- */
+  const pf=ld(KPF,[]), px=ld(KPX,{});
+  L.push('## พอร์ตของผม');
+  if(pf.length){
+    const rows=pf.map(h=>{
+      const sym=(h.sym||'').toUpperCase();
+      const p=h.type==='cash'?1:(h.manual!=null&&h.manual!==''&&isFinite(h.manual)
+        ? Number(h.manual):((px[sym]&&isFinite(px[sym].price))?px[sym].price:null));
+      const qty=Number(h.qty)||0, cost=(Number(h.cost)||0)*qty;
+      return {sym,type:h.type,val:p!=null?p*qty:null,cost,
+        tgt:(h.tgt!=null&&h.tgt!=='')?Number(h.tgt):null};
+    });
+    const priced=rows.filter(r=>r.val!=null);
+    const total=priced.reduce((a,r)=>a+r.val,0);
+    const cost=priced.reduce((a,r)=>a+r.cost,0);
+    L.push('มูลค่ารวม '+n2(total)+' · ต้นทุน '+n2(cost)
+      +' · กำไรขาดทุน '+n2(total-cost)+(cost?' ('+pc((total-cost)/cost*100)+')':''));
+    if(rows.length>priced.length)
+      L.push('หมายเหตุ: มี '+(rows.length-priced.length)+' รายการที่ไม่มีราคา จึงไม่ถูกนับ');
+    priced.sort((a,b)=>b.val-a.val).forEach(r=>{
+      L.push('- '+r.sym+' ('+(r.type||'—')+'): '+n2(r.val)
+        +' = '+(total?(r.val/total*100).toFixed(1):'—')+'%'
+        +(r.tgt!=null?' | เป้า '+r.tgt+'%':' | ยังไม่ได้ตั้งเป้า')
+        +(r.cost?' | กำไรขาดทุน '+pc((r.val-r.cost)/r.cost*100):''));
+    });
+  }else L.push('ยังไม่มีพอร์ตในเบราว์เซอร์นี้');
+  L.push('');
+
+  /* --- สถิติการเทรด --- */
+  const tr=ld(KJ,[]);
+  L.push('## สถิติการเทรดของผม (จาก Backtest Journal)');
+  if(tr.length){
+    const closed=tr.map(t=>{
+      const e=Number(t.entry), sl=Number(t.sl), x=Number(t.exit);
+      if(!isFinite(e)||!isFinite(sl)||!isFinite(x))return null;
+      const dir=t.dir==='sell'?'sell':'buy';
+      const risk=dir==='buy'?e-sl:sl-e;
+      if(!(risk>0))return null;
+      const rew=dir==='buy'?x-e:e-x;
+      return {r:rew/risk,setup:t.setup||'(ไม่ระบุ)',mood:t.mood||'(ไม่ระบุ)',sym:t.sym};
+    }).filter(Boolean);
+    if(closed.length){
+      const sum=closed.reduce((a,x)=>a+x.r,0);
+      const win=closed.filter(x=>x.r>0.02).length, loss=closed.filter(x=>x.r<-0.02).length;
+      L.push('ไม้ที่ปิดแล้ว '+closed.length+' ไม้ · R รวม '+sum.toFixed(2)
+        +' · R เฉลี่ยต่อไม้ '+(sum/closed.length).toFixed(2)
+        +' · อัตราชนะ '+((win+loss)?Math.round(win/(win+loss)*100)+'%':'—'));
+      const grp=(key)=>{
+        const m={};
+        closed.forEach(x=>{ (m[x[key]]=m[x[key]]||[]).push(x.r) });
+        return Object.entries(m).map(([k,v])=>
+          k+': '+v.length+' ไม้ R รวม '+v.reduce((a,b)=>a+b,0).toFixed(2)
+          +' เฉลี่ย '+(v.reduce((a,b)=>a+b,0)/v.length).toFixed(2)).join(' | ');
+      };
+      L.push('- แยกตาม setup: '+grp('setup'));
+      L.push('- แยกตามอารมณ์ตอนเข้า: '+grp('mood'));
+      if(closed.length<30)L.push('- หมายเหตุ: ต่ำกว่า 30 ไม้ ความบังเอิญยังมีน้ำหนักมาก');
+    }else L.push('มีไม้บันทึกไว้ '+tr.length+' ไม้ แต่ยังไม่มีไม้ที่ปิดและข้อมูลครบ');
+  }else L.push('ยังไม่มีบันทึกการเทรด');
+  L.push('');
+
+  L.push('## สิ่งที่อยากให้ช่วย');
+  L.push('(เขียนคำถามของคุณตรงนี้ เช่น "พอร์ตนี้กระจุกตรงไหน" '
+    +'หรือ "setup ไหนที่ควรเลิกใช้" หรือ "ตลาดตอนนี้เหมาะกับการเพิ่มความเสี่ยงไหม")');
+  L.push('');
+  L.push('---');
+  L.push('กติกาที่อยากให้ยึด: แยกข้อเท็จจริงจากการตีความให้ชัด '
+    +'ถ้าข้อมูลไม่พอให้บอกว่าไม่พอ อย่าเดา '
+    +'และไม่ต้องบอกให้ซื้อหรือขายตัวไหน ผมตัดสินใจเอง');
+
+  const txt=L.join('\n');
+  g('pk').value=txt;
+  g('pkInfo').textContent='ประกอบแล้ว '+txt.length.toLocaleString()+' ตัวอักษร'
+    +(SCAN?'':' · ยังไม่มีผลสแกน ส่วนตลาดจึงว่าง');
+  return txt;
+}
+
+g('bBuild').onclick=buildPacket;
+g('bCopy').onclick=async()=>{
+  if(!g('pk').value)buildPacket();
+  try{
+    await navigator.clipboard.writeText(g('pk').value);
+    g('pkInfo').innerHTML='<span style="color:var(--up)">คัดลอกแล้ว — '
+      +'ไปวางในแชต Claude ได้เลย</span>';
+  }catch(e){
+    g('pk').select();
+    g('pkInfo').innerHTML='<span style="color:var(--warn)">'
+      +'เบราว์เซอร์ไม่ให้คัดลอกอัตโนมัติ — เลือกข้อความแล้วกด Ctrl+C เอง</span>';
+  }
+};
+/* ============================================================
+   ห้องทำงานพิกเซล
+   วาดด้วยโค้ดล้วน ไม่มีไฟล์ภาพ จึงไม่มีอะไรต้องโหลดเพิ่ม
+   ท่าทางของตัวละครผูกกับสถานะจริงของเอเจนต์ ไม่ใช่สุ่มเอาสวย
+   ============================================================ */
+const CV=g('room'), CX=CV.getContext('2d');
+const RW=320, RH=200;
+const LANE=190;                 /* ระดับเท้าของคนที่เดินในทางเดินหน้าห้อง */
+const SKIN=['#e8b98c','#c98f62','#f2d2ae','#a9714b','#e0a877','#d8a06a'];
+const SHIRT=['#5b8dd6','#d6775b','#6bbd8a','#b98ad6','#d6b85b','#5bc7d6'];
+const DESKS=[];
+for(let i=0;i<6;i++){
+  const col=i%3, row=(i/3)|0;
+  /* ระยะห่างสองแถวต้องมากกว่าความสูงของกล่องคลิก
+     ไม่งั้นคลิกแถวหน้าแล้วไปโดนคนแถวหลัง */
+  DESKS.push({x:28+col*98, y:row===0?100:142, row});
+}
+/* ท่าทางของตัวละคร = สถานะของเอเจนต์ */
+function agentState(a){
+  const o=OUT[a.id];
+  if(!o)return 'away';                      /* ไม่เคยรัน = ยังไม่มาทำงาน */
+  const h=hoursAgo(o.data.generated||o.data.date);
+  if(h!=null&&h>staleLimit(a))return 'sleep';   /* เงียบนานผิดปกติ = หลับ */
+  if(o.data.status==='attention')return 'alert';
+  if(o.data.status==='quiet')return 'idle';
+  return 'work';
+}
+const STATE_INFO={
+  work: ['#34C27D','ทำงานปกติ'],
+  alert:['#f59e0b','มีเรื่องต้องดู'],
+  idle: ['#96a3b8','รันแล้วแต่ไม่เจออะไร'],
+  sleep:['#E5645A','เงียบนานผิดปกติ'],
+  away: ['#5c6a80','ยังไม่เคยรัน']
+};
+/* ============================================================
+   คนเดินในทางเดินหน้าห้อง
+   ส่วนนี้เป็น "ภาพประกอบ" ล้วนๆ ไม่ได้แทนเอเจนต์ตัวไหน และไม่ได้บอกสถานะอะไร
+   ตั้งใจแยกให้ชัด เพราะถ้าทำของตกแต่งให้ดูเหมือนข้อมูล คนจะอ่านผิด
+   ============================================================ */
+const COFFEE=268;            /* ตำแหน่งตู้กาแฟหน้า ที่คนเดินแวะ */
+const WALKERS=[
+  {x:40,  dir:1,  spd:0.6, sk:2, sh:0, cup:false, pause:0, nextStop:COFFEE},
+  {x:190, dir:-1, spd:0.45,sk:3, sh:3, cup:true,  pause:0, nextStop:22},
+  {x:120, dir:1,  spd:0.75,sk:1, sh:4, cup:false, pause:0, nextStop:COFFEE}
+];
+function stepWalkers(){
+  WALKERS.forEach(w=>{
+    if(w.pause>0){ w.pause--; return }
+    w.x+=w.dir*w.spd;
+    /* ชนขอบแล้วกลับตัว ไม่เดินทะลุออกนอกจอ */
+    if(w.x<16){ w.x=16; w.dir=1 }
+    if(w.x>RW-16){ w.x=RW-16; w.dir=-1 }
+    /* แวะจุดหมาย */
+    if(w.nextStop!=null&&Math.abs(w.x-w.nextStop)<1.2){
+      w.pause=w.nextStop===COFFEE?40:22;
+      if(w.nextStop===COFFEE)w.cup=true;
+      w.dir=-w.dir;
+      w.nextStop = w.nextStop===COFFEE ? 22 : COFFEE;
+    }
+  });
+}
+function drawWalker(w,t){
+  const sk=SKIN[w.sk%SKIN.length], sh=SHIRT[w.sh%SHIRT.length];
+  const x=Math.round(w.x), y=LANE-13;
+  const moving=w.pause<=0;
+  const f=moving?Math.floor(t/2)%2:0;
+  /* เงา */
+  px(x-1,LANE,8,1,'#0c1018');
+  /* ขา */
+  if(moving){
+    px(x+1,y+7,2,5,'#2f3a52'); px(x+4-f*2,y+7,2,5-f,'#2f3a52');
+  }else{ px(x+1,y+7,2,5,'#2f3a52'); px(x+4,y+7,2,5,'#2f3a52') }
+  /* ตัว */
+  px(x+1,y+1,5,6,sh);
+  /* แขนและแก้วกาแฟ */
+  const ax=w.dir>0?x+6:x-1;
+  px(ax,y+2+(moving?f:0),1,3,sk);
+  if(w.cup)px(ax+(w.dir>0?0:-1),y+1+(moving?f:0),2,2,'#d9e2ef');
+  /* หัว */
+  px(x+1,y-4,5,5,sk);
+  px(x+1,y-5,5,2,'#2b2b33');
+  const ex=w.dir>0?x+4:x+2;
+  px(ex,y-2,1,1,'#1a1a22');
+}
+
+let tick=0, raf=null;
+const reduce = window.matchMedia
+  && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function px(x,y,w,h,c){ CX.fillStyle=c; CX.fillRect(x|0,y|0,w|0,h|0) }
+
+/* สีฟ้าของหน้าต่างเปลี่ยนตามเวลาจริงที่กรุงเทพ */
+function skyColors(){
+  const h=Number(new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Bangkok',
+    hour:'2-digit',hour12:false}).format(new Date()));
+  if(h>=6&&h<9)  return ['#2e4a6b','#5b7ea8','#f0b27a'];   /* เช้า */
+  if(h>=9&&h<16) return ['#3a6ea5','#7fb0dd','#ffffff'];   /* กลางวัน */
+  if(h>=16&&h<19)return ['#4a3a5e','#9c6b8a','#f0916a'];   /* เย็น */
+  return ['#141c2e','#243352','#dfe6f5'];                   /* กลางคืน */
+}
+function drawRoom(){
+  const [sky1,sky2,sun]=skyColors();
+  px(0,0,RW,RH,'#151a26');
+  /* หน้าต่างหลัง */
+  px(14,10,RW-28,52,sky1);
+  for(let i=0;i<RW-28;i+=1)
+    px(14+i,10,1,52-Math.round(26*Math.sin(i/(RW-28)*Math.PI)*0.0)+0,sky1);
+  px(14,10,RW-28,26,sky2);
+  px(RW-62,18,10,10,sun);
+  /* เส้นขอบตึกเมือง */
+  let bx=14;
+  const seed=[22,34,14,40,26,30,18,38,24,32,20,36];
+  seed.forEach((hgt,i)=>{
+    const w=(RW-28)/seed.length;
+    px(bx,62-hgt,w-2,hgt,i%2?'#1c2436':'#222c42');
+    for(let wy=62-hgt+3;wy<58;wy+=6)
+      for(let wx=bx+2;wx<bx+w-4;wx+=5)
+        px(wx,wy,2,2,(i*7+wy+wx)%5===0?'#f5d98a':'#2c3650');
+    bx+=w;
+  });
+  /* กรอบหน้าต่าง */
+  px(14,8,RW-28,2,'#2b3448'); px(14,62,RW-28,2,'#2b3448');
+  px(14,8,2,56,'#2b3448'); px(RW-16,8,2,56,'#2b3448');
+  for(let i=1;i<4;i++)px(14+i*((RW-28)/4),8,2,56,'#2b3448');
+  /* พื้นและผนัง */
+  px(0,64,RW,22,'#1a2030');
+  px(0,86,RW,RH-86,'#131824');
+  for(let y=90;y<RH;y+=14)px(0,y,RW,1,'#171d2b');
+  /* ทางเดินหน้าห้อง */
+  px(0,LANE-2,RW,2,'#1b2231');
+  px(0,LANE+6,RW,RH-LANE-6,'#10151f');
+  /* ของประดับ */
+  px(6,70,8,16,'#2a3346'); px(5,66,10,6,'#3b6b4a');         /* ต้นไม้ */
+  px(RW-18,68,12,18,'#2a3346'); px(RW-16,70,8,6,'#4a5468');  /* ตู้กาแฟหลัง */
+  px(RW-15,78,2,2,'#f5b942');
+  /* ตู้กาแฟหน้า จุดที่คนเดินแวะ */
+  px(COFFEE-5,LANE-20,11,20,'#273048');
+  px(COFFEE-3,LANE-17,7,6,'#3c4866');
+  px(COFFEE-2,LANE-9,4,2,'#f5b942');
+  px(COFFEE-5,LANE-22,11,2,'#323c56');
+  /* กระถางต้นไม้หน้า */
+  px(10,LANE-9,7,9,'#2a3346');
+  px(9,LANE-16,9,8,'#3b6b4a'); px(12,LANE-19,3,4,'#4c8560');
+}
+function drawDesk(d,color){
+  px(d.x-16,d.y+10,36,4,'#2d3548');
+  px(d.x-14,d.y+14,4,10,'#242c3c'); px(d.x+14,d.y+14,4,10,'#242c3c');
+  /* จอ */
+  px(d.x-9,d.y-6,18,13,'#1b2232');
+  px(d.x-8,d.y-5,16,11,color);
+  px(d.x-2,d.y+7,4,3,'#2d3548');
+}
+function drawScreen(d,st,t){
+  /* เส้นกราฟบนจอ ขยับเฉพาะตอนทำงาน */
+  const base=d.y+2;
+  for(let i=0;i<14;i++){
+    const ph=(st==='work'||st==='alert')?t*0.25:0;
+    const hgt=1+Math.round(3*Math.abs(Math.sin((i+ph)*0.7)));
+    px(d.x-7+i, base-hgt, 1, hgt,
+      st==='alert'?'#ffb4a8':st==='work'?'#9ff0c4':'#5c6a80');
+  }
+}
+function drawChar(d,i,st,t){
+  const sk=SKIN[i%SKIN.length], sh=SHIRT[i%SHIRT.length];
+  const bob=(st==='work')?(Math.floor(t/3)%2):0;
+  const sleep=(st==='sleep');
+  const y=d.y+16+bob+(sleep?2:0);
+  const x=d.x-3;
+  if(st==='away'){
+    /* เก้าอี้ว่าง */
+    px(x-2,y+4,10,3,'#2a3346'); px(x-2,y+7,2,6,'#222a3a'); px(x+6,y+7,2,6,'#222a3a');
+    return;
+  }
+  /* เก้าอี้ */
+  px(x-3,y+2,12,2,'#2a3346');
+  /* ตัว */
+  px(x,y,7,7,sh);
+  /* แขน */
+  const arm=(st==='work')?(Math.floor(t/2)%2):0;
+  px(x-2,y+2-arm,2,3,sk); px(x+7,y+2-(1-arm)*(st==='work'?1:0),2,3,sk);
+  /* หัว */
+  px(x+1,y-6,5,6,sk);
+  px(x+1,y-7,5,2,'#2b2b33');
+  if(!sleep){ px(x+2,y-4,1,1,'#1a1a22'); px(x+4,y-4,1,1,'#1a1a22') }
+  else { px(x+2,y-4,3,1,'#1a1a22') }
+  /* ฟองข้อความ */
+  if(st==='alert'&&Math.floor(t/6)%2===0){
+    px(x+7,y-13,7,7,'#f59e0b'); px(x+9,y-12,1,4,'#1a1a22'); px(x+9,y-7,1,1,'#1a1a22');
+  }
+  if(sleep&&Math.floor(t/8)%2===0){
+    px(x+7,y-11,1,1,'#96a3b8'); px(x+9,y-13,2,2,'#96a3b8');
+  }
+}
+function drawFrame(){
+  drawRoom();
+  AGENTS.forEach((a,i)=>{
+    const d=DESKS[i], st=agentState(a);
+    drawDesk(d,st==='alert'?'#3a2a20':st==='away'?'#1b2030':'#14301f');
+    drawScreen(d,st,tick);
+    drawChar(d,i,st,tick);
+    /* ไฟสถานะเล็กๆ ที่ขอบโต๊ะ */
+    px(d.x+15,d.y+11,2,2,STATE_INFO[st][0]);
+  });
+  /* คนเดิน วาดทีหลังสุดเพราะอยู่หน้าสุดของห้อง */
+  WALKERS.forEach(w=>drawWalker(w,tick));
+}
+function loop(){
+  tick++;
+  stepWalkers();
+  drawFrame();
+  raf=setTimeout(()=>requestAnimationFrame(loop), reduce?100000:160);
+}
+function startRoom(){
+  if(raf)clearTimeout(raf);
+  drawFrame();
+  if(!reduce)loop();
+}
+function renderRoom(){
+  drawFrame();
+  const used={};
+  AGENTS.forEach(a=>{ const s=agentState(a); used[s]=(used[s]||0)+1 });
+  g('roomLegend').innerHTML=Object.keys(STATE_INFO)
+    .filter(k=>used[k])
+    .map(k=>'<span><i style="background:'+STATE_INFO[k][0]+'"></i>'
+      +esc(STATE_INFO[k][1])+' '+used[k]+' คน</span>').join('');
+  g('roomNote').innerHTML=
+    '<b>ท่าทางผูกกับสถานะจริง</b> — พิมพ์งานอยู่ = รันปกติ · '
+    +'มีป้ายตกใจ = รายงานว่ามีเรื่องต้องดู · นั่งนิ่ง = รันแล้วแต่ไม่เจออะไร · '
+    +'หลับ = เงียบนานเกินรอบของตัวเอง · เก้าอี้ว่าง = ยังไม่เคยรัน<br>'
+    +'คลิกที่โต๊ะเพื่อเลื่อนไปดูการ์ดของคนนั้น · '
+    +'แสงนอกหน้าต่างเปลี่ยนตามเวลาจริงที่กรุงเทพ<br>'
+    +'<b>คนที่เดินไปมาในทางเดินหน้าห้องเป็นภาพประกอบล้วนๆ</b> '
+    +'ไม่ได้แทนเอเจนต์ตัวไหนและไม่ได้บอกสถานะอะไร — '
+    +'ดูสถานะจากคนที่นั่งโต๊ะเท่านั้น<br>'
+    +'วาดด้วยโค้ดล้วน ไม่มีไฟล์ภาพ จึงไม่ถ่วงเวลาโหลด · '
+    +'ถ้าตั้งค่าเครื่องให้ลดการเคลื่อนไหว ห้องจะหยุดนิ่งแต่ยังบอกสถานะได้เหมือนเดิม';
+}
+CV.addEventListener('click',e=>{
+  const r=CV.getBoundingClientRect();
+  const x=(e.clientX-r.left)/r.width*RW, y=(e.clientY-r.top)/r.height*RH;
+  let hit=-1;
+  DESKS.forEach((d,i)=>{ if(x>d.x-20&&x<d.x+22&&y>d.y-13&&y<d.y+23)hit=i });
+  if(hit<0)return;
+  const cards=document.querySelectorAll('#team .ag');
+  if(cards[hit]){
+    cards[hit].scrollIntoView({behavior:'smooth',block:'center'});
+    cards[hit].style.outline='2px solid var(--accent)';
+    setTimeout(()=>{cards[hit].style.outline=''},1600);
+  }
+});
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden){ if(raf)clearTimeout(raf); raf=null }
+  else if(!reduce&&!raf)loop();
+});
+
+g('bExport').onclick=exportData;
+g('bLoad').onclick=loadAll;
+render();
+startRoom();
+loadAll();
+</script>
+<script src="theme.js"></script>
+</body></html>

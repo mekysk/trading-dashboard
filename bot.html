@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BOT — Trading Dashboard</title>
+<style>
+:root{--bg:#0b0e14;--bg2:#111721;--bg3:#161d2a;--line:#222c3d;--tx:#e6edf7;--tx2:#94a3b8;
+--tx3:#5d6b80;--gold:#f5b942;--acc:#3b82f6;--up:#22c55e;--dn:#ef4444;--warn:#f59e0b;--pur:#a78bfa}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-size:14px;line-height:1.55;padding-bottom:40px;
+font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Leelawadee UI','Noto Sans Thai',Tahoma,sans-serif}
+.mono{font-family:ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+.up{color:var(--up)}.dn{color:var(--dn)}.fl{color:var(--tx2)}.wn{color:var(--warn)}
+button{font-family:inherit;cursor:pointer}a{color:var(--acc);text-decoration:none}
+header{position:sticky;top:0;z-index:50;background:rgba(11,14,20,.96);
+backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.hbar{display:flex;align-items:center;gap:12px;padding:9px 16px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:15px}.logo span{color:var(--gold)}
+nav{display:flex;gap:2px;margin-left:6px}
+nav a{color:var(--tx3);padding:6px 13px;font-size:13px;font-weight:600;border-radius:7px}
+nav a.on{color:var(--tx);background:var(--bg3)}
+.right{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{background:var(--bg3);border:1px solid var(--line);color:var(--tx2);
+padding:5px 11px;border-radius:7px;font-size:12px}
+.btn:hover{border-color:var(--acc);color:var(--tx)}
+.btn.go{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn.xs{padding:3px 8px;font-size:11px}
+main{padding:14px 16px;max-width:1600px;margin:0 auto}
+.ph{background:var(--bg3);border:1px solid var(--line);border-radius:10px;padding:11px 18px;
+margin-bottom:12px;font-size:17px;font-weight:700;letter-spacing:.6px;text-align:center}
+.grid{display:grid;gap:12px;grid-template-columns:1.55fr 1fr;
+grid-template-areas:"a c" "b c"}
+.ga{grid-area:a}.gb{grid-area:b}.gc{grid-area:c}
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:14px;
+display:flex;flex-direction:column;min-width:0}
+.card h3{font-size:11.5px;font-weight:700;color:var(--tx2);text-transform:uppercase;
+letter-spacing:.7px;margin-bottom:11px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.sub{font-size:11px;color:var(--tx3);font-weight:400;text-transform:none;letter-spacing:0}
+.pr{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+input,select{background:var(--bg3);border:1px solid var(--line);color:var(--tx);
+padding:5px 8px;border-radius:6px;font-size:12.5px;font-family:inherit}
+input:focus,select:focus{outline:none;border-color:var(--acc)}
+input.n{width:70px;text-align:right;font-family:ui-monospace,monospace}
+.frow{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;
+padding:5px 0;font-size:12.5px;border-bottom:1px solid rgba(34,44,61,.4)}
+.frow span{color:var(--tx2)}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{text-align:right;font-size:10px;color:var(--tx3);font-weight:600;padding:6px 5px;
+border-bottom:1px solid var(--line);text-transform:uppercase;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+td{padding:6px 5px;border-bottom:1px solid rgba(34,44,61,.5);text-align:right;white-space:nowrap}
+tr.hl{background:rgba(59,130,246,.08)}
+.stat{display:flex;flex-direction:column;gap:1px;padding:9px 11px;background:var(--bg3);border-radius:8px}
+.stat b{font-size:18px;font-weight:700;font-family:ui-monospace,monospace;line-height:1.2}
+.stat span{font-size:10.5px;color:var(--tx3)}
+.sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(112px,1fr));gap:8px}
+.note{margin-top:auto;padding-top:10px;font-size:10.5px;color:var(--tx3);line-height:1.65;
+border-top:1px dashed var(--line)}
+.note b{color:var(--tx2)}
+.ld{color:var(--tx3);text-align:center;padding:18px 0;font-size:12.5px}
+.danger{background:rgba(239,68,68,.09);border:1px solid rgba(239,68,68,.32);border-radius:8px;
+padding:11px 13px;font-size:12px;color:var(--dn);line-height:1.75;margin-bottom:11px}
+.danger b{color:#ff8a8a}
+.warnbox{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.28);border-radius:8px;
+padding:10px 12px;font-size:11.5px;color:var(--warn);line-height:1.7;margin-bottom:10px}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.half{background:var(--bg3);border-radius:8px;padding:11px}
+.half .t{font-size:10.5px;color:var(--tx3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+@media(max-width:1050px){.grid{grid-template-columns:1fr;grid-template-areas:"a" "b" "c"}
+.split{grid-template-columns:1fr}}
+</style>
+<link rel="stylesheet" href="theme.css">
+</head>
+<body>
+
+<header>
+  <div class="hbar">
+    <div class="logo">TRADING <span>DASHBOARD</span></div>
+    <nav>
+      <a href="index.html">PORT</a>
+      <a href="trade.html">TRADE</a>
+      <a href="macro.html">MACRO</a>
+      <a class="on" href="bot.html">BOT</a>
+      <a href="market.html">MARKET</a>
+      <a href="weekly.html">WEEKLY</a>
+    </nav>
+    <div class="right">
+      <span id="msg" class="sub"></span>
+      <button class="btn" id="bLoad">↻ ดึงข้อมูลราคา</button>
+      <button class="btn go" id="bRun">▶ ทดสอบ</button>
+    </div>
+  </div>
+</header>
+
+<main>
+<div class="ph">BOT</div>
+
+<div class="danger">
+  <b>อ่านก่อนใช้</b> — หน้านี้เป็น<b>เครื่องมือทดสอบย้อนหลัง ไม่ได้ส่งคำสั่งซื้อขายจริง</b>
+  ผลทดสอบย้อนหลังที่สวยงามไม่ได้แปลว่าจะทำเงินได้จริง เพราะอดีตไม่เคยซ้ำรอยเดิม
+  ระบบนี้จึงบังคับให้ดู 3 อย่างคู่กันเสมอ: ผลในช่วงที่<b>ไม่ได้ใช้ปรับค่า</b> ·
+  <b>การถอยจากยอดสูงสุด</b> · และ<b>เทียบกับการซื้อแล้วถือเฉยๆ</b>
+</div>
+
+<div class="grid">
+  <div class="card ga">
+    <h3>BOT1 — ค่า Input &amp; ผลการทดสอบ</h3>
+    <div class="split" style="margin-bottom:12px">
+      <div>
+        <div class="frow"><span>สัญลักษณ์</span>
+          <input id="pSym" value="SPY" style="width:96px"></div>
+        <div class="frow"><span>ช่วงเวลา</span>
+          <select id="pYears" style="width:96px">
+            <option value="3">3 ปี</option><option value="5" selected>5 ปี</option>
+            <option value="10">10 ปี</option></select></div>
+        <div class="frow"><span>เส้นเร็ว (วัน)</span>
+          <input class="n" id="pFast" type="number" value="20"></div>
+        <div class="frow"><span>เส้นช้า (วัน)</span>
+          <input class="n" id="pSlow" type="number" value="50"></div>
+        <div class="frow"><span>กรอง RSI</span>
+          <select id="pUseRsi" style="width:70px"><option value="0">ปิด</option>
+            <option value="1">เปิด</option></select></div>
+        <div class="frow"><span>ซื้อเมื่อ RSI ต่ำกว่า</span>
+          <input class="n" id="pRsiMax" type="number" value="70"></div>
+      </div>
+      <div>
+        <div class="frow"><span>ทุนเริ่มต้น</span>
+          <input class="n" id="pCap" type="number" value="10000" style="width:88px"></div>
+        <div class="frow"><span>ใช้เงินต่อไม้ (%)</span>
+          <input class="n" id="pRisk" type="number" value="100"></div>
+        <div class="frow"><span>Stop loss (%)</span>
+          <input class="n" id="pStop" type="number" value="0"></div>
+        <div class="frow"><span>Take profit (%)</span>
+          <input class="n" id="pTake" type="number" value="0"></div>
+        <div class="frow"><span>ค่าธรรมเนียม (%)</span>
+          <input class="n" id="pFee" type="number" step="any" value="0.1"></div>
+        <div class="frow"><span>Slippage (%)</span>
+          <input class="n" id="pSlip" type="number" step="any" value="0.05"></div>
+      </div>
+    </div>
+    <div id="resBox"></div>
+    <div id="eqBox" style="margin-top:12px"></div>
+    <div class="note"><b>Stop / Take = 0 คือปิดใช้งาน</b> ·
+      ค่าธรรมเนียมกับ slippage ตั้งค่าเริ่มต้นไม่เป็นศูนย์โดยตั้งใจ
+      เพราะการทดสอบที่ไม่หักต้นทุนคือผลลัพธ์ในจินตนาการ</div>
+  </div>
+
+  <div class="card gb">
+    <h3>บันทึกค่าสถิติ &amp; จุดดี จุดอ่อน</h3>
+    <div id="statBox"></div>
+    <div id="swBox" style="margin-top:12px"></div>
+  </div>
+
+  <div class="card gc">
+    <h3>Optimize จากสภาวะตลาด <span class="sub">ปรับค่าจากอดีต แล้วพิสูจน์กับอนาคตที่ไม่เคยเห็น</span></h3>
+    <div class="warnbox">
+      การไล่หาค่าที่ดีที่สุดจากข้อมูลทั้งชุด คือ<b>การจำอดีต ไม่ใช่การทำนายอนาคต</b><br>
+      ระบบนี้จึงปรับค่าจาก <b>60% แรก</b> แล้วเอาไปทดสอบกับ <b>40% หลัง</b> ที่บอทไม่เคยเห็น —
+      <b>ถ้าตัวเลขสองช่องต่างกันมาก แปลว่าค่าที่ได้คือการ overfit</b>
+    </div>
+    <div class="pr" style="margin-bottom:10px">
+      <button class="btn go" id="bOpt">เริ่มค้นหา</button>
+      <span class="sub">ทดสอบ 30 ชุดค่า</span>
+    </div>
+    <div id="optBox"></div>
+    <div id="sizeBox" style="margin-top:14px"></div>
+  </div>
+</div>
+
+<div class="card" style="margin-top:12px">
+  <h3>แก้ไม้ <span class="sub">เพิ่มเงินตอนติดลบเพื่อถัวต้นทุน</span></h3>
+  <div class="danger">
+    <b>ก่อนดูตาราง ขอให้เข้าใจกลไกนี้ก่อน</b><br>
+    การแก้ไม้ทำให้<b>ชนะเล็กๆ ติดกันยาวมาก แล้วแพ้ครั้งเดียวหมดตัว</b> —
+    ไม่ใช่เพราะโชคร้าย แต่เพราะมันคือรูปแบบผลลัพธ์ตามธรรมชาติของวิธีนี้<br>
+    การทดสอบย้อนหลัง 5 ปี<b>มักไม่มีเหตุการณ์ที่ทำให้พังอยู่ในนั้น</b> มันเลยดูดีเสมอ
+    จนกว่าจะเจอของจริง · ตารางนี้แสดง<b>เงินที่ต้องมีจริง</b> ซึ่งเป็นตัวเลขที่ backtest ไม่เคยบอกคุณ
+  </div>
+  <div class="pr" style="margin-bottom:10px">
+    <label class="sub">ไม้แรก <input class="n" id="mBase" type="number" value="1000"></label>
+    <label class="sub">คูณไม้ละ <input class="n" id="mMult" type="number" step="any" value="2"></label>
+    <label class="sub">ราคาลงไม้ละ <input class="n" id="mDrop" type="number" step="any" value="10"> %</label>
+    <label class="sub">จำนวนไม้ <input class="n" id="mSteps" type="number" value="8"></label>
+  </div>
+  <div id="mgBox"></div>
+</div>
+</main>
+
+<script>
+/* ==================================================================
+   BACKTEST ENGINE
+   หลักการที่ยึดไว้ตลอด:
+   1. สัญญาณคำนวณจากแท่ง i แต่เข้า/ออกที่ราคาเปิดของแท่ง i+1
+      (ห้ามใช้ข้อมูลที่ยังไม่เกิดขึ้น = look-ahead bias)
+   2. หักค่าธรรมเนียมและ slippage ทุกไม้เสมอ ไม่มีค่าเริ่มต้นเป็นศูนย์
+   3. เทียบกับ "ซื้อแล้วถือ" เสมอ เพราะกำไรที่แพ้การนอนเฉยๆ คือการทำให้แย่ลง
+   ================================================================== */
+function sma(a,n,i){ if(i<n-1)return null; let s=0; for(let k=i-n+1;k<=i;k++)s+=a[k]; return s/n; }
+function rsiSeries(c,p){
+  const out=new Array(c.length).fill(null);
+  if(c.length<p+1)return out;
+  let g=0,l=0;
+  for(let i=1;i<=p;i++){const d=c[i]-c[i-1];if(d>=0)g+=d;else l-=d}
+  let ag=g/p,al=l/p;
+  out[p]=al===0?100:100-100/(1+ag/al);
+  for(let i=p+1;i<c.length;i++){
+    const d=c[i]-c[i-1];
+    ag=(ag*(p-1)+Math.max(d,0))/p; al=(al*(p-1)+Math.max(-d,0))/p;
+    out[i]=al===0?100:100-100/(1+ag/al);
+  }
+  return out;
+}
+
+/* bars = [{d,o,h,l,c}] เรียงเก่า -> ใหม่ */
+function backtest(bars,P){
+  const cost=(P.feePct||0)/100, slip=(P.slipPct||0)/100;
+  const c=bars.map(b=>b.c);
+  const rsi=P.useRsi?rsiSeries(c,P.rsiLen||14):null;
+  const cap0=P.capital||10000;
+  let cash=cap0, pos=0, entry=0, entryIdx=-1;
+  const trades=[], equity=[];
+  let peak=cap0, mdd=0, maxDDpct=0;
+
+  for(let i=0;i<bars.length;i++){
+    const px=bars[i].c;
+    const eq=cash+pos*px;
+    equity.push({d:bars[i].d,v:eq});
+    if(eq>peak)peak=eq;
+    const dd=eq-peak; if(dd<mdd)mdd=dd;
+    const ddp=peak?dd/peak*100:0; if(ddp<maxDDpct)maxDDpct=ddp;
+
+    /* --- ตรวจ stop / target ด้วยราคาสูง-ต่ำของแท่งนี้ (สัญญาณจากไม้ที่เปิดไว้แล้ว) --- */
+    if(pos>0){
+      let exitPx=null,reason='';
+      if(P.stopPct>0){
+        const s=entry*(1-P.stopPct/100);
+        if(bars[i].l<=s){exitPx=s;reason='stop'}
+      }
+      if(exitPx===null&&P.takePct>0){
+        const t=entry*(1+P.takePct/100);
+        if(bars[i].h>=t){exitPx=t;reason='target'}
+      }
+      if(exitPx!==null){
+        const fill=exitPx*(1-slip);
+        const proceeds=pos*fill*(1-cost);
+        trades.push({din:bars[entryIdx].d,dout:bars[i].d,entry,exit:fill,qty:pos,
+          pl:proceeds-pos*entry,reason});
+        cash+=proceeds; pos=0; entry=0; entryIdx=-1;
+      }
+    }
+
+    /* --- สัญญาณจากแท่ง i ใช้สั่งที่แท่ง i+1 --- */
+    if(i+1>=bars.length)continue;
+    const fast=sma(c,P.fast,i), slow=sma(c,P.slow,i);
+    const fastP=sma(c,P.fast,i-1), slowP=sma(c,P.slow,i-1);
+    if(fast==null||slow==null||fastP==null||slowP==null)continue;
+    const crossUp=fastP<=slowP&&fast>slow;
+    const crossDn=fastP>=slowP&&fast<slow;
+    const rsiOk=!P.useRsi||(rsi[i]!=null&&rsi[i]<(P.rsiMax||70));
+    const nextOpen=bars[i+1].o;
+
+    if(pos===0&&crossUp&&rsiOk){
+      const fill=nextOpen*(1+slip);
+      const spend=cash*((P.riskPct||100)/100);
+      const qty=fill>0?(spend*(1-cost))/fill:0;
+      if(qty>0){ pos=qty; entry=fill; entryIdx=i+1; cash-=spend; }
+    } else if(pos>0&&crossDn){
+      const fill=nextOpen*(1-slip);
+      const proceeds=pos*fill*(1-cost);
+      trades.push({din:bars[entryIdx].d,dout:bars[i+1].d,entry,exit:fill,qty:pos,
+        pl:proceeds-pos*entry,reason:'signal'});
+      cash+=proceeds; pos=0; entry=0; entryIdx=-1;
+    }
+  }
+  /* ปิดสถานะที่ค้างอยู่ที่แท่งสุดท้าย เพื่อให้ตัวเลขจบจริง */
+  if(pos>0){
+    const last=bars[bars.length-1];
+    const fill=last.c*(1-slip), proceeds=pos*fill*(1-cost);
+    trades.push({din:bars[entryIdx].d,dout:last.d,entry,exit:fill,qty:pos,
+      pl:proceeds-pos*entry,reason:'end'});
+    cash+=proceeds; pos=0;
+  }
+  const final=cash;
+  const bhQty=bars.length?cap0*(1-cost)/(bars[0].c*(1+slip)):0;
+  const bhFinal=bars.length?bhQty*bars[bars.length-1].c*(1-slip)*(1-cost):cap0;
+  const years=bars.length/252;
+  const cagr=(v)=>years>0&&cap0>0&&v>0?(Math.pow(v/cap0,1/years)-1)*100:null;
+  const wins=trades.filter(t=>t.pl>0), losses=trades.filter(t=>t.pl<0);
+  const gw=wins.reduce((a,b)=>a+b.pl,0), gl=Math.abs(losses.reduce((a,b)=>a+b.pl,0));
+  return {
+    trades,equity,final,ret:(final-cap0)/cap0*100,cagr:cagr(final),
+    bhFinal,bhRet:(bhFinal-cap0)/cap0*100,bhCagr:cagr(bhFinal),
+    edge:(final-bhFinal)/cap0*100,
+    n:trades.length,wins:wins.length,losses:losses.length,
+    winRate:trades.length?wins.length/trades.length*100:0,
+    profitFactor:gl?gw/gl:(gw>0?Infinity:0),
+    avgWin:wins.length?gw/wins.length:0, avgLoss:losses.length?gl/losses.length:0,
+    maxDD:mdd,maxDDpct,bars:bars.length,years,
+  };
+}
+
+/* แบ่งข้อมูลเป็นช่วงปรับค่า และช่วงทดสอบจริง */
+function splitBars(bars,isFrac){
+  const k=Math.floor(bars.length*(isFrac==null?0.6:isFrac));
+  return {IS:bars.slice(0,k),OOS:bars.slice(k)};
+}
+
+/* ค้นหาค่าที่ดีที่สุด "เฉพาะในช่วง IS" แล้วเอาไปทดสอบกับ OOS */
+function optimize(bars,base,grid,isFrac){
+  const {IS,OOS}=splitBars(bars,isFrac);
+  const results=[];
+  for(const f of grid.fast)for(const s of grid.slow){
+    if(f>=s)continue;
+    const P={...base,fast:f,slow:s};
+    const r=backtest(IS,P);
+    if(r.n<3)continue;         /* ต่ำกว่า 3 ไม้ ไม่ใช่ผลลัพธ์ เป็นเรื่องบังเอิญล้วน */
+    /* ไม่ทิ้งชุดที่ไม้น้อย แต่ติดธงไว้ให้เห็นบนหน้าจอ ไม่ซ่อนข้อมูลจากผู้ใช้ */
+    results.push({fast:f,slow:s,is:r,thin:r.n<10});
+  }
+  results.sort((a,b)=>b.is.ret-a.is.ret);
+  results.forEach(x=>{ x.oos=backtest(OOS,{...base,fast:x.fast,slow:x.slow}); });
+  return {results,IS,OOS};
+}
+
+/* ===== แก้ไม้ (เพิ่มเงินตอนติดลบ) — คำนวณเงินที่ต้องใช้จริง ===== */
+function martingale(base,mult,steps,dropPct){
+  const rows=[];
+  let total=0,qty=0,cost=0;
+  for(let i=0;i<steps;i++){
+    const amt=base*Math.pow(mult,i);
+    const px=100*Math.pow(1-dropPct/100,i);   /* ราคาสมมติเริ่มที่ 100 */
+    total+=amt; cost+=amt; qty+=amt/px;
+    const avg=cost/qty;
+    const breakeven=(avg/px-1)*100;
+    rows.push({step:i+1,amt,px,total,avg,breakeven});
+  }
+  return rows;
+}
+
+/* ============================================================
+   หน้า BOT — ส่วนติดต่อผู้ใช้
+   ============================================================ */
+const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const n2=v=>(v==null||!isFinite(v))?(v===Infinity?'∞':'—'):Number(v).toFixed(2);
+const pct=v=>(v==null||!isFinite(v))?'—':(v>=0?'+':'')+v.toFixed(1)+'%';
+const usd=v=>(v==null||!isFinite(v))?'—':(v<0?'-$':'$')+Math.abs(v).toLocaleString('en-US',{maximumFractionDigits:0});
+const cl=v=>v>0?'up':v<0?'dn':'fl';
+let BARS=null, LAST=null;
+
+function P(){
+  const g=id=>document.getElementById(id);
+  return {fast:+g('pFast').value||20, slow:+g('pSlow').value||50,
+    useRsi:g('pUseRsi').value==='1', rsiMax:+g('pRsiMax').value||70, rsiLen:14,
+    capital:+g('pCap').value||10000, riskPct:+g('pRisk').value||100,
+    stopPct:+g('pStop').value||0, takePct:+g('pTake').value||0,
+    feePct:+g('pFee').value||0, slipPct:+g('pSlip').value||0};
+}
+
+/* ---------- ดึงราคาย้อนหลัง ---------- */
+function parseCsv(csv){
+  const L=csv.trim().split('\n'); if(L.length<50)return null;
+  const out=[];
+  for(let i=1;i<L.length;i++){
+    const a=L[i].split(',');
+    const o=parseFloat(a[1]),h=parseFloat(a[2]),l=parseFloat(a[3]),c=parseFloat(a[4]);
+    if(a[0]&&isFinite(o)&&isFinite(h)&&isFinite(l)&&isFinite(c))out.push({d:a[0],o,h,l,c});
+  }
+  return out.length>100?out:null;
+}
+async function loadBars(){
+  const m=document.getElementById('msg');
+  const raw=document.getElementById('pSym').value.trim().toLowerCase();
+  const code=raw.includes('.')||raw.includes('usd')?raw:raw+'.us';
+  m.textContent='กำลังดึงข้อมูล '+code+'…';
+  const url='https://stooq.com/q/d/l/?s='+code+'&i=d';
+  const PX=[u=>'https://api.allorigins.win/raw?url='+encodeURIComponent(u),
+    u=>'https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent(u),
+    u=>'https://corsproxy.io/?url='+encodeURIComponent(u)];
+  let csv=null;
+  try{csv=await Promise.any(PX.map(f=>fetch(f(url),{cache:'no-store'})
+    .then(r=>r.ok?r.text():Promise.reject(new Error('HTTP')))));}catch(e){}
+  if(!csv){m.innerHTML='<span class="wn">ดึงข้อมูลไม่สำเร็จ — ลองใหม่หรือเปลี่ยนสัญลักษณ์</span>';return false}
+  const all=parseCsv(csv);
+  if(!all){m.innerHTML='<span class="wn">ไม่พบข้อมูลของ '+esc(code)+'</span>';return false}
+  const years=+document.getElementById('pYears').value||5;
+  BARS=all.slice(-Math.round(years*252));
+  m.textContent='ได้ข้อมูล '+BARS.length+' แท่ง ('+BARS[0].d+' ถึง '+BARS[BARS.length-1].d+')';
+  return true;
+}
+
+/* ---------- แสดงผลทดสอบ ---------- */
+function showResult(r){
+  LAST=r;
+  const beat=r.final>r.bhFinal;
+  document.getElementById('resBox').innerHTML='<div class="sgrid">'
+    +'<div class="stat"><b class="'+cl(r.ret)+'">'+pct(r.ret)+'</b><span>ผลตอบแทนรวม</span></div>'
+    +'<div class="stat"><b class="'+cl(r.cagr)+'">'+pct(r.cagr)+'</b><span>ต่อปี (CAGR)</span></div>'
+    +'<div class="stat"><b class="dn">'+pct(r.maxDDpct)+'</b><span>ถอยจากยอดสูงสุด</span></div>'
+    +'<div class="stat"><b>'+r.n+'</b><span>จำนวนไม้</span></div>'
+    +'<div class="stat"><b class="'+cl(r.bhRet)+'">'+pct(r.bhRet)+'</b><span>ซื้อแล้วถือเฉยๆ</span></div>'
+    +'<div class="stat"><b class="'+(beat?'up':'dn')+'">'+pct(r.edge)+'</b><span>ดีกว่า/แย่กว่าการนอนเฉยๆ</span></div>'
+    +'</div>'
+    +(!beat?'<div class="danger" style="margin-top:10px;margin-bottom:0">'
+      +'<b>บอทนี้ทำได้แย่กว่าการซื้อแล้วถือเฉยๆ '+pct(Math.abs(r.edge))+'</b> — '
+      +'เหนื่อยเฝ้าจอทั้งปีเพื่อให้ได้น้อยกว่าการซื้อแล้วนอน</div>'
+      :'<div class="warnbox" style="margin-top:10px;margin-bottom:0;border-color:rgba(34,197,94,.3);color:var(--up)">'
+      +'ชนะการซื้อแล้วถือ '+pct(r.edge)+' ในช่วงนี้ — '
+      +'<b>แต่ตัวเลขนี้มาจากค่าที่คุณเลือกเอง ต้องพิสูจน์กับช่วงที่ไม่ได้ใช้ปรับค่าด้วย</b></div>');
+
+  /* เส้นทุน */
+  const eq=r.equity;
+  if(eq.length>1){
+    const vs=eq.map(e=>e.v),mn=Math.min(...vs),mx=Math.max(...vs),rg=(mx-mn)||1;
+    const W=600;
+    const pts=eq.map((e,i)=>(i/(eq.length-1)*W).toFixed(1)+','+(110-(e.v-mn)/rg*100).toFixed(1)).join(' ');
+    /* เส้นซื้อแล้วถือ */
+    const b0=BARS[0].c;
+    const bh=BARS.map(b=>r.equity[0].v*b.c/b0);
+    const pts2=bh.map((v,i)=>(i/(bh.length-1)*W).toFixed(1)+','+(110-(v-mn)/rg*100).toFixed(1)).join(' ');
+    document.getElementById('eqBox').innerHTML=
+      '<div class="sub" style="margin-bottom:5px">เส้นทุน — '
+      +'<span style="color:var(--acc)">■</span> บอท · '
+      +'<span style="color:var(--tx3)">■</span> ซื้อแล้วถือ</div>'
+      +'<svg viewBox="0 0 '+W+' 120" preserveAspectRatio="none" '
+      +'style="width:100%;height:150px;background:var(--bg3);border-radius:8px">'
+      +'<polyline points="'+pts2+'" fill="none" stroke="#5d6b80" stroke-width="1.5"/>'
+      +'<polyline points="'+pts+'" fill="none" stroke="#3b82f6" stroke-width="2"/></svg>';
+  }
+
+  /* สถิติ + จุดดีจุดอ่อน */
+  document.getElementById('statBox').innerHTML='<div class="sgrid">'
+    +[['อัตราชนะ',r.winRate.toFixed(0)+'%',''],
+      ['Profit Factor',n2(r.profitFactor),r.profitFactor>=1?'up':'dn'],
+      ['ชนะ / แพ้',r.wins+' / '+r.losses,''],
+      ['กำไรเฉลี่ยไม้ชนะ',usd(r.avgWin),'up'],
+      ['ขาดทุนเฉลี่ยไม้แพ้',usd(-r.avgLoss),'dn'],
+      ['ทุนปลายทาง',usd(r.final),cl(r.final-r.equity[0].v)],
+    ].map(([l,v,c])=>'<div class="stat"><b class="'+c+'">'+v+'</b><span>'+l+'</span></div>').join('')
+    +'</div>';
+
+  const good=[],bad=[];
+  if(r.n<20)bad.push('มีแค่ '+r.n+' ไม้ใน '+r.years.toFixed(1)+' ปี — <b>สถิติจากไม้น้อยขนาดนี้เชื่อไม่ได้</b>');
+  else good.push('มี '+r.n+' ไม้ พอมีน้ำหนักทางสถิติระดับหนึ่ง');
+  if(r.maxDDpct<-30)bad.push('เคยถอยจากยอด '+pct(r.maxDDpct)+' — <b>ถามตัวเองว่าจะทนถือต่อไหวไหมตอนนั้น</b>');
+  else if(r.maxDDpct>-15)good.push('ถอยจากยอดมากสุดแค่ '+pct(r.maxDDpct)+' ถือว่านิ่ง');
+  if(r.profitFactor<1)bad.push('Profit Factor ต่ำกว่า 1 = <b>ระบบนี้ไม่ทำเงิน</b>');
+  else if(r.profitFactor>1.5)good.push('Profit Factor '+n2(r.profitFactor)+' กำไรมากกว่าขาดทุนพอสมควร');
+  if(r.edge<0)bad.push('แพ้การซื้อแล้วถือ '+pct(r.edge));
+  else good.push('ชนะการซื้อแล้วถือ '+pct(r.edge)+' ในช่วงที่ทดสอบ');
+  if(r.winRate>70&&r.profitFactor<1.2)
+    bad.push('ชนะบ่อย ('+r.winRate.toFixed(0)+'%) แต่กำไรไม่โต — <b>รูปแบบคลาสสิกของระบบที่แพ้ครั้งเดียวคืนหมด</b>');
+  document.getElementById('swBox').innerHTML=
+    '<div class="split">'
+    +'<div class="half"><div class="t" style="color:var(--up)">จุดดี</div>'
+    +(good.length?good.map(x=>'<div style="font-size:11.5px;line-height:1.7;color:var(--tx2)">• '+x+'</div>').join('')
+      :'<div class="sub">ยังไม่พบจุดเด่นชัดเจน</div>')+'</div>'
+    +'<div class="half"><div class="t" style="color:var(--dn)">จุดอ่อน</div>'
+    +(bad.length?bad.map(x=>'<div style="font-size:11.5px;line-height:1.7;color:var(--tx2)">• '+x+'</div>').join('')
+      :'<div class="sub">ไม่พบจุดอ่อนร้ายแรงในช่วงที่ทดสอบ</div>')+'</div></div>';
+}
+
+/* ---------- optimize ---------- */
+function showOpt(){
+  if(!BARS){document.getElementById('optBox').innerHTML='<div class="ld">ดึงข้อมูลราคาก่อน</div>';return}
+  const base=P();
+  const grid={fast:[5,10,15,20,25,30],slow:[30,50,80,100,150]};
+  const {results}=optimize(BARS,base,grid,0.6);
+  if(!results.length){document.getElementById('optBox').innerHTML=
+    '<div class="ld">ไม่มีชุดค่าไหนเกิดไม้เพียงพอ ลองเพิ่มช่วงเวลาหรือลดค่าเส้นค่าเฉลี่ย</div>';return}
+  const top=results.slice(0,8);
+  const decay=top.map(x=>x.is.ret-x.oos.ret);
+  const avgDecay=decay.reduce((a,b)=>a+b,0)/decay.length;
+  document.getElementById('optBox').innerHTML=
+    '<div style="overflow-x:auto"><table><thead><tr><th>เร็ว/ช้า</th><th>ไม้</th>'
+    +'<th>ช่วงปรับค่า</th><th>ช่วงพิสูจน์</th><th>ต่างกัน</th></tr></thead><tbody>'
+    +top.map((x,i)=>{
+      const d=x.is.ret-x.oos.ret;
+      return '<tr'+(i===0?' class="hl"':'')+'><td><b>'+x.fast+' / '+x.slow+'</b></td>'
+      +'<td class="mono'+(x.thin?' wn':'')+'">'+x.is.n+(x.thin?' ⚠':'')+'</td>'
+      +'<td class="mono '+cl(x.is.ret)+'">'+pct(x.is.ret)+'</td>'
+      +'<td class="mono '+cl(x.oos.ret)+'"><b>'+pct(x.oos.ret)+'</b></td>'
+      +'<td class="mono '+(d>20?'dn':'fl')+'">'+pct(-d)+'</td></tr>';
+    }).join('')+'</tbody></table></div>'
+    +'<div class="'+(avgDecay>20?'danger':'warnbox')+'" style="margin-top:10px;margin-bottom:0">'
+    +(avgDecay>20
+      ? '<b>ผลตกลงเฉลี่ย '+avgDecay.toFixed(0)+' จุด เมื่อเจอข้อมูลที่ไม่เคยเห็น</b><br>'
+        +'นี่คืออาการ overfit ชัดเจน — ค่าที่ได้คือการจำอดีต ไม่ใช่กฎที่ใช้ได้จริง'
+      : 'ผลต่างระหว่างสองช่วงเฉลี่ย '+avgDecay.toFixed(0)+' จุด ถือว่ายังพอรับได้<br>'
+        +'<b>ให้ยึดตัวเลขช่องขวา (ช่วงพิสูจน์) เป็นความจริงเสมอ</b> ไม่ใช่ช่องซ้าย')
+    +'</div>'
+    +'<div class="sub" style="margin-top:7px">⚠ = ไม้น้อยกว่า 10 ไม้ ตัวเลขไม่มีน้ำหนัก · '
+    +'แถวไฮไลต์ = ดีที่สุดในช่วงปรับค่า ซึ่ง<b>ไม่ได้แปลว่าดีที่สุดจริง</b></div>';
+
+  /* ปรับจำนวนเงินลงทุน */
+  const best=results[0];
+  const dd=Math.abs(best.oos.maxDDpct||best.is.maxDDpct||0);
+  const cap=P().capital;
+  const rows=[10,20,30].map(tol=>{
+    const frac=dd>0?Math.min(100,tol/dd*100):100;
+    return {tol,frac,amt:cap*frac/100};
+  });
+  document.getElementById('sizeBox').innerHTML=
+    '<div class="sub" style="font-weight:700;color:var(--gold);margin-bottom:6px">ปรับจำนวนเงินลงทุน</div>'
+    +'<div class="sub" style="margin-bottom:8px;line-height:1.7">'
+    +'กลยุทธ์นี้เคยถอยจากยอด <b>'+dd.toFixed(1)+'%</b> ในช่วงพิสูจน์ '
+    +'ถ้าคุณรับการขาดทุนของ<b>ทั้งพอร์ต</b>ได้เท่าไหร่ ควรใส่เงินไม่เกินเท่านี้</div>'
+    +'<table><thead><tr><th>รับขาดทุนพอร์ตได้</th><th>ใส่ได้ไม่เกิน</th><th>เป็นเงิน</th></tr></thead><tbody>'
+    +rows.map(x=>'<tr><td>'+x.tol+'%</td><td class="mono">'+x.frac.toFixed(0)+'% ของทุน</td>'
+      +'<td class="mono">'+usd(x.amt)+'</td></tr>').join('')
+    +'</tbody></table>'
+    +'<div class="sub" style="margin-top:7px">คำนวณจาก drawdown ในอดีต · '
+    +'<b>ของจริงมักแย่กว่าที่เคยเกิด</b> เผื่อไว้เสมอ</div>';
+}
+
+/* ---------- แก้ไม้ ---------- */
+function showMG(){
+  const g=id=>+document.getElementById(id).value;
+  const base=g('mBase')||1000, mult=g('mMult')||2, steps=Math.min(15,g('mSteps')||8), drop=g('mDrop')||10;
+  const rows=martingale(base,mult,steps,drop);
+  const last=rows[rows.length-1];
+  const cap=P().capital;
+  document.getElementById('mgBox').innerHTML=
+    '<div style="overflow-x:auto"><table><thead><tr><th>ไม้ที่</th><th>ลงเพิ่ม</th>'
+    +'<th>ราคาสมมติ</th><th>เงินที่ใช้ไปแล้ว</th><th>ต้นทุนเฉลี่ย</th>'
+    +'<th>ต้องเด้งกี่ % ถึงเท่าทุน</th><th>% ของพอร์ต</th></tr></thead><tbody>'
+    +rows.map(r=>{
+      const ofCap=cap?r.total/cap*100:0;
+      const over=ofCap>100;
+      return '<tr'+(over?' style="opacity:.55"':'')+'><td><b>'+r.step+'</b></td>'
+        +'<td class="mono">'+usd(r.amt)+'</td>'
+        +'<td class="mono">'+r.px.toFixed(1)+'</td>'
+        +'<td class="mono'+(over?' dn':'')+'">'+usd(r.total)+'</td>'
+        +'<td class="mono">'+r.avg.toFixed(1)+'</td>'
+        +'<td class="mono wn">+'+r.breakeven.toFixed(1)+'%</td>'
+        +'<td class="mono'+(over?' dn':'')+'">'+ofCap.toFixed(0)+'%'+(over?' ⛔':'')+'</td></tr>';
+    }).join('')+'</tbody></table></div>'
+    +'<div class="danger" style="margin-top:11px;margin-bottom:0">'
+    +'<b>ครบ '+steps+' ไม้ ต้องใช้เงิน '+usd(last.total)+' = '
+    +(last.total/base).toFixed(0)+' เท่าของไม้แรก'
+    +(cap?' และคิดเป็น '+(last.total/cap*100).toFixed(0)+'% ของทุนทั้งหมด':'')+'</b><br>'
+    +'และถึงตอนนั้นราคายังต้องเด้งขึ้นอีก <b>'+last.breakeven.toFixed(1)+'%</b> คุณถึงจะแค่<b>เท่าทุน</b><br>'
+    +'สังเกตว่า<b>ยิ่งแก้ไม้ ตัวเลขนี้ยิ่งสูงขึ้น ไม่ใช่ต่ำลง</b> — '
+    +'เพราะราคาร่วงเร็วกว่าที่ต้นทุนเฉลี่ยจะตามลงไปทัน '
+    +'ซึ่งสวนทางกับความรู้สึกของคนส่วนใหญ่ที่คิดว่าถัวแล้วจะกลับมาง่ายขึ้น</div>';
+}
+
+/* ---------- เริ่มทำงาน ---------- */
+function init(){
+  document.getElementById('bLoad').onclick=async()=>{
+    const b=document.getElementById('bLoad');b.disabled=true;
+    await loadBars();b.disabled=false;
+    if(BARS)showResult(backtest(BARS,P()));
+  };
+  document.getElementById('bRun').onclick=async()=>{
+    if(!BARS){const okk=await loadBars();if(!okk)return}
+    showResult(backtest(BARS,P()));
+  };
+  document.getElementById('bOpt').onclick=async()=>{
+    if(!BARS){const okk=await loadBars();if(!okk)return}
+    const b=document.getElementById('bOpt');b.textContent='กำลังคำนวณ…';b.disabled=true;
+    setTimeout(()=>{showOpt();b.textContent='เริ่มค้นหา';b.disabled=false},30);
+  };
+  ['mBase','mMult','mDrop','mSteps'].forEach(i=>document.getElementById(i).oninput=showMG);
+  showMG();
+  document.getElementById('resBox').innerHTML=
+    '<div class="ld">กด <b>▶ ทดสอบ</b> มุมขวาบนเพื่อเริ่ม<br>'
+    +'<span class="sub">ระบบจะดึงราคาย้อนหลังจริงมาทดสอบให้</span></div>';
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+</script>
+<script src="theme.js"></script>
+</body>
+</html>

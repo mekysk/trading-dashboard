@@ -1,0 +1,529 @@
+<!DOCTYPE html><html lang="th"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bot Lab — Trading Dashboard</title>
+<style>
+:root{--bg:#0a0d13;--bg2:#10151e;--bg3:#161d29;--line:#222c3d;--tx:#e8eef8;
+--tx2:#96a3b8;--tx3:#5c6a80;--accent:#f5b942;--glow:245,185,66;--acc:#3b82f6;
+--up:#34C27D;--dn:#E5645A;--warn:#f59e0b;--pur:#a78bfa}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-size:14px;line-height:1.55;padding-bottom:40px;
+font-family:-apple-system,'Segoe UI','Leelawadee UI','Noto Sans Thai',Tahoma,sans-serif}
+.mono{font-family:ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+.up{color:var(--up)}.dn{color:var(--dn)}.fl{color:var(--tx2)}
+button{font-family:inherit;cursor:pointer}a{color:var(--acc);text-decoration:none}
+header{position:sticky;top:0;z-index:50;background:rgba(10,13,19,.96);
+backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.hbar{display:flex;align-items:center;gap:12px;padding:9px 16px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:15px}.logo span{color:var(--accent)}
+nav{display:flex;gap:2px;margin-left:6px;flex-wrap:wrap}
+nav a{color:var(--tx3);padding:6px 12px;font-size:12.5px;font-weight:600;border-radius:7px}
+nav a.on{color:var(--tx);background:var(--bg3)}
+.right{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{background:var(--bg3);border:1px solid var(--line);color:var(--tx2);
+padding:5px 11px;border-radius:7px;font-size:12px}
+.btn:hover{color:var(--tx)}
+.btn.go{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn.on{background:rgba(var(--glow),.16);border-color:var(--accent);color:var(--accent);font-weight:600}
+main{padding:18px;max-width:1480px;margin:0 auto}
+h1{font-size:27px;font-weight:800;letter-spacing:-.02em}
+.lead{font-size:12.5px;color:var(--tx2);margin:3px 0 14px;max-width:80ch;line-height:1.7}
+.sub{font-size:11px;color:var(--tx3);font-weight:400}
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:16px;margin-bottom:12px}
+.card h3{font-size:13px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.frm{display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:9px;margin-bottom:11px}
+.frm label{display:flex;flex-direction:column;gap:3px;font-size:10px;color:var(--tx3);
+text-transform:uppercase;letter-spacing:.07em;font-weight:600}
+input,select{background:var(--bg3);border:1px solid var(--line);color:var(--tx);
+border-radius:6px;padding:6px 9px;font-family:inherit;font-size:12.5px;width:100%}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:9px;margin-bottom:12px}
+.kpi{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:11px 13px}
+.kpi .n{font-size:10px;color:var(--tx3);text-transform:uppercase;letter-spacing:.08em}
+.kpi .v{font-size:22px;font-weight:800;letter-spacing:-.03em;line-height:1.2;
+font-family:ui-monospace,monospace}
+.kpi .s{font-size:10px;color:var(--tx3)}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{text-align:right;font-size:10px;color:var(--tx3);font-weight:600;padding:7px 6px;
+border-bottom:1px solid var(--line);text-transform:uppercase;letter-spacing:.07em;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+td{padding:7px 6px;border-bottom:1px solid rgba(34,44,61,.5);text-align:right;white-space:nowrap}
+tbody tr:hover{background:rgba(255,255,255,.025)}
+.tag{display:inline-block;font-size:9.5px;padding:1px 7px;border-radius:4px;font-weight:700;margin-right:3px}
+.t-up{background:rgba(52,194,125,.18);color:var(--up)}
+.t-dn{background:rgba(229,100,90,.18);color:var(--dn)}
+.t-na{background:rgba(148,163,184,.14);color:var(--tx2)}
+.t-w{background:rgba(245,158,11,.18);color:var(--warn)}
+.bar{height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;width:66px;
+display:inline-block;vertical-align:middle;margin-left:6px}
+.bar i{display:block;height:100%}
+.ld{color:var(--tx3);text-align:center;padding:26px 0;font-size:12.5px;line-height:1.9}
+.warnbox{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.28);
+border-radius:9px;padding:12px 14px;font-size:11.5px;color:var(--warn);line-height:1.8;margin-bottom:12px}
+.warnbox b{color:#ffd37a}
+.infobox{background:rgba(59,130,246,.07);border:1px solid rgba(59,130,246,.25);
+border-radius:9px;padding:11px 13px;font-size:11.5px;color:var(--tx2);line-height:1.75;margin-bottom:12px}
+.note{font-size:10.5px;color:var(--tx3);line-height:1.75;margin-top:11px;
+padding-top:10px;border-top:1px dashed var(--line)}
+.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:12px}
+.diag{display:flex;flex-direction:column;gap:8px}
+.dg{display:flex;gap:10px;align-items:flex-start;background:var(--bg3);
+border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:12.5px;line-height:1.7}
+.dg .ic{font-size:15px;flex:none}
+@media(max-width:700px){main{padding:12px}h1{font-size:22px}}
+</style>
+<link rel="stylesheet" href="theme.css">
+</head><body>
+
+<header><div class="hbar">
+  <div class="logo">TRADING <span>DASHBOARD</span></div>
+  <nav>
+    <a href="bot.html">BOT</a><a href="botlab.html" class="on">BOT LAB</a>
+    <a href="journal.html">JOURNAL</a><a href="index.html">PORT</a>
+    <a href="plan.html">แผนลงทุน</a><a href="heatmap.html">HEATMAP</a>
+    <a href="breadth.html">BREADTH</a><a href="scanner.html">SCANNER</a>
+    <a href="trade.html">TRADE</a><a href="macro.html">MACRO</a>
+  </nav>
+  <div class="right">
+    <span id="msg" class="sub"></span>
+    <button class="btn go" id="bRun">▶ ทดสอบ</button>
+  </div>
+</div></header>
+
+<main>
+  <h1>🧪 Bot Lab</h1>
+  <div class="lead">กลยุทธ์นี้เก่งตอนไหน อ่อนตอนไหน — แยกผลตามสภาวะตลาด ไม่ใช่ดูแค่ตัวเลขรวม</div>
+
+  <div class="card">
+    <h3>⚙️ ค่าที่ใช้ทดสอบ</h3>
+    <div class="frm">
+      <label>สินทรัพย์<input id="sym" value="SPY"></label>
+      <label>ปีย้อนหลัง<select id="yrs">
+        <option>3</option><option selected>5</option><option>8</option><option>10</option></select></label>
+      <label>เส้นเร็ว<input id="fast" type="number" value="20"></label>
+      <label>เส้นช้า<input id="slow" type="number" value="60"></label>
+      <label>ทุนเริ่ม<input id="cap" type="number" value="10000"></label>
+      <label>ลงไม้ละ %<input id="risk" type="number" value="100"></label>
+      <label>ค่าธรรมเนียม %<input id="fee" type="number" step="any" value="0.1"></label>
+      <label>สลิป %<input id="slip" type="number" step="any" value="0.05"></label>
+      <label>ตัดขาดทุน %<input id="stop" type="number" step="any" value="0"></label>
+      <label>ปิดกำไร %<input id="take" type="number" step="any" value="0"></label>
+    </div>
+    <div style="display:flex;gap:7px;flex-wrap:wrap;align-items:center">
+      <button class="btn go" id="bRun2">▶ ทดสอบ</button>
+      <button class="btn" id="bOpt">🔧 ปรับค่าแยกตามสภาวะ</button>
+      <span class="sub" id="dataMeta"></span>
+    </div>
+  </div>
+
+  <div id="status"></div>
+  <div class="kpis" id="kpis"></div>
+
+  <div class="card">
+    <h3>📈 เส้นทุน <span class="sub" id="eqMeta"></span></h3>
+    <div id="eq"></div>
+    <div class="note">เส้นสีทองคือกลยุทธ์ เส้นเทาคือซื้อแล้วถือเฉยๆ —
+      ถ้ากลยุทธ์ชนะไม่ได้แม้แต่การถือเฉยๆ ความซับซ้อนที่เพิ่มมาก็ไม่คุ้ม</div>
+  </div>
+
+  <div class="card">
+    <h3>📅 ผลตอบแทนรายปี</h3>
+    <div id="yearly"></div>
+  </div>
+
+  <div class="card">
+    <h3>🌦 ผลแยกตามสภาวะตลาด <span class="sub" id="regMeta"></span></h3>
+    <div id="byreg"></div>
+  </div>
+
+  <div class="card">
+    <h3>🔎 จุดดี · จุดอ่อน <span class="sub">สรุปจากตัวเลขข้างบน</span></h3>
+    <div class="diag" id="diag"></div>
+  </div>
+
+  <div class="card">
+    <h3>💰 ขนาดการลงทุน <span class="sub">ถ้าย้อนกลับไปลงไม้ละกี่ % ของทุน</span></h3>
+    <div id="size"></div>
+  </div>
+
+  <div class="card" id="optCard" style="display:none">
+    <h3>🔧 ปรับค่าแยกตามสภาวะตลาด</h3>
+    <div id="opt"></div>
+  </div>
+</main>
+
+<script src="engine.js"></script>
+<script>
+/* ============================================================
+   Bot Lab
+   ใช้เครื่องทดสอบตัวเดียวกับหน้า BOT (อยู่ใน engine.js)
+   ของใหม่คือการแยกผลตามสภาวะตลาด ซึ่งตัดสินจากข้อมูลถึงวันนั้นเท่านั้น
+   ============================================================ */
+const E=SCANENG, CKEY='botlab_px_v1';
+const PROX=[u=>'https://api.allorigins.win/raw?url='+encodeURIComponent(u),
+  u=>'https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent(u),
+  u=>'https://corsproxy.io/?url='+encodeURIComponent(u)];
+let BARS=null, SYM='', R=null, REG=null;
+
+const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+  .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const pc=v=>v==null||!isFinite(v)?'—':(v>=0?'+':'')+v.toFixed(1)+'%';
+const pc2=v=>v==null||!isFinite(v)?'—':(v>=0?'+':'')+v.toFixed(2)+'%';
+const cl2=v=>v==null?'fl':v>0?'up':v<0?'dn':'fl';
+const nm=(v,d)=>v==null||!isFinite(v)?'—':Number(v).toLocaleString('en-US',
+  {minimumFractionDigits:d==null?0:d,maximumFractionDigits:d==null?0:d});
+const g=id=>document.getElementById(id);
+
+function params(){
+  return {fast:+g('fast').value||20, slow:+g('slow').value||60,
+    capital:+g('cap').value||10000, riskPct:+g('risk').value||100,
+    feePct:+g('fee').value||0, slipPct:+g('slip').value||0,
+    stopPct:+g('stop').value||0, takePct:+g('take').value||0};
+}
+/* ขนาดตัวอย่าง — จำนวนไม้บอกว่าตัวเลขเชื่อได้แค่ไหน */
+function qual(n){
+  if(n<10) return ['t-dn','น้อยมาก'];
+  if(n<30) return ['t-dn','ยังน้อย'];
+  if(n<100)return ['t-w','พอใช้'];
+  return ['t-up','พอประมาณ'];
+}
+
+async function csv(sym){
+  const url='https://stooq.com/q/d/l/?s='+E.stooqSym(sym)+'&i=d';
+  const t=await Promise.any(PROX.map(f=>fetch(f(url),{cache:'no-store'})
+    .then(r=>r.ok?r.text():Promise.reject(new Error('x')))));
+  return E.parseCsv(t);
+}
+async function run(){
+  const sym=g('sym').value.trim().toUpperCase();
+  if(!sym){ alert('ใส่ชื่อสินทรัพย์ก่อน'); return }
+  const btns=[g('bRun'),g('bRun2'),g('bOpt')];
+  btns.forEach(b=>b.disabled=true);
+  g('msg').textContent='กำลังดึงราคา...';
+  try{
+    if(SYM!==sym||!BARS){
+      const b=await csv(sym);
+      if(!b)throw new Error('ดึงราคาไม่ได้ หรือข้อมูลน้อยกว่า 60 วัน');
+      BARS=b; SYM=sym;
+    }
+    g('msg').textContent='';
+  }catch(e){
+    g('msg').innerHTML='<span style="color:var(--warn)">'+esc(String(e.message||e))+'</span>';
+    btns.forEach(b=>b.disabled=false);
+    return;
+  }
+  btns.forEach(b=>b.disabled=false);
+  compute(); render();
+}
+function slice(){
+  const yrs=+g('yrs').value||5;
+  const want=Math.round(yrs*252);
+  /* ต้องมีประวัติก่อนหน้าอีกราว 1 ปีครึ่ง เพื่อให้รู้สภาวะตลาดตั้งแต่วันแรกที่ทดสอบ */
+  return BARS.slice(Math.max(0,BARS.length-want));
+}
+function compute(){
+  if(!BARS){R=null;REG=null;return}
+  const bars=slice();
+  R=E.backtest(bars,params());
+  /* คำนวณสภาวะจากประวัติทั้งหมดที่มี แล้วค่อยตัดมาเฉพาะช่วงที่ทดสอบ
+     ทำแบบนี้ไม่ใช่การแอบดูอนาคต เพราะสภาวะของแต่ละวันยังใช้แค่ข้อมูลก่อนหน้าวันนั้น
+     แต่ทำให้วันแรกๆ ของช่วงทดสอบมีสภาวะ แทนที่จะว่างเปล่าไป 200 วัน */
+  const all=E.regimes(BARS);
+  REG=all.slice(BARS.length-bars.length);
+  R._bars=bars;
+}
+
+/* ---------- กราฟ ---------- */
+function chart(series,dates,h){
+  const vals=[].concat(...series.map(s=>s.v.filter(x=>x!=null&&isFinite(x))));
+  if(vals.length<3)return '<div class="ld">ข้อมูลไม่พอวาดกราฟ</div>';
+  const W=940,H=h||210,P=46,PB=20;
+  const mn=Math.min(...vals), mx=Math.max(...vals), rg=(mx-mn)||1;
+  const n=Math.max(...series.map(s=>s.v.length));
+  const X=i=>P+(n<2?0:i/(n-1))*(W-P-12);
+  const Y=v=>H-PB-(v-mn)/rg*(H-PB-14);
+  let gg='';
+  series.forEach(s=>{
+    const pts=s.v.map((v,i)=>(v==null?null:X(i).toFixed(1)+','+Y(v).toFixed(1)))
+      .filter(Boolean).join(' ');
+    gg+='<polyline points="'+pts+'" fill="none" stroke="'+s.c+'" stroke-width="'+(s.w||2)+'"/>';
+  });
+  gg+='<text x="4" y="14" font-size="10" fill="var(--tx3)">'+nm(mx)+'</text>'
+    +'<text x="4" y="'+(H-PB+4)+'" font-size="10" fill="var(--tx3)">'+nm(mn)+'</text>';
+  if(dates&&dates.length)gg+='<text x="'+P+'" y="'+(H-4)+'" font-size="9" fill="var(--tx3)">'
+    +esc(dates[0])+'</text><text x="'+(W-12)+'" y="'+(H-4)+'" font-size="9" '
+    +'fill="var(--tx3)" text-anchor="end">'+esc(dates[dates.length-1])+'</text>';
+  const leg='<div style="display:flex;gap:14px;flex-wrap:wrap;font-size:11px;'
+    +'color:var(--tx2);margin-top:4px">'+series.filter(s=>s.n).map(s=>
+    '<span><i style="display:inline-block;width:11px;height:3px;background:'+s.c
+    +';vertical-align:middle;margin-right:5px"></i>'+esc(s.n)+'</span>').join('')+'</div>';
+  return '<svg viewBox="0 0 '+W+' '+H+'" width="100%" height="'+H+'" '
+    +'preserveAspectRatio="none" style="display:block">'+gg+'</svg>'+leg;
+}
+
+/* ---------- วาดหน้า ---------- */
+function render(){
+  if(!R){
+    g('status').innerHTML='<div class="infobox"><b>ยังไม่ได้ทดสอบ</b> — '
+      +'ใส่ชื่อสินทรัพย์แล้วกด <b>▶ ทดสอบ</b><br>'
+      +'หน้านี้ใช้เครื่องทดสอบตัวเดียวกับหน้า <a href="bot.html">BOT</a> '
+      +'ตัวเลขจึงตรงกัน ของใหม่คือการแยกผลตามสภาวะตลาด</div>';
+    ['eq','yearly','byreg','size'].forEach(i=>g(i).innerHTML='<div class="ld">—</div>');
+    g('diag').innerHTML='';
+    g('kpis').innerHTML='';
+    return;
+  }
+  const bars=R._bars;
+  const q=qual(R.n);
+  g('dataMeta').textContent='มีราคา '+BARS.length+' วัน · ใช้ทดสอบ '+bars.length
+    +' วัน ('+bars[0].d+' ถึง '+bars[bars.length-1].d+')';
+
+  /* --- สถานะ --- */
+  let st='<div class="infobox">'+esc(SYM)+' · ทดสอบ '+R.years.toFixed(1)+' ปี · '
+    +R.n+' ไม้ <span class="tag '+q[0]+'">'+q[1]+'</span></div>';
+  st+='<div class="warnbox"><b>ผลทดสอบย้อนหลังคือเพดานบน ไม่ใช่สิ่งที่จะได้จริง</b> — '
+    +'ค่าที่ตั้งอยู่ตอนนี้ถูกเลือกโดยรู้อยู่แล้วว่าอดีตเป็นอย่างไร '
+    +'ยิ่งลองหลายค่าแล้วเก็บค่าที่สวยที่สุด ยิ่งห่างจากความจริง<br>'
+    +'กติกาที่เครื่องนี้ยึดไว้: <b>สัญญาณเกิดที่แท่งวันนี้ แต่สั่งซื้อขายที่ราคาเปิดวันถัดไป</b> '
+    +'และคิดค่าธรรมเนียมกับสลิปทุกไม้ — ไม่ใช่การซื้อขายที่ราคาปิดวันเดียวกันซึ่งทำไม่ได้จริง</div>';
+  if(R.n<30)st+='<div class="warnbox">มีแค่ '+R.n+' ไม้ — '
+    +'ต่ำกว่า 30 ไม้ ความบังเอิญมีน้ำหนักมากกว่าฝีมือของกลยุทธ์ '
+    +'ตัวเลขทุกตัวข้างล่างจึงยังเชื่อไม่ได้ ลองขยายปีย้อนหลังหรือใช้เส้นที่สั้นลง</div>';
+  g('status').innerHTML=st;
+
+  /* --- ตัวเลขสรุป --- */
+  const K=[
+    ['ผลตอบแทนรวม',pc(R.ret),'ซื้อถือเฉยๆ '+pc(R.bhRet),
+      R.ret>=0?'var(--up)':'var(--dn)'],
+    ['ต่อปี',pc(R.cagr),'ซื้อถือเฉยๆ '+pc(R.bhCagr),R.cagr>=0?'var(--up)':'var(--dn)'],
+    ['ชนะซื้อถือ',pc(R.edge),R.edge>=0?'ดีกว่าการถือเฉยๆ':'แพ้การถือเฉยๆ',
+      R.edge>=0?'var(--up)':'var(--dn)'],
+    ['อัตราชนะ',R.n?R.winRate.toFixed(0)+'%':'—',R.wins+' ชนะ / '+R.losses+' แพ้','var(--tx)'],
+    ['Profit Factor',isFinite(R.profitFactor)?R.profitFactor.toFixed(2)
+      :(R.n?'ไม่มีไม้ขาดทุน':'—'),'กำไรรวม ÷ ขาดทุนรวม',
+      R.profitFactor>=1.5?'var(--up)':R.profitFactor>=1?'var(--warn)':'var(--dn)'],
+    ['ขาดทุนสูงสุด',R.maxDDpct.toFixed(1)+'%','จากจุดสูงสุดของเส้นทุน','var(--dn)']
+  ];
+  g('kpis').innerHTML=K.map(k=>'<div class="kpi"><div class="n">'+k[0]+'</div>'
+    +'<div class="v" style="color:'+k[3]+'">'+k[1]+'</div>'
+    +'<div class="s">'+esc(k[2])+'</div></div>').join('');
+
+  /* --- เส้นทุน --- */
+  const eq=R.equity.map(x=>x.v);
+  const cap0=params().capital;
+  const bh=bars.map(b=>cap0*b.c/bars[0].c);
+  g('eq').innerHTML=chart([{v:eq,c:'var(--accent)',n:'กลยุทธ์'},
+    {v:bh,c:'#7d8596',n:'ซื้อแล้วถือ',w:1.5}],R.equity.map(x=>x.d));
+  g('eqMeta').textContent='ทุนเริ่ม '+nm(cap0)+' → '+nm(R.final);
+
+  /* --- รายปี --- */
+  const byY={};
+  R.equity.forEach(x=>{ const y=x.d.slice(0,4); (byY[y]=byY[y]||[]).push(x.v) });
+  const bhY={};
+  bars.forEach((b,i)=>{ const y=b.d.slice(0,4); (bhY[y]=bhY[y]||[]).push(bh[i]) });
+  const yrs=Object.keys(byY).sort();
+  g('yearly').innerHTML= yrs.length
+    ? '<table><thead><tr><th>ปี</th><th>กลยุทธ์</th><th>ซื้อถือ</th><th>ต่าง</th>'
+      +'<th>ไม้ในปีนั้น</th></tr></thead><tbody>'
+      +yrs.map(y=>{
+        const a=byY[y], r=a.length>1?(a[a.length-1]/a[0]-1)*100:null;
+        const b2=bhY[y], rb=b2&&b2.length>1?(b2[b2.length-1]/b2[0]-1)*100:null;
+        const nT=R.trades.filter(t=>t.dout.slice(0,4)===y).length;
+        const d=(r!=null&&rb!=null)?r-rb:null;
+        return '<tr><td><b>'+y+'</b></td>'
+          +'<td class="mono '+cl2(r)+'">'+pc(r)+'</td>'
+          +'<td class="mono fl">'+pc(rb)+'</td>'
+          +'<td class="mono '+cl2(d)+'">'+pc(d)+'</td>'
+          +'<td class="mono">'+nT+'</td></tr>';
+      }).join('')+'</tbody></table>'
+      +'<div class="note">ปีแรกและปีสุดท้ายมักไม่เต็มปี จึงเทียบกับปีอื่นตรงๆ ไม่ได้ · '
+      +'ช่อง “ต่าง” คือชนะหรือแพ้การถือเฉยๆ ในปีนั้น</div>'
+    : '<div class="ld">—</div>';
+
+  /* --- แยกตามสภาวะ --- */
+  const days=E.regimeDays(REG);
+  const byReg=E.statsByRegime(bars,R.trades,REG);
+  g('regMeta').textContent='รู้สภาวะ '+days.known+'/'+days.total+' วัน';
+  const totDays=days.known||1;
+  g('byreg').innerHTML= byReg.length
+    ? '<table><thead><tr><th>สภาวะตลาด</th><th>สัดส่วนเวลา</th><th>ไม้</th><th>อัตราชนะ</th>'
+      +'<th>กำไรเฉลี่ยต่อไม้</th><th>กำไรรวม</th><th>Profit Factor</th><th>ความน่าเชื่อ</th>'
+      +'</tr></thead><tbody>'
+      +byReg.map(x=>{
+        const dcount=days.counts[x.key]||0;
+        const share=dcount/totDays*100;
+        const qq=qual(x.n);
+        return '<tr><td><b>'+esc(x.key)+'</b></td>'
+          +'<td class="mono fl">'+(dcount?share.toFixed(0)+'%':'—')
+            +'<span class="bar"><i style="width:'+Math.min(100,share)
+            +'%;background:var(--tx3)"></i></span></td>'
+          +'<td class="mono">'+x.n+'</td>'
+          +'<td class="mono">'+(x.winRate==null?'—':x.winRate.toFixed(0)+'%')+'</td>'
+          +'<td class="mono '+cl2(x.avgRet)+'">'+pc2(x.avgRet)+'</td>'
+          +'<td class="mono '+cl2(x.pl)+'">'+nm(x.pl)+'</td>'
+          +'<td class="mono">'+(x.pf==null?(x.loss?'—':'ไม่มีไม้แพ้'):x.pf.toFixed(2))+'</td>'
+          +'<td><span class="tag '+qq[0]+'">'+qq[1]+'</span></td></tr>';
+      }).join('')+'</tbody></table>'
+      +'<div class="note"><b>สภาวะตลาดตัดสินจากข้อมูลถึงวันนั้นเท่านั้น</b> — '
+      +'ดูว่าราคาอยู่เหนือหรือใต้เส้น 200 วัน เส้นนั้นชี้ขึ้นหรือลง '
+      +'และความผันผวน 20 วันสูงหรือต่ำกว่าค่ากลางของตัวเองย้อนหลัง 1 ปี<br>'
+      +'ถ้าใช้ข้อมูลทั้งชุดมาตัดสินว่าช่วงไหนเป็นขาขึ้น จะเท่ากับรู้อนาคต '
+      +'แล้วข้อสรุปว่า “เก่งในขาขึ้น” จะใช้ไม่ได้จริง เพราะตอนอยู่ในสถานการณ์จริง '
+      +'เราไม่รู้ว่ากำลังอยู่ในขาขึ้นหรือเปล่า<br>'
+      +'<b>สัดส่วนเวลา</b> บอกว่าชุดข้อมูลนี้เจอสภาวะนั้นบ่อยแค่ไหน — '
+      +'สภาวะที่เจอน้อย ตัวเลขยิ่งเชื่อยาก</div>'
+    : '<div class="ld">ไม่มีไม้ให้แยก</div>';
+
+  /* --- จุดดี จุดอ่อน --- */
+  const D=[];
+  const useful=byReg.filter(x=>x.key!=='ไม่รู้สภาวะ'&&x.n>=5);
+  if(R.edge>=0)D.push(['✅','ชนะการถือเฉยๆ อยู่ '+pc(R.edge)+' ตลอดช่วงทดสอบ '
+    +'(กลยุทธ์ '+pc(R.ret)+' เทียบกับถือเฉยๆ '+pc(R.bhRet)+')']);
+  else D.push(['⚠️','<b>แพ้การถือเฉยๆ อยู่ '+pc(Math.abs(R.edge))+'</b> — '
+    +'กลยุทธ์ได้ '+pc(R.ret)+' ขณะที่ซื้อแล้วนั่งเฉยๆ ได้ '+pc(R.bhRet)
+    +' ความซับซ้อนที่เพิ่มมาจึงยังไม่คุ้ม']);
+  if(useful.length){
+    const best=useful[0], worst=useful[useful.length-1];
+    if(best.avgRet>0)D.push(['💪','ทำได้ดีที่สุดตอน <b>'+esc(best.key)+'</b> — '
+      +best.n+' ไม้ ชนะ '+(best.winRate==null?'—':best.winRate.toFixed(0)+'%')
+      +' กำไรเฉลี่ยไม้ละ '+pc2(best.avgRet)]);
+    if(worst.avgRet<0)D.push(['🩹','เสียเงินมากที่สุดตอน <b>'+esc(worst.key)+'</b> — '
+      +worst.n+' ไม้ กำไรเฉลี่ยไม้ละ '+pc2(worst.avgRet)
+      +' <span class="sub">ถ้าหยุดเทรดในสภาวะนี้ได้ ผลรวมจะดีขึ้น '
+      +'แต่ต้องรู้ให้ได้ก่อนว่ากำลังอยู่ในสภาวะนั้น ซึ่งรู้ยากกว่าที่คิด</span>']);
+    const thin=useful.filter(x=>x.n<10);
+    if(thin.length)D.push(['🔍','สภาวะที่มีไม้น้อยกว่า 10: '
+      +esc(thin.map(x=>x.key).join(' · '))+' — ตัวเลขของกลุ่มพวกนี้ยังอ่านไม่ได้']);
+  }else D.push(['🔍','ไม้ยังน้อยเกินกว่าจะแยกตามสภาวะตลาดได้อย่างมีความหมาย']);
+  const avgHold=R.trades.length
+    ? R.trades.reduce((a,t)=>a+((new Date(t.dout)-new Date(t.din))/864e5),0)/R.trades.length
+    : null;
+  if(avgHold!=null)D.push(['⏱','ถือเฉลี่ยไม้ละ '+avgHold.toFixed(0)+' วัน · '
+    +'เทรดปีละประมาณ '+(R.years>0?(R.n/R.years).toFixed(1):'—')+' ไม้']);
+  if(R.maxDDpct<-25)D.push(['📉','<b>เคยขาดทุนสูงสุด '+R.maxDDpct.toFixed(1)+'%</b> — '
+    +'ถามตัวเองตรงๆ ว่าถ้าเห็นพอร์ตลดลงขนาดนี้จริง จะยังกดตามระบบต่อไหว '
+    +'กลยุทธ์ที่ทนไม่ไหวแล้วเลิกกลางคัน ให้ผลแย่กว่าไม่เริ่มเลย']);
+  const stops=R.trades.filter(t=>t.reason==='stop').length;
+  const targets=R.trades.filter(t=>t.reason==='target').length;
+  if(stops+targets>0)D.push(['🎯','ออกด้วยจุดตัดขาดทุน '+stops+' ไม้ · '
+    +'ออกที่เป้ากำไร '+targets+' ไม้ · ออกตามสัญญาณ '
+    +R.trades.filter(t=>t.reason==='signal').length+' ไม้']);
+  g('diag').innerHTML=D.map(x=>'<div class="dg"><span class="ic">'+x[0]
+    +'</span><span>'+x[1]+'</span></div>').join('');
+
+  /* --- ขนาดการลงทุน --- */
+  const fr=[0.25,0.5,0.75,1];
+  const ss=E.sizeStudy(R.trades,fr);
+  g('size').innerHTML= R.n
+    ? '<table><thead><tr><th>ลงไม้ละ</th><th>ทุนกลายเป็น</th><th>ผลตอบแทนรวม</th>'
+      +'<th>ขาดทุนสูงสุด</th><th></th></tr></thead><tbody>'
+      +ss.map(x=>'<tr><td><b>'+(x.f*100).toFixed(0)+'% ของทุน</b></td>'
+        +'<td class="mono">'+(x.wiped?'0':x.mult.toFixed(2)+' เท่า')+'</td>'
+        +'<td class="mono '+cl2(x.ret)+'">'+(x.wiped?'หมดตัว':pc(x.ret))+'</td>'
+        +'<td class="mono dn">'+x.maxDD.toFixed(1)+'%'
+        +'<span class="bar"><i style="width:'+Math.min(100,x.maxDD)
+        +'%;background:var(--dn)"></i></span></td>'
+        +'<td>'+(x.wiped?'<span class="tag t-dn">ล้างพอร์ต</span>':'')+'</td></tr>').join('')
+      +'</tbody></table>'
+      +'<div class="note">เล่นไม้ชุดเดิมซ้ำ แต่เปลี่ยนสัดส่วนเงินที่ลงแต่ละไม้ · '
+      +'<b>ขาดทุนสูงสุดโตเร็วกว่าผลตอบแทน</b> — ลงเงินเป็นสองเท่าไม่ได้แปลว่ากำไรสองเท่า '
+      +'แต่ความเจ็บมักมากกว่าสองเท่า<br>'
+      +'<b>ตัวเลขนี้คือสิ่งที่เคยเกิดขึ้น ไม่ใช่สิ่งที่จะเกิด</b> — '
+      +'ขาดทุนสูงสุดในอนาคตมักแรงกว่าในผลทดสอบ เพราะอดีตมีเหตุการณ์แย่ที่สุดอยู่ชุดเดียว '
+      +'แต่อนาคตยังมีเหตุการณ์ที่ไม่เคยเกิดรออยู่<br>'
+      +'ใช้ได้กับกลยุทธ์ที่ถือทีละไม้เท่านั้น ซึ่งกลยุทธ์นี้ใช่</div>'
+    : '<div class="ld">ไม่มีไม้</div>';
+}
+
+/* ---------- ปรับค่าแยกตามสภาวะ ---------- */
+function optimize(){
+  if(!BARS){ alert('กด ▶ ทดสอบ ก่อน'); return }
+  const bars=slice(), base=params();
+  const all=E.regimes(BARS);
+  const reg=all.slice(BARS.length-bars.length);
+  const {IS,OOS}=E.splitBars(bars,0.6);
+  const grid=[];
+  for(const f of [5,10,15,20,30,50])for(const s of [20,30,50,80,120,200])
+    if(f<s)grid.push({f,s});
+  const res=grid.map(x=>{
+    const P={...base,fast:x.f,slow:x.s};
+    const is=E.backtest(IS,P);
+    if(is.n<3)return null;
+    const oos=E.backtest(OOS,P);
+    return {f:x.f,s:x.s,is,oos};
+  }).filter(Boolean);
+  res.sort((a,b)=>b.is.ret-a.is.ret);
+  const top=res.slice(0,10);
+
+  /* แยกตามสภาวะ: หาค่าที่ดีที่สุดเฉพาะไม้ที่เปิดในสภาวะนั้น
+     คำนวณสภาวะ "ครั้งเดียว" แล้วใช้ซ้ำ — ถ้าเรียกซ้ำในลูป
+     จะกลายเป็นหลายสิบรอบบนข้อมูลหลายพันวัน และหน้าจะค้าง */
+  const regIS=reg.slice(0,IS.length);
+  const byComboReg=res.map(x=>({f:x.f,s:x.s,
+    st:E.statsByRegime(IS,x.is.trades,regIS,'trend')}));
+  const regKeys=[...new Set(regIS.filter(Boolean).map(r=>r.trend))];
+  const perReg=regKeys.map(k=>{
+    const scored=byComboReg.map(x=>{
+      const st=x.st.find(y=>y.key===k);
+      return st?{f:x.f,s:x.s,st}:null;
+    }).filter(Boolean).filter(x=>x.st.n>=5)
+      .sort((a,b)=>b.st.avgRet-a.st.avgRet);
+    return {k,best:scored[0]||null,cands:scored.length};
+  });
+
+  g('optCard').style.display='';
+  g('opt').innerHTML=
+    '<div class="warnbox"><b>อ่านตรงนี้ก่อนเชื่อตัวเลขข้างล่าง</b><br>'
+    +'ผมลอง '+res.length+' ชุดค่า แล้วเอาชุดที่สวยที่สุดมาแสดง — '
+    +'การทำแบบนี้<u>รับประกันว่าได้ตัวเลขสวย</u> ไม่ว่ากลยุทธ์จะมีของจริงหรือไม่ '
+    +'เพราะลองมากพอ ยังไงก็มีชุดที่บังเอิญเข้าทางข้อมูลชุดนี้<br>'
+    +'ตารางจึงแยก <b>ช่วงปรับค่า</b> (ใช้หาค่า) กับ <b>ช่วงทดสอบจริง</b> (ไม่เคยถูกใช้หาค่า) '
+    +'<b>ให้ดูช่องขวาเป็นหลัก</b> ถ้าช่วงปรับค่าสวยแต่ช่วงทดสอบจริงแย่ '
+    +'แปลว่าค่านั้นพอดีกับอดีตเท่านั้น ไม่ได้มีของจริง<br>'
+    +'<b>การปรับค่าแยกตามสภาวะตลาดยิ่งเสี่ยงกว่าอีกเท่าตัว</b> เพราะแบ่งข้อมูลให้เล็กลงไปอีก '
+    +'ไม้ต่อกลุ่มยิ่งน้อย โอกาสที่ตัวเลขเป็นความบังเอิญยิ่งสูง</div>'
+    +'<table><thead><tr><th>เส้นเร็ว</th><th>เส้นช้า</th>'
+    +'<th>ช่วงปรับค่า</th><th>ไม้</th><th>ช่วงทดสอบจริง</th><th>ไม้</th><th>ขาดทุนสูงสุด</th>'
+    +'</tr></thead><tbody>'
+    +top.map((x,i)=>'<tr'+(i===0?' style="background:rgba(245,185,66,.06)"':'')+'>'
+      +'<td><b>'+x.f+'</b></td><td><b>'+x.s+'</b></td>'
+      +'<td class="mono '+cl2(x.is.ret)+'">'+pc(x.is.ret)+'</td>'
+      +'<td class="mono fl">'+x.is.n+(x.is.n<10?' <span class="tag t-dn">น้อย</span>':'')+'</td>'
+      +'<td class="mono '+cl2(x.oos.ret)+'" style="font-weight:700">'+pc(x.oos.ret)+'</td>'
+      +'<td class="mono fl">'+x.oos.n+(x.oos.n<10?' <span class="tag t-dn">น้อย</span>':'')+'</td>'
+      +'<td class="mono dn">'+x.oos.maxDDpct.toFixed(1)+'%</td></tr>').join('')
+    +'</tbody></table>'
+    +(()=>{
+      const good=top.filter(x=>x.oos.ret>0).length;
+      return '<div class="note">ใน 10 ชุดที่ดีที่สุดของช่วงปรับค่า มี <b>'+good
+        +'</b> ชุดที่ยังบวกในช่วงทดสอบจริง — '
+        +(good>=7?'ถือว่าค่อนข้างทน ไม่ได้พอดีกับค่าใดค่าหนึ่งเป็นพิเศษ'
+         :good>=4?'ก้ำกึ่ง ผลขึ้นกับค่าที่เลือกพอสมควร'
+         :'<b>น่าห่วง</b> ค่าที่สวยในอดีตส่วนใหญ่ใช้ไม่ได้ในช่วงที่ไม่เคยเห็น')+'</div>';
+    })()
+    +'<h3 style="margin-top:16px">ค่าที่เข้ากับแต่ละสภาวะ <span class="sub">'
+    +'จากช่วงปรับค่าเท่านั้น</span></h3>'
+    +'<table><thead><tr><th>สภาวะ</th><th>เส้นเร็ว</th><th>เส้นช้า</th>'
+    +'<th>ไม้ในสภาวะนั้น</th><th>กำไรเฉลี่ยต่อไม้</th></tr></thead><tbody>'
+    +perReg.map(x=>'<tr><td><b>'+esc(x.k)+'</b></td>'
+      +(x.best
+        ? '<td class="mono">'+x.best.f+'</td><td class="mono">'+x.best.s+'</td>'
+          +'<td class="mono">'+x.best.st.n
+          +(x.best.st.n<10?' <span class="tag t-dn">น้อย</span>':'')+'</td>'
+          +'<td class="mono '+cl2(x.best.st.avgRet)+'">'+pc2(x.best.st.avgRet)+'</td>'
+        : '<td colspan="4" class="fl" style="text-align:left">'
+          +'ไม้ในสภาวะนี้น้อยกว่า 5 ทุกชุดค่า จึงไม่สรุป</td>')
+      +'</tr>').join('')+'</tbody></table>'
+    +'<div class="note">ตารางนี้<b>ไม่ได้บอกให้เปลี่ยนค่าตามสภาวะ</b> '
+    +'เพราะกว่าจะรู้ว่าอยู่ในสภาวะไหน ตลาดก็เปลี่ยนไปแล้ว '
+    +'ใช้ดูว่ากลยุทธ์มีนิสัยอย่างไรมากกว่า เช่น ถ้าทุกสภาวะชอบค่าใกล้เคียงกัน '
+    +'แปลว่ากลยุทธ์ค่อนข้างทน ถ้าแต่ละสภาวะชอบคนละค่าสุดขั้ว '
+    +'แปลว่าผลที่เห็นน่าจะเป็นความบังเอิญมากกว่าของจริง</div>';
+  g('optCard').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+g('bRun').onclick=run; g('bRun2').onclick=run; g('bOpt').onclick=optimize;
+['fast','slow','cap','risk','fee','slip','stop','take','yrs'].forEach(i=>
+  g(i).addEventListener('change',()=>{ if(BARS){compute();render()} }));
+render();
+</script>
+<script src="theme.js"></script>
+</body></html>

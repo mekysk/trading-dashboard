@@ -1,0 +1,446 @@
+<!DOCTYPE html><html lang="th"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Market Weekly — Trading Dashboard</title>
+<style>
+:root{--bg:#0a0d13;--bg2:#10151e;--bg3:#161d29;--line:#222c3d;--tx:#e8eef8;
+--tx2:#96a3b8;--tx3:#5c6a80;--accent:#f5b942;--glow:245,185,66;--acc:#3b82f6;
+--up:#34C27D;--dn:#E5645A;--warn:#f59e0b}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-size:14px;line-height:1.55;padding-bottom:40px;
+font-family:-apple-system,'Segoe UI','Leelawadee UI','Noto Sans Thai',Tahoma,sans-serif}
+.mono{font-family:ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+.up{color:var(--up)}.dn{color:var(--dn)}.fl{color:var(--tx2)}
+button{font-family:inherit;cursor:pointer}a{color:var(--acc);text-decoration:none}
+header{position:sticky;top:0;z-index:50;background:rgba(10,13,19,.96);
+backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.hbar{display:flex;align-items:center;gap:12px;padding:9px 16px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:15px}.logo span{color:var(--accent)}
+nav{display:flex;gap:2px;margin-left:6px;flex-wrap:wrap}
+nav a{color:var(--tx3);padding:6px 12px;font-size:12.5px;font-weight:600;border-radius:7px}
+nav a.on{color:var(--tx);background:var(--bg3)}
+.right{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{background:var(--bg3);border:1px solid var(--line);color:var(--tx2);
+padding:5px 11px;border-radius:7px;font-size:12px}
+.btn.go{background:var(--acc);border-color:var(--acc);color:#fff}
+main{padding:18px;max-width:1360px;margin:0 auto}
+.head{display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+h1{font-size:27px;font-weight:800;letter-spacing:-.02em;display:flex;align-items:center;gap:9px}
+.lead{font-size:12.5px;color:var(--tx2);margin-top:3px;max-width:76ch;line-height:1.7}
+select,input{background:var(--bg3);border:1px solid var(--line);color:var(--tx);
+padding:7px 10px;border-radius:8px;font-size:12.5px;font-family:inherit}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:9px;margin-bottom:16px}
+.kpi{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.kpi .n{font-size:10.5px;color:var(--tx3);margin-bottom:2px}
+.kpi .v{font-size:17px;font-weight:700;font-family:ui-monospace,monospace;letter-spacing:-.02em}
+.kpi .c{font-size:11.5px;font-weight:700}
+.kpi .c em{font-style:normal;color:var(--tx3);font-weight:400;font-size:10px}
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:16px;margin-bottom:12px}
+.card h3{font-size:13px;font-weight:700;margin-bottom:11px;display:flex;align-items:center;gap:8px}
+.sub{font-size:11px;color:var(--tx3);font-weight:400}
+.art p{font-size:14px;line-height:1.95;margin-bottom:13px;color:var(--tx)}
+.meta{font-size:11.5px;color:var(--tx3);margin-bottom:12px}
+.footrow{display:flex;gap:18px;flex-wrap:wrap;padding-top:12px;margin-top:4px;
+border-top:1px solid var(--line);font-size:12px;color:var(--tx2)}
+.footrow b{font-family:ui-monospace,monospace}
+.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:12px}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{text-align:right;font-size:10px;color:var(--tx3);font-weight:600;padding:7px 6px;
+border-bottom:1px solid var(--line);text-transform:uppercase;letter-spacing:.08em}
+th:first-child,td:first-child{text-align:left}
+td{padding:7px 6px;border-bottom:1px solid rgba(34,44,61,.5);text-align:right}
+.rs{display:inline-block;min-width:28px;text-align:center;font-size:11px;font-weight:700;
+padding:2px 7px;border-radius:20px;font-family:ui-monospace,monospace}
+.rs.hi{background:rgba(var(--glow),.18);color:var(--accent)}
+.rs.mid{background:rgba(148,163,184,.15);color:var(--tx2)}
+.sig{font-size:10.5px;color:var(--tx2)}
+.sig b{color:var(--accent);font-weight:600}
+.ld{color:var(--tx3);text-align:center;padding:22px 0;font-size:12.5px}
+.note{font-size:10.5px;color:var(--tx3);line-height:1.7;margin-top:11px;
+padding-top:10px;border-top:1px dashed var(--line)}
+.note b{color:var(--tx2)}
+.warnbox{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.28);
+border-radius:9px;padding:11px 13px;font-size:11.5px;color:var(--warn);line-height:1.7;margin-bottom:12px}
+.bar{height:5px;border-radius:3px;background:var(--bg3);overflow:hidden;margin-top:4px}
+.bar i{display:block;height:100%}
+@media(max-width:700px){main{padding:12px}h1{font-size:22px}}
+</style>
+<link rel="stylesheet" href="theme.css">
+</head><body>
+
+<header><div class="hbar">
+  <div class="logo">TRADING <span>DASHBOARD</span></div>
+  <nav>
+      <a href="index.html">PORT</a>
+      <a href="trade.html">TRADE</a>
+      <a href="macro.html">MACRO</a>
+      <a href="bot.html">BOT</a>
+      <a href="market.html">MARKET</a>
+      <a class="on" href="weekly.html">WEEKLY</a>
+    </nav>
+  <div class="right">
+    <span id="msg" class="sub"></span>
+    <button class="btn go" id="bLoad">↻ ดึงข้อมูล</button>
+  </div>
+</div></header>
+
+<main>
+  <div class="head">
+    <div style="flex:1;min-width:280px">
+      <h1>📅 Market Weekly</h1>
+      <div class="lead">สรุปตลาดรายสัปดาห์ — อ่านหน้าเดียวรู้ว่าสัปดาห์ที่ผ่านมาเกิดอะไรขึ้น
+        และสัปดาห์หน้าต้องจับตาอะไร</div>
+    </div>
+    <select id="wkSel" style="min-width:190px"><option>สัปดาห์ล่าสุด</option></select>
+  </div>
+
+  <div class="kpis" id="kpis"></div>
+
+  <div class="card art">
+    <h3>📝 สรุปสัปดาห์ <span class="sub" id="artMeta"></span></h3>
+    <div id="artBody"></div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <h3>🔥 กลุ่มเด่นสหรัฐฯ <span class="sub">ผลตอบแทนสัปดาห์นี้</span></h3>
+      <div id="sectors"></div>
+      <div class="note"><b>ใช้ ETF รายกลุ่มเป็นตัวแทน</b> (XLK, XLF, XLE ฯลฯ)
+        กลุ่มย่อยละเอียดแบบของเขาต้องใช้ข้อมูลรายหุ้นทั้งตลาด ซึ่งไม่มีแหล่งฟรี</div>
+    </div>
+    <div class="card">
+      <h3>⭐ หุ้นน่าจับตา <span class="sub">RS + สัญญาณทางเทคนิค</span></h3>
+      <div id="watch"></div>
+      <div class="note"><b>RS คิดจากกลุ่มที่สแกนเท่านั้น</b> ไม่ใช่ทั้งตลาดเหมือน IBD —
+        เลข 99 แปลว่าแข็งที่สุดในรายชื่อนี้ ไม่ใช่แข็งที่สุดในตลาด</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🌍 ภาพรวมทุกสินทรัพย์ <span class="sub">เรียงตามผลตอบแทนสัปดาห์นี้</span></h3>
+    <div id="allTable"></div>
+  </div>
+
+  <div class="warnbox" id="limits" style="display:none"></div>
+</main>
+
+<script>
+/* ==================================================================
+   Market Weekly — เครื่องคำนวณ
+   ดึงราคาย้อนหลังจาก Stooq แล้วคำนวณเอง: ผลตอบแทนรายสัปดาห์,
+   RS เทียบตลาด, และสัญญาณทางเทคนิค
+   ================================================================== */
+const PROX=[u=>'https://api.allorigins.win/raw?url='+encodeURIComponent(u),
+  u=>'https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent(u),
+  u=>'https://corsproxy.io/?url='+encodeURIComponent(u)];
+async function csv(code){
+  const url='https://stooq.com/q/d/l/?s='+code+'&i=d';
+  const t=await Promise.any(PROX.map(f=>fetch(f(url),{cache:'no-store'})
+    .then(r=>r.ok?r.text():Promise.reject(new Error('x')))));
+  const L=t.trim().split('\n'); if(L.length<60)return null;
+  const out=[];
+  for(let i=1;i<L.length;i++){
+    const a=L[i].split(',');
+    const o=+a[1],h=+a[2],l=+a[3],c=+a[4],v=+a[5];
+    if(a[0]&&isFinite(c))out.push({d:a[0],o,h,l,c,v:isFinite(v)?v:0});
+  }
+  return out.length>60?out:null;
+}
+/* ดึงหลายตัวพร้อมกันทีละ 3 */
+async function fetchMany(codes,onDone){
+  const data={},q=codes.slice();let n=0;
+  async function worker(){
+    while(q.length){
+      const c=q.shift();
+      try{ const r=await csv(c); if(r)data[c]=r; }catch(e){}
+      n++; if(onDone)onDone(n,codes.length);
+    }
+  }
+  await Promise.all([worker(),worker(),worker()]);
+  return data;
+}
+
+/* ---------- หาวันศุกร์ของสัปดาห์ย้อนหลัง ---------- */
+function weekEnds(bars,count){
+  /* คืนดัชนีของแท่งสุดท้ายในแต่ละสัปดาห์ (ใหม่ -> เก่า) */
+  const out=[];
+  for(let i=bars.length-1;i>0&&out.length<count+1;i--){
+    const a=new Date(bars[i].d), b=new Date(bars[i-1].d);
+    const wa=weekKey(a), wb=weekKey(b);
+    if(wa!==wb)out.push(i);
+  }
+  return out;
+}
+function weekKey(d){
+  const t=new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate()));
+  const day=t.getUTCDay()||7; t.setUTCDate(t.getUTCDate()+4-day);
+  const y0=new Date(Date.UTC(t.getUTCFullYear(),0,1));
+  return t.getUTCFullYear()+'-'+Math.ceil(((t-y0)/86400000+1)/7);
+}
+/* ผลตอบแทนของสัปดาห์ที่ย้อนไป back สัปดาห์ (0 = ล่าสุด) */
+function weekRet(bars,back){
+  if(!bars||bars.length<10)return null;
+  const ends=weekEnds(bars,back+2);
+  const endIdx=ends[back], startIdx=ends[back+1];
+  if(endIdx==null||startIdx==null)return null;
+  const a=bars[startIdx].c, b=bars[endIdx].c;
+  return a?{pct:(b-a)/a*100,close:b,from:bars[startIdx].d,to:bars[endIdx].d}:null;
+}
+
+/* ---------- ตัวชี้วัด ---------- */
+const sma=(a,n)=>a.length<n?null:a.slice(-n).reduce((x,y)=>x+y,0)/n;
+const ret=(c,n)=>c.length<n+1?null:(c.at(-1)-c.at(-1-n))/c.at(-1-n)*100;
+
+/* RS แบบถ่วงน้ำหนักช่วงเวลา แล้วแปลงเป็นเปอร์เซ็นไทล์ 1-99 */
+function rsRaw(c){
+  const r63=ret(c,63), r126=ret(c,126), r189=ret(c,189), r252=ret(c,252);
+  const parts=[[r63,.4],[r126,.2],[r189,.2],[r252,.2]].filter(x=>x[0]!=null);
+  if(!parts.length)return null;
+  const w=parts.reduce((a,b)=>a+b[1],0);
+  return parts.reduce((a,b)=>a+b[0]*b[1],0)/w;
+}
+/* RS Rating 1-99 แบบ IBD: ตัวที่แย่สุดได้ 1 ตัวที่ดีสุดได้ 99
+   ใช้ลำดับที่ (rank) ไม่ใช่สัดส่วนจำนวน จึงกระจายเต็มช่วงเสมอ */
+function toPercentile(vals){
+  const sorted=vals.filter(v=>v!=null).slice().sort((a,b)=>a-b);
+  const n=sorted.length;
+  return v=>{
+    if(v==null||!n)return null;
+    if(n===1)return 50;
+    let lo=0,hi=n;
+    while(lo<hi){const m=(lo+hi)>>1; if(sorted[m]<v)lo=m+1; else hi=m}
+    return Math.max(1,Math.min(99,Math.round(lo/(n-1)*98)+1));
+  };
+}
+
+/* ---------- สัญญาณทางเทคนิค ---------- */
+function signals(bars){
+  if(!bars||bars.length<120)return [];
+  const c=bars.map(b=>b.c), h=bars.map(b=>b.h), l=bars.map(b=>b.l), v=bars.map(b=>b.v);
+  const out=[];
+  const px=c.at(-1);
+  const hi52=Math.max(...h.slice(-252)), ma50=sma(c,50);
+
+  /* ใกล้จุดสูงสุด 52 สัปดาห์ (ห่างไม่เกิน 5%) */
+  if(hi52&&(hi52-px)/hi52*100<=5)out.push('ใกล้ 52WH');
+
+  /* VCP — ช่วงราคาแคบลงเรื่อยๆ 3 ช่วง */
+  const rng=n=>{const H=Math.max(...h.slice(-n)),L=Math.min(...l.slice(-n));return L?(H-L)/L*100:null};
+  const r1=rng(10),r2=rng(25),r3=rng(50);
+  if(r1&&r2&&r3&&r1<r2*0.72&&r2<r3*0.82&&px>ma50)out.push('VCP');
+
+  /* VDU — ปริมาณแห้ง: 5 วันล่าสุดต่ำกว่าค่าเฉลี่ย 50 วันมาก */
+  const v5=sma(v,5), v50=sma(v,50);
+  if(v5&&v50&&v5<v50*0.62)out.push('VDU');
+
+  /* PPBP — แท่งเขียวพร้อมวอลุ่มสูงสุดในรอบ 10 วัน และยืนเหนือ MA50 */
+  const last=bars.at(-1);
+  if(ma50&&last.c>last.o&&last.c>ma50&&last.v>=Math.max(...v.slice(-10)))out.push('PPBP');
+
+  return out;
+}
+
+/* ============================================================
+   หน้า Market Weekly — ส่วนติดต่อผู้ใช้
+   ============================================================ */
+const KEY='weekly_cache_v1';
+const INDEX=[
+ {c:'^spx',n:'S&P 500'},{c:'^ndq',n:'Nasdaq'},{c:'^dji',n:'Dow Jones'},
+ {c:'xauusd',n:'ทองคำ'},{c:'cl.f',n:'น้ำมัน WTI'},{c:'btcusd',n:'Bitcoin'},
+ {c:'dx.f',n:'ดัชนีดอลลาร์'},{c:'^vix',n:'VIX'}];
+const SECTOR=[
+ {c:'xlk.us',n:'เทคโนโลยี'},{c:'xlf.us',n:'การเงิน'},{c:'xle.us',n:'พลังงาน'},
+ {c:'xlv.us',n:'สุขภาพ'},{c:'xly.us',n:'สินค้าฟุ่มเฟือย'},{c:'xlp.us',n:'สินค้าจำเป็น'},
+ {c:'xli.us',n:'อุตสาหกรรม'},{c:'xlu.us',n:'สาธารณูปโภค'},{c:'xlb.us',n:'วัตถุดิบ'},
+ {c:'xlre.us',n:'อสังหา'},{c:'xlc.us',n:'สื่อสาร'}];
+const UNIVERSE=['aapl','msft','nvda','googl','amzn','meta','tsla','avgo','amd','mu',
+ 'pltr','smci','crm','orcl','adbe','qcom','txn','intc','now','panw',
+ 'jpm','bac','v','ma','xom','cvx','unh','lly','cat','ba','nflx','coin','hood','vlo','elv','swks','hpe'];
+
+const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+  .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const pc=v=>v==null?'—':(v>=0?'+':'')+v.toFixed(2)+'%';
+const cl2=v=>v>0?'up':v<0?'dn':'fl';
+const num=(v,d)=>v==null?'—':Number(v).toLocaleString('en-US',
+  {minimumFractionDigits:d==null?2:d,maximumFractionDigits:d==null?2:d});
+let DATA=null, BACK=0;
+
+function loadCache(){
+  try{const c=JSON.parse(localStorage.getItem(KEY));
+    if(c&&Date.now()-c.t<12*3600*1000){DATA=c;return true}}catch(e){}
+  return false;
+}
+async function load(){
+  const m=document.getElementById('msg'), b=document.getElementById('bLoad');
+  b.disabled=true;
+  const codes=[...INDEX.map(x=>x.c),...SECTOR.map(x=>x.c),...UNIVERSE.map(s=>s+'.us')];
+  const data=await fetchMany(codes,(n,t)=>{m.textContent='ดึง '+n+'/'+t});
+  b.disabled=false;
+  if(!Object.keys(data).length){
+    m.innerHTML='<span style="color:var(--warn)">ดึงข้อมูลไม่สำเร็จ ลองใหม่อีกครั้ง</span>';
+    return;
+  }
+  DATA={t:Date.now(),data};
+  try{localStorage.setItem(KEY,JSON.stringify(DATA))}catch(e){}
+  m.textContent='';
+  render();
+}
+
+function buildWeekOptions(){
+  const ref=DATA&&DATA.data['^spx'];
+  const sel=document.getElementById('wkSel');
+  if(!ref){sel.innerHTML='<option>สัปดาห์ล่าสุด</option>';return}
+  let h='';
+  for(let i=0;i<8;i++){
+    const w=weekRet(ref,i);
+    if(!w)break;
+    const d=new Date(w.to);
+    h+='<option value="'+i+'">สัปดาห์สิ้นสุด '
+      +d.toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'2-digit'})+'</option>';
+  }
+  sel.innerHTML=h||'<option>ไม่มีข้อมูล</option>';
+  sel.value=String(BACK);
+  sel.onchange=()=>{BACK=+sel.value||0;render()};
+}
+
+function render(){
+  if(!DATA){
+    document.getElementById('kpis').innerHTML=
+      '<div class="ld" style="grid-column:1/-1">กด <b>↻ ดึงข้อมูล</b> มุมขวาบนเพื่อเริ่ม<br>'
+      +'<span class="sub">ใช้เวลาประมาณ 30-60 วินาที แล้วเก็บไว้ 12 ชั่วโมง</span></div>';
+    document.getElementById('artBody').innerHTML='<div class="ld">ยังไม่มีข้อมูล</div>';
+    return;
+  }
+  buildWeekOptions();
+  const D=DATA.data;
+
+  /* ---- แถบ KPI ---- */
+  document.getElementById('kpis').innerHTML=INDEX.map(x=>{
+    const w=D[x.c]?weekRet(D[x.c],BACK):null;
+    const dec=x.c==='^vix'||x.c==='dx.f'?2:(w&&w.close>1000?0:2);
+    return '<div class="kpi"><div class="n">'+esc(x.n)+'</div>'
+      +'<div class="v">'+(w?num(w.close,dec):'—')+'</div>'
+      +'<div class="c '+cl2(w&&w.pct)+'">'+(w?pc(w.pct):'—')
+      +' <em>ทั้งสัปดาห์</em></div></div>';
+  }).join('');
+
+  /* ---- บทสรุป ---- */
+  const sp=D['^spx']?weekRet(D['^spx'],BACK):null;
+  const nq=D['^ndq']?weekRet(D['^ndq'],BACK):null;
+  const dj=D['^dji']?weekRet(D['^dji'],BACK):null;
+  const gd=D['xauusd']?weekRet(D['xauusd'],BACK):null;
+  const bt=D['btcusd']?weekRet(D['btcusd'],BACK):null;
+  const oil=D['cl.f']?weekRet(D['cl.f'],BACK):null;
+  const dx=D['dx.f']?weekRet(D['dx.f'],BACK):null;
+  const vx=D['^vix']?weekRet(D['^vix'],BACK):null;
+
+  document.getElementById('artMeta').textContent=
+    sp?(sp.from+' ถึง '+sp.to):'';
+
+  const bits=[];
+  if(sp&&nq&&dj){
+    const avg=(sp.pct+nq.pct+dj.pct)/3;
+    const dir=avg>1?'ปิดบวกค่อนข้างแรง':avg>0.2?'ปิดบวก':avg<-1?'ปิดลบค่อนข้างแรง':avg<-0.2?'ปิดลบ':'แทบไม่เปลี่ยนแปลง';
+    let t='สัปดาห์นี้ดัชนีหลักสหรัฐฯ '+dir+' โดยเฉลี่ย '+pc(avg)+' — S&P 500 '+pc(sp.pct)
+      +', Nasdaq '+pc(nq.pct)+' และ Dow Jones '+pc(dj.pct);
+    const sprd=nq.pct-dj.pct;
+    if(Math.abs(sprd)>1)t+=' ส่วนต่างระหว่าง Nasdaq กับ Dow ที่ '+sprd.toFixed(2)
+      +' จุดเปอร์เซ็นต์ บอกว่า'+(sprd>0?'เงินยังอยู่ฝั่งหุ้นเติบโต':'เงินย้ายไปฝั่งหุ้นดั้งเดิม');
+    bits.push(t);
+  }
+  if(gd||bt||oil||dx){
+    let t='ฝั่งสินทรัพย์อื่น';
+    const p=[];
+    if(gd)p.push('ทองคำ '+pc(gd.pct));
+    if(oil)p.push('น้ำมัน WTI '+pc(oil.pct));
+    if(bt)p.push('Bitcoin '+pc(bt.pct));
+    if(dx)p.push('ดัชนีดอลลาร์ '+pc(dx.pct));
+    t+=' — '+p.join(' · ');
+    if(gd&&dx&&gd.pct*dx.pct<0)
+      t+=' ทองคำกับดอลลาร์เคลื่อนสวนทางกันตามความสัมพันธ์ปกติ';
+    else if(gd&&dx&&gd.pct>0&&dx.pct>0)
+      t+=' ทองคำและดอลลาร์บวกพร้อมกัน ซึ่งมักสะท้อนแรงซื้อสินทรัพย์ปลอดภัย';
+    bits.push(t);
+  }
+  if(vx){
+    bits.push('VIX ปิดที่ '+num(vx.close)+' ('+pc(vx.pct)+' ทั้งสัปดาห์) '
+      +(vx.close>25?'ซึ่งอยู่โซนที่ตลาดกังวลสูง'
+       :vx.close>18?'ซึ่งอยู่โซนระมัดระวัง':'ซึ่งถือว่าตลาดยังสงบ'));
+  }
+  /* กลุ่มที่นำและตามหลัง */
+  const secs=SECTOR.map(s=>({n:s.n,w:D[s.c]?weekRet(D[s.c],BACK):null}))
+    .filter(x=>x.w).sort((a,b)=>b.w.pct-a.w.pct);
+  if(secs.length>=3){
+    bits.push('กลุ่มที่นำตลาดสัปดาห์นี้คือ '+secs.slice(0,3).map(s=>s.n+' '+pc(s.w.pct)).join(', ')
+      +' ส่วนที่ถูกขายหนักสุดคือ '+secs.slice(-2).map(s=>s.n+' '+pc(s.w.pct)).join(' และ '));
+  }
+  document.getElementById('artBody').innerHTML=
+    bits.map(b=>'<p>'+b+'</p>').join('')
+    +'<div class="footrow">'
+    +(secs.length?'<span>กลุ่มบวก <b class="up">'+secs.filter(s=>s.w.pct>0).length
+      +'</b> / ลบ <b class="dn">'+secs.filter(s=>s.w.pct<0).length+'</b></span>':'')
+    +'<span>ข้อมูล ณ <b>'+new Date(DATA.t).toLocaleString('th-TH',
+      {dateStyle:'medium',timeStyle:'short'})+'</b></span></div>'
+    +'<div class="note"><b>ข้อความนี้ประกอบจากตัวเลขโดยตรง ไม่ใช่บทวิเคราะห์</b> — '
+    +'ระบบอ่านค่าแล้วเรียบเรียงตามกฎที่กำหนดไว้ ไม่ได้ตีความข่าวหรือเหตุการณ์ '
+    +'ถ้าต้องการสรุปที่อ้างอิงข่าวจริง ต้องให้ AI เขียนให้แบบสรุปข่าวเช้า</div>';
+
+  /* ---- กลุ่มเด่น ---- */
+  const mx=Math.max(3,...secs.map(s=>Math.abs(s.w.pct)));
+  document.getElementById('sectors').innerHTML=secs.length
+    ? '<table><thead><tr><th>กลุ่ม</th><th>สัปดาห์นี้</th><th style="width:40%"></th></tr></thead><tbody>'
+      +secs.map(s=>'<tr><td>'+esc(s.n)+'</td>'
+        +'<td class="mono '+cl2(s.w.pct)+'">'+pc(s.w.pct)+'</td>'
+        +'<td><div class="bar"><i style="width:'+(Math.abs(s.w.pct)/mx*100).toFixed(0)
+        +'%;background:var(--'+(s.w.pct>=0?'up':'dn')+')"></i></div></td></tr>').join('')
+      +'</tbody></table>'
+    : '<div class="ld">ไม่มีข้อมูลกลุ่ม</div>';
+
+  /* ---- หุ้นน่าจับตา ---- */
+  const stocks=UNIVERSE.map(s=>{
+    const b=D[s+'.us']; if(!b)return null;
+    const c=b.map(x=>x.c);
+    return {sym:s.toUpperCase(),bars:b,raw:rsRaw(c),
+      w:weekRet(b,BACK),sig:signals(b),px:c.at(-1)};
+  }).filter(Boolean);
+  const toP=toPercentile(stocks.map(s=>s.raw));
+  stocks.forEach(s=>s.rs=toP(s.raw));
+  const watch=stocks.filter(s=>s.sig.length&&s.rs>=70)
+    .sort((a,b)=>b.rs-a.rs).slice(0,10);
+  document.getElementById('watch').innerHTML=watch.length
+    ? '<table><thead><tr><th>หุ้น</th><th>ราคา</th><th>สัปดาห์</th><th>RS</th>'
+      +'<th style="text-align:left">สัญญาณ</th></tr></thead><tbody>'
+      +watch.map(s=>'<tr><td><b>'+s.sym+'</b></td>'
+        +'<td class="mono">'+num(s.px)+'</td>'
+        +'<td class="mono '+cl2(s.w&&s.w.pct)+'">'+(s.w?pc(s.w.pct):'—')+'</td>'
+        +'<td><span class="rs '+(s.rs>=85?'hi':'mid')+'">'+s.rs+'</span></td>'
+        +'<td style="text-align:left" class="sig">'+s.sig.map(x=>'<b>'+x+'</b>').join(' · ')+'</td></tr>').join('')
+      +'</tbody></table>'
+    : '<div class="ld">สัปดาห์นี้ไม่มีหุ้นผ่านเกณฑ์<br>'
+      +'<span class="sub">RS ≥ 70 และต้องมีสัญญาณอย่างน้อย 1 อย่าง — บางสัปดาห์ไม่มีเลยถือว่าปกติ</span></div>';
+
+  /* ---- ตารางรวม ---- */
+  const all=[...INDEX.map(x=>({n:x.n,g:'ดัชนี/สินทรัพย์',w:D[x.c]?weekRet(D[x.c],BACK):null})),
+             ...SECTOR.map(x=>({n:x.n,g:'กลุ่มหุ้นสหรัฐฯ',w:D[x.c]?weekRet(D[x.c],BACK):null}))]
+    .filter(x=>x.w).sort((a,b)=>b.w.pct-a.w.pct);
+  document.getElementById('allTable').innerHTML=
+    '<table><thead><tr><th>รายการ</th><th>ประเภท</th><th>ราคาปิด</th><th>สัปดาห์นี้</th></tr></thead><tbody>'
+    +all.map(x=>'<tr><td>'+esc(x.n)+'</td><td style="color:var(--tx3)">'+x.g+'</td>'
+      +'<td class="mono">'+num(x.w.close,x.w.close>1000?0:2)+'</td>'
+      +'<td class="mono '+cl2(x.w.pct)+'">'+pc(x.w.pct)+'</td></tr>').join('')
+    +'</tbody></table>';
+
+  /* ---- ข้อจำกัด ---- */
+  const lim=document.getElementById('limits');
+  lim.style.display='block';
+  lim.innerHTML='<b>สิ่งที่หน้านี้ยังทำไม่ได้</b> — '
+    +'ข้อมูลหุ้นไทยและ fund flow (ซื้อขายสุทธิต่างชาติ/สถาบัน) ไม่มีแหล่งฟรีที่ดึงอัตโนมัติได้ · '
+    +'RS คิดจาก '+stocks.length+' ตัวที่สแกน ไม่ใช่ทั้งตลาด · '
+    +'ปฏิทินงบและโลโก้บริษัทต้องใช้ข้อมูลแบบเสียเงิน';
+}
+
+document.getElementById('bLoad').onclick=load;
+loadCache();
+render();
+</script>
+<script src="theme.js"></script>
+</body></html>

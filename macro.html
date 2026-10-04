@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MACRO — Trading Dashboard</title>
+<style>
+:root{--bg:#0b0e14;--bg2:#111721;--bg3:#161d2a;--line:#222c3d;--tx:#e6edf7;--tx2:#94a3b8;
+--tx3:#5d6b80;--gold:#f5b942;--acc:#3b82f6;--up:#22c55e;--dn:#ef4444;--warn:#f59e0b;--pur:#a78bfa}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-size:14px;line-height:1.55;padding-bottom:40px;
+font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Leelawadee UI','Noto Sans Thai',Tahoma,sans-serif}
+.mono{font-family:ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+.up{color:var(--up)}.dn{color:var(--dn)}.wn{color:var(--warn)}.fl{color:var(--tx2)}
+button{font-family:inherit;cursor:pointer}
+a{color:var(--acc);text-decoration:none}
+header{position:sticky;top:0;z-index:50;background:rgba(11,14,20,.96);
+backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.hbar{display:flex;align-items:center;gap:12px;padding:9px 16px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:15px}.logo span{color:var(--gold)}
+nav{display:flex;gap:2px;margin-left:6px}
+nav a{color:var(--tx3);padding:6px 13px;font-size:13px;font-weight:600;border-radius:7px}
+nav a.on{color:var(--tx);background:var(--bg3)}
+.right{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{background:var(--bg3);border:1px solid var(--line);color:var(--tx2);
+padding:5px 11px;border-radius:7px;font-size:12px}
+.btn:hover{border-color:var(--acc);color:var(--tx)}
+.btn.go{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn.xs{padding:3px 8px;font-size:11px}
+main{padding:14px 16px;max-width:1560px;margin:0 auto}
+.ph{background:var(--bg3);border:1px solid var(--line);border-radius:10px;padding:11px 18px;
+margin-bottom:12px;font-size:17px;font-weight:700;letter-spacing:.6px;text-align:center}
+.hero{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:12px}
+.hcard{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:13px 15px}
+.hcard .lb{font-size:10.5px;color:var(--tx3);text-transform:uppercase;letter-spacing:.7px}
+.hcard .vl{font-size:24px;font-weight:700;margin-top:3px;line-height:1.15}
+.hcard .sm{font-size:11.5px;color:var(--tx2);margin-top:3px}
+.grid{display:grid;gap:12px;grid-template-columns:1.2fr .95fr .95fr;
+grid-template-areas:"a b d" "a c f" "a c e"}
+.ga{grid-area:a}.gb{grid-area:b}.gc{grid-area:c}.gd{grid-area:d}.ge{grid-area:e}.gf{grid-area:f}
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:14px;
+display:flex;flex-direction:column;min-width:0}
+.card h3{font-size:11.5px;font-weight:700;color:var(--tx2);text-transform:uppercase;
+letter-spacing:.7px;margin-bottom:11px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.sub{font-size:11px;color:var(--tx3);font-weight:400;text-transform:none;letter-spacing:0}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{text-align:right;font-size:10px;color:var(--tx3);font-weight:600;padding:6px 5px;
+border-bottom:1px solid var(--line);text-transform:uppercase;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+td{padding:6px 5px;border-bottom:1px solid rgba(34,44,61,.5);text-align:right;white-space:nowrap}
+tfoot td{border-top:2px solid var(--line);border-bottom:none;font-weight:700}
+input,select{background:var(--bg3);border:1px solid var(--line);color:var(--tx);
+padding:5px 7px;border-radius:6px;font-size:12.5px;font-family:inherit}
+input:focus,select:focus{outline:none;border-color:var(--acc)}
+input.n{width:74px;text-align:right;font-family:ui-monospace,monospace}
+.axis{display:flex;align-items:center;gap:9px;padding:7px 0;
+border-bottom:1px solid rgba(34,44,61,.5)}
+.axis .k{width:150px;font-size:12.5px;color:var(--tx2)}
+.axis .bar{flex:1;height:16px;background:var(--bg3);border-radius:4px;position:relative;min-width:70px}
+.axis .bar i{position:absolute;top:0;height:100%;border-radius:4px}
+.axis .bar .mid{position:absolute;left:50%;top:0;width:1px;height:100%;background:var(--tx3);opacity:.55}
+.axis .v{width:44px;text-align:right;font-family:ui-monospace,monospace;font-size:12px}
+.axis .s{width:96px;text-align:right;font-size:11px;font-weight:700}
+.gauge{position:relative;height:10px;border-radius:5px;margin:8px 0 4px;
+background:linear-gradient(90deg,#22c55e,#84cc16,#eab308,#f59e0b,#ef4444)}
+.gauge i{position:absolute;top:-4px;width:3px;height:18px;background:#fff;border-radius:2px;
+box-shadow:0 0 5px rgba(0,0,0,.7)}
+.gl{display:flex;justify-content:space-between;font-size:9.5px;color:var(--tx3)}
+.sblock{padding:9px 0;border-bottom:1px solid rgba(34,44,61,.5)}
+.sblock:last-child{border-bottom:none}
+.sblock .top{display:flex;align-items:baseline;gap:8px}
+.sblock .nm{font-size:12.5px;font-weight:700}
+.sblock .sc{font-size:20px;font-weight:700;font-family:ui-monospace,monospace;margin-left:auto}
+.read{background:var(--bg3);border-left:2px solid var(--pur);border-radius:0 7px 7px 0;
+padding:10px 12px;font-size:12px;line-height:1.8;color:var(--tx2)}
+.read b{color:var(--pur)}
+.note{margin-top:auto;padding-top:10px;font-size:10.5px;color:var(--tx3);line-height:1.65;
+border-top:1px dashed var(--line)}
+.note b{color:var(--tx2)}
+.warnbox{background:rgba(239,68,68,.09);border:1px solid rgba(239,68,68,.3);border-radius:8px;
+padding:10px 13px;font-size:12.5px;color:var(--dn);line-height:1.7;margin-bottom:12px;font-weight:600}
+.inpsec{margin-top:14px}
+.inphead{display:flex;align-items:center;gap:10px;background:var(--bg3);border:1px solid var(--line);
+border-radius:9px;padding:10px 14px;cursor:pointer;font-weight:700;font-size:13px}
+.inphead .ar{margin-left:auto;color:var(--tx3);font-size:11px}
+.inpbody{border:1px solid var(--line);border-top:none;border-radius:0 0 9px 9px;padding:14px;
+background:var(--bg2)}
+.gtitle{font-size:11.5px;font-weight:700;color:var(--gold);margin:14px 0 6px}
+.gtitle:first-child{margin-top:0}
+.irow{display:grid;grid-template-columns:1fr 90px 90px 46px 46px 46px;gap:7px;align-items:center;
+padding:5px 0;border-bottom:1px solid rgba(34,44,61,.4);font-size:12px}
+.irow .nm{color:var(--tx2);overflow:hidden;text-overflow:ellipsis}
+.irow .nm em{font-style:normal;font-size:10px;color:var(--tx3);display:block}
+.irow .c{text-align:center;font-family:ui-monospace,monospace;font-size:11.5px}
+.ihead{color:var(--tx3);font-size:9.5px;text-transform:uppercase;font-weight:600}
+.srow{display:grid;grid-template-columns:1fr 52px 62px 74px;gap:7px;align-items:center;
+padding:4px 0;font-size:11.5px;border-bottom:1px solid rgba(34,44,61,.35)}
+.pill{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:700}
+.p-ok{background:rgba(34,197,94,.15);color:var(--up)}
+.p-nu{background:rgba(148,163,184,.15);color:var(--tx2)}
+.p-bad{background:rgba(239,68,68,.15);color:var(--dn)}
+.p-wn{background:rgba(245,158,11,.15);color:var(--warn)}
+@media(max-width:1150px){.grid{grid-template-columns:1fr 1fr;
+grid-template-areas:"a a" "b c" "d f" "e e"}}
+@media(max-width:760px){.grid{grid-template-columns:1fr;grid-template-areas:"a" "b" "c" "d" "f" "e"}
+.irow{grid-template-columns:1fr 70px 70px}.irow .c{display:none}}
+</style>
+<link rel="stylesheet" href="theme.css">
+</head>
+<body>
+
+<header>
+  <div class="hbar">
+    <div class="logo">TRADING <span>DASHBOARD</span></div>
+    <nav>
+      <a href="index.html">PORT</a>
+      <a href="trade.html">TRADE</a>
+      <a class="on" href="macro.html">MACRO</a>
+      <a href="bot.html">BOT</a>
+      <a href="market.html">MARKET</a>
+      <a href="weekly.html">WEEKLY</a>
+    </nav>
+    <div class="right">
+      <span id="upd" class="sub"></span>
+      <button class="btn" id="bSave">บันทึกลง LOG</button>
+      <button class="btn" id="bExport">ส่งออก</button>
+      <button class="btn" id="bImport">นำเข้า</button>
+      <input type="file" id="fImp" accept=".json" style="display:none">
+      <button class="btn" id="bReset">ค่าตัวอย่าง</button>
+    </div>
+  </div>
+</header>
+
+<main>
+<div class="ph">MACRO ECONOMICS</div>
+<div id="trip" class="warnbox" style="display:none"></div>
+
+<div class="hero" id="hero"></div>
+
+<div class="grid">
+  <div class="card ga">
+    <h3>เงินอยู่ที่ไหน <span class="sub">ผลตอบแทน ETF ตัวแทนแต่ละตลาด</span>
+      <button class="btn xs" id="bFlow" style="margin-left:auto">↻ ดึงข้อมูล</button></h3>
+    <div id="flowBox"></div>
+    <div class="note" style="margin-top:12px;padding-top:10px"><b>แทนแผนที่โลก</b>
+      เพราะข้อมูลเงินไหลจริงไม่มีให้ใช้ฟรี — ตลาดไหนขึ้น = เงินไหลเข้าที่นั่น
+      <b>วัดได้จริงและตรวจสอบย้อนหลังได้</b><br>
+      ข้อมูลแคชไว้ 12 ชม. กดปุ่มเพื่อดึงใหม่</div>
+  </div>
+
+  <div class="card gb">
+    <h3>Fear &amp; Greed รายสินทรัพย์</h3>
+    <div id="sent"></div>
+    <div class="note">คะแนนสูง = โลภ (ระวัง) · ต่ำ = กลัว (มักเป็นโอกาส)<br>
+      ถ่วงน้ำหนัก Tier A 0.5 · B 0.3 · C 0.2 ตามที่คุณตั้งไว้</div>
+  </div>
+
+  <div class="card gc">
+    <h3>อ่านสถานการณ์ <span class="sub">แปลจากตัวเลข ไม่ใช่ความเห็น</span></h3>
+    <div id="read"></div>
+    <div class="note"><b>นี่คือการแปลกฎในไฟล์เป็นภาษาคน</b> ไม่ใช่การพยากรณ์
+      และไม่ใช่คำแนะนำซื้อขาย</div>
+  </div>
+
+  <div class="card gf">
+    <h3>Alpha &amp; Beta <span class="sub">พอร์ตคุณเทียบตลาด</span></h3>
+    <div id="abBox"></div>
+    <div class="note"><b>Beta</b> = พอร์ตแกว่งแรงกว่าตลาดกี่เท่า ·
+      <b>Alpha</b> = ผลตอบแทนส่วนเกินหลังหักส่วนที่ได้มาจากการรับความเสี่ยงตลาด<br>
+      Alpha เป็นบวกเล็กน้อยในช่วงสั้นๆ <b>แทบไม่มีความหมายทางสถิติ</b></div>
+  </div>
+
+  <div class="card ge">
+    <h3>สินทรัพย์ไหนราคาต่ำ <span class="sub">เทียบข้ามสินทรัพย์</span></h3>
+    <div id="valBox"></div>
+    <div class="note"><b>ใช้ตัววัดชุดเดียวกับที่คุณตั้ง Val Gate ในไฟล์</b>
+      หุ้น = Forward P/E percentile · ทอง = ราคา ÷ ต้นทุนขุด · BTC = MVRV Z<br>
+      <b>ถูกไม่ได้แปลว่าจะขึ้น</b> ของถูกอยู่ถูกได้เป็นปี — ใช้คู่กับ Tech Gate เสมอ</div>
+  </div>
+
+  <div class="card gd">
+    <h3>ปฏิทิน &amp; รอบทบทวน</h3>
+    <div id="cal"></div>
+    <div class="note">ตารางรอบทบทวนมาจากชีท REF ในไฟล์คุณ<br>
+      <b>กฎสำคัญ:</b> ห้ามเปลี่ยน regime เพราะตัวเลขเดือนเดียว ต้องยืนยัน 2–3 เดือน</div>
+  </div>
+</div>
+
+  <div class="card" style="margin-top:12px">
+    <h3>สถานะระบอบตลาด &amp; น้ำหนักเป้าหมาย</h3>
+    <div id="axes"></div>
+    <div style="margin-top:14px"><div class="gtitle" style="margin:0 0 6px">น้ำหนักพอร์ตเป้าหมาย</div>
+      <div id="targets"></div></div>
+    <div class="note"><b>Target % = Max Weight × Regime Factor × Ceiling × Sentiment × Val Gate</b>
+      แล้วคูณ 0 ถ้า Tech Gate ยังไม่ผ่าน<br>
+      ทุกสูตรตรงกับไฟล์ scorecard ของคุณ ตรวจแล้วตรงทุกช่อง</div>
+  </div>
+
+
+<div class="card" style="margin-top:12px">
+  <h3>ติดตามนักลงทุนรายใหญ่ <span class="sub">13F / ข่าวสาธารณะ</span></h3>
+  <div class="warnbox" style="background:rgba(245,158,11,.08);border-color:rgba(245,158,11,.3);color:var(--warn)">
+    ⏱ <b>ข้อมูล 13F ออกไตรมาสละครั้ง และช้ากว่าความจริง 45 วัน</b> —
+    ที่คุณเห็นว่า "เขาซื้อ X" คือเขาซื้อไปแล้ว 1.5–4.5 เดือน และอาจขายทิ้งไปแล้วก็ได้
+    ใช้ดูแนวคิดและธีมการลงทุน <b>ไม่ใช่สัญญาณให้ตามซื้อ</b>
+  </div>
+  <div class="addrow" style="grid-template-columns:1.1fr 1fr .8fr 1fr 1.6fr auto;display:grid;gap:7px;margin-bottom:10px">
+    <input id="siWho" placeholder="ชื่อนักลงทุน / กองทุน">
+    <input id="siSym" placeholder="สัญลักษณ์">
+    <select id="siAct"><option value="buy">ซื้อเพิ่ม</option><option value="new">เปิดใหม่</option>
+      <option value="trim">ลด</option><option value="exit">ขายหมด</option></select>
+    <input id="siDate" type="date" title="วันที่ยื่นเอกสาร">
+    <input id="siNote" placeholder="ความเห็น / เหตุผล">
+    <button class="btn go" id="siAdd">+ เพิ่ม</button>
+  </div>
+  <div id="siList"></div>
+  <div class="sub" style="margin-top:10px;line-height:1.8">
+    แหล่งดูฟรี:
+    <a href="https://www.sec.gov/edgar/search/#/forms=13F-HR" target="_blank" rel="noopener noreferrer">SEC EDGAR (ต้นทาง)</a> ·
+    <a href="https://www.dataroma.com/m/home.php" target="_blank" rel="noopener noreferrer">Dataroma</a> ·
+    <a href="https://whalewisdom.com/" target="_blank" rel="noopener noreferrer">WhaleWisdom</a><br>
+    ระบบดึงอัตโนมัติไม่ได้เพราะเว็บพวกนี้ไม่เปิดสิทธิ์ให้เบราว์เซอร์เรียกข้อมูล — บันทึกเองทีละรายการ
+  </div>
+</div>
+
+<div class="inpsec">
+  <div class="inphead" id="tgl1">แกน 1 — กรอกข้อมูลมาโคร 12 ตัวชี้วัด
+    <span class="ar" id="ar1">▼ กดเพื่อเปิด/ปิด</span></div>
+  <div class="inpbody" id="body1"></div>
+</div>
+
+<div class="inpsec">
+  <div class="inphead" id="tgl2">แกน 2, 3, 5 — พื้นฐาน · เทคนิค · Sentiment
+    <span class="ar" id="ar2">▼ กดเพื่อเปิด/ปิด</span></div>
+  <div class="inpbody" id="body2" style="display:none"></div>
+</div>
+
+<div class="card" style="margin-top:14px">
+  <h3>ข้อจำกัดของระบบนี้ <span class="sub">คัดมาจากชีท REF ในไฟล์คุณเอง</span></h3>
+  <div style="font-size:12px;color:var(--tx2);line-height:1.9">
+    • เกณฑ์คะแนนทุกตัวเป็นค่าตั้งต้นจากช่วงประวัติศาสตร์ทั่วไป <b>ยังไม่ผ่าน backtest</b> ต้องทดสอบแล้วปรับเอง<br>
+    • ตาราง regime score เป็นความสัมพันธ์เฉลี่ยในอดีต ไม่ใช่กฎธรรมชาติ — ปี 2022 ทองไม่ขึ้นทั้งที่เงินเฟ้อพุ่ง เพราะ real yield ชนะ<br>
+    • เมื่อทองสวนทางกับ real yield นานเกิน 1 เดือน แปลว่ามีตัวขับตัวอื่น ต้องหาให้เจอ ไม่ใช่เชื่อโมเดล<br>
+    • ตอนวิกฤต หุ้น/ทอง/BTC วิ่งเป็นตัวเดียวกัน (มี.ค. 2020, 2022) — <b>สามตัวนี้ไม่ใช่ diversification จริง</b><br>
+    • <b>ระบบนี้ยังไม่มีชั้น Risk Management</b> (ขาดทุนต่อไม้, portfolio heat, drawdown stop) ซึ่งสำคัญกว่าการวิเคราะห์
+  </div>
+</div>
+</main>
+
+<script>
+/* ==================================================================
+   เครื่องคำนวณ MACRO SCORECARD
+   แปลงตรงจากสูตรในไฟล์ macro_sentiment_scorecard_4.xlsx
+   ทุกเกณฑ์อ้างอิงสูตรจริงในไฟล์ ไม่ได้ประมาณเอา
+   ================================================================== */
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const step=(v,pairs,last)=>{for(const [t,s] of pairs){if(v>=t)return s}return last};
+const stepDown=(v,pairs,last)=>{for(const [t,s] of pairs){if(v<=t)return s}return last};
+
+/* 12 ตัวชี้วัด — เกณฑ์ Level/Trend ตรงตามไฟล์ */
+const IND=[
+ {g:'G',k:'ism_no',  n:'ISM Manufacturing New Orders', src:'ismworld.org', u:'index',
+  lvl:c=>step(c,[[55,2],[50,1],[47,0],[45,-1]],-2),
+  trd:(c,p)=>c-p>=2?1:(c-p<=-2?-1:0)},
+ {g:'G',k:'claims',  n:'Initial Claims 4wk MA', src:'FRED: IC4WSA', u:'พันราย',
+  lvl:c=>stepDown(c,[[210,2],[240,1],[270,0],[300,-1]],-2),
+  trd:(c,p)=>p-c>=15?1:(c-p>=15?-1:0)},
+ {g:'G',k:'lei',     n:'Conference Board LEI 6-mo ann.', src:'conference-board.org', u:'%',
+  lvl:c=>step(c,[[2,2],[0,1],[-2,0],[-4,-1]],-2),
+  trd:(c,p)=>c-p>=1?1:(c-p<=-1?-1:0)},
+
+ {g:'I',k:'pce',     n:'Core PCE 3-mo annualized', src:'FRED: PCEPILFE', u:'%',
+  lvl:c=>step(c,[[3.5,2],[2.8,1],[2,0],[1.5,-1]],-2),
+  trd:(c,p)=>c-p>=0.5?1:(c-p<=-0.5?-1:0)},
+ {g:'I',k:'be5y5y',  n:'5y5y Forward Breakeven', src:'FRED: T5YIFR', u:'%',
+  lvl:c=>step(c,[[2.75,2],[2.4,1],[2.1,0],[1.8,-1]],-2),
+  trd:(c,p)=>c-p>=0.15?1:(c-p<=-0.15?-1:0)},
+ {g:'I',k:'ism_pp',  n:'ISM Prices Paid', src:'ismworld.org', u:'index',
+  lvl:c=>step(c,[[65,2],[57,1],[48,0],[42,-1]],-2),
+  trd:(c,p)=>c-p>=5?1:(c-p<=-5?-1:0)},
+
+ {g:'P',k:'real10y', n:'Real 10Y Yield (TIPS)', src:'FRED: DFII10', u:'%',
+  lvl:c=>stepDown(c,[[0.5,2],[1.3,1],[2,0],[2.6,-1]],-2),
+  trd:(c,p)=>p-c>=0.25?1:(c-p>=0.25?-1:0)},
+ {g:'P',k:'netliq',  n:'Net Liquidity (Fed BS − TGA − RRP)', src:'FRED 3 series', u:'$ ล้านล้าน',
+  /* ตัวนี้ให้คะแนนจาก "ส่วนต่าง" ไม่ใช่ระดับ และไม่มีคะแนน Trend */
+  lvl:(c,p)=>{const d=c-p;return d>=0.3?2:d>=0.1?1:d>=-0.1?0:d>=-0.3?-1:-2},
+  trd:()=>0, useDiff:true},
+ {g:'P',k:'fedpath', n:'Fed path 12m (Δ ดอกเบี้ยที่ตลาดคาด)', src:'CME FedWatch', u:'bp',
+  lvl:c=>stepDown(c,[[-100,2],[-25,1],[25,0],[75,-1]],-2),
+  trd:(c,p)=>p-c>=25?1:(c-p>=25?-1:0)},
+
+ {g:'R',k:'hyoas',   n:'HY OAS (credit spread)', src:'FRED: BAMLH0A0HYM2', u:'bp',
+  lvl:c=>stepDown(c,[[300,2],[380,1],[480,0],[620,-1]],-2),
+  trd:(c,p)=>p-c>=50?1:(c-p>=50?-1:0)},
+ {g:'R',k:'t10y2y',  n:'2s10s Spread', src:'FRED: T10Y2Y', u:'bp',
+  lvl:c=>c>=75?1:(c>=10?0:(c>=-40?0:-1)),
+  /* ชันขึ้นเร็วหลังกลับหัว = สัญญาณเตือนถดถอย */
+  trd:(c,p)=>(p<-10&&c-p>=40)?-2:0},
+ {g:'R',k:'dxy',     n:'DXY (Dollar Index)', src:'FRED: DTWEXBGS', u:'index',
+  lvl:()=>0,
+  trd:(c,p)=>{if(!p)return 0;const r=(c-p)/p;return r>=0.05?-1:(r<=-0.05?1:0)}},
+];
+
+function scoreIndicator(ind,cur,prev){
+  if(cur==null||cur===''||!isFinite(cur))return {lvl:null,trd:null,score:null};
+  const p=(prev==null||prev===''||!isFinite(prev))?null:Number(prev);
+  const lvl=ind.useDiff?(p==null?null:ind.lvl(Number(cur),p)):ind.lvl(Number(cur));
+  const trd=(p==null)?0:ind.trd(Number(cur),p);
+  if(lvl==null)return {lvl:null,trd:null,score:null};
+  return {lvl,trd,score:clamp(lvl+trd,-2,2)};
+}
+const r2=v=>v==null?null:Math.round(v*100)/100;
+function groupScore(vals,inds){
+  const ss=inds.map(i=>scoreIndicator(i,vals[i.k+'_c'],vals[i.k+'_p']).score).filter(s=>s!=null);
+  return ss.length?r2(ss.reduce((a,b)=>a+b,0)/ss.length):null;
+}
+
+/* ---- สถานะแต่ละแกน (เกณฑ์ ±0.34 ตามไฟล์) ---- */
+const st3=(v,up,mid,dn)=>v==null?'—':(v>=0.34?up:(v<=-0.34?dn:mid));
+const stateG=v=>st3(v,'UP','FLAT','DOWN');
+const stateP=v=>st3(v,'SUPPORTIVE','NEUTRAL','TIGHT');
+const stateR=v=>st3(v,'CALM','NEUTRAL','STRESSED');
+
+/* ---- ตาราง REF ---- */
+const QUAD={UP:{DOWN:'Goldilocks',FLAT:'Expansion',UP:'Reflation'},
+            FLAT:{DOWN:'Disinflation',FLAT:'Neutral',UP:'Inflation Creep'},
+            DOWN:{DOWN:'Recession',FLAT:'Slowdown',UP:'Stagflation'}};
+const RS={
+ stocks:{UP:{DOWN:2,FLAT:2,UP:1},FLAT:{DOWN:1,FLAT:0,UP:-1},DOWN:{DOWN:-2,FLAT:-1,UP:-2}},
+ gold:  {UP:{DOWN:0,FLAT:1,UP:2},FLAT:{DOWN:1,FLAT:0,UP:1},DOWN:{DOWN:1,FLAT:1,UP:2}},
+ btc:   {UP:{DOWN:2,FLAT:2,UP:1},FLAT:{DOWN:1,FLAT:0,UP:0},DOWN:{DOWN:-2,FLAT:-1,UP:-1}}};
+const SENT_MULT={
+ 'EXTREME FEAR':{GOOD:1.5,NEUTRAL:1.2,BAD:0.5},
+ 'FEAR':{GOOD:1.25,NEUTRAL:1,BAD:0.6},
+ 'NEUTRAL':{GOOD:1,NEUTRAL:1,BAD:0.75},
+ 'GREED':{GOOD:0.8,NEUTRAL:0.8,BAD:0.5},
+ 'EXTREME GREED':{GOOD:0.6,NEUTRAL:0.5,BAD:0.3}};
+const W1={stocks:0.5,gold:0.7,btc:0.55};   /* น้ำหนักแกน 1 : แกน 2 */
+
+/* ---- Sentiment ---- */
+function sentComposite(rows){
+  let num=0,den=0;
+  rows.forEach(r=>{
+    const p=Number(r.pct);
+    if(!isFinite(p))return;
+    const greed=r.dir===1?p:100-p;
+    num+=Number(r.w)*greed; den+=Number(r.w);
+  });
+  return den?Math.round(num/den*10)/10:null;
+}
+const sentBand=v=>v==null?'—':(v>=90?'EXTREME GREED':v>=70?'GREED':v>30?'NEUTRAL':v>10?'FEAR':'EXTREME FEAR');
+const regimeBucket=rs=>rs==null?'NEUTRAL':(rs>=1?'GOOD':rs<=-1?'BAD':'NEUTRAL');
+
+/* ---- คำนวณทั้งระบบ ---- */
+function computeAll(S){
+  const G=groupScore(S.macro,IND.filter(i=>i.g==='G'));
+  const I=groupScore(S.macro,IND.filter(i=>i.g==='I'));
+  const P=groupScore(S.macro,IND.filter(i=>i.g==='P'));
+  const R=groupScore(S.macro,IND.filter(i=>i.g==='R'));
+  const gS=stateG(G), iS=stateG(I);
+  const quadrant=(gS==='—'||iS==='—')?'—':QUAD[gS][iS];
+
+  /* Tripwire */
+  const oasChg=Number(S.trip.oasChg), vix=Number(S.trip.vix);
+  const fired=(isFinite(oasChg)&&oasChg>100)||String(S.trip.manual||'N').toUpperCase()==='Y';
+  const warning=(isFinite(vix)&&vix>30)?'VIX STRESS — ทบทวนด้วยมือ':'-';
+
+  /* เพดานพอร์ต */
+  let ceiling;
+  if(fired)ceiling=0.25;
+  else if(R!=null&&R<=-1.5)ceiling=0.25;
+  else if(P!=null&&R!=null&&P+R>=2)ceiling=1;
+  else if(P!=null&&R!=null&&P+R>=0)ceiling=0.75;
+  else ceiling=0.5;
+
+  const assets=['stocks','gold','btc'].map(a=>{
+    const macro=(gS==='—'||iS==='—')?null:RS[a][gS][iS];
+    const fund=S.fund[a].score;
+    const w1=W1[a];
+    const regimeScore=(macro==null||fund==null)?null:r2(macro*w1+fund*(1-w1));
+    const factor=regimeScore==null?null:clamp((regimeScore+2)/4,0,1);
+    const comp=sentComposite(S.sent[a]);
+    const band=sentBand(comp);
+    const bucket=regimeBucket(regimeScore);
+    const mult=(band==='—')?1:SENT_MULT[band][bucket];
+    const valGate=S.fund[a].valGate;
+    const techY=String(S.tech[a]||'N').toUpperCase()==='Y';
+    const maxW=S.maxW[a];
+    const target=(factor==null)?0:
+      Math.min(maxW,maxW*factor*ceiling*mult*valGate)*(techY?1:0);
+    return {key:a,macro,fund,w1,regimeScore,factor,comp,band,bucket,mult,valGate,
+            techY,maxW,target};
+  });
+  const cash=1-assets.reduce((a,x)=>a+x.target,0);
+  return {G,I,P,R,gS,iS,pS:stateP(P),rS:stateR(R),quadrant,ceiling,fired,warning,assets,cash};
+}
+
+
+/* ==================================================================
+   "เงินอยู่ที่ไหน" — ผลตอบแทนรายประเทศและรายสินทรัพย์
+   ใช้ ETF จดทะเบียนสหรัฐฯ เป็นตัวแทนของแต่ละตลาด
+   ดึงราคาย้อนหลังจาก Stooq (คำขอละสัญลักษณ์ แต่แคช 12 ชม.)
+   ================================================================== */
+const CTRY=[
+ {c:'spy.us', n:'สหรัฐฯ',   g:'ct'},{c:'ewj.us', n:'ญี่ปุ่น',  g:'ct'},
+ {c:'ewg.us', n:'เยอรมนี',  g:'ct'},{c:'ewu.us', n:'อังกฤษ',   g:'ct'},
+ {c:'fxi.us', n:'จีน',      g:'ct'},{c:'ewy.us', n:'เกาหลี',   g:'ct'},
+ {c:'ewt.us', n:'ไต้หวัน',  g:'ct'},{c:'inda.us',n:'อินเดีย',  g:'ct'},
+ {c:'vnm.us', n:'เวียดนาม', g:'ct'},{c:'thd.us', n:'ไทย',      g:'ct'},
+ {c:'ewz.us', n:'บราซิล',   g:'ct'},
+ {c:'spy.us', n:'หุ้นสหรัฐฯ',g:'as'},{c:'gld.us',n:'ทองคำ',    g:'as'},
+ {c:'tlt.us', n:'พันธบัตรยาว',g:'as'},{c:'btcusd',n:'Bitcoin', g:'as'},
+ {c:'dbc.us', n:'สินค้าโภคภัณฑ์',g:'as'},{c:'vwo.us',n:'ตลาดเกิดใหม่',g:'as'},
+ {c:'uup.us', n:'ดอลลาร์',  g:'as'},
+];
+const FLOW_KEY='macro_flows_v1';
+let FLOWS=null;
+
+function loadFlowCache(){
+  try{const c=JSON.parse(localStorage.getItem(FLOW_KEY));
+    if(c&&Date.now()-c.t<12*3600*1000){FLOWS=c;return true}}catch(e){}
+  return false;
+}
+/* คืนผลตอบแทนจากชุดราคาปิด (เรียงเก่า->ใหม่) ย้อนไป n วันทำการ */
+function retN(closes,n){
+  if(!closes||closes.length<n+1)return null;
+  const a=closes[closes.length-1-n],b=closes[closes.length-1];
+  return a?(b-a)/a*100:null;
+}
+function retYTD(rows){
+  if(!rows||!rows.length)return null;
+  const y=new Date().getFullYear();
+  const last=rows[rows.length-1];
+  for(const r of rows){if(new Date(r.d).getFullYear()===y)
+    return r.c?(last.c-r.c)/r.c*100:null;}
+  return null;
+}
+function parseStooqDaily(csv){
+  const lines=csv.trim().split('\n');
+  if(lines.length<3)return null;
+  const out=[];
+  for(let i=1;i<lines.length;i++){
+    const a=lines[i].split(',');
+    const d=a[0],c=parseFloat(a[4]);
+    if(d&&isFinite(c))out.push({d,c});
+  }
+  return out.length>30?out:null;
+}
+async function fetchFlows(onProgress){
+  const uniq=[...new Set(CTRY.map(x=>x.c))];
+  const P=[u=>'https://api.allorigins.win/raw?url='+encodeURIComponent(u),
+    u=>'https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent(u),
+    u=>'https://corsproxy.io/?url='+encodeURIComponent(u)];
+  const data={};
+  let done=0;
+  /* จำกัด 3 คำขอพร้อมกัน กันโดน rate limit */
+  const queue=uniq.slice();
+  async function worker(){
+    while(queue.length){
+      const code=queue.shift();
+      const url='https://stooq.com/q/d/l/?s='+code+'&i=d';
+      try{
+        const csv=await Promise.any(P.map(f=>fetch(f(url),{cache:'no-store'})
+          .then(r=>r.ok?r.text():Promise.reject(new Error('HTTP')))));
+        const rows=parseStooqDaily(csv);
+        if(rows)data[code]=rows.slice(-400);
+      }catch(e){}
+      done++;
+      if(onProgress)onProgress(done,uniq.length);
+    }
+  }
+  await Promise.all([worker(),worker(),worker()]);
+  if(!Object.keys(data).length)return false;
+  FLOWS={t:Date.now(),data};
+  try{localStorage.setItem(FLOW_KEY,JSON.stringify(FLOWS))}catch(e){}
+  return true;
+}
+function flowRows(group){
+  if(!FLOWS)return [];
+  return CTRY.filter(x=>x.g===group).map(x=>{
+    const rows=FLOWS.data[x.c];
+    if(!rows)return {n:x.n,c:x.c,m1:null,m3:null,ytd:null};
+    const closes=rows.map(r=>r.c);
+    return {n:x.n,c:x.c,m1:retN(closes,21),m3:retN(closes,63),ytd:retYTD(rows)};
+  }).filter(r=>r.m1!=null).sort((a,b)=>b.m1-a.m1);
+}
+
+/* ==================================================================
+   "สินทรัพย์ไหนราคาต่ำ" — เทียบความถูกแพงข้ามสินทรัพย์
+   ใช้ตัววัดชุดเดียวกับที่คุณใช้ตั้ง Val Gate ในไฟล์ scorecard
+   จึงไม่ได้เพิ่มภาระกรอกข้อมูลใหม่
+   ================================================================== */
+const VALDEF={fwdpe_pctile:88, gold_aisc:2.35, btc_mvrv:2.8};
+
+/* แปลงเป็นคะแนนความถูก 0-100 (สูง = ถูก) พร้อมป้ายกำกับ */
+function valStocks(p){            /* Forward P/E percentile เทียบ 10 ปี */
+  if(p==null||!isFinite(p))return null;
+  const cheap=100-p;              /* percentile ต่ำ = ถูก */
+  return {v:p,unit:'%ile',cheap,
+    label:p>=97?'แพงมาก':p>=90?'แพง':p>=70?'ค่อนข้างแพง':p>=40?'กลางๆ':p>=20?'ค่อนข้างถูก':'ถูก',
+    gate:p>=97?0.5:p>=90?0.75:1,
+    how:'Forward P/E อยู่ที่เปอร์เซ็นไทล์ที่ '+p+' ของ 10 ปีที่ผ่านมา'};
+}
+function valGold(r){              /* ราคา ÷ ต้นทุนผลิต (AISC) */
+  if(r==null||!isFinite(r))return null;
+  const cheap=Math.max(0,Math.min(100,(3.0-r)/(3.0-1.2)*100));
+  return {v:r,unit:'× AISC',cheap,
+    label:r>=2.6?'แพงมาก':r>=2.2?'แพง':r>=1.8?'กลางๆ':r>=1.5?'ค่อนข้างถูก':'ถูก',
+    gate:r>=2.6?0.5:r>=2.2?0.75:1,
+    how:'ราคาทองเป็น '+r+' เท่าของต้นทุนขุดเฉลี่ยทั้งอุตสาหกรรม'};
+}
+function valBtc(z){               /* MVRV Z-Score */
+  if(z==null||!isFinite(z))return null;
+  const cheap=Math.max(0,Math.min(100,(7-z)/(7-(-1))*100));
+  return {v:z,unit:'Z',cheap,
+    label:z>=6?'แพงมาก':z>=4.5?'แพง':z>=2?'กลางๆ':z>=0?'ค่อนข้างถูก':'ถูก',
+    gate:z>=6?0.5:z>=4.5?0.75:1,
+    how:'MVRV Z-Score = '+z+' (เหนือ 6 เคยเป็นยอดดอยทุกรอบ ต่ำกว่า 0 เคยเป็นก้นเหว)'};
+}
+function valuationAll(V){
+  /* Number(null) === 0 ไม่ใช่ NaN — ถ้าไม่ดักไว้ ช่องว่างจะกลายเป็น "ถูกมาก" ซึ่งอันตราย */
+  const num=x=>(x==null||x===''||!isFinite(Number(x)))?null:Number(x);
+  return [
+    {key:'stocks',n:'US Stocks',r:valStocks(num(V.fwdpe_pctile))},
+    {key:'gold',  n:'ทองคำ',    r:valGold(num(V.gold_aisc))},
+    {key:'btc',   n:'Bitcoin',  r:valBtc(num(V.btc_mvrv))},
+  ].filter(x=>x.r).sort((a,b)=>b.r.cheap-a.r.cheap);
+}
+
+
+/* ==================================================================
+   ALPHA + BETA
+   beta ประมาณ = ถ่วงน้ำหนัก beta รายตัวตามมูลค่าที่ถือ (ใช้ได้ทันที)
+   beta จริง + alpha = คำนวณจากประวัติมูลค่าพอร์ตเทียบ SPY (ต้องรอสะสมข้อมูล)
+   ================================================================== */
+const HIST_KEY='pro_hist';           /* บันทึกโดยหน้า PORT */
+const SI_KEY='macro_si_v1';          /* ตารางนักลงทุนรายใหญ่ */
+const RF_ANNUAL=0.042;               /* อัตราปลอดความเสี่ยงโดยประมาณ (T-Bill) */
+
+/* beta อ้างอิงคร่าวๆ — ปรับเองได้ในหน้าจอ */
+const BETA={
+ AAPL:1.15,MSFT:0.95,NVDA:1.75,TSLA:2.05,AMZN:1.20,GOOGL:1.05,META:1.25,
+ AMD:1.90,AVGO:1.20,PLTR:2.30,NFLX:1.10,COIN:3.20,MSTR:3.50,
+ SPY:1.00,VOO:1.00,QQQ:1.15,DIA:0.90,IWM:1.15,VTI:1.00,
+ GLD:0.10,SLV:0.45,TLT:-0.10,
+ _gold:0.10,_crypto:2.00,_cash:0,_fund:0.85,_stock:1.00};
+function betaOf(sym,type,override){
+  const u=(sym||'').toUpperCase();
+  if(override&&override[u]!=null&&isFinite(override[u]))return Number(override[u]);
+  if(BETA[u]!=null)return BETA[u];
+  if(type==='gold')return BETA._gold;
+  if(type==='crypto')return BETA._crypto;
+  if(type==='cash')return BETA._cash;
+  if(type==='fund'||type==='ssf'||type==='rmf')return BETA._fund;
+  return BETA._stock;
+}
+/* beta ของพอร์ต = ถ่วงน้ำหนักตามมูลค่า */
+function portBeta(rows,override){
+  let tot=0,acc=0,unknown=[];
+  rows.forEach(r=>{
+    if(r.val==null||r.val<=0)return;
+    tot+=r.val;
+    const u=(r.h.sym||'').toUpperCase();
+    const known=(override&&override[u]!=null)||BETA[u]!=null||r.h.type!=='stock';
+    if(!known)unknown.push(u);
+    acc+=r.val*betaOf(r.h.sym,r.h.type,override);
+  });
+  return tot?{beta:acc/tot,total:tot,unknown:[...new Set(unknown)]}:null;
+}
+
+/* ---- คำนวณจากประวัติจริง ---- */
+function dailyReturns(series){          /* series = [{d,v}] เรียงเก่า->ใหม่ */
+  const out=[];
+  for(let i=1;i<series.length;i++){
+    const a=series[i-1].v,b=series[i].v;
+    if(a>0&&isFinite(a)&&isFinite(b))out.push({d:series[i].d,r:(b-a)/a});
+  }
+  return out;
+}
+function alignSeries(pf,bm){            /* จับคู่ตามวันที่ */
+  const m={};bm.forEach(x=>m[x.d]=x.r);
+  const P=[],B=[];
+  pf.forEach(x=>{if(m[x.d]!=null){P.push(x.r);B.push(m[x.d])}});
+  return {P,B};
+}
+const mean=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:0;
+function regress(P,B){                  /* คืน beta และ alpha ต่อวัน */
+  if(P.length<2)return null;
+  const mp=mean(P),mb=mean(B);
+  let cov=0,varb=0;
+  for(let i=0;i<P.length;i++){cov+=(P[i]-mp)*(B[i]-mb);varb+=(B[i]-mb)**2}
+  if(varb===0)return null;
+  const beta=cov/varb;
+  const rfD=RF_ANNUAL/252;
+  /* alpha แบบ CAPM ต่อวัน: (Rp - rf) - beta x (Rb - rf) */
+  const alphaD=(mp-rfD)-beta*(mb-rfD);
+  return {beta,alphaD,alphaAnnual:alphaD*252,n:P.length,
+    corr:(varb&&P.length)?cov/Math.sqrt(varb*P.reduce((s,x)=>s+(x-mp)**2,0)):null};
+}
+function loadHist(){try{return JSON.parse(localStorage.getItem(HIST_KEY))||[]}catch(e){return []}}
+
+/* คุณภาพของตัวเลขตามจำนวนวันที่มี */
+function quality(n){
+  if(n<20)return {t:'ยังเชื่อถือไม่ได้',c:'var(--dn)',
+    d:'ข้อมูลน้อยเกินไป ตัวเลขจะแกว่งแรงและหลอกตา'};
+  if(n<60)return {t:'พอดูทิศทางได้',c:'var(--warn)',
+    d:'เริ่มมีความหมาย แต่ยังไม่ควรใช้ตัดสินใจจริงจัง'};
+  if(n<120)return {t:'พอใช้',c:'var(--warn)',
+    d:'มีข้อมูลระดับหนึ่งแล้ว แต่ยังไม่ครอบคลุมสภาวะตลาดหลายแบบ'};
+  return {t:'ใช้อ้างอิงได้',c:'var(--up)',
+    d:'ครอบคลุมช่วงเวลาพอสมควรแล้ว แต่ยังบอกอนาคตไม่ได้อยู่ดี'};
+}
+
+/* ==================== ค่าตั้งต้น (ตัวอย่างจากไฟล์ scorecard) ==================== */
+const DEFAULT={
+ date:new Date().toISOString().slice(0,10),
+ macro:{ism_no_c:51.2,ism_no_p:48.6,claims_c:228,claims_p:235,lei_c:-0.8,lei_p:-1.9,
+  pce_c:2.6,pce_p:2.9,be5y5y_c:2.32,be5y5y_p:2.28,ism_pp_c:58,ism_pp_p:53,
+  real10y_c:1.85,real10y_p:2.1,netliq_c:6.05,netliq_p:5.92,fedpath_c:-50,fedpath_p:-25,
+  hyoas_c:315,hyoas_p:342,t10y2y_c:45,t10y2y_p:22,dxy_c:98.4,dxy_p:100.2},
+ trip:{oasChg:-18,vix:17.5,manual:'N'},
+ fund:{stocks:{score:0.77,valGate:1},gold:{score:-1.33,valGate:1},btc:{score:0.67,valGate:1}},
+ sent:{
+  stocks:[{n:'VIX',t:'A',w:.5,pct:34,dir:-1},{n:'VIX9D/VIX (backwardation)',t:'A',w:.5,pct:28,dir:-1},
+          {n:'% S&P เหนือ 200DMA',t:'A',w:.5,pct:68,dir:1},{n:'Equity put/call',t:'B',w:.3,pct:40,dir:-1},
+          {n:'NAAIM exposure',t:'B',w:.3,pct:72,dir:1},{n:'AAII bull–bear',t:'C',w:.2,pct:61,dir:1}],
+  gold:  [{n:'GVZ (gold implied vol)',t:'A',w:.5,pct:45,dir:-1},{n:'CFTC COT net spec long',t:'B',w:.3,pct:78,dir:1},
+          {n:'Gold ETF holdings 1-mo',t:'B',w:.3,pct:66,dir:1},{n:'Retail gold sentiment',t:'C',w:.2,pct:58,dir:1}],
+  btc:   [{n:'Perp funding 7d avg',t:'A',w:.5,pct:71,dir:1},{n:'Open interest',t:'B',w:.3,pct:74,dir:1},
+          {n:'Long/short ratio',t:'B',w:.3,pct:63,dir:1},{n:'Crypto Fear & Greed',t:'C',w:.2,pct:69,dir:1}]},
+ tech:{stocks:'Y',gold:'N',btc:'N'},
+ maxW:{stocks:0.6,gold:0.2,btc:0.1},
+ val:{fwdpe_pctile:88,gold_aisc:2.35,btc_mvrv:2.8}};
+
+const KEY='macro_sc_v1', LOGKEY='macro_log_v1';
+const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const pc1=v=>v==null?'—':(v*100).toFixed(1)+'%';
+function load(){try{const v=JSON.parse(localStorage.getItem(KEY));
+  return v?Object.assign(JSON.parse(JSON.stringify(DEFAULT)),v):JSON.parse(JSON.stringify(DEFAULT))}
+  catch(e){return JSON.parse(JSON.stringify(DEFAULT))}}
+let S=load();
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+
+const ASSET={stocks:'US Stocks',gold:'ทองคำ',btc:'Bitcoin'};
+const QUAD_TH={Goldilocks:'โตดี เงินเฟ้อลง — สภาพที่ดีที่สุดสำหรับหุ้น',
+ Expansion:'เศรษฐกิจขยายตัว เงินเฟ้อนิ่ง',
+ Reflation:'โตพร้อมเงินเฟ้อเร่ง — ของจริง (ทอง สินค้าโภคภัณฑ์) มักนำ',
+ Disinflation:'โตแผ่ว เงินเฟ้อลง — บอนด์มักได้เปรียบ',
+ Neutral:'ไม่มีทิศทางเด่น',
+ 'Inflation Creep':'โตแผ่วแต่เงินเฟ้อคืบขึ้น — ระวัง',
+ Recession:'หดตัวและเงินเฟ้อลง — เงินสดกับบอนด์',
+ Slowdown:'ชะลอตัว เงินเฟ้อนิ่ง',
+ Stagflation:'หดตัวพร้อมเงินเฟ้อ — สภาพที่ยากที่สุด'};
+
+/* ==================== วาดหน้าจอ ==================== */
+function render(){
+  const R=computeAll(S);
+  document.getElementById('upd').textContent='อัปเดต '+S.date;
+
+  const tw=document.getElementById('trip');
+  if(R.fired||R.warning!=='-'){
+    tw.style.display='block';
+    tw.innerHTML=(R.fired?'⛔ TRIPWIRE ทำงาน — เพดานพอร์ตถูกบังคับลงเหลือ 25%<br>':'')
+      +(R.warning!=='-'?'⚠ '+esc(R.warning):'');
+  } else tw.style.display='none';
+
+  /* แถบสรุปบนสุด */
+  const cCol=R.ceiling>=1?'var(--up)':R.ceiling>=0.75?'var(--up)':R.ceiling>=0.5?'var(--warn)':'var(--dn)';
+  document.getElementById('hero').innerHTML=
+    '<div class="hcard"><div class="lb">Quadrant</div><div class="vl" style="color:var(--gold)">'
+    +esc(R.quadrant)+'</div><div class="sm">'+esc(QUAD_TH[R.quadrant]||'')+'</div></div>'
+    +'<div class="hcard"><div class="lb">Portfolio Ceiling</div><div class="vl" style="color:'+cCol+'">'
+    +pc1(R.ceiling)+'</div><div class="sm">เพดานเงินที่ให้ลงเสี่ยงรวมทุกตัว</div></div>'
+    +'<div class="hcard"><div class="lb">ลงเสี่ยงจริงตามโมเดล</div><div class="vl">'
+    +pc1(1-R.cash)+'</div><div class="sm">เงินสด / T-Bills '+pc1(R.cash)+'</div></div>'
+    +'<div class="hcard"><div class="lb">Tripwire</div><div class="vl" style="color:'
+    +(R.fired?'var(--dn)':'var(--up)')+'">'+(R.fired?'FIRED':'CLEAR')+'</div>'
+    +'<div class="sm">'+(R.warning==='-'?'ไม่มีสัญญาณเตือน':esc(R.warning))+'</div></div>';
+
+  /* 4 แกน */
+  const axis=(k,v,s,good)=>{
+    const w=v==null?0:Math.min(50,Math.abs(v)/2*50);
+    const pos=v==null||v>=0;
+    const col=v==null?'var(--tx3)':(good(v)?'var(--up)':'var(--dn)');
+    return '<div class="axis"><span class="k">'+k+'</span>'
+      +'<span class="bar"><i style="left:'+(pos?50:50-w)+'%;width:'+w+'%;background:'+col+'"></i>'
+      +'<span class="mid"></span></span>'
+      +'<span class="v">'+(v==null?'—':v.toFixed(2))+'</span>'
+      +'<span class="s" style="color:'+col+'">'+esc(s)+'</span></div>';
+  };
+  document.getElementById('axes').innerHTML=
+    axis('G — Growth',R.G,R.gS,v=>v>=0)
+   +axis('I — Inflation',R.I,R.iS,v=>v<=0)
+   +axis('P — Policy / Liquidity',R.P,R.pS,v=>v>=0)
+   +axis('R — Risk / Credit',R.R,R.rS,v=>v>=0)
+   +'<div class="sub" style="margin-top:7px;line-height:1.7">แถบขวา = ดีต่อสินทรัพย์เสี่ยง · '
+   +'เกณฑ์ ±0.34 · <b>I สูง = เงินเฟ้อแรงขึ้น</b> จึงขึ้นสีแดงเมื่อเป็นบวก</div>';
+
+  /* น้ำหนักเป้าหมาย */
+  document.getElementById('targets').innerHTML=
+    '<div style="overflow-x:auto"><table><thead><tr><th>สินทรัพย์</th><th>Regime</th>'
+    +'<th>Factor</th><th>Sent</th><th>Gate</th><th>เป้า %</th></tr></thead><tbody>'
+    +R.assets.map(a=>{
+      const gate=a.techY?'<span class="pill p-ok">ผ่าน</span>':'<span class="pill p-bad">ยังไม่ผ่าน</span>';
+      return '<tr><td><b>'+ASSET[a.key]+'</b></td>'
+        +'<td class="mono">'+(a.regimeScore==null?'—':a.regimeScore.toFixed(2))+'</td>'
+        +'<td class="mono">'+(a.factor==null?'—':a.factor.toFixed(3))+'</td>'
+        +'<td class="mono">×'+a.mult+'</td><td>'+gate+'</td>'
+        +'<td class="mono" style="font-weight:700;color:'+(a.target>0?'var(--up)':'var(--tx3)')+'">'
+        +pc1(a.target)+'</td></tr>';
+    }).join('')
+    +'</tbody><tfoot><tr><td colspan="5">เงินสด / T-Bills</td>'
+    +'<td class="mono">'+pc1(R.cash)+'</td></tr></tfoot></table></div>';
+
+  /* Fear & Greed */
+  document.getElementById('sent').innerHTML=R.assets.map(a=>{
+    const col=a.comp==null?'var(--tx3)':a.comp>=70?'var(--dn)':a.comp>30?'var(--warn)':'var(--up)';
+    const pill=a.band==='NEUTRAL'?'p-nu':(a.band.includes('GREED')?'p-bad':'p-ok');
+    return '<div class="sblock"><div class="top"><span class="nm">'+ASSET[a.key]+'</span>'
+      +'<span class="pill '+pill+'">'+esc(a.band)+'</span>'
+      +'<span class="sc" style="color:'+col+'">'+(a.comp==null?'—':a.comp)+'</span></div>'
+      +'<div class="gauge"><i style="left:'+(a.comp==null?50:a.comp)+'%"></i></div>'
+      +'<div class="gl"><span>กลัวสุด 0</span><span>โลภสุด 100</span></div>'
+      +'<div class="sub" style="margin-top:4px">Regime bucket: <b>'+esc(a.bucket)
+      +'</b> → ตัวคูณ ×'+a.mult+'</div></div>';
+  }).join('');
+
+  /* อ่านสถานการณ์ */
+  const bits=[];
+  bits.push('ตอนนี้อยู่ควอดรันต์ <b>'+esc(R.quadrant)+'</b> — '+esc(QUAD_TH[R.quadrant]||''));
+  if(R.P!=null&&R.R!=null)
+    bits.push('สภาพคล่องกับความเสี่ยงรวมกันได้ '+(R.P+R.R).toFixed(2)
+      +' → เพดานพอร์ต <b>'+pc1(R.ceiling)+'</b>');
+  const best=R.assets.filter(a=>a.regimeScore!=null).sort((a,b)=>b.regimeScore-a.regimeScore)[0];
+  if(best)bits.push('ระบอบตอนนี้เอื้อกับ <b>'+ASSET[best.key]+'</b> มากที่สุด (คะแนน '
+    +best.regimeScore.toFixed(2)+')');
+  const blocked=R.assets.filter(a=>!a.techY&&a.factor>0);
+  if(blocked.length)bits.push('<span class="wn">'+blocked.map(a=>ASSET[a.key]).join(' และ ')
+    +' มาโครเอื้อ แต่ Tech Gate ยังไม่ผ่าน จึงถูกกดเป็น 0</span> — โมเดลบอกว่ารอสัญญาณราคาก่อน');
+  const hot=R.assets.filter(a=>a.comp!=null&&a.comp>=70);
+  if(hot.length)bits.push('<span class="wn">'+hot.map(a=>ASSET[a.key]).join(' และ ')
+    +' อยู่โซนโลภ</span> — ตัวคูณ sentiment จะกดน้ำหนักลงอัตโนมัติ');
+  if(R.cash>0.5)bits.push('โมเดลให้ถือเงินสดเกินครึ่งพอร์ต ('+pc1(R.cash)
+    +') — เป็นผลจากเพดานและ gate ไม่ใช่การมองตลาดแย่');
+  document.getElementById('read').innerHTML='<div class="read">'+bits.join('<br><br>')+'</div>';
+
+  /* ปฏิทิน / รอบทบทวน */
+  document.getElementById('cal').innerHTML=
+    '<div class="gtitle" style="margin-top:0">รอบทบทวน</div>'
+    +[['รายวัน','VIX + term structure · BTC funding · ตรวจ tripwire'],
+      ['รายสัปดาห์','Initial claims · Net Liquidity · HY OAS · COT (ศุกร์) · AAII (พฤหัส) · NAAIM'],
+      ['รายเดือน','ISM · Core PCE · LEI · Fed path → รีสกอร์ G/I/P/R ทั้งชุด แล้วบันทึกลง LOG'],
+      ['ตาม event','FOMC · CPI · NFP']]
+     .map(([k,v])=>'<div style="padding:7px 0;border-bottom:1px solid rgba(34,44,61,.5)">'
+      +'<div style="font-size:12px;font-weight:700;color:var(--tx)">'+k+'</div>'
+      +'<div class="sub" style="line-height:1.6">'+v+'</div></div>').join('')
+    +'<div class="gtitle">แหล่งข้อมูล (ฟรีทั้งหมด)</div>'
+    +'<div class="sub" style="line-height:1.9">'
+    +'<a href="https://fred.stlouisfed.org/" target="_blank" rel="noopener noreferrer">FRED</a> — claims, PCE, TIPS, breakeven, HY OAS, 2s10s, DXY<br>'
+    +'<a href="https://www.ismworld.org/" target="_blank" rel="noopener noreferrer">ISM</a> — New Orders, Prices Paid<br>'
+    +'<a href="https://www.cmegroup.com/markets/interest-rates/cme-fedwatch-tool.html" target="_blank" rel="noopener noreferrer">CME FedWatch</a> — Fed path<br>'
+    +'<a href="https://alternative.me/crypto/fear-and-greed-index/" target="_blank" rel="noopener noreferrer">alternative.me</a> — Crypto Fear &amp; Greed<br>'
+    +'<a href="https://www.naaim.org/" target="_blank" rel="noopener noreferrer">NAAIM</a> · '
+    +'<a href="https://www.aaii.com/sentimentsurvey" target="_blank" rel="noopener noreferrer">AAII</a> · '
+    +'<a href="https://www.gold.org/" target="_blank" rel="noopener noreferrer">WGC</a></div>';
+
+  renderFlows();
+  renderVal();
+  renderAB();
+  renderSI();
+  buildInputs(R);
+}
+
+
+/* ---------- วาดช่อง "เงินอยู่ที่ไหน" ---------- */
+function renderFlows(){
+  const el=document.getElementById('flowBox');
+  if(!FLOWS){
+    el.innerHTML='<div class="sub" style="padding:16px 0;text-align:center;line-height:1.8">'
+      +'ยังไม่มีข้อมูล — กดปุ่ม <b>↻ ดึงข้อมูล</b> ด้านบน<br>'
+      +'ใช้เวลาราว 10–20 วินาที แล้วเก็บไว้ 12 ชั่วโมง</div>';
+    return;
+  }
+  const age=Math.round((Date.now()-FLOWS.t)/60000);
+  const bar=(v,mx)=>{
+    if(v==null)return '<span class="bar"><span class="mid"></span></span>';
+    const w=Math.min(48,Math.abs(v)/mx*48);
+    const pos=v>=0;
+    return '<span class="bar"><i style="left:'+(pos?50:50-w)+'%;width:'+w
+      +'%;background:'+(pos?'var(--up)':'var(--dn)')+'"></i><span class="mid"></span></span>';
+  };
+  const tbl=(g,title)=>{
+    const rows=flowRows(g);
+    if(!rows.length)return '';
+    const mx=Math.max(8,...rows.map(r=>Math.abs(r.m1||0)));
+    return '<div class="gtitle" style="margin-top:'+(g==='ct'?'0':'14px')+'">'+title+'</div>'
+      +'<div class="axis" style="border:none;padding-bottom:2px">'
+      +'<span class="k" style="font-size:9.5px;color:var(--tx3);text-transform:uppercase">ตลาด</span>'
+      +'<span class="bar" style="background:none"></span>'
+      +'<span class="v" style="font-size:9.5px;color:var(--tx3)">1M</span>'
+      +'<span class="v" style="font-size:9.5px;color:var(--tx3)">3M</span>'
+      +'<span class="v" style="font-size:9.5px;color:var(--tx3)">YTD</span></div>'
+      +rows.map(r=>'<div class="axis"><span class="k">'+esc(r.n)+'</span>'
+        +bar(r.m1,mx)
+        +'<span class="v '+(r.m1>=0?'up':'dn')+'">'+(r.m1==null?'—':(r.m1>=0?'+':'')+r.m1.toFixed(1))+'</span>'
+        +'<span class="v '+(r.m3>=0?'up':'dn')+'">'+(r.m3==null?'—':(r.m3>=0?'+':'')+r.m3.toFixed(1))+'</span>'
+        +'<span class="v '+(r.ytd>=0?'up':'dn')+'">'+(r.ytd==null?'—':(r.ytd>=0?'+':'')+r.ytd.toFixed(1))+'</span>'
+        +'</div>').join('');
+  };
+  el.innerHTML=tbl('ct','รายประเทศ — เรียงตามผลตอบแทน 1 เดือน')
+    +tbl('as','รายสินทรัพย์')
+    +'<div class="sub" style="margin-top:9px">ดึงล่าสุด '+age+' นาทีที่แล้ว · '
+    +'แถบแสดงผลตอบแทน 1 เดือน</div>';
+}
+
+/* ---------- วาดช่อง "สินทรัพย์ไหนราคาต่ำ" ---------- */
+function renderVal(){
+  const el=document.getElementById('valBox');
+  const list=valuationAll(S.val);
+  if(!list.length){el.innerHTML='<div class="ld">กรอกตัวเลขด้านล่าง</div>';return;}
+  el.innerHTML=list.map(x=>{
+    const c=x.r.cheap;
+    const col=c>=60?'var(--up)':c>=35?'var(--warn)':'var(--dn)';
+    return '<div class="sblock"><div class="top"><span class="nm">'+esc(x.n)+'</span>'
+      +'<span class="pill '+(c>=60?'p-ok':c>=35?'p-wn':'p-bad')+'">'+esc(x.r.label)+'</span>'
+      +'<span class="sc" style="color:'+col+'">'+x.r.v+'<span style="font-size:11px;color:var(--tx3)"> '
+      +esc(x.r.unit)+'</span></span></div>'
+      +'<div class="bar" style="height:7px;border-radius:4px;margin-top:6px">'
+      +'<i style="display:block;height:100%;border-radius:4px;width:'+c.toFixed(0)+'%;background:'+col+'"></i></div>'
+      +'<div class="sub" style="margin-top:4px">'+esc(x.r.how)+'</div>'
+      +(x.r.gate<1?'<div class="sub" style="color:var(--warn)">→ Val Gate ถูกกดเหลือ '
+        +x.r.gate+' ตามกฎในไฟล์คุณ</div>':'')
+      +'</div>';
+  }).join('')
+  +'<div class="sub" style="margin-top:8px">แถบยาว = ถูก · แถบสั้น = แพง</div>';
+}
+
+
+/* ---------- วาด Alpha & Beta ---------- */
+function renderAB(){
+  const el=document.getElementById('abBox');
+  let PF=[],PX={};
+  try{PF=JSON.parse(localStorage.getItem('pro_pf'))||[]}catch(e){}
+  try{PX=JSON.parse(localStorage.getItem('pro_px'))||{}}catch(e){}
+  const ov=S.betaOv||{};
+  const rows=PF.map(h=>{
+    let price=null;
+    if(h.type==='cash')price=1;
+    else if(h.manual!=null&&h.manual!==''&&isFinite(h.manual))price=Number(h.manual);
+    else{const p=PX[(h.sym||'').toUpperCase()];price=(p&&isFinite(p.price))?p.price:null}
+    return {h,val:price!=null?price*(Number(h.qty)||0):null};
+  });
+  const pb=portBeta(rows,ov);
+  const hist=loadHist();
+
+  let out='';
+  if(!pb){
+    out+='<div class="sub" style="padding:14px 0;line-height:1.8">ยังไม่มีข้อมูลพอร์ต — '
+      +'เปิดหน้า <a href="index.html">PORT</a> แล้วกรอกรายการถือครองกับกดดึงราคาก่อน</div>';
+  }else{
+    const bcol=pb.beta>1.2?'var(--dn)':pb.beta<0.8?'var(--up)':'var(--warn)';
+    out+='<div class="sblock"><div class="top"><span class="nm">Beta ประมาณจากการถือครอง</span>'
+      +'<span class="sc" style="color:'+bcol+'">'+pb.beta.toFixed(2)+'</span></div>'
+      +'<div class="sub" style="margin-top:3px">'
+      +(pb.beta>1.1?'พอร์ตแกว่งแรงกว่าตลาด — ตลาดลง 10% พอร์ตมีแนวโน้มลง '+(pb.beta*10).toFixed(0)+'%'
+       :pb.beta<0.9?'พอร์ตแกว่งน้อยกว่าตลาด — ป้องกันขาลงได้บ้าง แต่ขาขึ้นก็ตามไม่ทัน'
+       :'พอร์ตแกว่งใกล้เคียงตลาด')+'</div>'
+      +(pb.unknown.length?'<div class="sub" style="color:var(--warn);margin-top:3px">'
+        +'ไม่รู้จัก beta ของ '+pb.unknown.join(', ')+' → ใช้ค่ากลาง 1.00 แทน (กรอกเองได้ด้านล่าง)</div>':'')
+      +'</div>';
+  }
+
+  /* จากประวัติจริง */
+  const spy=FLOWS&&FLOWS.data&&FLOWS.data['spy.us'];
+  if(hist.length<3){
+    out+='<div class="sblock"><div class="sub" style="line-height:1.85">'
+      +'<b style="color:var(--tx)">Alpha และ Beta จริงยังคำนวณไม่ได้</b><br>'
+      +'ต้องมีประวัติมูลค่าพอร์ตอย่างน้อย 20 วัน ตอนนี้มี <b>'+hist.length+' วัน</b><br>'
+      +'ระบบบันทึกให้อัตโนมัติทุกครั้งที่คุณเปิดหน้า PORT และกดดึงราคา — '
+      +'<b>เปิดบ่อยๆ เส้นจะสมบูรณ์ขึ้นเอง</b><br>'
+      +'<span style="color:var(--tx3)">ย้อนหลังไปสร้างข้อมูลที่ไม่เคยบันทึกไม่ได้</span></div></div>';
+  }else if(!spy){
+    out+='<div class="sblock"><div class="sub">มีประวัติพอร์ต '+hist.length+' วันแล้ว '
+      +'แต่ยังไม่มีข้อมูล SPY สำหรับเทียบ — กดปุ่ม <b>↻ ดึงข้อมูล</b> ในช่อง "เงินอยู่ที่ไหน" ก่อน</div></div>';
+  }else{
+    const pfR=dailyReturns(hist.map(x=>({d:x.d,v:x.v})));
+    const bmR=dailyReturns(spy.map(x=>({d:x.d,v:x.c})));
+    const {P,B}=alignSeries(pfR,bmR);
+    const reg=regress(P,B);
+    if(!reg){
+      out+='<div class="sblock"><div class="sub">วันที่ของพอร์ตกับ SPY ยังจับคู่กันไม่พอ ('
+        +P.length+' วัน) — เปิดหน้า PORT ในวันทำการตลาดสหรัฐฯ จะจับคู่ได้ดีขึ้น</div></div>';
+    }else{
+      const q=quality(reg.n);
+      const acol=reg.alphaAnnual>0?'var(--up)':'var(--dn)';
+      out+='<div class="sblock"><div class="top"><span class="nm">Beta จริง (จากประวัติ)</span>'
+        +'<span class="sc">'+reg.beta.toFixed(2)+'</span></div></div>'
+        +'<div class="sblock"><div class="top"><span class="nm">Alpha ต่อปี</span>'
+        +'<span class="sc" style="color:'+acol+'">'+(reg.alphaAnnual>=0?'+':'')
+        +(reg.alphaAnnual*100).toFixed(1)+'%</span></div>'
+        +'<div class="sub" style="margin-top:3px">'
+        +(reg.alphaAnnual>0?'ทำได้ดีกว่าการถือ SPY เฉยๆ หลังปรับความเสี่ยงแล้ว'
+                           :'ทำได้แย่กว่าการถือ SPY เฉยๆ หลังปรับความเสี่ยงแล้ว')+'</div></div>'
+        +'<div class="sblock"><div class="row" style="border:none;padding:2px 0">'
+        +'<span>จำนวนวันที่ใช้คำนวณ</span><b>'+reg.n+' วัน</b></div>'
+        +'<div class="row" style="border:none;padding:2px 0"><span>ความน่าเชื่อถือ</span>'
+        +'<b style="color:'+q.c+'">'+q.t+'</b></div>'
+        +'<div class="sub" style="margin-top:4px">'+q.d+'</div></div>';
+    }
+  }
+  out+='<div style="margin-top:10px"><div class="sub" style="margin-bottom:5px">'
+    +'แก้ค่า beta รายตัวเอง (เว้นว่าง = ใช้ค่าที่ระบบรู้จัก)</div>'
+    +'<div class="pr"><input id="bvSym" placeholder="สัญลักษณ์" style="width:100px">'
+    +'<input id="bvVal" type="number" step="any" placeholder="beta" style="width:76px">'
+    +'<button class="btn xs" id="bvAdd">บันทึก</button></div>'
+    +(Object.keys(ov).length?'<div class="sub" style="margin-top:5px">'
+      +Object.entries(ov).map(([k,v])=>'<span class="pill p-nu" style="margin-right:4px">'
+      +esc(k)+' = '+v+' <b data-bv="'+esc(k)+'" style="cursor:pointer">✕</b></span>').join('')+'</div>':'')
+    +'</div>';
+  el.innerHTML=out;
+
+  const ba=document.getElementById('bvAdd');
+  if(ba)ba.onclick=()=>{
+    const sy=document.getElementById('bvSym').value.toUpperCase().trim();
+    const vv=Number(document.getElementById('bvVal').value);
+    if(!sy||!isFinite(vv))return;
+    S.betaOv=S.betaOv||{};S.betaOv[sy]=vv;save();render();};
+  el.querySelectorAll('[data-bv]').forEach(b=>b.onclick=()=>{
+    delete S.betaOv[b.dataset.bv];save();render();});
+}
+
+/* ---------- ตารางนักลงทุนรายใหญ่ ---------- */
+function loadSI(){try{return JSON.parse(localStorage.getItem(SI_KEY))||[]}catch(e){return []}}
+function saveSI(v){try{localStorage.setItem(SI_KEY,JSON.stringify(v))}catch(e){}}
+function renderSI(){
+  const el=document.getElementById('siList');
+  const list=loadSI();
+  if(!list.length){
+    el.innerHTML='<div class="ld">ยังไม่มีรายการ — เพิ่มด้านบน หรือดูจากลิงก์ด้านล่าง</div>';
+    return;
+  }
+  const ACT={buy:['ซื้อเพิ่ม','p-ok'],new:['เปิดใหม่','p-ok'],
+             trim:['ลด','p-wn'],exit:['ขายหมด','p-bad']};
+  const today=new Date();
+  el.innerHTML='<div style="overflow-x:auto"><table><thead><tr>'
+    +'<th>นักลงทุน</th><th>สัญลักษณ์</th><th>ทำอะไร</th><th>วันที่ยื่น</th>'
+    +'<th>ข้อมูลเก่าแค่ไหน</th><th>ความเห็น</th><th></th></tr></thead><tbody>'
+    +list.map((x,i)=>{
+      const d=new Date(x.date+'T00:00:00');
+      const days=isNaN(d)?null:Math.round((today-d)/86400000);
+      const a=ACT[x.act]||['—','p-nu'];
+      const ageCol=days==null?'':days>120?'var(--dn)':days>60?'var(--warn)':'var(--tx2)';
+      return '<tr><td><b>'+esc(x.who)+'</b></td><td><b>'+esc(x.sym)+'</b></td>'
+        +'<td><span class="pill '+a[1]+'">'+a[0]+'</span></td>'
+        +'<td class="mono">'+esc(x.date||'—')+'</td>'
+        +'<td class="mono" style="color:'+ageCol+'">'+(days==null?'—':days+' วัน')+'</td>'
+        +'<td style="text-align:left;white-space:normal;color:var(--tx2);font-size:11.5px">'
+        +esc(x.note||'')+'</td>'
+        +'<td><button class="btn xs" data-si="'+i+'">✕</button></td></tr>';
+    }).join('')+'</tbody></table></div>';
+  el.querySelectorAll('[data-si]').forEach(b=>b.onclick=()=>{
+    const l=loadSI();l.splice(+b.dataset.si,1);saveSI(l);renderSI();});
+}
+
+/* ==================== ช่องกรอก ==================== */
+function buildInputs(R){
+  const gName={G:'GROWTH (G)',I:'INFLATION (I) — บวก = เงินเฟ้อแรงขึ้น',
+    P:'POLICY / LIQUIDITY (P) — บวก = ผ่อนคลาย',R:'RISK / CREDIT (R) — บวก = ตลาดสงบ'};
+  let h='';
+  ['G','I','P','R'].forEach(g=>{
+    h+='<div class="gtitle">'+gName[g]+'</div>'
+      +'<div class="irow ihead"><div>ตัวชี้วัด</div><div style="text-align:center">ปัจจุบัน</div>'
+      +'<div style="text-align:center">3 เดือนก่อน</div><div class="c">L</div><div class="c">T</div><div class="c">คะแนน</div></div>';
+    IND.filter(i=>i.g===g).forEach(i=>{
+      const sc=scoreIndicator(i,S.macro[i.k+'_c'],S.macro[i.k+'_p']);
+      const col=sc.score==null?'var(--tx3)':sc.score>0?'var(--up)':sc.score<0?'var(--dn)':'var(--tx2)';
+      h+='<div class="irow"><div class="nm">'+esc(i.n)+'<em>'+esc(i.src)+' · '+esc(i.u)+'</em></div>'
+        +'<div><input class="n" type="number" step="any" data-m="'+i.k+'_c" value="'+(S.macro[i.k+'_c']??'')+'"></div>'
+        +'<div><input class="n" type="number" step="any" data-m="'+i.k+'_p" value="'+(S.macro[i.k+'_p']??'')+'"></div>'
+        +'<div class="c">'+(sc.lvl==null?'—':sc.lvl)+'</div><div class="c">'+(sc.trd==null?'—':sc.trd)+'</div>'
+        +'<div class="c" style="color:'+col+';font-weight:700">'+(sc.score==null?'—':sc.score)+'</div></div>';
+    });
+    const v={G:R.G,I:R.I,P:R.P,R:R.R}[g];
+    h+='<div class="irow" style="border-bottom:none"><div class="nm"><b>คะแนนแกน '+g+'</b></div>'
+      +'<div></div><div></div><div></div><div></div>'
+      +'<div class="c" style="font-weight:700;color:var(--gold)">'+(v==null?'—':v.toFixed(2))+'</div></div>';
+  });
+  h+='<div class="gtitle">TRIPWIRE — ตัดวงจรฉุกเฉิน</div>'
+    +'<div class="irow"><div class="nm">HY OAS เปลี่ยนแปลงใน 1 เดือน<em>กว้างขึ้นเกิน 100bp = ตัดวงจร</em></div>'
+    +'<div><input class="n" type="number" step="any" data-t="oasChg" value="'+(S.trip.oasChg??'')+'"></div><div></div><div></div><div></div><div></div></div>'
+    +'<div class="irow"><div class="nm">VIX ราคาปิดล่าสุด<em>เกิน 30 = เตือน</em></div>'
+    +'<div><input class="n" type="number" step="any" data-t="vix" value="'+(S.trip.vix??'')+'"></div><div></div><div></div><div></div><div></div></div>'
+    +'<div class="irow"><div class="nm">Manual override<em>พิมพ์ Y เพื่อบังคับตัดวงจร</em></div>'
+    +'<div><select data-t="manual" style="width:74px"><option'+(S.trip.manual!=='Y'?' selected':'')+'>N</option>'
+    +'<option'+(S.trip.manual==='Y'?' selected':'')+'>Y</option></select></div><div></div><div></div><div></div><div></div></div>';
+  document.getElementById('body1').innerHTML=h;
+
+  /* แกน 2/3/5 */
+  let h2='<div class="gtitle">แกน 2 — พื้นฐาน · แกน 3 — เทคนิค · เพดานรายตัว</div>'
+    +'<div style="overflow-x:auto"><table><thead><tr><th>สินทรัพย์</th><th>คะแนนพื้นฐาน</th>'
+    +'<th>Val Gate</th><th>Tech Gate</th><th>Max Weight</th></tr></thead><tbody>'
+    +['stocks','gold','btc'].map(a=>
+      '<tr><td><b>'+ASSET[a]+'</b></td>'
+      +'<td><input class="n" type="number" step="any" data-f="'+a+'.score" value="'+S.fund[a].score+'"></td>'
+      +'<td><select data-f="'+a+'.valGate" style="width:70px">'
+      +[1,0.75,0.5].map(v=>'<option value="'+v+'"'+(S.fund[a].valGate==v?' selected':'')+'>'+v+'</option>').join('')
+      +'</select></td>'
+      +'<td><select data-tech="'+a+'" style="width:64px"><option'+(S.tech[a]!=='Y'?' selected':'')+'>N</option>'
+      +'<option'+(S.tech[a]==='Y'?' selected':'')+'>Y</option></select></td>'
+      +'<td><input class="n" type="number" step="any" data-w="'+a+'" value="'+S.maxW[a]+'"></td></tr>').join('')
+    +'</tbody></table></div>'
+    +'<div class="sub" style="margin-top:8px;line-height:1.7">คะแนนพื้นฐานและ Tech Gate ยังต้องกรอกเอง '
+    +'เพราะต้องดูงบ/คลื่น/โครงสร้างราคาจากชีท FUNDAMENTAL และ TECH ในไฟล์ของคุณ '
+    +'ระบบนี้รับผลลัพธ์มาคำนวณต่อให้</div>';
+
+  ['stocks','gold','btc'].forEach(a=>{
+    h2+='<div class="gtitle">แกน 5 — Sentiment: '+ASSET[a]+'</div>'
+      +'<div class="srow" style="color:var(--tx3);font-size:9.5px;text-transform:uppercase;font-weight:600">'
+      +'<div>ตัวชี้วัด</div><div>Tier</div><div>น้ำหนัก</div><div>Percentile</div></div>';
+    S.sent[a].forEach((r,i)=>{
+      h2+='<div class="srow"><div style="color:var(--tx2)">'+esc(r.n)
+        +' <span class="sub">('+(r.dir===1?'สูง=โลภ':'สูง=กลัว')+')</span></div>'
+        +'<div>'+r.t+'</div><div class="mono">'+r.w+'</div>'
+        +'<div><input class="n" style="width:64px" type="number" step="any" min="0" max="100" '
+        +'data-s="'+a+'.'+i+'" value="'+r.pct+'"></div></div>';
+    });
+  });
+  h2+='<div class="gtitle">ตัววัดความถูกแพง (ใช้ตั้ง Val Gate ด้วย)</div>'
+    +'<div class="srow" style="grid-template-columns:1fr 100px"><div style="color:var(--tx2)">'
+    +'หุ้น — Forward P/E percentile เทียบ 10 ปี</div>'
+    +'<div><input class="n" type="number" step="any" data-v="fwdpe_pctile" value="'+S.val.fwdpe_pctile+'"></div></div>'
+    +'<div class="srow" style="grid-template-columns:1fr 100px"><div style="color:var(--tx2)">'
+    +'ทองคำ — ราคา ÷ ต้นทุนขุด AISC</div>'
+    +'<div><input class="n" type="number" step="any" data-v="gold_aisc" value="'+S.val.gold_aisc+'"></div></div>'
+    +'<div class="srow" style="grid-template-columns:1fr 100px"><div style="color:var(--tx2)">'
+    +'Bitcoin — MVRV Z-Score</div>'
+    +'<div><input class="n" type="number" step="any" data-v="btc_mvrv" value="'+S.val.btc_mvrv+'"></div></div>';
+  document.getElementById('body2').innerHTML=h2;
+
+  /* ผูก event */
+  document.querySelectorAll('[data-m]').forEach(el=>el.onchange=()=>{
+    S.macro[el.dataset.m]=el.value===''?null:Number(el.value);S.date=new Date().toISOString().slice(0,10);save();render();});
+  document.querySelectorAll('[data-t]').forEach(el=>el.onchange=()=>{
+    S.trip[el.dataset.t]=el.dataset.t==='manual'?el.value:(el.value===''?null:Number(el.value));save();render();});
+  document.querySelectorAll('[data-f]').forEach(el=>el.onchange=()=>{
+    const [a,f]=el.dataset.f.split('.');S.fund[a][f]=Number(el.value);save();render();});
+  document.querySelectorAll('[data-tech]').forEach(el=>el.onchange=()=>{
+    S.tech[el.dataset.tech]=el.value;save();render();});
+  document.querySelectorAll('[data-w]').forEach(el=>el.onchange=()=>{
+    S.maxW[el.dataset.w]=Number(el.value);save();render();});
+  document.querySelectorAll('[data-v]').forEach(el=>el.onchange=()=>{
+    S.val[el.dataset.v]=Number(el.value);save();render();});
+  document.querySelectorAll('[data-s]').forEach(el=>el.onchange=()=>{
+    const [a,i]=el.dataset.s.split('.');S.sent[a][+i].pct=Number(el.value);save();render();});
+}
+
+/* ==================== ปุ่มต่างๆ ==================== */
+function init(){
+  const tg=(h,b,ar)=>document.getElementById(h).onclick=()=>{
+    const el=document.getElementById(b);
+    const open=el.style.display!=='none';
+    el.style.display=open?'none':'block';
+    document.getElementById(ar).textContent=open?'▼ กดเพื่อเปิด/ปิด':'▲ กดเพื่อเปิด/ปิด';};
+  tg('tgl1','body1','ar1');tg('tgl2','body2','ar2');
+  loadFlowCache();
+  document.getElementById('bFlow').onclick=async()=>{
+    const b=document.getElementById('bFlow');
+    b.textContent='กำลังดึง…';b.disabled=true;
+    const okk=await fetchFlows((d,t)=>{b.textContent='ดึง '+d+'/'+t});
+    b.disabled=false;b.textContent='↻ ดึงข้อมูล';
+    if(!okk)alert('ดึงข้อมูลไม่สำเร็จ — ตัวกลางอาจใช้ไม่ได้ตอนนี้ ลองใหม่อีกครั้ง');
+    renderFlows();};
+  document.getElementById('siDate').value=new Date().toISOString().slice(0,10);
+  document.getElementById('siAdd').onclick=()=>{
+    const g=id=>document.getElementById(id);
+    const who=g('siWho').value.trim(),sym=g('siSym').value.toUpperCase().trim();
+    if(!who||!sym){alert('กรอกชื่อนักลงทุนและสัญลักษณ์ก่อน');return}
+    const l=loadSI();
+    l.push({who,sym,act:g('siAct').value,date:g('siDate').value,note:g('siNote').value.trim()});
+    saveSI(l);renderSI();
+    ['siWho','siSym','siNote'].forEach(i=>g(i).value='');};
+  document.getElementById('bReset').onclick=()=>{
+    if(!confirm('กลับไปใช้ค่าตัวอย่างจากไฟล์ scorecard?\nข้อมูลที่กรอกไว้จะหายไป'))return;
+    S=JSON.parse(JSON.stringify(DEFAULT));save();render();};
+  document.getElementById('bExport').onclick=()=>{
+    const b=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(b);
+    a.download='macro-'+S.date+'.json';a.click();};
+  document.getElementById('bImport').onclick=()=>document.getElementById('fImp').click();
+  document.getElementById('fImp').onchange=e=>{
+    const f=e.target.files[0];if(!f)return;const r=new FileReader();
+    r.onload=()=>{try{S=Object.assign(JSON.parse(JSON.stringify(DEFAULT)),JSON.parse(r.result));save();render();}
+      catch(err){alert('ไฟล์ไม่ถูกต้อง')}};r.readAsText(f);};
+  document.getElementById('bSave').onclick=()=>{
+    const R=computeAll(S);
+    let log=[];try{log=JSON.parse(localStorage.getItem(LOGKEY))||[]}catch(e){}
+    log.push({date:new Date().toISOString().slice(0,10),G:R.G,I:R.I,P:R.P,R:R.R,
+      quadrant:R.quadrant,ceiling:R.ceiling,
+      stocks:R.assets[0].target,gold:R.assets[1].target,btc:R.assets[2].target,cash:R.cash});
+    try{localStorage.setItem(LOGKEY,JSON.stringify(log.slice(-200)))}catch(e){}
+    alert('บันทึกลง LOG แล้ว (ทั้งหมด '+log.length+' รายการ)\nกดส่งออกเพื่อเก็บเป็นไฟล์');};
+  render();
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+</script>
+<script src="theme.js"></script>
+</body>
+</html>

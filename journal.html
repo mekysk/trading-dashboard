@@ -1,0 +1,589 @@
+<!DOCTYPE html><html lang="th"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Backtest Journal — Trading Dashboard</title>
+<style>
+:root{--bg:#0a0d13;--bg2:#10151e;--bg3:#161d29;--line:#222c3d;--tx:#e8eef8;
+--tx2:#96a3b8;--tx3:#5c6a80;--accent:#f5b942;--glow:245,185,66;--acc:#3b82f6;
+--up:#34C27D;--dn:#E5645A;--warn:#f59e0b;--pur:#a78bfa}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-size:14px;line-height:1.55;padding-bottom:40px;
+font-family:-apple-system,'Segoe UI','Leelawadee UI','Noto Sans Thai',Tahoma,sans-serif}
+.mono{font-family:ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+.up{color:var(--up)}.dn{color:var(--dn)}.fl{color:var(--tx2)}
+button{font-family:inherit;cursor:pointer}a{color:var(--acc);text-decoration:none}
+header{position:sticky;top:0;z-index:50;background:rgba(10,13,19,.96);
+backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.hbar{display:flex;align-items:center;gap:12px;padding:9px 16px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:15px}.logo span{color:var(--accent)}
+nav{display:flex;gap:2px;margin-left:6px;flex-wrap:wrap}
+nav a{color:var(--tx3);padding:6px 12px;font-size:12.5px;font-weight:600;border-radius:7px}
+nav a.on{color:var(--tx);background:var(--bg3)}
+.right{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{background:var(--bg3);border:1px solid var(--line);color:var(--tx2);
+padding:5px 11px;border-radius:7px;font-size:12px}
+.btn:hover{color:var(--tx)}
+.btn.go{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn.on{background:rgba(var(--glow),.16);border-color:var(--accent);color:var(--accent);font-weight:600}
+.btn.sm{padding:2px 7px;font-size:11px}
+.btn.dg{border-color:rgba(229,100,90,.4);color:var(--dn)}
+main{padding:18px;max-width:1500px;margin:0 auto;display:grid;
+grid-template-columns:330px 1fr;gap:12px;align-items:start}
+.full{grid-column:1/-1}
+h1{font-size:27px;font-weight:800;letter-spacing:-.02em}
+.lead{font-size:12.5px;color:var(--tx2);margin:3px 0 0;max-width:80ch;line-height:1.7}
+.sub{font-size:11px;color:var(--tx3);font-weight:400}
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:15px;margin-bottom:12px}
+.card h3{font-size:13px;font-weight:700;margin-bottom:11px;display:flex;align-items:center;gap:8px}
+.side{position:sticky;top:62px}
+.frm{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.frm .w2{grid-column:1/-1}
+label{display:flex;flex-direction:column;gap:3px;font-size:10px;color:var(--tx3);
+text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+input,select,textarea{background:var(--bg3);border:1px solid var(--line);color:var(--tx);
+border-radius:6px;padding:6px 9px;font-family:inherit;font-size:12.5px;width:100%}
+textarea{min-height:58px;resize:vertical;font-size:12px}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--acc)}
+input.bad{border-color:var(--dn)}
+.hint{font-size:10.5px;line-height:1.6;margin-top:7px;padding:8px 10px;border-radius:7px;
+background:var(--bg3);color:var(--tx2)}
+.hint.err{background:rgba(229,100,90,.1);color:var(--dn)}
+.hint b{color:var(--tx)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:9px;margin-bottom:12px}
+.kpi{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:11px 13px}
+.kpi .n{font-size:10px;color:var(--tx3);text-transform:uppercase;letter-spacing:.08em}
+.kpi .v{font-size:23px;font-weight:800;letter-spacing:-.03em;line-height:1.2;
+font-family:ui-monospace,monospace}
+.kpi .s{font-size:10px;color:var(--tx3)}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{text-align:right;font-size:10px;color:var(--tx3);font-weight:600;padding:7px 6px;
+border-bottom:1px solid var(--line);text-transform:uppercase;letter-spacing:.07em;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+td{padding:7px 6px;border-bottom:1px solid rgba(34,44,61,.5);text-align:right;white-space:nowrap}
+tbody tr:hover{background:rgba(255,255,255,.025)}
+.tag{display:inline-block;font-size:9.5px;padding:1px 7px;border-radius:4px;font-weight:700;margin-right:3px}
+.t-w{background:rgba(52,194,125,.18);color:var(--up)}
+.t-l{background:rgba(229,100,90,.18);color:var(--dn)}
+.t-b{background:rgba(148,163,184,.14);color:var(--tx2)}
+.t-o{background:rgba(245,158,11,.18);color:var(--warn)}
+.t-q1{background:rgba(229,100,90,.16);color:var(--dn)}
+.t-q2{background:rgba(245,158,11,.16);color:var(--warn)}
+.t-q3{background:rgba(52,194,125,.16);color:var(--up)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:11px}
+.ld{color:var(--tx3);text-align:center;padding:26px 0;font-size:12.5px;line-height:1.9}
+.warnbox{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.28);
+border-radius:9px;padding:11px 13px;font-size:11.5px;color:var(--warn);line-height:1.8;margin-bottom:12px}
+.warnbox b{color:#ffd37a}
+.infobox{background:rgba(59,130,246,.07);border:1px solid rgba(59,130,246,.25);
+border-radius:9px;padding:11px 13px;font-size:11.5px;color:var(--tx2);line-height:1.75;margin-bottom:12px}
+.note{font-size:10.5px;color:var(--tx3);line-height:1.75;margin-top:11px;
+padding-top:10px;border-top:1px dashed var(--line)}
+.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:12px}
+.bars{display:flex;align-items:flex-end;gap:2px;height:46px}
+.bars i{flex:1;min-width:2px;border-radius:1px 1px 0 0;display:block}
+@media(max-width:1000px){main{grid-template-columns:1fr}.side{position:static}}
+@media(max-width:700px){main{padding:12px}h1{font-size:22px}}
+</style>
+<link rel="stylesheet" href="theme.css">
+</head><body>
+
+<header><div class="hbar">
+  <div class="logo">TRADING <span>DASHBOARD</span></div>
+  <nav>
+    <a href="brief.html">BRIEF</a><a href="events.html">EVENTS</a>
+    <a href="theme-matrix.html">THEMES</a><a href="scanner.html">SCANNER</a>
+    <a href="flow.html">FLOW</a><a href="journal.html" class="on">JOURNAL</a>
+    <a href="bot.html">BOT</a><a href="index.html">PORT</a>
+    <a href="trade.html">TRADE</a><a href="macro.html">MACRO</a><a href="market.html">MARKET</a>
+  </nav>
+  <div class="right">
+    <span id="msg" class="sub"></span>
+    <button class="btn" id="bExport">⬇ ส่งออก JSON</button>
+    <button class="btn" id="bImport">⬆ นำเข้า</button>
+    <input type="file" id="fImport" accept=".json" style="display:none">
+  </div>
+</div></header>
+
+<main>
+  <div class="full">
+    <h1>📓 Backtest Journal</h1>
+    <div class="lead">บันทึกไม้ที่เทรดย้อนหลังบนกราฟ แล้วดูว่า setup ไหนได้ผลจริง —
+      วัดด้วย R ไม่ใช่เงิน</div>
+  </div>
+
+  <div class="side">
+    <div class="card">
+      <h3>✏️ บันทึกไม้</h3>
+      <div class="frm">
+        <label class="w2">สินทรัพย์
+          <input id="fSym" placeholder="XAUUSD" list="symList">
+          <datalist id="symList"></datalist></label>
+        <label>ทิศทาง<select id="fDir">
+          <option value="buy">BUY / ซื้อ</option>
+          <option value="sell">SELL / ขาย</option></select></label>
+        <label>วันที่<input id="fDate" type="date"></label>
+        <label>ENTRY<input id="fEntry" type="number" step="any" placeholder="3315.00"></label>
+        <label>SL<input id="fSL" type="number" step="any" placeholder="3295.00"></label>
+        <label>TP<input id="fTP" type="number" step="any" placeholder="3355.00"></label>
+        <label>EXIT<input id="fExit" type="number" step="any" placeholder="ว่าง = ยังไม่ปิด"></label>
+        <label>ขนาด (lot/หุ้น)<input id="fSize" type="number" step="any" placeholder="0.1"></label>
+        <label>ไทม์เฟรม<select id="fTF">
+          <option value="">—</option><option>M5</option><option>M15</option>
+          <option>H1</option><option>H4</option><option>D1</option><option>W1</option></select></label>
+        <label class="w2">SETUP
+          <input id="fSetup" placeholder="CHoCH + FVG + Low High" list="setupList">
+          <datalist id="setupList"></datalist></label>
+        <label class="w2">อารมณ์ตอนเข้า<select id="fMood">
+          <option value="มีแผน">🙂 นิ่ง มีแผน</option>
+          <option value="ลังเล">😐 ลังเล</option>
+          <option value="กลัวตกรถ">😰 กลัวตกรถ</option>
+          <option value="แก้แค้น">😡 อยากเอาคืน</option>
+          <option value="มั่นใจเกิน">😤 มั่นใจเกินไป</option></select></label>
+        <label class="w2">บันทึก<textarea id="fNote" placeholder="เหตุผลที่เข้า สิ่งที่สังเกต..."></textarea></label>
+      </div>
+      <div id="hint" class="hint"></div>
+      <div style="display:flex;gap:7px;margin-top:9px;flex-wrap:wrap">
+        <button class="btn go" id="bSave" style="flex:1">+ บันทึกไม้</button>
+        <button class="btn" id="bClear">ล้างฟอร์ม</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>⚙️ ค่าต่อจุด <span class="sub">สำหรับคิดเป็นเงิน</span></h3>
+      <div id="cfg"></div>
+      <div class="note">ถ้าไม่ตั้งค่า หน้านี้จะไม่แสดงตัวเลขเงินเลย
+        แสดงแต่ R ซึ่งถูกต้องเสมอไม่ว่าสินทรัพย์อะไร</div>
+    </div>
+  </div>
+
+  <div>
+    <div id="status"></div>
+    <div class="kpis" id="kpis"></div>
+
+    <div class="card">
+      <h3>📈 เส้นทุนสะสม (R) <span class="sub" id="eqMeta"></span></h3>
+      <div id="eq"></div>
+    </div>
+
+    <div class="g2">
+      <div class="card"><h3>🎯 แยกตาม Setup</h3><div id="bySetup"></div></div>
+      <div class="card"><h3>🧠 แยกตามอารมณ์</h3><div id="byMood"></div></div>
+      <div class="card"><h3>💱 แยกตามสินทรัพย์</h3><div id="bySym"></div></div>
+      <div class="card"><h3>↕️ แยกตามทิศทาง · ไทม์เฟรม</h3><div id="byDir"></div></div>
+    </div>
+
+    <div class="card">
+      <h3>📋 ไม้ทั้งหมด</h3>
+      <div class="chips" id="chips"></div>
+      <div style="overflow:auto"><div id="tbl"></div></div>
+      <div class="note" id="foot"></div>
+    </div>
+  </div>
+</main>
+
+<script>
+/* ============================================================
+   Backtest Journal
+   แกนกลางคือ R-multiple = กำไร/ขาดทุน หารด้วย ระยะที่ยอมเสี่ยง
+   ใช้ R เพราะมันเทียบข้ามสินทรัพย์ได้ตรงๆ
+   ทองหนึ่งไม้กับหุ้นหนึ่งไม้คิดเป็นเงินไม่เท่ากัน แต่คิดเป็น R เทียบกันได้
+   ============================================================ */
+const KT='bt_trades_v1', KC='bt_cfg_v1';
+let TR=[], CFG={}, FILT='all';
+
+const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+  .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const cl2=v=>v==null?'fl':v>0?'up':v<0?'dn':'fl';
+const nm=(v,d)=>v==null||!isFinite(v)?'—':Number(v).toLocaleString('en-US',
+  {minimumFractionDigits:d==null?2:d,maximumFractionDigits:d==null?2:d});
+const rr=v=>v==null||!isFinite(v)?'—':(v>=0?'+':'')+v.toFixed(2)+'R';
+function num(v){
+  if(v==null)return null;
+  if(typeof v==='string'){ v=v.trim().replace(/,/g,''); if(v==='')return null }
+  const x=Number(v);
+  return isFinite(x)?x:null;
+}
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+
+/* ============================================================
+   ตรวจไม้หนึ่งไม้ และคำนวณ R
+   จุดที่พลาดง่ายที่สุดคือ SL อยู่ผิดฝั่ง
+   ไม้ BUY ต้องวาง SL ต่ำกว่าราคาเข้า ไม่งั้นมันไม่ใช่ stop loss
+   ถ้าปล่อยผ่าน ระยะเสี่ยงจะติดลบ แล้ว R จะกลับเครื่องหมายทั้งหมด
+   ไม้ที่ขาดทุนจะกลายเป็นกำไรในสถิติ จึงต้องปฏิเสธตั้งแต่ต้น
+   ============================================================ */
+function calc(t){
+  const o={ok:false,err:null,risk:null,r:null,planR:null,pnl:null,open:false};
+  const e=num(t.entry), sl=num(t.sl), tp=num(t.tp), x=num(t.exit);
+  if(e==null||sl==null){ o.err='ต้องมีราคาเข้าและ SL'; return o }
+  if(!(e>0)||!(sl>0)){ o.err='ราคาต้องมากกว่าศูนย์'; return o }
+  const dir=t.dir==='sell'?'sell':'buy';
+  const risk=dir==='buy' ? e-sl : sl-e;
+  if(risk<=0){
+    o.err = dir==='buy' ? 'ไม้ BUY ต้องวาง SL ต่ำกว่าราคาเข้า'
+                        : 'ไม้ SELL ต้องวาง SL สูงกว่าราคาเข้า';
+    return o;
+  }
+  o.ok=true; o.risk=risk;
+  if(tp!=null&&tp>0){
+    const pr=dir==='buy' ? tp-e : e-tp;
+    o.planR=pr/risk;
+    if(pr<=0)o.warn=(dir==='buy'?'TP ควรอยู่สูงกว่าราคาเข้า':'TP ควรอยู่ต่ำกว่าราคาเข้า');
+  }
+  if(x==null||!(x>0)){ o.open=true; return o }     /* ยังไม่ปิด = ยังไม่มีผล */
+  const rew=dir==='buy' ? x-e : e-x;
+  o.r=rew/risk;
+  const size=num(t.size), vp=num(CFG[String(t.sym||'').toUpperCase()]);
+  if(size!=null&&vp!=null)o.pnl=rew*size*vp;       /* ไม่มีค่าต่อจุด = ไม่เดาเป็นเงิน */
+  return o;
+}
+function rows(){
+  return TR.map(t=>{
+    const c=calc(t);
+    return Object.assign({},t,c,{
+      res: c.open?'open' : c.r==null?'bad' : c.r>0.02?'win' : c.r<-0.02?'loss':'be'
+    });
+  });
+}
+
+/* ============================================================
+   สถิติจากชุดไม้ที่ปิดแล้ว
+   ============================================================ */
+function stats(L){
+  const C=L.filter(x=>x.r!=null&&isFinite(x.r));
+  const s={n:C.length,win:0,loss:0,be:0,sumR:0,gp:0,gl:0,
+    avgR:null,winRate:null,pf:null,exp:null,maxDD:0,maxWin:0,maxLoss:0,
+    avgWin:null,avgLoss:null,best:null,worst:null,curve:[],pnl:null,pnlKnown:0};
+  if(!C.length)return s;
+  /* เรียงตามวันที่อย่างเดียว — ไม้ที่ลงวันเดียวกันให้คงลำดับที่บันทึกไว้
+     (Array.sort ของ JS รักษาลำดับเดิมเมื่อเทียบแล้วเท่ากัน)
+     ห้ามใช้ id มาตัดสิน เพราะ id มีส่วนที่สุ่ม ลำดับจะเปลี่ยนทุกครั้งที่วาดใหม่
+     แล้วเส้นทุนกับจำนวนแพ้ติดกันจะไม่ตรงกันสักรอบ */
+  C.sort((a,b)=>String(a.date||'').localeCompare(String(b.date||'')));
+  let eq=0,peak=0,ws=0,ls=0,pnl=0;
+  C.forEach(t=>{
+    const r=t.r;
+    s.sumR+=r;
+    if(r>0.02){s.win++;s.gp+=r;ws++;ls=0}
+    else if(r<-0.02){s.loss++;s.gl+=-r;ls++;ws=0}
+    else {s.be++;ws=0;ls=0}
+    s.maxWin=Math.max(s.maxWin,ws); s.maxLoss=Math.max(s.maxLoss,ls);
+    eq+=r; s.curve.push(eq);
+    peak=Math.max(peak,eq);
+    s.maxDD=Math.max(s.maxDD,peak-eq);
+    if(t.pnl!=null){ pnl+=t.pnl; s.pnlKnown++ }
+    if(s.best==null||r>s.best)s.best=r;
+    if(s.worst==null||r<s.worst)s.worst=r;
+  });
+  s.avgR=s.sumR/C.length;
+  s.exp=s.avgR;                      /* ค่าคาดหวังต่อไม้ = R เฉลี่ย */
+  const decided=s.win+s.loss;
+  s.winRate=decided?s.win/decided*100:null;   /* ไม้เสมอไม่นับทั้งเศษและส่วน */
+  s.avgWin =s.win ? s.gp/s.win : null;
+  s.avgLoss=s.loss? s.gl/s.loss: null;
+  s.pf = s.gl>0 ? s.gp/s.gl : null;  /* ไม่มีไม้ขาดทุน = หารศูนย์ ไม่ใช่ค่าอนันต์ */
+  if(s.pnlKnown)s.pnl=pnl;
+  return s;
+}
+/* ขนาดตัวอย่างพอเชื่อได้แค่ไหน */
+function quality(n){
+  if(n<10) return ['t-q1','น้อยมาก','ต่ำกว่า 10 ไม้ ตัวเลขยังบอกอะไรไม่ได้'];
+  if(n<30) return ['t-q1','ยังน้อย','ต่ำกว่า 30 ไม้ ความบังเอิญมีน้ำหนักกว่าฝีมือ'];
+  if(n<100)return ['t-q2','พอใช้','30-99 ไม้ พอเห็นเค้า แต่ยังแกว่งได้มาก'];
+  return ['t-q3','พอประมาณ','100 ไม้ขึ้นไป เริ่มเชื่อถือได้ แต่ไม่ใช่การรับประกัน'];
+}
+
+/* ---------- เก็บค่า ---------- */
+function loadLocal(){
+  try{ const t=JSON.parse(localStorage.getItem(KT)); if(Array.isArray(t))TR=t }catch(e){}
+  try{ const c=JSON.parse(localStorage.getItem(KC)); if(c&&typeof c==='object')CFG=c }catch(e){}
+}
+const save=()=>{ try{localStorage.setItem(KT,JSON.stringify(TR));
+  localStorage.setItem(KC,JSON.stringify(CFG))}catch(e){} };
+
+/* ---------- ฟอร์ม ---------- */
+const g=id=>document.getElementById(id);
+function formTrade(){
+  return {id:uid(), sym:g('fSym').value.trim().toUpperCase(),
+    dir:g('fDir').value, date:g('fDate').value,
+    entry:num(g('fEntry').value), sl:num(g('fSL').value),
+    tp:num(g('fTP').value), exit:num(g('fExit').value),
+    size:num(g('fSize').value), tf:g('fTF').value,
+    setup:g('fSetup').value.trim(), mood:g('fMood').value,
+    note:g('fNote').value.trim()};
+}
+function hint(){
+  const t=formTrade(), c=calc(t), h=g('hint');
+  g('fSL').classList.toggle('bad', !!c.err&&c.err.indexOf('SL')>=0);
+  if(c.err){ h.className='hint err'; h.innerHTML='⚠ '+esc(c.err); return }
+  h.className='hint';
+  let s='ระยะเสี่ยง <b>'+nm(c.risk,c.risk<1?5:2)+'</b> จุด';
+  if(c.planR!=null)s+=' · แผน <b>'+rr(c.planR)+'</b>';
+  if(c.open)s+=' · <span style="color:var(--warn)">ยังไม่ปิด จึงยังไม่เข้าสถิติ</span>';
+  else if(c.r!=null)s+=' · ผลจริง <b class="'+cl2(c.r)+'">'+rr(c.r)+'</b>';
+  if(c.pnl!=null)s+=' · '+(c.pnl>=0?'+':'')+nm(c.pnl)+' (จากค่าต่อจุดที่ตั้งไว้)';
+  else if(c.r!=null&&t.sym)s+=' · <span class="sub">ยังไม่ได้ตั้งค่าต่อจุดของ '
+    +esc(t.sym)+' จึงไม่คิดเป็นเงิน</span>';
+  if(c.warn)s+='<br><span style="color:var(--warn)">⚠ '+esc(c.warn)+'</span>';
+  h.innerHTML=s;
+}
+g('bSave').onclick=()=>{
+  const t=formTrade(), c=calc(t);
+  if(c.err){ alert(c.err); return }
+  if(!t.sym){ alert('ใส่ชื่อสินทรัพย์ด้วย'); return }
+  TR.push(t); save();
+  ['fEntry','fSL','fTP','fExit','fNote'].forEach(i=>g(i).value='');
+  render();
+};
+g('bClear').onclick=()=>{
+  ['fSym','fEntry','fSL','fTP','fExit','fSize','fSetup','fNote'].forEach(i=>g(i).value='');
+  hint();
+};
+['fSym','fDir','fEntry','fSL','fTP','fExit','fSize'].forEach(i=>
+  g(i).addEventListener('input',hint));
+g('fDir').addEventListener('change',hint);
+
+/* ---------- นำเข้า / ส่งออก ---------- */
+g('bExport').onclick=()=>{
+  const blob=new Blob([JSON.stringify({v:1,exported:new Date().toISOString(),
+    cfg:CFG,trades:TR},null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='backtest-journal-'+new Date().toISOString().slice(0,10)+'.json';
+  a.click(); URL.revokeObjectURL(a.href);
+};
+g('bImport').onclick=()=>g('fImport').click();
+g('fImport').addEventListener('change',e=>{
+  const f=e.target.files[0]; if(!f)return;
+  const rd=new FileReader();
+  rd.onload=()=>{
+    try{
+      const j=JSON.parse(rd.result);
+      const list=Array.isArray(j)?j:(j.trades||[]);
+      if(!Array.isArray(list)||!list.length)throw new Error('ไม่พบรายการไม้ในไฟล์');
+      /* รวมกับของเดิม ไม่ทับทิ้ง และกันไม้ซ้ำด้วย id */
+      const have=new Set(TR.map(x=>x.id));
+      let add=0, skip=0;
+      list.forEach(x=>{
+        if(!x||x.entry==null||x.sl==null){ skip++; return }
+        const t=Object.assign({},x);
+        if(!t.id||have.has(t.id))t.id=uid();
+        have.add(t.id); TR.push(t); add++;
+      });
+      if(j.cfg&&typeof j.cfg==='object')CFG=Object.assign({},j.cfg,CFG);
+      save(); render();
+      g('msg').innerHTML='นำเข้า '+add+' ไม้'
+        +(skip?' · ข้าม '+skip+' ที่ข้อมูลไม่ครบ':'');
+      setTimeout(()=>g('msg').textContent='',6000);
+    }catch(err){ alert('อ่านไฟล์ไม่ได้: '+err.message) }
+  };
+  rd.readAsText(f);
+  e.target.value='';
+});
+
+/* ---------- เส้นทุน ---------- */
+function curveSvg(c){
+  if(c.length<2)return '<div class="ld">ต้องมีอย่างน้อย 2 ไม้ที่ปิดแล้วจึงจะวาดเส้นได้</div>';
+  const W=900,H=190,P=24;
+  const mn=Math.min(0,...c), mx=Math.max(0,...c), rg=(mx-mn)||1;
+  const X=i=>P+i/(c.length-1)*(W-P*2);
+  const Y=v=>H-P-(v-mn)/rg*(H-P*2);
+  const pts=c.map((v,i)=>X(i).toFixed(1)+','+Y(v).toFixed(1)).join(' ');
+  const last=c[c.length-1];
+  const col=last>=0?'var(--up)':'var(--dn)';
+  let peak=-Infinity, ddi=0, dd=0, pki=0, bi=0;
+  c.forEach((v,i)=>{ if(v>peak){peak=v;pki=i} if(peak-v>dd){dd=peak-v;ddi=i;bi=pki} });
+  return '<svg viewBox="0 0 '+W+' '+H+'" width="100%" height="190" '
+    +'preserveAspectRatio="none" style="display:block">'
+    +'<line x1="'+P+'" x2="'+(W-P)+'" y1="'+Y(0).toFixed(1)+'" y2="'+Y(0).toFixed(1)
+    +'" stroke="var(--line)" stroke-width="1" stroke-dasharray="3 3"/>'
+    +(dd>0.01?'<rect x="'+X(bi).toFixed(1)+'" y="'+Y(c[bi]).toFixed(1)+'" width="'
+      +Math.max(1,X(ddi)-X(bi)).toFixed(1)+'" height="'+Math.max(1,Y(c[ddi])-Y(c[bi])).toFixed(1)
+      +'" fill="rgba(229,100,90,.13)"/>':'')
+    +'<polyline points="'+pts+'" fill="none" stroke="'+col+'" stroke-width="2"/>'
+    +'<circle cx="'+X(c.length-1).toFixed(1)+'" cy="'+Y(last).toFixed(1)
+    +'" r="3.5" fill="'+col+'"/>'
+    +'<text x="'+P+'" y="14" font-size="11" fill="var(--tx3)">สูงสุด '+mx.toFixed(1)+'R</text>'
+    +'<text x="'+P+'" y="'+(H-6)+'" font-size="11" fill="var(--tx3)">ต่ำสุด '+mn.toFixed(1)+'R</text>'
+    +'</svg>';
+}
+
+/* ---------- ตารางแยกกลุ่ม ---------- */
+function group(L,keyFn,label){
+  const m={};
+  L.forEach(t=>{ const k=keyFn(t)||'(ไม่ระบุ)'; (m[k]=m[k]||[]).push(t) });
+  const out=Object.keys(m).map(k=>({k,s:stats(m[k])}))
+    .filter(x=>x.s.n>0)
+    .sort((a,b)=>b.s.sumR-a.s.sumR);
+  if(!out.length)return '<div class="ld">ยังไม่มีไม้ที่ปิดแล้ว</div>';
+  return '<table><thead><tr><th>'+label+'</th><th>ไม้</th><th>ชนะ</th>'
+    +'<th>R เฉลี่ย</th><th>R รวม</th><th>ความน่าเชื่อ</th></tr></thead><tbody>'
+    +out.map(x=>{
+      const q=quality(x.s.n);
+      return '<tr><td><b>'+esc(x.k)+'</b></td>'
+        +'<td class="mono">'+x.s.n+'</td>'
+        +'<td class="mono">'+(x.s.winRate==null?'—':Math.round(x.s.winRate)+'%')+'</td>'
+        +'<td class="mono '+cl2(x.s.avgR)+'">'+rr(x.s.avgR)+'</td>'
+        +'<td class="mono '+cl2(x.s.sumR)+'">'+rr(x.s.sumR)+'</td>'
+        +'<td><span class="tag '+q[0]+'">'+q[1]+'</span></td></tr>';
+    }).join('')+'</tbody></table>'
+    +'<div class="note">เรียงตาม R รวม — แต่<b>อย่าเพิ่งเชื่อแถวที่ไม้น้อย</b> '
+    +'กลุ่มที่มี 3-5 ไม้แล้วดูดีมาก มักเป็นความบังเอิญ</div>';
+}
+
+/* ---------- ค่าต่อจุด ---------- */
+function renderCfg(){
+  const syms=[...new Set(TR.map(t=>String(t.sym||'').toUpperCase()).filter(Boolean))];
+  g('cfg').innerHTML= syms.length
+    ? syms.map(s=>'<label style="flex-direction:row;align-items:center;gap:8px;'
+        +'text-transform:none;margin-bottom:6px"><span style="width:88px;color:var(--tx2);'
+        +'font-size:12px;font-weight:600">'+esc(s)+'</span>'
+        +'<input type="number" step="any" data-cfg="'+esc(s)+'" '
+        +'value="'+(CFG[s]==null?'':CFG[s])+'" placeholder="เช่น ทอง 100"></label>').join('')
+      +'<div class="sub" style="margin-top:6px">มูลค่าต่อ 1 จุด ต่อ 1 หน่วยขนาด · '
+      +'ทอง 1 ล็อต = 100 ออนซ์ · หุ้นสหรัฐฯ = 1 · ฟอเร็กซ์ 1 ล็อต = 100,000</div>'
+    : '<div class="sub">บันทึกไม้แรกก่อน แล้วชื่อสินทรัพย์จะมาโผล่ตรงนี้</div>';
+}
+g('cfg').addEventListener('input',e=>{
+  const s=e.target.dataset.cfg; if(!s)return;
+  const v=num(e.target.value);
+  if(v==null)delete CFG[s]; else CFG[s]=v;
+  save(); render();
+});
+
+/* ---------- วาดหน้า ---------- */
+function render(){
+  const L=rows();
+  const closed=L.filter(x=>x.r!=null);
+  const open=L.filter(x=>x.open);
+  const bad=L.filter(x=>x.res==='bad');
+  const S=stats(L);
+  const q=quality(S.n);
+
+  /* --- สถานะ --- */
+  let st='';
+  if(!TR.length){
+    st='<div class="infobox"><b>ยังไม่มีไม้</b> — กรอกฟอร์มทางซ้ายเพื่อบันทึกไม้แรก '
+      +'หรือกด <b>⬆ นำเข้า</b> ถ้ามีไฟล์ JSON จากที่อื่นอยู่แล้ว<br>'
+      +'ไม้ที่ยังไม่ใส่ราคาออก จะถูกเก็บไว้แต่ไม่นำไปคิดสถิติ '
+      +'เพราะมันยังไม่มีผลลัพธ์</div>';
+  }else{
+    st='<div class="infobox">บันทึกแล้ว '+TR.length+' ไม้ · ปิดแล้ว '+closed.length
+      +(open.length?' · ยังไม่ปิด '+open.length+' (ไม่คิดในสถิติ)':'')
+      +(bad.length?' · <span style="color:var(--warn)">ข้อมูลผิด '+bad.length+'</span>':'')
+      +'</div>';
+    st+='<div class="warnbox"><b>ขนาดตัวอย่าง: '+q[1]+'</b> — '+q[2]+'<br>'
+      +'ชุดไม้ที่คัดมาเองจากกราฟย้อนหลังมักดูดีกว่าของจริง เพราะตอนเลื่อนกราฟ '
+      +'เราเห็นแท่งขวามือไปแล้วโดยไม่รู้ตัว และมักข้ามช่วงที่สับสนไป '
+      +'<b>ให้ถือว่านี่คือเพดานบนของผลงาน ไม่ใช่สิ่งที่จะได้จริง</b></div>';
+  }
+  g('status').innerHTML=st;
+
+  /* --- ตัวเลขสรุป --- */
+  const pfTxt = S.pf==null
+    ? (S.n&&!S.loss?'<span style="font-size:15px">ยังไม่มีไม้ขาดทุน</span>':'—')
+    : nm(S.pf);
+  const K=[
+    ['จำนวนไม้',String(S.n),open.length?'ยังไม่ปิดอีก '+open.length:'','var(--tx)'],
+    ['อัตราชนะ',S.winRate==null?'—':Math.round(S.winRate)+'%',
+      S.be?'ไม้เสมอ '+S.be+' ไม่นับ':(S.win+' ชนะ / '+S.loss+' แพ้'),
+      S.winRate==null?'var(--tx2)':S.winRate>=50?'var(--up)':'var(--dn)'],
+    ['R รวม',rr(S.sumR),'ผลสะสมทั้งหมด',cl2(S.sumR)==='up'?'var(--up)':'var(--dn)'],
+    ['R เฉลี่ยต่อไม้',rr(S.avgR),'ค่าคาดหวัง',
+      S.avgR==null?'var(--tx2)':S.avgR>0?'var(--up)':'var(--dn)'],
+    ['Profit Factor',pfTxt,S.pf==null?'':'กำไรรวม ÷ ขาดทุนรวม',
+      S.pf==null?'var(--tx2)':S.pf>=1.5?'var(--up)':S.pf>=1?'var(--warn)':'var(--dn)'],
+    ['ขาดทุนสูงสุด','-'+S.maxDD.toFixed(2)+'R','จากจุดสูงสุดของเส้นทุน','var(--dn)']
+  ];
+  g('kpis').innerHTML=K.map(k=>
+    '<div class="kpi"><div class="n">'+k[0]+'</div>'
+    +'<div class="v" style="color:'+k[3]+'">'+k[1]+'</div>'
+    +'<div class="s">'+esc(k[2])+'</div></div>').join('');
+
+  /* --- เส้นทุน --- */
+  g('eqMeta').textContent = S.n
+    ? 'แพ้ติดกันสูงสุด '+S.maxLoss+' ไม้ · ชนะติดกันสูงสุด '+S.maxWin+' ไม้'
+      +(S.pnl!=null?' · เป็นเงิน '+(S.pnl>=0?'+':'')+nm(S.pnl)
+        +(S.pnlKnown<S.n?' (จาก '+S.pnlKnown+'/'+S.n+' ไม้ที่ตั้งค่าต่อจุดไว้)':''):'')
+    : '';
+  g('eq').innerHTML=curveSvg(S.curve);
+
+  /* --- แยกกลุ่ม --- */
+  g('bySetup').innerHTML=group(L,t=>t.setup,'Setup');
+  g('byMood').innerHTML =group(L,t=>t.mood,'อารมณ์')
+    +'<div class="note">ถ้าไม้ที่เข้าตอนอารมณ์ไม่นิ่งขาดทุนกว่าชัดเจน '
+    +'นั่นคือสิ่งที่แก้ได้เร็วที่สุด เร็วกว่าการหา setup ใหม่</div>';
+  g('bySym').innerHTML  =group(L,t=>t.sym,'สินทรัพย์');
+  g('byDir').innerHTML  =group(L,t=>(t.dir==='sell'?'SELL':'BUY')+(t.tf?' · '+t.tf:''),'ทิศทาง');
+
+  /* --- ตารางไม้ --- */
+  const FS=[['all','ทั้งหมด'],['win','ชนะ'],['loss','แพ้'],['open','ยังไม่ปิด'],['bad','ข้อมูลผิด']];
+  g('chips').innerHTML=FS.map(f=>
+    '<button class="btn'+(FILT===f[0]?' on':'')+'" data-fl="'+f[0]+'">'+f[1]+'</button>').join('');
+  let V=L.filter(t=>FILT==='all'||t.res===FILT
+    ||(FILT==='win'&&t.res==='win')||(FILT==='loss'&&t.res==='loss'));
+  /* ล่าสุดอยู่บน — วันเดียวกันให้ไม้ที่บันทึกทีหลังอยู่บน (ใช้ลำดับในอาเรย์ ไม่ใช่ id ที่สุ่ม) */
+  V.forEach((t,i)=>t._i=i);
+  V.sort((a,b)=>String(b.date||'').localeCompare(String(a.date||''))||(b._i-a._i));
+  g('tbl').innerHTML= V.length
+    ? '<table><thead><tr><th>วันที่</th><th>สินทรัพย์</th><th>ทิศ</th><th>Setup</th>'
+      +'<th>Entry</th><th>SL</th><th>Exit</th><th>แผน</th><th>ผล</th><th>ผลเป็น R</th>'
+      +'<th>อารมณ์</th><th></th></tr></thead><tbody>'
+      +V.map(t=>'<tr>'
+        +'<td class="sub">'+esc(t.date||'—')+'</td>'
+        +'<td><b>'+esc(t.sym||'—')+'</b></td>'
+        +'<td class="'+(t.dir==='sell'?'dn':'up')+'">'+(t.dir==='sell'?'SELL':'BUY')+'</td>'
+        +'<td class="sub" style="text-align:left;max-width:170px;overflow:hidden;'
+          +'text-overflow:ellipsis">'+esc(t.setup||'—')+'</td>'
+        +'<td class="mono">'+nm(t.entry,2)+'</td>'
+        +'<td class="mono fl">'+nm(t.sl,2)+'</td>'
+        +'<td class="mono">'+(t.exit==null?'<span class="fl">—</span>':nm(t.exit,2))+'</td>'
+        +'<td class="mono fl">'+(t.planR==null?'—':rr(t.planR))+'</td>'
+        +'<td>'+(t.res==='open'?'<span class="tag t-o">ยังไม่ปิด</span>'
+          :t.res==='bad'?'<span class="tag t-l">'+esc(t.err||'ข้อมูลผิด')+'</span>'
+          :t.res==='win'?'<span class="tag t-w">ชนะ</span>'
+          :t.res==='loss'?'<span class="tag t-l">แพ้</span>'
+          :'<span class="tag t-b">เสมอ</span>')+'</td>'
+        +'<td class="mono '+cl2(t.r)+'">'+rr(t.r)+'</td>'
+        +'<td class="sub">'+esc(t.mood||'—')+'</td>'
+        +'<td><button class="btn sm dg" data-del="'+esc(t.id)+'">ลบ</button></td>'
+        +'</tr>'
+        +(t.note?'<tr><td colspan="12" class="sub" style="text-align:left;'
+          +'border-bottom:1px solid rgba(34,44,61,.5);padding:0 6px 7px">↳ '
+          +esc(t.note)+'</td></tr>':'')).join('')
+      +'</tbody></table>'
+    : '<div class="ld">ไม่มีไม้ที่ตรงเงื่อนไข</div>';
+
+  g('foot').innerHTML=
+    '<b>R</b> = กำไรหรือขาดทุน หารด้วยระยะที่ยอมเสี่ยง (ระยะจากราคาเข้าถึง SL) '
+    +'ชนะ 2R คือได้เท่ากับที่ยอมเสี่ยงไว้สองเท่า — ใช้ R เพราะเทียบข้ามสินทรัพย์ได้ '
+    +'ทองหนึ่งไม้กับหุ้นหนึ่งไม้คิดเป็นเงินไม่เท่ากัน แต่คิดเป็น R เทียบกันตรงๆ ได้<br>'
+    +'<b>อัตราชนะไม่นับไม้เสมอ</b> ทั้งเศษและส่วน · '
+    +'<b>Profit Factor</b> จะไม่แสดงเมื่อยังไม่มีไม้ขาดทุน เพราะเป็นการหารด้วยศูนย์ '
+    +'ไม่ใช่ค่าอนันต์ที่แปลว่าดีเลิศ<br>'
+    +'ไม้ที่ยังไม่ใส่ราคาออกจะไม่ถูกคิดในสถิติทุกตัว · '
+    +'ข้อมูลเก็บในเบราว์เซอร์เครื่องนี้เท่านั้น ไม่ได้ส่งไปไหน — '
+    +'<b>ล้างข้อมูลเบราว์เซอร์แล้วหาย กด ⬇ ส่งออก JSON เก็บไว้เป็นระยะ</b>';
+
+  /* รายการแนะนำในช่องกรอก */
+  g('symList').innerHTML=[...new Set(TR.map(t=>t.sym).filter(Boolean))]
+    .map(s=>'<option value="'+esc(s)+'">').join('');
+  g('setupList').innerHTML=[...new Set(TR.map(t=>t.setup).filter(Boolean))]
+    .map(s=>'<option value="'+esc(s)+'">').join('');
+  renderCfg();
+}
+g('chips').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b||!b.dataset.fl)return;
+  FILT=b.dataset.fl; render();
+});
+g('tbl').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b||!b.dataset.del)return;
+  if(!confirm('ลบไม้นี้ถาวร?'))return;
+  TR=TR.filter(t=>t.id!==b.dataset.del); save(); render();
+});
+
+loadLocal();
+if(!g('fDate').value)g('fDate').value=new Date().toISOString().slice(0,10);
+render(); hint();
+</script>
+<script src="theme.js"></script>
+</body></html>

@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TRADE — Trading Dashboard</title>
+<style>
+:root{--bg:#0b0e14;--bg2:#111721;--bg3:#161d2a;--line:#222c3d;--tx:#e6edf7;--tx2:#94a3b8;
+--tx3:#5d6b80;--gold:#f5b942;--acc:#3b82f6;--up:#22c55e;--dn:#ef4444;--warn:#f59e0b;--pur:#a78bfa}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-size:14px;line-height:1.55;padding-bottom:40px;
+font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Leelawadee UI','Noto Sans Thai',Tahoma,sans-serif}
+.mono{font-family:ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+.up{color:var(--up)}.dn{color:var(--dn)}.fl{color:var(--tx2)}
+button{font-family:inherit;cursor:pointer}
+a{color:var(--acc);text-decoration:none}
+header{position:sticky;top:0;z-index:50;background:rgba(11,14,20,.96);
+backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.hbar{display:flex;align-items:center;gap:12px;padding:9px 16px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:15px}.logo span{color:var(--gold)}
+nav{display:flex;gap:2px;margin-left:6px}
+nav a{color:var(--tx3);padding:6px 13px;font-size:13px;font-weight:600;border-radius:7px}
+nav a.on{color:var(--tx);background:var(--bg3)}
+.right{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{background:var(--bg3);border:1px solid var(--line);color:var(--tx2);
+padding:5px 11px;border-radius:7px;font-size:12px}
+.btn:hover{border-color:var(--acc);color:var(--tx)}
+.btn.go{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn.xs{padding:3px 8px;font-size:11px}
+main{padding:14px 16px;max-width:1600px;margin:0 auto}
+.ph{background:var(--bg3);border:1px solid var(--line);border-radius:10px;padding:11px 18px;
+margin-bottom:12px;font-size:17px;font-weight:700;letter-spacing:.6px;text-align:center}
+.grid{display:grid;gap:12px;grid-template-columns:2fr 1fr}
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:14px;
+display:flex;flex-direction:column;min-width:0}
+.card h3{font-size:11.5px;font-weight:700;color:var(--tx2);text-transform:uppercase;
+letter-spacing:.7px;margin-bottom:11px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.sub{font-size:11px;color:var(--tx3);font-weight:400;text-transform:none;letter-spacing:0}
+.rcol{display:flex;flex-direction:column;gap:12px}
+.chip{background:var(--bg3);border:1px solid var(--line);border-radius:6px;
+padding:4px 10px;font-size:12px;color:var(--tx2)}
+.chip.sel{background:rgba(59,130,246,.16);border-color:var(--acc);color:var(--tx)}
+.pr{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{text-align:right;font-size:10px;color:var(--tx3);font-weight:600;padding:6px 5px;
+border-bottom:1px solid var(--line);text-transform:uppercase;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+td{padding:6px 5px;border-bottom:1px solid rgba(34,44,61,.5);text-align:right;white-space:nowrap}
+input,select{background:var(--bg3);border:1px solid var(--line);color:var(--tx);
+padding:6px 8px;border-radius:6px;font-size:12.5px;font-family:inherit}
+input:focus,select:focus{outline:none;border-color:var(--acc)}
+.stat{display:flex;flex-direction:column;gap:1px;padding:9px 11px;background:var(--bg3);
+border-radius:8px}
+.stat b{font-size:19px;font-weight:700;font-family:ui-monospace,monospace;line-height:1.2}
+.stat span{font-size:10.5px;color:var(--tx3)}
+.sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(115px,1fr));gap:8px}
+.note{margin-top:auto;padding-top:10px;font-size:10.5px;color:var(--tx3);line-height:1.65;
+border-top:1px dashed var(--line)}
+.note b{color:var(--tx2)}
+.ld{color:var(--tx3);text-align:center;padding:18px 0;font-size:12.5px}
+.warnbox{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.28);
+border-radius:8px;padding:10px 12px;font-size:11.5px;color:var(--warn);line-height:1.7;margin-bottom:10px}
+.addrow{display:grid;grid-template-columns:118px 1fr 82px 90px 92px 92px auto;gap:6px;margin-top:10px}
+.tvwrap{border-radius:8px;overflow:hidden}
+.badge{font-size:10px;padding:2px 7px;border-radius:5px;font-weight:700}
+.b-w{background:rgba(34,197,94,.15);color:var(--up)}
+.b-l{background:rgba(239,68,68,.15);color:var(--dn)}
+@media(max-width:1050px){.grid{grid-template-columns:1fr}
+.addrow{grid-template-columns:1fr 1fr}}
+</style>
+<link rel="stylesheet" href="theme.css">
+</head>
+<body>
+
+<header>
+  <div class="hbar">
+    <div class="logo">TRADING <span>DASHBOARD</span></div>
+    <nav>
+      <a href="index.html">PORT</a>
+      <a class="on" href="trade.html">TRADE</a>
+      <a href="macro.html">MACRO</a>
+      <a href="bot.html">BOT</a>
+      <a href="market.html">MARKET</a>
+      <a href="weekly.html">WEEKLY</a>
+    </nav>
+    <div class="right">
+      <button class="btn" id="bExport">ส่งออก</button>
+      <button class="btn" id="bImport">นำเข้า</button>
+      <input type="file" id="fImp" accept=".json" style="display:none">
+    </div>
+  </div>
+</header>
+
+<main>
+<div class="ph">TRADE</div>
+
+<div class="grid">
+  <div class="card">
+    <h3>กราฟหุ้น <span class="sub">กราฟเต็มของ TradingView ใส่อินดิเคเตอร์ ตีเส้นได้</span></h3>
+    <div class="pr" id="pills" style="margin-bottom:9px"></div>
+    <div id="chart"></div>
+    <div class="note">พิมพ์สัญลักษณ์เพิ่มได้ · เครื่องหมาย <b>E</b> บนกราฟคือวันประกาศงบ</div>
+  </div>
+
+  <div class="rcol">
+    <div class="card">
+      <h3>Heat Map <span class="sub">S&amp;P 500 แยกตามกลุ่ม</span></h3>
+      <div id="heat"></div>
+    </div>
+    <div class="card">
+      <h3>สแกนหุ้นเล่น</h3>
+      <div id="scan"></div>
+    </div>
+    <div class="card">
+      <h3>บันทึกค่าสถิติ <span class="sub">สรุปย่อ</span></h3>
+      <div id="quick"></div>
+      <div class="note">คำนวณจากไม้ที่ <b>ปิดจบแล้ว</b> ในสมุดบันทึกด้านล่าง</div>
+    </div>
+  </div>
+</div>
+
+<div class="card" style="margin-top:12px">
+  <h3>บันทึกค่าสถิติการเทรด <span class="sub">จากสมุดบันทึกซื้อขาย</span></h3>
+  <div id="qualityBox"></div>
+  <div id="statBox"></div>
+  <div id="curveBox" style="margin-top:14px"></div>
+  <div class="note"><b>Profit Factor</b> = กำไรรวม ÷ ขาดทุนรวม (ต่ำกว่า 1 = ระบบไม่ทำเงิน) ·
+    <b>ค่าคาดหวัง</b> = กำไรเฉลี่ยที่ควรได้ต่อ 1 ไม้<br>
+    <b>อัตราชนะสูงไม่ได้แปลว่าทำเงิน</b> — ชนะ 90% แต่แพ้ครั้งเดียวหมดตัวก็มี ต้องดูคู่กันเสมอ</div>
+</div>
+
+<div class="card" style="margin-top:12px">
+  <h3>สมุดบันทึกซื้อขาย <span class="sub">ใช้ข้อมูลชุดเดียวกับหน้า PORT</span></h3>
+  <div class="addrow">
+    <input id="tDate" type="date">
+    <input id="tSym" placeholder="สัญลักษณ์">
+    <select id="tSide"><option value="buy">ซื้อ</option><option value="sell">ขาย</option></select>
+    <input id="tQty" type="number" step="any" placeholder="จำนวน">
+    <input id="tPrice" type="number" step="any" placeholder="ราคา">
+    <input id="tFee" type="number" step="any" placeholder="ค่าธรรมเนียม">
+    <button class="btn go" id="tAdd">+ บันทึก</button>
+  </div>
+  <div id="trList" style="margin-top:12px"></div>
+  <div class="note">ใช้<b>ต้นทุนถัวเฉลี่ย</b> เหมือนทุกหน้าในระบบ ·
+    ถ้าจะใช้ยื่นภาษี ให้ยึดเอกสารจากโบรกเกอร์เป็นหลัก</div>
+</div>
+</main>
+
+<script>
+/* ==================================================================
+   สถิติการเทรด — คำนวณจากสมุดบันทึกซื้อขาย (pro_tr)
+   หลักคิด: การ "ขาย" แต่ละครั้งคือผลลัพธ์ที่ปิดจบแล้ว 1 ผล
+   ใช้ต้นทุนถัวเฉลี่ยเหมือนหน้าอื่น เพื่อให้ตัวเลขสอดคล้องกันทั้งระบบ
+   ================================================================== */
+function closedTrades(TR){
+  const book={},results=[];
+  const sorted=TR.slice().sort((a,b)=>
+    (a.date||'').localeCompare(b.date||'')||(a.t||0)-(b.t||0));
+  for(const tr of sorted){
+    const s=(tr.sym||'').toUpperCase();
+    if(!s)continue;
+    const b=book[s]||(book[s]={qty:0,cost:0});
+    const q=Math.abs(Number(tr.qty)||0), p=Number(tr.price)||0, fee=Number(tr.fee)||0;
+    if(!q)continue;
+    if(tr.side==='sell'){
+      const sq=Math.min(q,b.qty);
+      if(sq>0){
+        const avg=b.qty?b.cost/b.qty:0;
+        const costOfSold=avg*sq;
+        const pl=(p*sq-fee)-costOfSold;
+        results.push({date:tr.date,sym:s,qty:sq,entry:avg,exit:p,fee,
+          pl,plPct:costOfSold?pl/costOfSold*100:null});
+        b.cost-=costOfSold; b.qty-=sq;
+        if(b.qty<1e-9){b.qty=0;b.cost=0}
+      }
+    }else{ b.cost+=p*q+fee; b.qty+=q; }
+  }
+  return results;
+}
+
+function tradeStats(res){
+  if(!res.length)return null;
+  const wins=res.filter(r=>r.pl>0), losses=res.filter(r=>r.pl<0), flat=res.filter(r=>r.pl===0);
+  const sum=a=>a.reduce((x,y)=>x+y.pl,0);
+  const grossWin=sum(wins), grossLoss=Math.abs(sum(losses));
+  const n=res.length;
+  const winRate=wins.length/n*100;
+  const avgWin=wins.length?grossWin/wins.length:0;
+  const avgLoss=losses.length?grossLoss/losses.length:0;
+  /* ค่าคาดหวังต่อไม้ = สิ่งที่บอกว่าระบบทำเงินได้จริงไหม */
+  const expectancy=(wins.length/n)*avgWin-(losses.length/n)*avgLoss;
+  /* กี่ไม้ติดกัน */
+  let curW=0,curL=0,maxW=0,maxL=0;
+  res.forEach(r=>{
+    if(r.pl>0){curW++;curL=0;maxW=Math.max(maxW,curW)}
+    else if(r.pl<0){curL++;curW=0;maxL=Math.max(maxL,curL)}
+  });
+  /* เส้นทุนสะสมและ drawdown */
+  let eq=0,peak=0,mdd=0;
+  const curve=res.map(r=>{eq+=r.pl;peak=Math.max(peak,eq);mdd=Math.min(mdd,eq-peak);return eq});
+  const best=res.reduce((a,b)=>b.pl>a.pl?b:a);
+  const worst=res.reduce((a,b)=>b.pl<a.pl?b:a);
+  return {n,wins:wins.length,losses:losses.length,flat:flat.length,winRate,
+    grossWin,grossLoss,net:grossWin-grossLoss,
+    profitFactor:grossLoss?grossWin/grossLoss:(grossWin>0?Infinity:0),
+    avgWin,avgLoss,
+    payoff:avgLoss?avgWin/avgLoss:(avgWin>0?Infinity:0),
+    expectancy,maxW,maxL,maxDD:mdd,curve,best,worst};
+}
+
+/* ความน่าเชื่อถือของสถิติตามจำนวนไม้ */
+function statQuality(n){
+  if(n<10)return {t:'ยังบอกอะไรไม่ได้',c:'var(--dn)',
+    d:'ไม้น้อยเกินไป ตัวเลขทั้งหมดเป็นเรื่องบังเอิญได้ทั้งนั้น'};
+  if(n<30)return {t:'ยังเชื่อไม่ได้',c:'var(--dn)',
+    d:'ต่ำกว่า 30 ไม้ ค่าสถิติแกว่งแรงมาก ไม้เดียวก็เปลี่ยนภาพทั้งหมด'};
+  if(n<100)return {t:'พอเห็นแนวโน้ม',c:'var(--warn)',
+    d:'เริ่มมีความหมาย แต่ยังไม่ผ่านสภาวะตลาดหลายแบบ'};
+  return {t:'มีน้ำหนักพอควร',c:'var(--up)',
+    d:'จำนวนไม้พอสมควรแล้ว แต่ยังไม่รับประกันอนาคต'};
+}
+
+/* ============================================================
+   หน้า TRADE — วิดเจ็ต TradingView + สถิติจากสมุดบันทึกของเรา
+   ============================================================ */
+const BASE='https://s3.tradingview.com/external-embedding/';
+const K={tr:'pro_tr',wl:'pro_wl',cur:'pro_cur',fx:'pro_fx'};
+const ld=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}};
+const sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+let TR=ld(K.tr,[]);
+let CUR=localStorage.getItem(K.cur)||'USD';
+const FXC=ld(K.fx,{fx:{usdthb:null}});
+const RATE=()=>(FXC&&FXC.fx&&FXC.fx.usdthb)?FXC.fx.usdthb:null;
+const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+function money(v){
+  if(v==null||!isFinite(v))return '—';
+  if(v===Infinity)return '∞';
+  if(CUR==='THB'){const r=RATE();if(!r)return '—';
+    const b=v*r;return (b<0?'-฿':'฿')+Math.abs(b).toLocaleString('en-US',{maximumFractionDigits:0})}
+  return (v<0?'-$':'$')+Math.abs(v).toLocaleString('en-US',{maximumFractionDigits:2});
+}
+const n2=v=>(v==null||!isFinite(v))?(v===Infinity?'∞':'—'):Number(v).toFixed(2);
+const cl=v=>v>0?'up':v<0?'dn':'fl';
+
+/* ---------- วิดเจ็ต ---------- */
+function tv(id,file,cfg,h){
+  const host=document.getElementById(id);if(!host)return;
+  host.innerHTML='';
+  const w=document.createElement('div');w.className='tradingview-widget-container tvwrap';
+  const inner=document.createElement('div');inner.className='tradingview-widget-container__widget';
+  if(h)inner.style.height=h;w.appendChild(inner);
+  const sc=document.createElement('script');sc.type='text/javascript';sc.async=true;
+  sc.src=BASE+file;
+  sc.innerHTML=JSON.stringify(Object.assign({colorTheme:'dark',isTransparent:true,locale:'th'},cfg));
+  w.appendChild(sc);host.appendChild(w);
+}
+const DEFWL=[{tv:'NASDAQ:AAPL',s:'AAPL'},{tv:'NASDAQ:NVDA',s:'NVDA'},{tv:'NASDAQ:MSFT',s:'MSFT'},
+ {tv:'NASDAQ:TSLA',s:'TSLA'},{tv:'NASDAQ:AMZN',s:'AMZN'},{tv:'NASDAQ:GOOGL',s:'GOOGL'},
+ {tv:'NASDAQ:META',s:'META'}];
+let WL=(()=>{const v=ld(K.wl,null);
+  return (Array.isArray(v)&&v.length)?v.map(x=>typeof x==='string'?{tv:x,s:x.split(':').pop()}:x):DEFWL})();
+let CH=WL[0].tv;
+function drawChart(){
+  const extra=[{tv:'FOREXCOM:SPXUSD',s:'S&P 500'},{tv:'TVC:GOLD',s:'ทองคำ'},
+    {tv:'BITSTAMP:BTCUSD',s:'BTC'}];
+  document.getElementById('pills').innerHTML=
+    [...WL,...extra].map(x=>'<button class="chip'+(x.tv===CH?' sel':'')+'" data-tv="'+esc(x.tv)+'">'
+      +esc(x.s)+'</button>').join('')
+    +'<input id="chIn" placeholder="พิมพ์สัญลักษณ์" style="width:130px;font-size:11.5px">';
+  document.querySelectorAll('#pills .chip').forEach(b=>b.onclick=()=>{CH=b.dataset.tv;drawChart()});
+  const ci=document.getElementById('chIn');
+  ci.onkeydown=e=>{if(e.key==='Enter'&&ci.value.trim()){CH=ci.value.toUpperCase().trim();drawChart()}};
+  tv('chart','embed-widget-advanced-chart.js',{autosize:false,width:'100%',height:620,
+    symbol:CH,interval:'D',timezone:'Asia/Bangkok',theme:'dark',style:'1',
+    hide_side_toolbar:false,allow_symbol_change:true,withdateranges:true,details:true,
+    studies:['STD;SMA','STD;RSI'],support_host:'https://www.tradingview.com'});
+}
+
+/* ---------- สถิติ ---------- */
+function draw(){
+  const res=closedTrades(TR);
+  const st=tradeStats(res);
+
+  /* สรุปย่อฝั่งขวา */
+  const q=document.getElementById('quick');
+  if(!st){
+    q.innerHTML='<div class="ld">ยังไม่มีไม้ที่ปิดจบ<br><span class="sub">บันทึกการซื้อและการขายด้านล่าง</span></div>';
+  }else{
+    q.innerHTML='<div class="sgrid">'
+      +'<div class="stat"><b class="'+cl(st.net)+'">'+money(st.net)+'</b><span>กำไรสุทธิ</span></div>'
+      +'<div class="stat"><b>'+st.n+'</b><span>ไม้ที่ปิดจบ</span></div>'
+      +'<div class="stat"><b>'+st.winRate.toFixed(0)+'%</b><span>อัตราชนะ</span></div>'
+      +'<div class="stat"><b class="'+(st.profitFactor>=1?'up':'dn')+'">'+n2(st.profitFactor)
+      +'</b><span>Profit Factor</span></div></div>';
+  }
+
+  /* สถิติเต็ม */
+  const qb=document.getElementById('qualityBox'),sb=document.getElementById('statBox');
+  if(!st){
+    qb.innerHTML='';
+    sb.innerHTML='<div class="ld">ยังไม่มีข้อมูล — บันทึกการซื้อขายด้านล่าง '
+      +'แล้วสถิติจะคำนวณให้อัตโนมัติเมื่อมีการขาย</div>';
+    document.getElementById('curveBox').innerHTML='';
+  }else{
+    const qq=statQuality(st.n);
+    qb.innerHTML='<div class="warnbox" style="border-color:'+qq.c+'33;color:'+qq.c+'">'
+      +'<b>ความน่าเชื่อถือของสถิติ: '+qq.t+'</b> (จาก '+st.n+' ไม้) — '+qq.d+'</div>';
+    sb.innerHTML='<div class="sgrid">'
+      +[['กำไรสุทธิ',money(st.net),cl(st.net)],
+        ['ไม้ที่ปิดจบ',st.n,''],
+        ['ชนะ / แพ้',st.wins+' / '+st.losses,''],
+        ['อัตราชนะ',st.winRate.toFixed(1)+'%',''],
+        ['Profit Factor',n2(st.profitFactor),st.profitFactor>=1?'up':'dn'],
+        ['ค่าคาดหวังต่อไม้',money(st.expectancy),cl(st.expectancy)],
+        ['กำไรเฉลี่ยไม้ชนะ',money(st.avgWin),'up'],
+        ['ขาดทุนเฉลี่ยไม้แพ้',money(-st.avgLoss),'dn'],
+        ['Payoff (ชนะ÷แพ้)',n2(st.payoff),st.payoff>=1?'up':'dn'],
+        ['ชนะติดกันสูงสุด',st.maxW+' ไม้','up'],
+        ['แพ้ติดกันสูงสุด',st.maxL+' ไม้','dn'],
+        ['ถอยจากยอดสูงสุด',money(st.maxDD),'dn'],
+        ['ไม้ดีที่สุด',money(st.best.pl)+' ('+esc(st.best.sym)+')','up'],
+        ['ไม้แย่ที่สุด',money(st.worst.pl)+' ('+esc(st.worst.sym)+')','dn'],
+      ].map(([l,v,c])=>'<div class="stat"><b class="'+c+'">'+v+'</b><span>'+l+'</span></div>').join('')
+      +'</div>';
+
+    /* เส้นทุนสะสม */
+    const c=st.curve,mn=Math.min(0,...c),mx=Math.max(0,...c),rg=(mx-mn)||1;
+    const W=Math.max(300,c.length*14);
+    const pts=c.map((v,i)=>(i/(Math.max(1,c.length-1))*W).toFixed(1)+','
+      +(96-(v-mn)/rg*88).toFixed(1)).join(' ');
+    const zero=(96-(0-mn)/rg*88).toFixed(1);
+    document.getElementById('curveBox').innerHTML=
+      '<div class="sub" style="margin-bottom:5px">เส้นกำไรสะสมทีละไม้</div>'
+      +'<svg viewBox="0 0 '+W+' 100" preserveAspectRatio="none" '
+      +'style="width:100%;height:120px;background:var(--bg3);border-radius:8px">'
+      +'<line x1="0" y1="'+zero+'" x2="'+W+'" y2="'+zero+'" stroke="#5d6b80" stroke-width="1" stroke-dasharray="4 4"/>'
+      +'<polyline points="'+pts+'" fill="none" stroke="'+(st.net>=0?'#22c55e':'#ef4444')+'" stroke-width="2"/>'
+      +'</svg>'
+      +'<div class="sub" style="margin-top:4px">เส้นประ = จุดคุ้มทุน · แกนนอน = ลำดับไม้ ไม่ใช่เวลา</div>';
+  }
+
+  /* สมุดบันทึก */
+  const tl=document.getElementById('trList');
+  const plBySell={};res.forEach((r,i)=>plBySell[r.date+'|'+r.sym+'|'+i]=r);
+  const sorted=TR.map((t,i)=>({...t,_i:i}))
+    .sort((a,b)=>(b.date||'').localeCompare(a.date||'')||(b.t||0)-(a.t||0));
+  tl.innerHTML=!sorted.length?'<div class="ld">ยังไม่มีรายการ</div>'
+    :'<div style="overflow-x:auto"><table><thead><tr><th>วันที่</th><th>สัญลักษณ์</th><th>ทำอะไร</th>'
+    +'<th>จำนวน</th><th>ราคา</th><th>ค่าธรรมเนียม</th><th></th></tr></thead><tbody>'
+    +sorted.map(t=>'<tr><td class="mono">'+esc(t.date)+'</td><td><b>'+esc(t.sym)+'</b></td>'
+      +'<td><span class="badge '+(t.side==='sell'?'b-l':'b-w')+'">'
+      +(t.side==='sell'?'ขาย':'ซื้อ')+'</span></td>'
+      +'<td class="mono">'+(Number(t.qty)||0)+'</td>'
+      +'<td class="mono">'+money(Number(t.price)||0)+'</td>'
+      +'<td class="mono">'+(Number(t.fee)?money(Number(t.fee)):'—')+'</td>'
+      +'<td><button class="btn xs" data-del="'+t._i+'">✕</button></td></tr>').join('')
+    +'</tbody></table></div>';
+  tl.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{
+    TR.splice(+b.dataset.del,1);sv(K.tr,TR);draw();});
+}
+
+function init(){
+  drawChart();
+  tv('heat','embed-widget-stock-heatmap.js',{dataSource:'SPX500',blockSize:'market_cap_basic',
+    blockColor:'change',grouping:'sector',width:'100%',height:300,hasTopBar:false,
+    isDataSetEnabled:false,isZoomEnabled:true,hasSymbolTooltip:true});
+  tv('scan','embed-widget-screener.js',{width:'100%',height:340,defaultColumn:'overview',
+    defaultScreen:'most_capitalized',market:'america',showToolbar:true});
+  document.getElementById('tDate').value=new Date().toISOString().slice(0,10);
+  document.getElementById('tAdd').onclick=()=>{
+    const g=id=>document.getElementById(id);
+    const sym=g('tSym').value.toUpperCase().trim();
+    const qty=Number(g('tQty').value),price=Number(g('tPrice').value);
+    if(!sym||!isFinite(qty)||qty<=0||!isFinite(price)||price<0){
+      alert('กรอกสัญลักษณ์ จำนวน และราคาให้ครบก่อน');return}
+    TR.push({date:g('tDate').value||new Date().toISOString().slice(0,10),sym,
+      side:g('tSide').value,qty,price,fee:Number(g('tFee').value)||0,t:Date.now()});
+    sv(K.tr,TR);['tSym','tQty','tPrice','tFee'].forEach(i=>g(i).value='');draw();};
+  ['tSym','tQty','tPrice','tFee'].forEach(i=>document.getElementById(i).onkeydown=e=>{
+    if(e.key==='Enter')document.getElementById('tAdd').click()});
+  document.getElementById('bExport').onclick=()=>{
+    const b=new Blob([JSON.stringify({trades:TR,exportedAt:new Date().toISOString()},null,2)],
+      {type:'application/json'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(b);
+    a.download='trades-'+new Date().toISOString().slice(0,10)+'.json';a.click();};
+  document.getElementById('bImport').onclick=()=>document.getElementById('fImp').click();
+  document.getElementById('fImp').onchange=e=>{
+    const f=e.target.files[0];if(!f)return;const r=new FileReader();
+    r.onload=()=>{try{const d=JSON.parse(r.result);
+      if(Array.isArray(d))TR=d;else if(Array.isArray(d.trades))TR=d.trades;
+      sv(K.tr,TR);draw();}catch(err){alert('ไฟล์ JSON ไม่ถูกต้อง')}};
+    r.readAsText(f);};
+  draw();
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+</script>
+<script src="theme.js"></script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+{
+  "date": "2026-10-03",
+  "body": "ตลาดสหรัฐฯ ปิดสัปดาห์แบบขึ้น หลังจากข้อมูลจ้างงานอ่อนกว่าคาด S&P 500 +0.7% ที่ 7,722.72 และ Nasdaq ไปถึงสูงสุดใหม่ที่ +1.0% ที่ 30,808 นักลงทุนลดการเดิมพันเรื่องการขึ้นอัตราดอกเบี้ยของเฟด แต่เงินไหลกลับเข้าตลาด โดยเฉพาะหุ้นเทค\n\nข้อเท็จจริง: ทองคำอยู่ที่ $4,167-4,182 ต่อออนซ์ Bitcoin ที่ $84,606 Meta เผชิญความกดดันจากค่าใช้จ่าย AI แต่แสดงสัญญาณบวกจากการตัดค่าใช้จ่าย Reality Labs Nvidia ยังแกร่งกับ Revenue ขึ้น 62% YoY\n\nมุมมอง: ตลาดเลิกกลัวการขึ้นอัตราดอกเบี้ย เลิ้มมอง Fed ว่าจะหยุด (Pause) หรือแม้กระทั่งลดลง หากเศรษฐกิจชะลอตัว ต้องจับตา CPI อพยพเดือนกันยายน (14 ตุลาคม) เป็นตัวเลขสำคัญที่สุด\n\nสัปดาห์หน้า (5-9 ตุลาคม): Leading Economic Index (5ต.ค.) และ Consumer Sentiment (9ต.ค.) สัปดาห์ถัด (14-15ต.ค.): CPI, PPI และ Retail Sales - ตัวเลขหลักที่กำหนดทิศทาง Fed",
+  "sources": [
+    {
+      "name": "Yahoo Finance: S&P 500, Nasdaq, Dow End Week Higher",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/p-500-nasdaq-dow-end-222859024.html"
+    },
+    {
+      "name": "CNBC: Stock market today",
+      "url": "https://www.cnbc.com/2026/10/01/stock-market-today-live-updates-.html"
+    },
+    {
+      "name": "TradingView: XAU/USD Chart",
+      "url": "https://www.tradingview.com/symbols/XAUUSD/"
+    },
+    {
+      "name": "CoinDesk: Bitcoin Price",
+      "url": "https://www.coindesk.com/price/bitcoin"
+    },
+    {
+      "name": "Trading Economics: US Economic Calendar",
+      "url": "https://tradingeconomics.com/united-states/calendar"
+    },
+    {
+      "name": "Yahoo Finance: Tech Stocks",
+      "url": "https://finance.yahoo.com/quotes/AAPL%2CMSFT%2CAMZN%2CNVDA%2CGOOGL%2CMETA%2CTSLA"
+    }
+  ]
+}

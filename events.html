@@ -1,0 +1,738 @@
+<!DOCTYPE html><html lang="th"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ปฏิทินเหตุการณ์ — Trading Dashboard</title>
+<style>
+:root{--bg:#0a0d13;--bg2:#10151e;--bg3:#161d29;--line:#222c3d;--tx:#e8eef8;
+--tx2:#96a3b8;--tx3:#5c6a80;--accent:#f5b942;--glow:245,185,66;--acc:#3b82f6;
+--up:#34C27D;--dn:#E5645A;--warn:#f59e0b;--pur:#a78bfa;--gold:#d4a843;--btc:#f7931a}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-size:14px;line-height:1.55;padding-bottom:40px;
+font-family:-apple-system,'Segoe UI','Leelawadee UI','Noto Sans Thai',Tahoma,sans-serif}
+.mono{font-family:ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+.up{color:var(--up)}.dn{color:var(--dn)}.fl{color:var(--tx2)}
+button{font-family:inherit;cursor:pointer}a{color:var(--acc);text-decoration:none}
+a:hover{text-decoration:underline}
+header{position:sticky;top:0;z-index:50;background:rgba(10,13,19,.96);
+backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.hbar{display:flex;align-items:center;gap:12px;padding:9px 16px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:15px}.logo span{color:var(--accent)}
+nav{display:flex;gap:2px;margin-left:6px;flex-wrap:wrap}
+nav a{color:var(--tx3);padding:6px 12px;font-size:12.5px;font-weight:600;border-radius:7px}
+nav a.on{color:var(--tx);background:var(--bg3)}
+.right{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{background:var(--bg3);border:1px solid var(--line);color:var(--tx2);
+padding:5px 11px;border-radius:7px;font-size:12px}
+.btn:hover{color:var(--tx)}
+.btn.go{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn.on{background:rgba(var(--glow),.16);border-color:var(--accent);color:var(--accent);font-weight:600}
+.btn.sm{padding:2px 7px;font-size:11px}
+main{padding:18px;max-width:1500px;margin:0 auto}
+h1{font-size:27px;font-weight:800;letter-spacing:-.02em}
+.lead{font-size:12.5px;color:var(--tx2);margin:3px 0 14px;max-width:80ch;line-height:1.7}
+.sub{font-size:11px;color:var(--tx3);font-weight:400}
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:16px;margin-bottom:12px}
+.card h3{font-size:13px;font-weight:700;margin-bottom:11px;display:flex;align-items:center;gap:8px}
+.cal{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}
+.cd{background:var(--bg3);border:1px solid var(--line);border-radius:9px;padding:10px 11px;min-height:104px}
+.cd.today{border-color:var(--accent);box-shadow:0 0 0 1px rgba(var(--glow),.25)}
+.cd .cdh{font-size:12px;font-weight:700}
+.cd .cdh b{font-size:17px;margin-left:3px}
+.cd .cdn{font-size:10px;color:var(--tx3);margin-bottom:6px}
+.cd .ci{font-size:11px;line-height:1.5;margin-bottom:3px;display:flex;gap:5px;align-items:flex-start}
+.cd .ci i{font-style:normal;flex:none}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:9px;margin-bottom:12px}
+.kpi{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:12px 14px;
+display:flex;gap:11px;align-items:center}
+.kpi .ic{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;
+font-size:16px;flex:none;background:rgba(255,255,255,.06)}
+.kpi .n{font-size:10.5px;color:var(--tx3)}
+.kpi .v{font-size:21px;font-weight:800;letter-spacing:-.02em;line-height:1.15}
+.kpi .s{font-size:10px;color:var(--tx3)}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{text-align:right;font-size:10px;color:var(--tx3);font-weight:600;padding:7px 6px;
+border-bottom:1px solid var(--line);text-transform:uppercase;letter-spacing:.07em;
+cursor:pointer;white-space:nowrap}
+th:hover{color:var(--tx2)}th.srt{color:var(--accent)}
+th:first-child,td:first-child{text-align:left}
+td{padding:7px 6px;border-bottom:1px solid rgba(34,44,61,.5);text-align:right;white-space:nowrap}
+tbody tr:hover{background:rgba(255,255,255,.025)}
+.tag{display:inline-block;font-size:9.5px;padding:1px 7px;border-radius:4px;font-weight:700}
+.t-up{background:rgba(52,194,125,.18);color:var(--up)}
+.t-dn{background:rgba(229,100,90,.18);color:var(--dn)}
+.t-eq{background:rgba(148,163,184,.14);color:var(--tx2)}
+.t-ed{background:rgba(59,130,246,.16);color:var(--acc)}
+.t-hi{background:rgba(229,100,90,.2);color:var(--dn)}
+.t-md{background:rgba(245,158,11,.18);color:var(--warn)}
+.t-lo{background:rgba(148,163,184,.14);color:var(--tx2)}
+.bar{height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;width:42px;
+display:inline-block;vertical-align:middle;margin-left:5px}
+.bar i{display:block;height:100%;background:var(--accent)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:11px}
+input,select,textarea{background:var(--bg3);border:1px solid var(--line);color:var(--tx);
+border-radius:6px;padding:5px 9px;font-family:inherit;font-size:12.5px}
+textarea{width:100%;min-height:86px;font-family:ui-monospace,monospace;font-size:11.5px;line-height:1.6}
+.frm{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:9px}
+.frm label{display:flex;flex-direction:column;gap:3px;font-size:10.5px;color:var(--tx3)}
+.ld{color:var(--tx3);text-align:center;padding:24px 0;font-size:12.5px;line-height:1.9}
+.warnbox{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.28);
+border-radius:9px;padding:12px 14px;font-size:11.5px;color:var(--warn);line-height:1.8;margin-bottom:12px}
+.warnbox b{color:#ffd37a}
+.infobox{background:rgba(59,130,246,.07);border:1px solid rgba(59,130,246,.25);
+border-radius:9px;padding:11px 13px;font-size:11.5px;color:var(--tx2);line-height:1.75;margin-bottom:12px}
+.note{font-size:10.5px;color:var(--tx3);line-height:1.75;margin-top:11px;
+padding-top:10px;border-top:1px dashed var(--line)}
+.evl{display:flex;flex-direction:column;gap:7px}
+.ev{display:flex;gap:10px;align-items:flex-start;background:var(--bg3);
+border:1px solid var(--line);border-radius:8px;padding:9px 11px}
+.ev .d{font-size:11px;color:var(--tx3);width:84px;flex:none}
+.ev .t{font-size:12.5px;flex:1}
+.ev .ic{font-size:15px;flex:none}
+.wl{display:flex;gap:5px;flex-wrap:wrap;align-items:center}
+.wl .s{background:var(--bg3);border:1px solid var(--line);border-radius:6px;
+padding:3px 6px 3px 9px;font-size:12px;font-weight:600;display:flex;align-items:center;gap:5px}
+.wl .s i{cursor:pointer;color:var(--tx3);font-style:normal;font-size:14px;line-height:1}
+.wl .s i:hover{color:var(--dn)}
+.hid{display:none}
+@media(max-width:800px){.cal{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){main{padding:12px}h1{font-size:22px}}
+</style>
+<link rel="stylesheet" href="theme.css">
+</head><body>
+
+<header><div class="hbar">
+  <div class="logo">TRADING <span>DASHBOARD</span></div>
+  <nav>
+    <a href="brief.html">BRIEF</a><a href="events.html" class="on">EVENTS</a>
+    <a href="scanner.html">SCANNER</a><a href="flow.html">FLOW</a>
+    <a href="weekly.html">WEEKLY</a><a href="index.html">PORT</a>
+    <a href="trade.html">TRADE</a><a href="macro.html">MACRO</a>
+    <a href="bot.html">BOT</a><a href="market.html">MARKET</a>
+  </nav>
+  <div class="right">
+    <span id="msg" class="sub"></span>
+    <button class="btn" id="bAdd">+ เพิ่มเอง</button>
+    <button class="btn" id="bPx">↻ ราคา</button>
+    <button class="btn go" id="bLoad">↻ โหลดข้อมูล</button>
+  </div>
+</div></header>
+
+<main>
+  <h1>📅 ปฏิทินเหตุการณ์</h1>
+  <div class="lead">หุ้นสหรัฐฯ · ทองคำ · Bitcoin — งบที่จะประกาศ ตัวเลขเศรษฐกิจ และเหตุการณ์ที่ขยับราคา</div>
+
+  <div id="status"></div>
+
+  <div class="card">
+    <h3>📅 สัปดาห์นี้ <span class="sub" id="calWeek"></span></h3>
+    <div class="cal" id="cal"></div>
+    <div class="note">กำหนดการเปลี่ยนได้ตลอด โดยเฉพาะวันประกาศงบที่บริษัทเลื่อนเองได้ —
+      ยืนยันกับแหล่งต้นทางก่อนวางแผนเทรด</div>
+  </div>
+
+  <div class="kpis" id="kpis"></div>
+
+  <div class="card">
+    <h3>💼 งบหุ้นสหรัฐฯ <span class="sub">EPS จริง เทียบ ที่ตลาดคาด</span></h3>
+    <div class="chips" id="chips"></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+      <input id="q" placeholder="ค้นหาชื่อหุ้น..." style="width:160px">
+      <span class="sub" style="align-self:center">พบ <b id="n" style="color:var(--accent);font-size:14px">0</b> รายการ</span>
+    </div>
+    <div style="overflow:auto"><div id="tbl"></div></div>
+    <div class="note" id="foot"></div>
+  </div>
+
+  <div class="card">
+    <h3>🌍 เหตุการณ์มหภาค · ทอง · คริปโต</h3>
+    <div class="chips" id="evChips"></div>
+    <div class="evl" id="evl"></div>
+    <div class="note">เหตุการณ์ที่ขยับทองและ Bitcoin มากที่สุดคือดอกเบี้ย เงินเฟ้อ
+      และทิศทางดอลลาร์ — ทั้งคู่ไม่มีงบการเงิน จึงดูจากปฏิทินนี้แทน</div>
+  </div>
+
+  <div class="card">
+    <h3>🗓 ปฏิทินเศรษฐกิจสด <span class="sub">อัปเดตอัตโนมัติจาก TradingView</span></h3>
+    <div id="tvcal"></div>
+  </div>
+
+  <div class="card">
+    <h3>📋 หุ้นที่ติดตาม <span class="sub">ใช้กรองตารางงบ · เก็บไว้ในเครื่องคุณ</span></h3>
+    <div class="wl" id="wl"></div>
+    <div style="margin-top:9px;display:flex;gap:6px;flex-wrap:wrap">
+      <input id="wlAdd" placeholder="เช่น AAPL NVDA" style="width:170px">
+      <button class="btn" id="bWlAdd">เพิ่ม</button>
+      <button class="btn" id="bWlClear">ล้าง (แสดงทุกตัว)</button>
+    </div>
+  </div>
+
+  <div class="card hid" id="formCard">
+    <h3>✏️ เพิ่ม / แก้ข้อมูลเอง</h3>
+    <div class="chips">
+      <button class="btn on" data-mode="er">งบหุ้น</button>
+      <button class="btn" data-mode="ev">เหตุการณ์</button>
+    </div>
+
+    <div id="erForm">
+      <div class="frm">
+        <label>ชื่อย่อ<input id="fSym" placeholder="AAPL"></label>
+        <label>งวด<input id="fPer" placeholder="Q4 FY26"></label>
+        <label>วันประกาศ<input id="fDate" type="date"></label>
+        <label>เวลา<select id="fWhen">
+          <option value="">ไม่ระบุ</option>
+          <option value="bmo">ก่อนตลาดเปิด</option>
+          <option value="amc">หลังตลาดปิด</option></select></label>
+        <label>EPS จริง<input id="fEps" type="number" step="any" placeholder="1.64"></label>
+        <label>EPS ที่คาด<input id="fEst" type="number" step="any" placeholder="1.60"></label>
+        <label>รายได้ (ล้าน $)<input id="fRev" type="number" step="any" placeholder="เว้นว่างได้"></label>
+        <label>รายได้ที่คาด<input id="fRevEst" type="number" step="any" placeholder="เว้นว่างได้"></label>
+        <label>ลิงก์แหล่งที่มา<input id="fSrc" placeholder="https://..."></label>
+      </div>
+      <div style="display:flex;gap:7px;flex-wrap:wrap">
+        <button class="btn go" id="bSave">บันทึก</button>
+        <button class="btn" id="bDel">ลบรายการนี้</button>
+        <span class="sub" style="align-self:center">บันทึกทับของเดิมถ้าชื่อย่อ+งวดซ้ำ</span>
+      </div>
+      <div style="margin-top:13px">
+        <div class="sub" style="margin-bottom:5px">หรือวางหลายรายการ — หนึ่งบรรทัดต่อหนึ่งงวด:
+          <b>ชื่อย่อ, งวด, วันประกาศ, EPS จริง, EPS ที่คาด, รายได้, รายได้ที่คาด</b></div>
+        <textarea id="paste" placeholder="AAPL, Q4 FY26, 2026-10-30, 1.64, 1.60, 94500, 94000
+NVDA, Q3 FY27, 2026-11-19, , 1.20, , 54000"></textarea>
+        <button class="btn" id="bPaste" style="margin-top:7px">นำเข้าจากข้อความ</button>
+        <span class="sub" id="pasteMsg"></span>
+      </div>
+    </div>
+
+    <div id="evForm" class="hid">
+      <div class="frm">
+        <label>วันที่<input id="gDate" type="date"></label>
+        <label>หมวด<select id="gCat">
+          <option value="macro">มหภาค</option>
+          <option value="gold">ทองคำ</option>
+          <option value="crypto">คริปโต</option></select></label>
+        <label>ความสำคัญ<select id="gImp">
+          <option value="high">สูง</option>
+          <option value="med">กลาง</option>
+          <option value="low">ต่ำ</option></select></label>
+        <label>ชื่อเหตุการณ์<input id="gTitle" placeholder="FOMC ประกาศดอกเบี้ย"></label>
+        <label>ลิงก์<input id="gSrc" placeholder="https://..."></label>
+      </div>
+      <div style="display:flex;gap:7px;flex-wrap:wrap">
+        <button class="btn go" id="bGSave">บันทึก</button>
+        <button class="btn" id="bGDel">ลบ</button>
+      </div>
+    </div>
+
+    <div style="margin-top:11px">
+      <button class="btn" id="bClose">ปิดหน้าต่างนี้</button>
+    </div>
+  </div>
+</main>
+
+<script src="engine.js"></script>
+<script>
+/* ============================================================
+   ปฏิทินเหตุการณ์ — หุ้นสหรัฐฯ · ทอง · Bitcoin
+   ตัวเลขงบมาจากไฟล์อัตโนมัติหรือที่กรอกเอง
+   ส่วนปฏิกิริยาราคา / RS / เทรนด์ คำนวณสดจากราคาจริง
+   ============================================================ */
+const E=SCANENG;
+const KWL='ev_wl_v1', KER='ev_er_v1', KEV='ev_ev_v1', KPX='ev_px_v1';
+const PROX=[u=>'https://api.allorigins.win/raw?url='+encodeURIComponent(u),
+  u=>'https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent(u),
+  u=>'https://corsproxy.io/?url='+encodeURIComponent(u)];
+const CAT={macro:{i:'🏛',n:'มหภาค'},gold:{i:'🥇',n:'ทองคำ'},
+  crypto:{i:'₿',n:'คริปโต'},earn:{i:'💼',n:'งบ'}};
+const IMP={high:['t-hi','สูง'],med:['t-md','กลาง'],low:['t-lo','ต่ำ']};
+
+let AUTO=null, ER={}, EV={}, WL=[], PX=null, SCAN=null;
+let FILT='all', EVFILT='all', SORT={k:'date',d:-1}, FMODE='er';
+
+const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+  .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const pc=v=>v==null?'—':(v>=0?'+':'')+v.toFixed(1)+'%';
+const cl2=v=>v==null?'fl':v>0?'up':v<0?'dn':'fl';
+const nm=(v,d)=>v==null?'—':Number(v).toLocaleString('en-US',
+  {minimumFractionDigits:d==null?2:d,maximumFractionDigits:d==null?2:d});
+function num(v){
+  if(v==null)return null;
+  if(typeof v==='string'){ v=v.trim().replace(/,/g,''); if(v==='')return null }
+  const x=Number(v);
+  return isFinite(x)?x:null;
+}
+/* วันที่แบบท้องถิ่น — ห้ามใช้ toISOString เพราะมันแปลงเป็น UTC
+   เครื่องอยู่ UTC+7 ถ้าเปิดก่อนเจ็ดโมงเช้า ปฏิทินจะเลื่อนถอยไปทั้งสัปดาห์ */
+function ymd(d){
+  const p=n=>String(n).padStart(2,'0');
+  return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());
+}
+
+/* ============================================================
+   เซอร์ไพรส์ = EPS จริง ต่างจากที่ตลาดคาดกี่เปอร์เซ็นต์
+   ตัวหารต้องใช้ "ค่าสัมบูรณ์" ของตัวเลขที่คาด
+   ไม่งั้นตอนที่ตลาดคาดว่าจะขาดทุน เครื่องหมายจะกลับด้าน
+   เช่น คาดขาดทุน 0.50 ออกมาขาดทุน 0.20 = ดีกว่าคาด
+   ถ้าหารด้วย -0.50 ตรงๆ จะได้ -60% ทั้งที่ควรเป็น +60%
+   ============================================================ */
+function surprise(act,est){
+  if(act==null||est==null)return {kind:'na',pct:null,label:'—'};
+  const diff=act-est;
+  const kind=diff>0?'beat':diff<0?'miss':'inline';
+  const label=diff>0?'ดีกว่าคาด':diff<0?'ต่ำกว่าคาด':'ตรงตามคาด';
+  if(est===0)return {kind,pct:null,label};     /* คาดไว้ศูนย์ คิดเป็น % ไม่ได้ */
+  return {kind,pct:diff/Math.abs(est)*100,label};
+}
+function surHtml(s){
+  if(s.kind==='na')return '<span class="fl">—</span>';
+  const cls=s.kind==='beat'?'t-up':s.kind==='miss'?'t-dn':'t-eq';
+  const p=s.pct==null?'':' <span class="mono '+(s.pct>=0?'up':'dn')+'">'
+    +(s.pct>=0?'+':'')+s.pct.toFixed(1)+'%</span>';
+  return '<span class="tag '+cls+'">'+s.label+'</span>'+p;
+}
+
+/* ============================================================
+   ปฏิกิริยาราคาต่อข่าว
+   first  = แท่งแรกตั้งแต่วันประกาศ เทียบกับแท่งก่อนหน้า
+   since  = ราคาปิดล่าสุด เทียบกับแท่งก่อนวันประกาศ
+   ถ้าข่าวยังไม่ถึง หรือหาแท่งก่อนหน้าไม่เจอ ให้คืน null ไม่เดา
+   ============================================================ */
+function reaction(bars,date,when){
+  const out={first:null,since:null,firstDate:null};
+  if(!bars||!bars.length||!date)return out;
+  const d=String(date).slice(0,10);
+  /* ประกาศ "หลังตลาดปิด" ตลาดจะตอบสนองวันทำการถัดไป ไม่ใช่วันเดียวกัน
+     ฐานที่ใช้เทียบจึงเป็นราคาปิดของวันประกาศเอง
+     ถ้าใช้กฎเดียวกับ "ก่อนเปิด" จะเลื่อนผิดไปหนึ่งวันทุกครั้ง */
+  let iBase=-1;
+  if(when==='amc'){
+    for(let i=0;i<bars.length;i++){ if(bars[i].d<=d)iBase=i; else break }
+  }else{
+    for(let i=0;i<bars.length;i++){ if(bars[i].d<d)iBase=i; else break }
+  }
+  if(iBase<0)return out;                      /* ไม่มีราคาก่อนข่าว */
+  const base=bars[iBase].c;
+  if(!(base>0))return out;
+  const iFirst=iBase+1;
+  if(iFirst<bars.length){
+    out.first=(bars[iFirst].c/base-1)*100;
+    out.firstDate=bars[iFirst].d;
+    out.since=(bars[bars.length-1].c/base-1)*100;
+  }
+  return out;
+}
+
+/* ---------- เก็บ/อ่านค่า ---------- */
+function loadLocal(){
+  const g=(k,d)=>{ try{const v=JSON.parse(localStorage.getItem(k)); return v==null?d:v}
+    catch(e){ return d } };
+  const w=g(KWL,null); if(Array.isArray(w))WL=w;
+  const a=g(KER,null); if(a&&typeof a==='object')ER=a;
+  const b=g(KEV,null); if(b&&typeof b==='object')EV=b;
+  const p=g(KPX,null); if(p&&p.t&&Date.now()-p.t<18*36e5)PX=p;
+}
+const sv=(k,v)=>{ try{localStorage.setItem(k,JSON.stringify(v))}catch(e){} };
+const keyOf=(s,p)=>String(s).toUpperCase()+'|'+String(p);
+const evKey=(d,t)=>String(d)+'|'+String(t);
+
+/* ---------- รวมข้อมูล ---------- */
+function earnRows(){
+  const o={};
+  if(AUTO&&Array.isArray(AUTO.earnings))
+    AUTO.earnings.forEach(r=>{ if(r&&r.sym&&r.period)
+      o[keyOf(r.sym,r.period)]=Object.assign({},r,{src2:'auto'}) });
+  Object.keys(ER).forEach(k=>{ o[k]=Object.assign({},ER[k],{src2:'manual'}) });
+  let L=Object.keys(o).map(k=>{
+    const r=o[k], sym=String(r.sym).toUpperCase();
+    const eps=num(r.eps), est=num(r.epsEst);
+    const rev=num(r.rev), revEst=num(r.revEst);
+    const bars=PX&&PX.data?PX.data[sym]:null;
+    const rc=reaction(bars,r.date,r.when);
+    const m=SCAN&&SCAN[sym]?SCAN[sym]:null;
+    return Object.assign({},r,{sym,eps,est,rev,revEst,
+      sur:surprise(eps,est), revSur:surprise(rev,revEst),
+      first:rc.first, since:rc.since, firstDate:rc.firstDate,
+      rs:m?m.rs:null, trend:m?m.trend:null, perf1m:m?m.perf1m:null,
+      done: eps!=null});
+  });
+  if(WL.length)L=L.filter(r=>WL.indexOf(r.sym)>=0);
+  return L;
+}
+function evRows(){
+  const o={};
+  if(AUTO&&Array.isArray(AUTO.events))
+    AUTO.events.forEach(e=>{ if(e&&e.date&&e.title)
+      o[evKey(e.date,e.title)]=Object.assign({},e,{src2:'auto'}) });
+  Object.keys(EV).forEach(k=>{ o[k]=Object.assign({},EV[k],{src2:'manual'}) });
+  return Object.keys(o).map(k=>o[k])
+    .sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+}
+
+/* ---------- โหลดไฟล์ ---------- */
+async function load(){
+  const m=document.getElementById('msg');
+  m.textContent='กำลังโหลด...';
+  try{
+    const r=await fetch('events-latest.json?t='+Date.now(),{cache:'no-store'});
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    AUTO=await r.json();
+  }catch(e){ AUTO=null }
+  try{                       /* ถ้ามีผลสแกน ใช้ RS ของจริงที่เทียบทั้งยูนิเวิร์ส */
+    const r=await fetch('scan.json?t='+Date.now(),{cache:'no-store'});
+    if(r.ok){
+      const j=await r.json();
+      if(j&&j.rows){
+        SCAN={};
+        j.rows.forEach(x=>SCAN[x.s]={rs:x.rs,trend:x.ttp,perf1m:x.c21,univ:j.scanned});
+      }
+    }
+  }catch(e){}
+  m.textContent='';
+  render();
+}
+/* ---------- ดึงราคาเพื่อคำนวณปฏิกิริยา ---------- */
+async function csv(sym){
+  const url='https://stooq.com/q/d/l/?s='+E.stooqSym(sym)+'&i=d';
+  const t=await Promise.any(PROX.map(f=>fetch(f(url),{cache:'no-store'})
+    .then(r=>r.ok?r.text():Promise.reject(new Error('x')))));
+  return E.parseCsv(t);
+}
+async function loadPx(){
+  const syms=[...new Set(earnRows().map(r=>r.sym))];
+  if(!syms.length){ alert('ยังไม่มีหุ้นในตาราง'); return }
+  const m=document.getElementById('msg'), b=document.getElementById('bPx');
+  b.disabled=true;
+  const q=syms.slice(), data={}, bad=[]; let n=0;
+  async function w(){
+    while(q.length){
+      const s=q.shift();
+      try{ const r=await csv(s); if(r)data[s]=r; else bad.push(s) }catch(e){ bad.push(s) }
+      n++; m.textContent='ดึงราคา '+n+'/'+syms.length;
+    }
+  }
+  await Promise.all([w(),w(),w()]);
+  b.disabled=false; m.textContent='';
+  PX={t:Date.now(),data,bad};
+  sv(KPX,PX);
+  render();
+}
+
+/* ---------- ปฏิทิน ---------- */
+function weekDays(){
+  const now=new Date();
+  const th=new Date(now.toLocaleString('en-US',{timeZone:'Asia/Bangkok'}));
+  const dow=th.getDay();
+  const back=dow===0?6:dow-1;
+  const mon=new Date(th); mon.setDate(th.getDate()-back);
+  const todayKey=ymd(th);
+  const N=['จ.','อ.','พ.','พฤ.','ศ.'];
+  return Array.from({length:5},(_,i)=>{
+    const d=new Date(mon); d.setDate(mon.getDate()+i);
+    const k=ymd(d);
+    return {k,n:N[i],day:d.getDate(),today:k===todayKey};
+  });
+}
+
+/* ---------- วาดหน้า ---------- */
+function render(){
+  const ers=earnRows(), evs=evRows();
+  const manN=Object.keys(ER).length+Object.keys(EV).length;
+
+  /* --- สถานะ --- */
+  let st='';
+  if(!AUTO&&!manN){
+    st='<div class="infobox"><b>ยังไม่มีข้อมูล</b><br>'
+      +'หน้านี้รับข้อมูลได้ 2 ทาง<br>'
+      +'<b>1. งานอัตโนมัติ</b> — ค้นกำหนดการงบและเหตุการณ์ทุกสัปดาห์ '
+      +'แล้วเขียนไฟล์ <b>events-latest.json</b> ซึ่งต้องอัปขึ้น GitHub ด้วย<br>'
+      +'<b>2. กดปุ่ม “+ เพิ่มเอง”</b> มุมขวาบน กรอกหรือวางทีละหลายรายการได้</div>';
+  }else{
+    const age=AUTO&&AUTO.generated
+      ? (Date.now()-new Date(AUTO.generated).getTime())/864e5 : null;
+    st='<div class="infobox">'
+      +(AUTO?('อัตโนมัติ: งบ '+((AUTO.earnings||[]).length)+' · เหตุการณ์ '
+        +((AUTO.events||[]).length)
+        +(age!=null?' · อัปเดตเมื่อ '+Math.round(age)+' วันก่อน':'')):'ยังไม่มีไฟล์อัตโนมัติ')
+      +(manN?' · กรอกเอง '+manN+' รายการ (ทับของอัตโนมัติเมื่อซ้ำ)':'')
+      +(PX?' · ราคาอัปเดตเมื่อ '+Math.round((Date.now()-PX.t)/36e5)+' ชม.ก่อน':'')
+      +(SCAN?' · RS เทียบ '+(Object.values(SCAN)[0]||{}).univ+' ตัวจากผลสแกน'
+            :' · <span style="color:var(--warn)">ยังไม่มี scan.json จึงไม่มี RS</span>')
+      +'</div>';
+    if(age!=null&&age>10)
+      st+='<div class="warnbox">ข้อมูลอัตโนมัติเก่า '+Math.round(age)
+        +' วันแล้ว อาจตกกำหนดการที่เพิ่งเปลี่ยน</div>';
+  }
+  st+='<div class="warnbox"><b>ตัวเลขงบและกำหนดการมาจากการค้นข่าว ไม่ได้ดึงจากบริษัทโดยตรง</b> '
+    +'— บริษัทเลื่อนวันประกาศได้ และตัวเลขที่ตลาดคาดต่างกันไปตามสำนัก '
+    +'<b>ก่อนเทรดรอบประกาศงบ ให้ยืนยันกับแหล่งต้นทางทุกครั้ง</b><br>'
+    +'ส่วนที่คำนวณจากราคาจริง (ปฏิกิริยาราคา · RS · เทรนด์) เชื่อถือได้ตามข้อมูลราคาที่ดึงมา</div>';
+  document.getElementById('status').innerHTML=st;
+
+  /* --- หุ้นที่ติดตาม --- */
+  document.getElementById('wl').innerHTML= WL.length
+    ? WL.map(s=>'<span class="s">'+esc(s)+'<i data-del="'+esc(s)+'">×</i></span>').join('')
+    : '<span class="sub">ยังไม่ได้เลือก — แสดงงบทุกตัวที่มีข้อมูล</span>';
+
+  /* --- ปฏิทินสัปดาห์ --- */
+  const wd=weekDays();
+  const byDay={};
+  ers.forEach(r=>{
+    const d=String(r.date||'').slice(0,10);
+    if(!wd.some(x=>x.k===d))return;
+    (byDay[d]=byDay[d]||[]).push({i:'💼',t:r.sym+(r.when==='bmo'?' (ก่อนเปิด)'
+      :r.when==='amc'?' (หลังปิด)':'')});
+  });
+  evs.forEach(e=>{
+    const d=String(e.date||'').slice(0,10);
+    if(!wd.some(x=>x.k===d))return;
+    (byDay[d]=byDay[d]||[]).push({i:(CAT[e.cat]||CAT.macro).i,t:e.title});
+  });
+  document.getElementById('calWeek').textContent=wd[0].k+' ถึง '+wd[4].k;
+  document.getElementById('cal').innerHTML=wd.map(d=>{
+    const L=byDay[d.k]||[];
+    return '<div class="cd'+(d.today?' today':'')+'">'
+      +'<div class="cdh">'+d.n+'<b>'+d.day+'</b></div>'
+      +'<div class="cdn">'+(L.length?L.length+' รายการ':'ไม่มีรายการ')+'</div>'
+      +L.slice(0,5).map(x=>'<div class="ci"><i>'+x.i+'</i><span>'+esc(x.t)+'</span></div>').join('')
+      +(L.length>5?'<div class="sub">และอีก '+(L.length-5)+'</div>':'')+'</div>';
+  }).join('');
+
+  /* --- ตัวเลขสรุป --- */
+  const done=ers.filter(r=>r.done);
+  const beat=done.filter(r=>r.sur.kind==='beat').length;
+  const miss=done.filter(r=>r.sur.kind==='miss').length;
+  const upcoming=ers.filter(r=>!r.done).length;
+  const bigEv=evs.filter(e=>e.impact==='high').length;
+  const K=[
+    ['💼','ประกาศแล้ว',done.length+' บริษัท','ยังไม่ประกาศ '+upcoming],
+    ['✅','ดีกว่าที่คาด',beat+' บริษัท',
+      done.length?Math.round(beat/done.length*100)+'% ของที่ประกาศ':'—'],
+    ['❌','ต่ำกว่าที่คาด',miss+' บริษัท',
+      done.length-beat-miss>0?'ตรงตามคาด '+(done.length-beat-miss):''],
+    ['🏛','เหตุการณ์สำคัญ',bigEv+' รายการ','ความสำคัญสูง']
+  ];
+  document.getElementById('kpis').innerHTML=K.map(k=>
+    '<div class="kpi"><div class="ic">'+k[0]+'</div><div>'
+    +'<div class="n">'+k[1]+'</div><div class="v">'+k[2]+'</div>'
+    +'<div class="s">'+esc(k[3])+'</div></div></div>').join('');
+
+  /* --- ตารางงบ --- */
+  const FS=[['all','ทั้งหมด'],['done','ประกาศแล้ว'],['todo','ยังไม่ประกาศ'],
+    ['beat','ดีกว่าคาด'],['miss','ต่ำกว่าคาด']];
+  document.getElementById('chips').innerHTML=FS.map(f=>
+    '<button class="btn'+(FILT===f[0]?' on':'')+'" data-fl="'+f[0]+'">'+f[1]+'</button>').join('');
+  const q=document.getElementById('q').value.trim().toUpperCase();
+  let L=ers.filter(r=>{
+    if(q&&r.sym.indexOf(q)<0)return false;
+    if(FILT==='done')return r.done;
+    if(FILT==='todo')return !r.done;
+    if(FILT==='beat')return r.sur.kind==='beat';
+    if(FILT==='miss')return r.sur.kind==='miss';
+    return true;
+  });
+  const k=SORT.k;
+  L.sort((a,b)=>{
+    if(k==='sym'||k==='date'||k==='period')
+      return SORT.d*String(a[k]||'').localeCompare(String(b[k]||''));
+    let x = k==='sur' ? a.sur.pct : a[k];
+    let y = k==='sur' ? b.sur.pct : b[k];
+    if(x==null&&y==null)return 0;
+    if(x==null)return 1; if(y==null)return -1;   /* ไม่มีค่า ไปท้ายเสมอ */
+    return SORT.d*(x-y);
+  });
+  document.getElementById('n').textContent=L.length;
+  const C=[['date','วันประกาศ'],['sym','หุ้น'],['period','งวด'],
+    ['eps','EPS จริง'],['est','ที่คาด'],['sur','เซอร์ไพรส์'],
+    ['first','ปฏิกิริยาแรก'],['since','ตั้งแต่ประกาศ'],
+    ['rs','RS'],['perf1m','1 เดือน'],['_a','']];
+  document.getElementById('tbl').innerHTML= L.length
+    ? '<table><thead><tr>'+C.map(c=>'<th data-k="'+c[0]+'" class="'
+      +(SORT.k===c[0]?'srt':'')+'">'+c[1]+(SORT.k===c[0]?(SORT.d<0?' ▼':' ▲'):'')
+      +'</th>').join('')+'</tr></thead><tbody>'
+      +L.map(r=>'<tr>'
+        +'<td class="sub">'+esc(String(r.date||'').slice(0,10))
+          +(r.when==='bmo'?' <span class="sub">ก่อนเปิด</span>'
+           :r.when==='amc'?' <span class="sub">หลังปิด</span>':'')+'</td>'
+        +'<td><b>'+esc(r.sym)+'</b>'
+          +(r.src2==='manual'?' <span class="tag t-ed">กรอกเอง</span>':'')+'</td>'
+        +'<td class="sub">'+esc(r.period||'')+'</td>'
+        +'<td class="mono">'+(r.eps==null?'<span class="fl">ยังไม่ประกาศ</span>':nm(r.eps))+'</td>'
+        +'<td class="mono fl">'+nm(r.est)+'</td>'
+        +'<td>'+surHtml(r.sur)+'</td>'
+        +'<td class="mono '+cl2(r.first)+'">'+pc(r.first)+'</td>'
+        +'<td class="mono '+cl2(r.since)+'">'+pc(r.since)+'</td>'
+        +'<td class="mono">'+(r.rs==null?'<span class="fl">—</span>'
+          :r.rs+'<span class="bar"><i style="width:'+r.rs+'%"></i></span>')+'</td>'
+        +'<td class="mono '+cl2(r.perf1m)+'">'+pc(r.perf1m)+'</td>'
+        +'<td>'+(r.src?'<a href="'+esc(r.src)+'" target="_blank" rel="noopener noreferrer">📄</a> ':'')
+          +'<a href="https://www.tradingview.com/symbols/'+esc(r.sym)+'/" '
+          +'target="_blank" rel="noopener noreferrer">📈</a> '
+          +'<button class="btn sm" data-ed="'+esc(keyOf(r.sym,r.period))+'">แก้</button></td>'
+        +'</tr>').join('')+'</tbody></table>'
+    : '<div class="ld">ไม่มีรายการที่ตรงเงื่อนไข</div>';
+  document.getElementById('foot').innerHTML=
+    '<b>เซอร์ไพรส์</b> = EPS จริง ต่างจากที่ตลาดคาดกี่ % โดยหารด้วย<u>ค่าสัมบูรณ์</u>ของตัวเลขที่คาด '
+    +'ไม่งั้นตอนที่ตลาดคาดว่าจะขาดทุน เครื่องหมายจะกลับด้าน '
+    +'(คาดขาดทุน 0.50 ออกมาขาดทุน 0.20 คือดีกว่าคาด ต้องได้ +60% ไม่ใช่ −60%)<br>'
+    +'<b>ปฏิกิริยาแรก</b> = ราคาปิดวันทำการแรกที่ตลาดได้ซื้อขายหลังรู้ข่าว เทียบราคาก่อนข่าว · '
+    +'<b>ตั้งแต่ประกาศ</b> = ราคาปิดล่าสุด เทียบราคาก่อนข่าว<br>'
+    +'ถ้าระบุว่าประกาศ <b>หลังตลาดปิด</b> ระบบจะนับปฏิกิริยาเป็นวันถัดไป ไม่ใช่วันเดียวกัน '
+    +'เพราะข่าวออกตอนตลาดปิดแล้ว ราคาวันนั้นยังไม่ทันรับรู้<br>'
+    +'ช่อง “—” คือข้อมูลไม่พอคำนวณ ไม่ใช่ศูนย์ · ต้องกด <b>↻ ราคา</b> ก่อน '
+    +'ช่องปฏิกิริยาราคาจึงจะมีค่า · หน้านี้ไม่ใช่คำแนะนำการลงทุน'
+    +(PX&&PX.bad&&PX.bad.length?'<br>ดึงราคาไม่สำเร็จ: '+esc(PX.bad.join(' ')):'');
+
+  /* --- เหตุการณ์ --- */
+  const EF=[['all','ทั้งหมด'],['macro','🏛 มหภาค'],['gold','🥇 ทองคำ'],['crypto','₿ คริปโต']];
+  document.getElementById('evChips').innerHTML=EF.map(f=>
+    '<button class="btn'+(EVFILT===f[0]?' on':'')+'" data-ev="'+f[0]+'">'+f[1]+'</button>').join('');
+  const today=ymd(new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Bangkok'})));
+  const EL=evs.filter(e=>EVFILT==='all'||e.cat===EVFILT);
+  document.getElementById('evl').innerHTML= EL.length
+    ? EL.map(e=>{
+        const c=CAT[e.cat]||CAT.macro, im=IMP[e.impact]||IMP.low;
+        const past=String(e.date)<today;
+        return '<div class="ev"'+(past?' style="opacity:.5"':'')+'>'
+          +'<span class="ic">'+c.i+'</span>'
+          +'<span class="d">'+esc(String(e.date).slice(0,10))+'</span>'
+          +'<span class="t">'+esc(e.title)
+            +' <span class="tag '+im[0]+'">'+im[1]+'</span>'
+            +(e.src2==='manual'?' <span class="tag t-ed">กรอกเอง</span>':'')
+            +(past?' <span class="sub">ผ่านไปแล้ว</span>':'')+'</span>'
+          +(e.src?'<a href="'+esc(e.src)+'" target="_blank" rel="noopener noreferrer">📄</a>':'')
+          +'<button class="btn sm" data-eved="'+esc(evKey(e.date,e.title))+'">แก้</button>'
+          +'</div>';
+      }).join('')
+    : '<div class="ld">ยังไม่มีเหตุการณ์ในหมวดนี้</div>';
+}
+
+/* ---------- วิดเจ็ตปฏิทินเศรษฐกิจ ---------- */
+(function(){
+  const host=document.getElementById('tvcal');
+  const w=document.createElement('div');
+  w.className='tradingview-widget-container';
+  const inner=document.createElement('div');
+  inner.className='tradingview-widget-container__widget';
+  w.appendChild(inner);
+  const sc=document.createElement('script');
+  sc.type='text/javascript'; sc.async=true;
+  sc.src='https://s3.tradingview.com/external-embedding/embed-widget-events.js';
+  sc.innerHTML=JSON.stringify({colorTheme:'dark',isTransparent:true,locale:'th',
+    width:'100%',height:460,importanceFilter:'0,1',countryFilter:'us,eu,jp,gb,cn'});
+  w.appendChild(sc); host.appendChild(w);
+})();
+
+/* ---------- ฟอร์ม ---------- */
+const g=id=>document.getElementById(id);
+function setMode(m){
+  FMODE=m;
+  g('erForm').classList.toggle('hid',m!=='er');
+  g('evForm').classList.toggle('hid',m!=='ev');
+  document.querySelectorAll('[data-mode]').forEach(b=>
+    b.classList.toggle('on',b.dataset.mode===m));
+}
+function openForm(){ g('formCard').classList.remove('hid');
+  g('formCard').scrollIntoView({behavior:'smooth',block:'nearest'}) }
+g('bAdd').onclick=()=>{
+  ['fSym','fPer','fDate','fEps','fEst','fRev','fRevEst','fSrc',
+   'gDate','gTitle','gSrc'].forEach(i=>g(i).value='');
+  setMode('er'); openForm();
+};
+g('bClose').onclick=()=>g('formCard').classList.add('hid');
+document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
+
+g('bSave').onclick=()=>{
+  const sym=g('fSym').value.trim().toUpperCase(), per=g('fPer').value.trim();
+  if(!sym||!per){ alert('ต้องใส่ชื่อย่อและงวด'); return }
+  ER[keyOf(sym,per)]={sym,period:per,date:g('fDate').value,when:g('fWhen').value,
+    eps:num(g('fEps').value), epsEst:num(g('fEst').value),
+    rev:num(g('fRev').value), revEst:num(g('fRevEst').value), src:g('fSrc').value.trim()};
+  sv(KER,ER); render();
+};
+g('bDel').onclick=()=>{
+  const k=keyOf(g('fSym').value.trim().toUpperCase(),g('fPer').value.trim());
+  if(ER[k]){ delete ER[k]; sv(KER,ER); render(); g('formCard').classList.add('hid') }
+  else alert('รายการนี้มาจากไฟล์อัตโนมัติ ลบไม่ได้ — แก้ค่าแล้วบันทึกทับแทน');
+};
+g('bGSave').onclick=()=>{
+  const d=g('gDate').value, t=g('gTitle').value.trim();
+  if(!d||!t){ alert('ต้องใส่วันที่และชื่อเหตุการณ์'); return }
+  EV[evKey(d,t)]={date:d,title:t,cat:g('gCat').value,impact:g('gImp').value,
+    src:g('gSrc').value.trim()};
+  sv(KEV,EV); render();
+};
+g('bGDel').onclick=()=>{
+  const k=evKey(g('gDate').value,g('gTitle').value.trim());
+  if(EV[k]){ delete EV[k]; sv(KEV,EV); render() }
+  else alert('รายการนี้มาจากไฟล์อัตโนมัติ ลบไม่ได้');
+};
+g('bPaste').onclick=()=>{
+  const lines=g('paste').value.split('\n').map(x=>x.trim()).filter(Boolean);
+  let okN=0; const bad=[];
+  lines.forEach((ln,i)=>{
+    const p=ln.split(',').map(x=>x.trim());
+    if(p.length<3||!p[0]||!p[1]){ bad.push(i+1); return }
+    const sym=p[0].toUpperCase();
+    ER[keyOf(sym,p[1])]={sym,period:p[1],date:p[2]||'',when:'',
+      eps:num(p[3]), epsEst:num(p[4]), rev:num(p[5]), revEst:num(p[6]), src:p[7]||''};
+    okN++;
+  });
+  sv(KER,ER);
+  g('pasteMsg').innerHTML=' นำเข้า '+okN+' รายการ'
+    +(bad.length?' · <span style="color:var(--warn)">ข้ามบรรทัดที่ '+bad.join(', ')
+      +' เพราะข้อมูลไม่ครบ</span>':'');
+  render();
+};
+
+/* ---------- เหตุการณ์อื่น ---------- */
+g('bWlAdd').onclick=()=>{
+  g('wlAdd').value.toUpperCase().split(/[\s,]+/).map(x=>x.trim()).filter(Boolean)
+    .forEach(s=>{ if(WL.indexOf(s)<0)WL.push(s) });
+  g('wlAdd').value=''; sv(KWL,WL); render();
+};
+g('bWlClear').onclick=()=>{ WL=[]; sv(KWL,WL); render() };
+g('wl').addEventListener('click',e=>{
+  const s=e.target.dataset?e.target.dataset.del:null;
+  if(!s)return; WL=WL.filter(x=>x!==s); sv(KWL,WL); render();
+});
+g('chips').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b||!b.dataset.fl)return;
+  FILT=b.dataset.fl; render();
+});
+g('evChips').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b||!b.dataset.ev)return;
+  EVFILT=b.dataset.ev; render();
+});
+g('tbl').addEventListener('click',e=>{
+  const bt=e.target.closest('button');
+  if(bt&&bt.dataset.ed){
+    const [sym,per]=bt.dataset.ed.split('|');
+    const r=ER[bt.dataset.ed]||(AUTO&&AUTO.earnings||[]).find(x=>keyOf(x.sym,x.period)===bt.dataset.ed);
+    setMode('er');
+    g('fSym').value=sym; g('fPer').value=per;
+    if(r){ g('fDate').value=String(r.date||'').slice(0,10); g('fWhen').value=r.when||'';
+      g('fEps').value=r.eps??''; g('fEst').value=r.epsEst??'';
+      g('fRev').value=r.rev??''; g('fRevEst').value=r.revEst??''; g('fSrc').value=r.src||'' }
+    openForm(); return;
+  }
+  const th=e.target.closest('th'); if(!th||!th.dataset.k||th.dataset.k==='_a')return;
+  if(SORT.k===th.dataset.k)SORT.d*=-1; else {SORT.k=th.dataset.k;SORT.d=-1}
+  render();
+});
+g('evl').addEventListener('click',e=>{
+  const bt=e.target.closest('button'); if(!bt||!bt.dataset.eved)return;
+  const r=EV[bt.dataset.eved]
+    ||(AUTO&&AUTO.events||[]).find(x=>evKey(x.date,x.title)===bt.dataset.eved);
+  setMode('ev');
+  if(r){ g('gDate').value=r.date||''; g('gTitle').value=r.title||'';
+    g('gCat').value=r.cat||'macro'; g('gImp').value=r.impact||'low'; g('gSrc').value=r.src||'' }
+  openForm();
+});
+g('q').addEventListener('input',render);
+g('bLoad').onclick=load;
+g('bPx').onclick=loadPx;
+
+loadLocal();
+render();
+load();
+</script>
+<script src="theme.js"></script>
+</body></html>

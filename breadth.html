@@ -1,0 +1,496 @@
+<!DOCTYPE html><html lang="th"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Market Breadth — Trading Dashboard</title>
+<style>
+:root{--bg:#0a0d13;--bg2:#10151e;--bg3:#161d29;--line:#222c3d;--tx:#e8eef8;
+--tx2:#96a3b8;--tx3:#5c6a80;--accent:#f5b942;--glow:245,185,66;--acc:#3b82f6;
+--up:#34C27D;--dn:#E5645A;--warn:#f59e0b;--pur:#a78bfa}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-size:14px;line-height:1.55;padding-bottom:40px;
+font-family:-apple-system,'Segoe UI','Leelawadee UI','Noto Sans Thai',Tahoma,sans-serif}
+.mono{font-family:ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+.up{color:var(--up)}.dn{color:var(--dn)}.fl{color:var(--tx2)}
+button{font-family:inherit;cursor:pointer}a{color:var(--acc);text-decoration:none}
+header{position:sticky;top:0;z-index:50;background:rgba(10,13,19,.96);
+backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.hbar{display:flex;align-items:center;gap:12px;padding:9px 16px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:15px}.logo span{color:var(--accent)}
+nav{display:flex;gap:2px;margin-left:6px;flex-wrap:wrap}
+nav a{color:var(--tx3);padding:6px 12px;font-size:12.5px;font-weight:600;border-radius:7px}
+nav a.on{color:var(--tx);background:var(--bg3)}
+.right{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{background:var(--bg3);border:1px solid var(--line);color:var(--tx2);
+padding:5px 11px;border-radius:7px;font-size:12px}
+.btn.go{background:var(--acc);border-color:var(--acc);color:#fff}
+main{padding:18px;max-width:1420px;margin:0 auto}
+h1{font-size:27px;font-weight:800;letter-spacing:-.02em}
+.lead{font-size:12.5px;color:var(--tx2);margin:3px 0 14px;max-width:80ch;line-height:1.7}
+.sub{font-size:11px;color:var(--tx3);font-weight:400}
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:16px;margin-bottom:12px}
+.card h3{font-size:13px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:9px;margin-bottom:12px}
+.kpi{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:11px 13px}
+.kpi .n{font-size:10px;color:var(--tx3);text-transform:uppercase;letter-spacing:.08em}
+.kpi .v{font-size:24px;font-weight:800;letter-spacing:-.03em;line-height:1.2;
+font-family:ui-monospace,monospace}
+.kpi .s{font-size:10px;color:var(--tx3)}
+.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:12px}
+.ratios{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:9px}
+.rt{background:var(--bg3);border:1px solid var(--line);border-radius:9px;padding:10px 11px}
+.rt .rn{font-size:12px;font-weight:700}
+.rt .rd{font-size:10px;color:var(--tx3);line-height:1.5;margin:2px 0 6px;min-height:28px}
+.rt .rv{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.rt .rv b{font-size:16px;font-family:ui-monospace,monospace}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{text-align:right;font-size:10px;color:var(--tx3);font-weight:600;padding:7px 6px;
+border-bottom:1px solid var(--line);text-transform:uppercase;letter-spacing:.07em;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+td{padding:7px 6px;border-bottom:1px solid rgba(34,44,61,.5);text-align:right;white-space:nowrap}
+tbody tr:hover{background:rgba(255,255,255,.025)}
+.tag{display:inline-block;font-size:9.5px;padding:1px 7px;border-radius:4px;font-weight:700}
+.t-up{background:rgba(52,194,125,.18);color:var(--up)}
+.t-dn{background:rgba(229,100,90,.18);color:var(--dn)}
+.t-na{background:rgba(148,163,184,.14);color:var(--tx2)}
+.t-w{background:rgba(245,158,11,.18);color:var(--warn)}
+.bar{height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;width:72px;
+display:inline-block;vertical-align:middle;margin-left:7px}
+.bar i{display:block;height:100%}
+.ld{color:var(--tx3);text-align:center;padding:26px 0;font-size:12.5px;line-height:1.9}
+.warnbox{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.28);
+border-radius:9px;padding:12px 14px;font-size:11.5px;color:var(--warn);line-height:1.8;margin-bottom:12px}
+.warnbox b{color:#ffd37a}
+.infobox{background:rgba(59,130,246,.07);border:1px solid rgba(59,130,246,.25);
+border-radius:9px;padding:11px 13px;font-size:11.5px;color:var(--tx2);line-height:1.75;margin-bottom:12px}
+.note{font-size:10.5px;color:var(--tx3);line-height:1.75;margin-top:11px;
+padding-top:10px;border-top:1px dashed var(--line)}
+@media(max-width:700px){main{padding:12px}h1{font-size:22px}}
+</style>
+<link rel="stylesheet" href="theme.css">
+</head><body>
+
+<header><div class="hbar">
+  <div class="logo">TRADING <span>DASHBOARD</span></div>
+  <nav>
+    <a href="brief.html">BRIEF</a><a href="breadth.html" class="on">BREADTH</a>
+    <a href="sentiment.html">SENTIMENT</a><a href="flow.html">FLOW</a>
+    <a href="events.html">EVENTS</a><a href="theme-matrix.html">THEMES</a>
+    <a href="scanner.html">SCANNER</a><a href="weekly.html">WEEKLY</a>
+    <a href="index.html">PORT</a><a href="macro.html">MACRO</a><a href="market.html">MARKET</a>
+  </nav>
+  <div class="right">
+    <span id="msg" class="sub"></span>
+    <button class="btn" id="bRatio">↻ อัตราส่วน</button>
+    <button class="btn go" id="bLoad">↻ โหลดผลสแกน</button>
+  </div>
+</div></header>
+
+<main>
+  <h1>📊 Market Breadth</h1>
+  <div class="lead">ตลาดขึ้นเพราะหุ้นส่วนใหญ่ขึ้น หรือขึ้นเพราะหุ้นไม่กี่ตัวลาก</div>
+
+  <div id="status"></div>
+  <div class="kpis" id="kpis"></div>
+
+  <div class="card">
+    <h3>📈 % หุ้นที่ยืนเหนือเส้นค่าเฉลี่ย <span class="sub">ย้อนหลัง 1 ปี</span></h3>
+    <div id="chMA"></div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <h3>➕ Advance–Decline Line <span class="sub">สะสมหุ้นขึ้นลบหุ้นลง</span></h3>
+      <div id="chAD"></div>
+      <div class="note">เส้นนี้ทำนิวไฮพร้อมดัชนี = แรงมาจากทั้งตลาด ·
+        ดัชนีทำนิวไฮแต่เส้นนี้ไม่ตาม = หุ้นไม่กี่ตัวลาก</div>
+    </div>
+    <div class="card">
+      <h3>🆕 นิวไฮ เทียบ นิวโลว์ 52 สัปดาห์</h3>
+      <div id="chNH"></div>
+      <div class="note">นิวโลว์แซงนิวไฮระหว่างที่ดัชนียังสูง มักเป็นสัญญาณเตือนล่วงหน้า</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>〰 McClellan Oscillator <span class="sub" id="mcMeta"></span></h3>
+    <div id="chMC"></div>
+    <div id="mcText" style="margin-top:10px;font-size:12px;color:var(--tx2);line-height:1.8"></div>
+  </div>
+
+  <div class="card">
+    <h3>⚖ อัตราส่วนความกว้าง <span class="sub">คำนวณสดจากราคา ไม่ต้องรอผลสแกน</span></h3>
+    <div class="ratios" id="ratios"></div>
+    <div class="note" id="ratNote"></div>
+  </div>
+
+  <div class="card">
+    <h3>⚡ วันที่ตลาดเคลื่อนไหวรุนแรง <span class="sub">หุ้นขยับเกิน 4% ในวันเดียวกี่ตัว</span></h3>
+    <div id="chP"></div>
+    <div id="pList"></div>
+  </div>
+</main>
+
+<script src="engine.js"></script>
+<script>
+/* ============================================================
+   Market Breadth
+   ตัวเลขนับหุ้นมาจาก scan.json ที่ GitHub Actions สแกนทุกคืน
+   ส่วนอัตราส่วนคำนวณสดจากราคา ETF ไม่กี่ตัว ใช้ได้แม้ยังไม่ได้ตั้ง Actions
+   ============================================================ */
+const E=SCANENG, RKEY='breadth_rat_v1';
+const PROX=[u=>'https://api.allorigins.win/raw?url='+encodeURIComponent(u),
+  u=>'https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent(u),
+  u=>'https://corsproxy.io/?url='+encodeURIComponent(u)];
+const RATIOS=[
+  {a:'RSP',b:'SPY', n:'RSP ÷ SPY',  d:'ถ่วงน้ำหนักเท่ากัน เทียบ ถ่วงตามขนาด — ตัวนี้บอกชัดที่สุด'},
+  {a:'QQQE',b:'QQQ',n:'QQQE ÷ QQQ', d:'เรื่องเดียวกันแต่ฝั่งเทค'},
+  {a:'IWM',b:'SPY', n:'IWM ÷ SPY',  d:'หุ้นเล็กนำหรือตามหุ้นใหญ่'},
+  {a:'SPHB',b:'SPLV',n:'SPHB ÷ SPLV',d:'ตลาดกล้าเสี่ยงหรือหลบเข้าหุ้นนิ่ง'},
+  {a:'HYG',b:'LQD', n:'HYG ÷ LQD',  d:'เครดิตตึงหรือยัง มักส่งสัญญาณก่อนหุ้น'}
+];
+const RSYMS=[...new Set(RATIOS.flatMap(r=>[r.a,r.b]))];
+
+const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+  .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const pc=v=>v==null?'—':(v>=0?'+':'')+v.toFixed(1)+'%';
+const cl2=v=>v==null?'fl':v>0?'up':v<0?'dn':'fl';
+const nm=(v,d)=>v==null||!isFinite(v)?'—':Number(v).toLocaleString('en-US',
+  {minimumFractionDigits:d==null?2:d,maximumFractionDigits:d==null?2:d});
+let SC=null, B=null, RAT=null;
+
+/* EMA ที่เริ่มจากค่าแรกจริง ไม่ใช่ศูนย์ — ถ้าเริ่มจากศูนย์ ช่วงต้นเส้นจะเพี้ยน */
+function ema(arr,p){
+  const k=2/(p+1), out=new Array(arr.length).fill(null);
+  let prev=null;
+  for(let i=0;i<arr.length;i++){
+    const v=arr[i];
+    if(v==null||!isFinite(v)){ out[i]=prev; continue }
+    prev = prev==null ? v : v*k+prev*(1-k);
+    out[i]=prev;
+  }
+  return out;
+}
+/* ============================================================
+   McClellan Oscillator แบบปรับอัตราส่วน
+   ใช้ (ขึ้น-ลง)/(ขึ้น+ลง) แทนผลต่างดิบ
+   เพราะจำนวนหุ้นที่รายงานแต่ละวันไม่เท่ากัน
+   ถ้าใช้ผลต่างดิบ วันที่หุ้นรายงานน้อยจะดูเหมือนตลาดเงียบลงเอง
+   ============================================================ */
+function mcclellan(adv,dec){
+  const rana=adv.map((a,i)=>{
+    const d=dec[i], t=a+d;
+    return t>0 ? (a-d)/t*1000 : null;
+  });
+  const e19=ema(rana,19), e39=ema(rana,39);
+  const osc=rana.map((_,i)=>(e19[i]==null||e39[i]==null)?null:e19[i]-e39[i]);
+  const sum=[]; let s=0;
+  osc.forEach(v=>{ if(v!=null)s+=v; sum.push(v==null?null:s) });
+  return {rana,osc,sum};
+}
+
+/* ---------- โหลด ---------- */
+async function loadScan(){
+  const m=document.getElementById('msg');
+  m.textContent='กำลังโหลด...';
+  try{
+    const r=await fetch('scan.json?t='+Date.now(),{cache:'no-store'});
+    if(!r.ok)throw new Error('ไม่พบไฟล์ (HTTP '+r.status+')');
+    const j=await r.json();
+    SC=j; B=j.breadth||null;
+    if(!B||!B.dates||B.dates.length<30)
+      throw new Error('ไฟล์ยังไม่มีข้อมูลความกว้างตลาด — ต้องรันสคริปต์สแกนเวอร์ชันใหม่');
+    m.textContent='';
+  }catch(e){
+    SC=null;B=null;m.textContent='';
+    noScan(String(e.message||e));
+    return;
+  }
+  render();
+}
+async function csv(sym){
+  const url='https://stooq.com/q/d/l/?s='+E.stooqSym(sym)+'&i=d';
+  const t=await Promise.any(PROX.map(f=>fetch(f(url),{cache:'no-store'})
+    .then(r=>r.ok?r.text():Promise.reject(new Error('x')))));
+  return E.parseCsv(t);
+}
+async function loadRatios(){
+  const m=document.getElementById('msg'), b=document.getElementById('bRatio');
+  b.disabled=true;
+  const q=RSYMS.slice(), data={}, bad=[]; let n=0;
+  async function w(){
+    while(q.length){
+      const s=q.shift();
+      try{ const r=await csv(s); if(r)data[s]=r; else bad.push(s) }catch(e){ bad.push(s) }
+      n++; m.textContent='ดึง '+n+'/'+RSYMS.length;
+    }
+  }
+  await Promise.all([w(),w(),w()]);
+  b.disabled=false; m.textContent='';
+  RAT={t:Date.now(),data,bad};
+  try{localStorage.setItem(RKEY,JSON.stringify(RAT))}catch(e){}
+  render();
+}
+function noScan(why){
+  document.getElementById('status').innerHTML=
+    '<div class="infobox"><b>ยังไม่มีข้อมูลนับหุ้น</b> — '+esc(why)+'<br><br>'
+    +'ส่วนที่ต้องนับหุ้นทุกตัว (% เหนือเส้นค่าเฉลี่ย · A/D Line · นิวไฮนิวโลว์ · McClellan) '
+    +'ต้องใช้ GitHub Actions สแกนให้ทุกคืน วิธีตั้งอยู่ในไฟล์ <b>ตั้งค่าสแกนเนอร์.txt</b> '
+    +'และต้องอัป <b>scripts/scan.mjs</b> เวอร์ชันล่าสุดด้วย<br>'
+    +'ระหว่างนี้ <b>กดปุ่ม “↻ อัตราส่วน”</b> ใช้ส่วนอัตราส่วนได้เลย '
+    +'ซึ่งบอกเรื่องเดียวกันได้ราว 80% โดยใช้แค่ '+RSYMS.length+' ตัว</div>';
+  ['chMA','chAD','chNH','chMC','chP'].forEach(i=>
+    document.getElementById(i).innerHTML='<div class="ld">—</div>');
+  document.getElementById('kpis').innerHTML='';
+  renderRatios();
+}
+
+/* ---------- กราฟ ---------- */
+function lineChart(series,opt){
+  opt=opt||{};
+  const pts=[];
+  series.forEach(s=>{
+    s.v.forEach((v,i)=>{ if(v!=null&&isFinite(v))pts.push(v) });
+  });
+  if(pts.length<5)return '<div class="ld">ข้อมูลยังไม่พอวาดกราฟ</div>';
+  const W=940,H=opt.h||180,P=30,PB=22;
+  let mn=opt.min!=null?opt.min:Math.min(...pts);
+  let mx=opt.max!=null?opt.max:Math.max(...pts);
+  if(mx===mn){mx+=1;mn-=1}
+  const pad=(mx-mn)*0.06; mn-=pad; mx+=pad;
+  const n=Math.max(...series.map(s=>s.v.length));
+  const X=i=>P+(n<2?0:i/(n-1))*(W-P-10);
+  const Y=v=>H-PB-(v-mn)/(mx-mn)*(H-PB-12);
+  let g='';
+  (opt.bands||[]).forEach(b=>{
+    g+='<rect x="'+P+'" y="'+Y(b[1]).toFixed(1)+'" width="'+(W-P-10)
+      +'" height="'+Math.abs(Y(b[0])-Y(b[1])).toFixed(1)+'" fill="'+b[2]+'"/>';
+  });
+  (opt.lines||[]).forEach(v=>{
+    if(v<mn||v>mx)return;
+    g+='<line x1="'+P+'" x2="'+(W-10)+'" y1="'+Y(v).toFixed(1)+'" y2="'+Y(v).toFixed(1)
+      +'" stroke="var(--line)" stroke-dasharray="3 3"/>'
+      +'<text x="'+(P-4)+'" y="'+(Y(v)+3).toFixed(1)+'" font-size="9" fill="var(--tx3)" '
+      +'text-anchor="end">'+v+'</text>';
+  });
+  series.forEach(s=>{
+    const seg=[]; let cur=[];
+    s.v.forEach((v,i)=>{
+      if(v==null||!isFinite(v)){ if(cur.length)seg.push(cur); cur=[] }
+      else cur.push(X(i).toFixed(1)+','+Y(v).toFixed(1));
+    });
+    if(cur.length)seg.push(cur);
+    seg.forEach(p=>{ if(p.length>1)
+      g+='<polyline points="'+p.join(' ')+'" fill="none" stroke="'+s.c
+        +'" stroke-width="'+(s.w||1.8)+'"/>' });
+  });
+  const d=opt.dates||[];
+  if(d.length)g+='<text x="'+P+'" y="'+(H-6)+'" font-size="9" fill="var(--tx3)">'+esc(d[0])+'</text>'
+    +'<text x="'+(W-10)+'" y="'+(H-6)+'" font-size="9" fill="var(--tx3)" text-anchor="end">'
+    +esc(d[d.length-1])+'</text>';
+  let leg='';
+  if(series.some(s=>s.n))leg='<div style="display:flex;gap:14px;flex-wrap:wrap;'
+    +'font-size:11px;color:var(--tx2);margin-top:4px">'
+    +series.filter(s=>s.n).map(s=>'<span><i style="display:inline-block;width:11px;'
+      +'height:3px;background:'+s.c+';vertical-align:middle;margin-right:5px"></i>'
+      +esc(s.n)+'</span>').join('')+'</div>';
+  return '<svg viewBox="0 0 '+W+' '+H+'" width="100%" height="'+H+'" '
+    +'preserveAspectRatio="none" style="display:block">'+g+'</svg>'+leg;
+}
+function barChart(up,dn,dates,h){
+  const n=up.length;
+  if(!n)return '<div class="ld">—</div>';
+  const W=940,H=h||120,P=30,mid=H/2;
+  const mx=Math.max(1,...up.map((v,i)=>Math.max(v||0,dn[i]||0)));
+  const bw=Math.max(1,(W-P-10)/n-0.6);
+  let g='<line x1="'+P+'" x2="'+(W-10)+'" y1="'+mid+'" y2="'+mid
+    +'" stroke="var(--line)"/>';
+  for(let i=0;i<n;i++){
+    const x=P+i/(n)*(W-P-10);
+    const hu=(up[i]||0)/mx*(mid-10), hd=(dn[i]||0)/mx*(mid-10);
+    if(hu>0)g+='<rect x="'+x.toFixed(1)+'" y="'+(mid-hu).toFixed(1)+'" width="'+bw.toFixed(1)
+      +'" height="'+hu.toFixed(1)+'" fill="var(--up)" opacity=".8"/>';
+    if(hd>0)g+='<rect x="'+x.toFixed(1)+'" y="'+mid+'" width="'+bw.toFixed(1)
+      +'" height="'+hd.toFixed(1)+'" fill="var(--dn)" opacity=".8"/>';
+  }
+  g+='<text x="'+P+'" y="12" font-size="9" fill="var(--tx3)">สูงสุด '+mx+' ตัว</text>';
+  if(dates&&dates.length)g+='<text x="'+(W-10)+'" y="'+(H-3)+'" font-size="9" '
+    +'fill="var(--tx3)" text-anchor="end">'+esc(dates[dates.length-1])+'</text>';
+  return '<svg viewBox="0 0 '+W+' '+H+'" width="100%" height="'+H+'" '
+    +'preserveAspectRatio="none" style="display:block">'+g+'</svg>';
+}
+
+/* ---------- อัตราส่วน ---------- */
+function renderRatios(){
+  const host=document.getElementById('ratios');
+  if(!RAT){
+    host.innerHTML='<div class="ld" style="grid-column:1/-1">'
+      +'กด <b>↻ อัตราส่วน</b> มุมขวาบนเพื่อดึง '+RSYMS.length+' ตัว</div>';
+    document.getElementById('ratNote').textContent='';
+    return;
+  }
+  const rs=RATIOS.map(r=>{
+    const st=E.ratioStat(RAT.data[r.a],RAT.data[r.b]);
+    return Object.assign({},r,{st});
+  });
+  host.innerHTML=rs.map(r=>{
+    if(!r.st)return '<div class="rt"><div class="rn">'+esc(r.n)+'</div>'
+      +'<div class="rd">'+esc(r.d)+'</div><div class="ld" style="padding:8px 0">ข้อมูลไม่พอ</div></div>';
+    const s=r.st;
+    const wide=s.aboveMA===true;
+    return '<div class="rt"><div class="rn">'+esc(r.n)
+      +' <span class="tag '+(wide?'t-up':'t-dn')+'">'+(wide?'กว้าง':'แคบ')+'</span></div>'
+      +'<div class="rd">'+esc(r.d)+'</div>'
+      +'<div class="rv"><b>'+nm(s.val,3)+'</b>'
+      +'<span class="'+cl2(s.m1)+'" style="font-size:11.5px;font-weight:700">1ด '+pc(s.m1)+'</span>'
+      +'<span class="'+cl2(s.m3)+'" style="font-size:11.5px;font-weight:700">3ด '+pc(s.m3)+'</span>'
+      +'</div></div>';
+  }).join('');
+  const known=rs.filter(r=>r.st&&r.st.aboveMA!=null);
+  const wideN=known.filter(r=>r.st.aboveMA).length;
+  document.getElementById('ratNote').innerHTML=
+    (known.length
+      ? '<b>'+wideN+' จาก '+known.length+' คู่บอกว่าตลาดกว้าง</b> '
+        +'(อัตราส่วนยืนเหนือค่าเฉลี่ย 50 วันของตัวมันเอง) — '
+        +(wideN>=known.length*0.6?'แรงกระจายทั่วตลาด'
+          :wideN<=known.length*0.4?'แรงกระจุกอยู่กับหุ้นใหญ่ไม่กี่ตัว':'ก้ำกึ่ง')+'<br>'
+      : '')
+    +'ส่วนนี้ใช้แค่ '+RSYMS.length+' ตัว จึงไม่ต้องรอผลสแกน '
+    +'แต่เป็นการวัดทางอ้อม ไม่ใช่การนับหุ้นจริง'
+    +(RAT.bad&&RAT.bad.length?'<br>ดึงไม่สำเร็จ: '+esc(RAT.bad.join(' ')):'');
+}
+
+/* ---------- วาดหน้า ---------- */
+function render(){
+  renderRatios();
+  if(!B){ return }
+  const n=B.dates.length, i=n-1;
+  const last=k=>B[k][i];
+  const prev=(k,back)=>i-back>=0?B[k][i-back]:null;
+
+  /* --- สถานะ --- */
+  const age=(Date.now()-new Date(SC.generated).getTime())/36e5;
+  let st='';
+  if(age>72)st+='<div class="warnbox">ผลสแกนเก่า '+Math.round(age/24)
+    +' วันแล้ว — GitHub Actions อาจหยุดทำงาน</div>';
+  st+='<div class="infobox">ข้อมูลความกว้างถึงวันที่ <b>'+esc(B.dates[i])+'</b> · '
+    +'นับจากหุ้น <b>'+last('n')+'</b> ตัวในวันนั้น · ย้อนหลัง '+n+' วันทำการ'
+    +(SC.breadthDropped?' · ตัดวันที่ข้อมูลมาไม่ครบทิ้ง '+SC.breadthDropped+' วัน':'')
+    +(B.dates[i]!==SC.asof?' · <span style="color:var(--warn)">วันล่าสุดของราคา ('
+      +esc(SC.asof)+') ยังไม่เข้าความกว้าง เพราะข้อมูลมาไม่ครบ</span>':'')
+    +'</div>';
+  st+='<div class="warnbox"><b>ยูนิเวิร์สคือหุ้นใหญ่สหรัฐฯ '+SC.universe+' ตัว ไม่ใช่ทั้งตลาด</b> '
+    +'— ตลาดสหรัฐฯ มีหุ้นจดทะเบียนหลายพันตัว ตัวเลขที่เห็นจึงเป็นความกว้างของ'
+    +'<u>กลุ่มหุ้นใหญ่</u> ไม่ใช่ของตลาดทั้งหมด<br>'
+    +'ข้อนี้สำคัญกับ<b>นิวไฮ-นิวโลว์</b>มากที่สุด เพราะหุ้นเล็กมักทำนิวโลว์ก่อนหุ้นใหญ่ '
+    +'ตัวเลขของเราจึงมักดู<b>ดีกว่าความจริงของตลาดรวม</b> '
+    +'อย่าเอาไปเทียบกับตัวเลขนิวไฮ-นิวโลว์ที่สำนักข่าวรายงาน เพราะคนละฐาน</div>';
+  document.getElementById('status').innerHTML=st;
+
+  /* --- ตัวเลขสรุป --- */
+  const a50=last('a50'), a200=last('a200');
+  const a50w=prev('a50',5), a200m=prev('a200',21);
+  const nh=last('nh'), nl=last('nl');
+  const mc=mcclellan(B.adv,B.dec);
+  const osc=mc.osc[i];
+  const col=v=>v==null?'var(--tx2)':v>=60?'var(--up)':v<=35?'var(--dn)':'var(--warn)';
+  const K=[
+    ['เหนือ MA50',a50==null?'—':Math.round(a50)+'%',
+      a50w==null?'':'สัปดาห์ก่อน '+Math.round(a50w)+'%',col(a50)],
+    ['เหนือ MA200',a200==null?'—':Math.round(a200)+'%',
+      a200m==null?'':'เดือนก่อน '+Math.round(a200m)+'%',col(a200)],
+    ['นิวไฮ − นิวโลว์',(nh-nl>=0?'+':'')+(nh-nl),
+      nh+' ไฮ / '+nl+' โลว์', nh-nl>=0?'var(--up)':'var(--dn)'],
+    ['หุ้นขึ้นวันนี้',last('adv')+' / '+last('n'),
+      'ลง '+last('dec')+(last('unch')?' · เท่าเดิม '+last('unch'):''),
+      last('adv')>=last('dec')?'var(--up)':'var(--dn)'],
+    ['McClellan',osc==null?'—':Math.round(osc),
+      osc==null?'':(osc>100?'ซื้อมากเกิน':osc<-100?'ขายมากเกิน':'ปกติ'),
+      osc==null?'var(--tx2)':osc>0?'var(--up)':'var(--dn)']
+  ];
+  document.getElementById('kpis').innerHTML=K.map(k=>
+    '<div class="kpi"><div class="n">'+k[0]+'</div>'
+    +'<div class="v" style="color:'+k[3]+'">'+k[1]+'</div>'
+    +'<div class="s">'+esc(k[2])+'</div></div>').join('');
+
+  /* --- กราฟ % เหนือ MA --- */
+  document.getElementById('chMA').innerHTML=lineChart(
+    [{v:B.a50,c:'var(--acc)',n:'% เหนือ MA50'},
+     {v:B.a200,c:'var(--accent)',n:'% เหนือ MA200'}],
+    {min:0,max:100,dates:B.dates,lines:[20,50,80],
+     bands:[[0,20,'rgba(229,100,90,.10)'],[80,100,'rgba(52,194,125,.10)']],h:200})
+    +'<div class="note">ต่ำกว่า 20% คือโซนที่ตลาดขายหนักจนเกือบทุกตัวหลุดเส้น '
+    +'· สูงกว่า 80% คือโซนที่แทบทุกตัวขึ้นพร้อมกัน<br>'
+    +'<b>กรณีที่ต้องระวังที่สุด:</b> ดัชนีทำนิวไฮ แต่เส้นพวกนี้ค่อยๆ ต่ำลง '
+    +'แปลว่าหุ้นกำลังทยอยอ่อนแรงอยู่ข้างใน ขณะที่หน้าดัชนียังดูดี</div>';
+
+  /* --- A/D Line --- */
+  let ad=0; const adl=B.adv.map((a,k)=>{ ad+=(a-B.dec[k]); return ad });
+  document.getElementById('chAD').innerHTML=lineChart(
+    [{v:adl,c:'var(--up)',n:'A/D Line สะสม'}],{dates:B.dates,h:170});
+
+  /* --- นิวไฮ/นิวโลว์ --- */
+  document.getElementById('chNH').innerHTML=
+    barChart(B.nh,B.nl,B.dates,140)
+    +'<div style="display:flex;gap:14px;font-size:11px;color:var(--tx2);margin-top:4px">'
+    +'<span><i style="display:inline-block;width:11px;height:3px;background:var(--up);'
+    +'vertical-align:middle;margin-right:5px"></i>นิวไฮ (แท่งขึ้น)</span>'
+    +'<span><i style="display:inline-block;width:11px;height:3px;background:var(--dn);'
+    +'vertical-align:middle;margin-right:5px"></i>นิวโลว์ (แท่งลง)</span></div>';
+
+  /* --- McClellan --- */
+  document.getElementById('chMC').innerHTML=lineChart(
+    [{v:mc.osc,c:'var(--pur)',n:'McClellan Oscillator'}],
+    {dates:B.dates,lines:[-100,0,100],
+     bands:[[-400,-100,'rgba(229,100,90,.09)'],[100,400,'rgba(52,194,125,.09)']],h:170})
+    +'<div style="margin-top:12px">'+lineChart(
+    [{v:mc.sum,c:'var(--accent)',n:'Summation Index สะสม'}],{dates:B.dates,h:140})+'</div>';
+  document.getElementById('mcMeta').textContent='เร่งหรือชะลอของแรงซื้อขาย';
+  const sumNow=mc.sum[i], sumPrev=i-21>=0?mc.sum[i-21]:null;
+  document.getElementById('mcText').innerHTML=
+    '<b>McClellan</b> = ส่วนต่างของค่าเฉลี่ยหุ้นขึ้น-ลง แบบเร็ว (19 วัน) ลบ แบบช้า (39 วัน) '
+    +'บวก = แรงซื้อกำลังเร่ง · ลบ = แรงขายกำลังเร่ง · '
+    +'เกิน ±100 ถือว่าสุดโต่ง มักตามด้วยการพักตัวสวนทาง<br>'
+    +'<b>Summation Index</b> คือผลสะสมของ McClellan บอกภาพกลางๆ ยาวกว่า '
+    +(sumNow!=null&&sumPrev!=null
+      ? 'ตอนนี้ '+Math.round(sumNow)+' · เดือนก่อน '+Math.round(sumPrev)
+        +' ('+(sumNow>sumPrev?'กำลังดีขึ้น':'กำลังแย่ลง')+')' : '')
+    +'<br><span class="sub">สองตัวนี้คิดจากสัดส่วนหุ้นขึ้น-ลง ไม่ใช่ผลต่างดิบ '
+    +'เพื่อให้วันที่หุ้นรายงานไม่เท่ากันยังเทียบกันได้</span>';
+
+  /* --- วันรุนแรง --- */
+  const pctUp=B.up4.map((v,k)=>B.n[k]?v/B.n[k]*100:null);
+  const pctDn=B.dn4.map((v,k)=>B.n[k]?v/B.n[k]*100:null);
+  document.getElementById('chP').innerHTML=barChart(B.up4,B.dn4,B.dates,120);
+  const big=[];
+  for(let k=0;k<n;k++){
+    const u=pctUp[k], d=pctDn[k];
+    if(u!=null&&u>=25)big.push({d:B.dates[k],t:'พุ่ง',p:u,c:B.up4[k],n:B.n[k]});
+    else if(d!=null&&d>=25)big.push({d:B.dates[k],t:'ร่วง',p:d,c:B.dn4[k],n:B.n[k]});
+  }
+  big.reverse();
+  document.getElementById('pList').innerHTML= big.length
+    ? '<table style="margin-top:11px"><thead><tr><th>วันที่</th><th>ลักษณะ</th>'
+      +'<th>จำนวนหุ้น</th><th>สัดส่วน</th></tr></thead><tbody>'
+      +big.slice(0,12).map(x=>'<tr><td class="sub">'+esc(x.d)+'</td>'
+        +'<td><span class="tag '+(x.t==='พุ่ง'?'t-up':'t-dn')+'">'+x.t+'</span></td>'
+        +'<td class="mono">'+x.c+' / '+x.n+'</td>'
+        +'<td class="mono '+(x.t==='พุ่ง'?'up':'dn')+'">'+x.p.toFixed(0)+'%'
+        +'<span class="bar"><i style="width:'+Math.min(100,x.p)
+        +'%;background:'+(x.t==='พุ่ง'?'var(--up)':'var(--dn)')+'"></i></span></td></tr>').join('')
+      +'</tbody></table>'
+      +(big.length>12?'<div class="sub" style="margin-top:6px">แสดง 12 วันล่าสุดจาก '
+        +big.length+' วัน</div>':'')
+      +'<div class="note">วันที่หุ้นเกิน 25% ขยับแรงพร้อมกัน คือวันที่ตลาดเคลื่อนทั้งก้อน '
+      +'มักเกิดตอนข่าวใหญ่หรือตอนตลาดกลับทิศ — <b>ตัวมันเองไม่ใช่สัญญาณซื้อขาย</b> '
+      +'แต่เป็นหมุดเวลาที่ควรกลับไปดูว่าเกิดอะไรขึ้นวันนั้น</div>'
+    : '<div class="note">ไม่มีวันที่หุ้นเกิน 25% ขยับแรงพร้อมกันในช่วงนี้ — '
+      +'ตลาดเคลื่อนไหวแบบกระจายตัว ไม่ได้ไปทั้งก้อน</div>';
+}
+
+document.getElementById('bLoad').onclick=loadScan;
+document.getElementById('bRatio').onclick=loadRatios;
+try{const c=JSON.parse(localStorage.getItem(RKEY));
+  if(c&&Date.now()-c.t<18*3600*1000)RAT=c}catch(e){}
+loadScan();
+</script>
+<script src="theme.js"></script>
+</body></html>

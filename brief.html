@@ -1,0 +1,338 @@
+<!DOCTYPE html><html lang="th"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Morning Brief — Trading Dashboard</title>
+<style>
+:root{--bg:#0a0d13;--bg2:#10151e;--bg3:#161d29;--line:#222c3d;--tx:#e8eef8;
+--tx2:#96a3b8;--tx3:#5c6a80;--accent:#f5b942;--glow:245,185,66;--acc:#3b82f6;
+--up:#34C27D;--dn:#E5645A;--warn:#f59e0b;--pur:#a78bfa}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-size:14px;line-height:1.55;padding-bottom:40px;
+font-family:-apple-system,'Segoe UI','Leelawadee UI','Noto Sans Thai',Tahoma,sans-serif}
+.mono{font-family:ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+.up{color:var(--up)}.dn{color:var(--dn)}.fl{color:var(--tx2)}
+button{font-family:inherit;cursor:pointer}a{color:var(--acc);text-decoration:none}
+header{position:sticky;top:0;z-index:50;background:rgba(10,13,19,.96);
+backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.hbar{display:flex;align-items:center;gap:12px;padding:9px 16px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:15px}.logo span{color:var(--accent)}
+nav{display:flex;gap:2px;margin-left:6px;flex-wrap:wrap}
+nav a{color:var(--tx3);padding:6px 12px;font-size:12.5px;font-weight:600;border-radius:7px}
+nav a.on{color:var(--tx);background:var(--bg3)}
+.right{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{background:var(--bg3);border:1px solid var(--line);color:var(--tx2);
+padding:5px 11px;border-radius:7px;font-size:12px}
+.btn.go{background:var(--acc);border-color:var(--acc);color:#fff}
+main{padding:18px;max-width:1360px;margin:0 auto}
+h1{font-size:27px;font-weight:800;letter-spacing:-.02em;display:flex;align-items:center;gap:9px}
+.lead{font-size:12.5px;color:var(--tx2);margin:3px 0 16px;max-width:76ch;line-height:1.7}
+.sub{font-size:11px;color:var(--tx3);font-weight:400}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:9px;margin-bottom:14px}
+.kpi{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.kpi .n{font-size:10.5px;color:var(--tx3);margin-bottom:2px}
+.kpi .v{font-size:17px;font-weight:700;font-family:ui-monospace,monospace;letter-spacing:-.02em}
+.kpi .c{font-size:11.5px;font-weight:700}
+.kpi .c em{font-style:normal;color:var(--tx3);font-weight:400;font-size:10px}
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:16px;margin-bottom:12px}
+.card h3{font-size:13px;font-weight:700;margin-bottom:11px;display:flex;align-items:center;gap:8px}
+.art p{font-size:14px;line-height:1.95;margin-bottom:12px}
+.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:12px}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{text-align:right;font-size:10px;color:var(--tx3);font-weight:600;padding:7px 6px;
+border-bottom:1px solid var(--line);text-transform:uppercase;letter-spacing:.08em}
+th:first-child,td:first-child{text-align:left}
+td{padding:7px 6px;border-bottom:1px solid rgba(34,44,61,.5);text-align:right}
+.ld{color:var(--tx3);text-align:center;padding:22px 0;font-size:12.5px}
+.note{font-size:10.5px;color:var(--tx3);line-height:1.7;margin-top:11px;
+padding-top:10px;border-top:1px dashed var(--line)}
+.note b{color:var(--tx2)}
+.warnbox{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.28);
+border-radius:9px;padding:11px 13px;font-size:11.5px;color:var(--warn);line-height:1.7;margin-bottom:12px}
+.clock{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--tx2);margin-bottom:14px}
+.clock b{color:var(--tx);font-family:ui-monospace,monospace}
+.pill{font-size:10.5px;padding:2px 9px;border-radius:20px;font-weight:700}
+.p-o{background:rgba(52,194,125,.16);color:var(--up)}
+.p-c{background:rgba(148,163,184,.15);color:var(--tx2)}
+.p-p{background:rgba(245,158,11,.16);color:var(--warn)}
+.tvwrap{border-radius:9px;overflow:hidden}
+@media(max-width:700px){main{padding:12px}h1{font-size:22px}}
+</style>
+<link rel="stylesheet" href="theme.css">
+</head><body>
+
+<header><div class="hbar">
+  <div class="logo">TRADING <span>DASHBOARD</span></div>
+  <nav>
+    <a href="brief.html" class="on">BRIEF</a><a href="weekly.html">WEEKLY</a>
+    <a href="index.html">PORT</a><a href="trade.html">TRADE</a>
+    <a href="macro.html">MACRO</a><a href="bot.html">BOT</a><a href="market.html">MARKET</a>
+  </nav>
+  <div class="right">
+    <span id="msg" class="sub"></span>
+    <button class="btn go" id="bLoad">↻ ดึงข้อมูล</button>
+  </div>
+</div></header>
+
+<main>
+  <h1>☀ Morning Brief</h1>
+  <div class="lead">สรุปตลาดเมื่อคืน · สิ่งที่ต้องจับตาวันนี้ — อ่านจบก่อนตลาดเปิด</div>
+
+  <div class="clock" id="clock"></div>
+  <div class="kpis" id="kpis"></div>
+
+  <div class="card art">
+    <h3>📝 สรุปคืนที่ผ่านมา <span class="sub" id="briefMeta"></span></h3>
+    <div id="briefBody"></div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <h3>📊 Watchlist เมื่อคืน <span class="sub">เรียงตามการเคลื่อนไหว</span></h3>
+      <div id="wl"></div>
+    </div>
+    <div class="card">
+      <h3>🗓 ปฏิทินเศรษฐกิจวันนี้ <span class="sub">เวลาไทย</span></h3>
+      <div id="cal"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📰 ข่าวล่าสุด</h3>
+    <div id="news"></div>
+    <div class="note">ฟีดจาก TradingView — พาดหัวภาษาอังกฤษตามต้นทาง ไม่แปลอัตโนมัติเพื่อลดความคลาดเคลื่อน</div>
+  </div>
+</main>
+
+<script>
+/* ============================================================
+   Morning Brief
+   ตัวเลขคำนวณสดจากราคาย้อนหลัง · บทความที่ AI เขียนโหลดจากไฟล์
+   ============================================================ */
+const KEY='brief_cache_v1', BRIEF_FILE='brief-latest.json';
+const PROX=[u=>'https://api.allorigins.win/raw?url='+encodeURIComponent(u),
+  u=>'https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent(u),
+  u=>'https://corsproxy.io/?url='+encodeURIComponent(u)];
+const ASSETS=[
+ {c:'^spx',n:'S&P 500'},{c:'^ndq',n:'Nasdaq'},{c:'^dji',n:'Dow Jones'},
+ {c:'^vix',n:'VIX'},{c:'xauusd',n:'ทองคำ'},{c:'cl.f',n:'น้ำมัน WTI'},
+ {c:'btcusd',n:'Bitcoin'},{c:'dx.f',n:'ดัชนีดอลลาร์'}];
+const WL=['aapl','msft','nvda','googl','amzn','meta','tsla'];
+
+const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+  .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const pc=v=>v==null?'—':(v>=0?'+':'')+v.toFixed(2)+'%';
+const cl2=v=>v>0?'up':v<0?'dn':'fl';
+const num=(v,d)=>v==null?'—':Number(v).toLocaleString('en-US',
+  {minimumFractionDigits:d==null?2:d,maximumFractionDigits:d==null?2:d});
+let DATA=null, BRIEF=null;
+
+async function csv(code){
+  const url='https://stooq.com/q/d/l/?s='+code+'&i=d';
+  const t=await Promise.any(PROX.map(f=>fetch(f(url),{cache:'no-store'})
+    .then(r=>r.ok?r.text():Promise.reject(new Error('x')))));
+  const L=t.trim().split('\n'); if(L.length<10)return null;
+  const out=[];
+  for(let i=1;i<L.length;i++){
+    const a=L[i].split(',');
+    const c=+a[4];
+    if(a[0]&&isFinite(c))out.push({d:a[0],o:+a[1],h:+a[2],l:+a[3],c,v:+a[5]||0});
+  }
+  return out.length>5?out:null;
+}
+/* เปลี่ยนแปลงของวันทำการล่าสุด = "เมื่อคืน" ในมุมคนไทย */
+function lastDay(bars){
+  if(!bars||bars.length<2)return null;
+  const a=bars[bars.length-2].c, b=bars[bars.length-1];
+  return a?{pct:(b.c-a)/a*100,close:b.c,date:b.d,hi:b.h,lo:b.l}:null;
+}
+
+async function load(){
+  const m=document.getElementById('msg'), btn=document.getElementById('bLoad');
+  btn.disabled=true;
+  const codes=[...ASSETS.map(x=>x.c),...WL.map(s=>s+'.us')];
+  const data={}; const q=codes.slice(); let n=0;
+  async function worker(){
+    while(q.length){
+      const c=q.shift();
+      try{const r=await csv(c); if(r)data[c]=r}catch(e){}
+      n++; m.textContent='ดึง '+n+'/'+codes.length;
+    }
+  }
+  await Promise.all([worker(),worker(),worker()]);
+  btn.disabled=false;
+  if(!Object.keys(data).length){
+    m.innerHTML='<span style="color:var(--warn)">ดึงข้อมูลไม่สำเร็จ ลองใหม่อีกครั้ง</span>';
+    return;
+  }
+  DATA={t:Date.now(),data};
+  try{localStorage.setItem(KEY,JSON.stringify(DATA))}catch(e){}
+  m.textContent='';
+  render();
+}
+/* บทความที่ AI เขียน (ถ้าอัปไฟล์ไว้) */
+async function loadBrief(){
+  try{
+    const r=await fetch(BRIEF_FILE+'?t='+Date.now(),{cache:'no-store'});
+    if(!r.ok)return;
+    const j=await r.json();
+    if(j&&j.body)BRIEF=j;
+  }catch(e){}
+}
+
+/* ---------- นาฬิกา / สถานะตลาด ---------- */
+function nyParts(d){
+  const p=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',
+    year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',
+    minute:'2-digit',second:'2-digit',hour12:false}).formatToParts(d);
+  const o={};p.forEach(x=>o[x.type]=x.value);
+  return {y:+o.year,mo:+o.month,d:+o.day,h:(+o.hour)%24,mi:+o.minute,s:+o.second};
+}
+function mktStatus(){
+  const now=new Date(), p=nyParts(now);
+  const off=Date.UTC(p.y,p.mo-1,p.d,p.h,p.mi,p.s)-(now.getTime()-now.getTime()%1000);
+  const ny=new Date(now.getTime()+off);
+  const dow=ny.getUTCDay(), m=ny.getUTCHours()*60+ny.getUTCMinutes();
+  const OPEN=570, CLOSE=960;
+  const at=(add,mm)=>{const t=new Date(now.getTime()+off);
+    t.setUTCDate(t.getUTCDate()+add); t.setUTCHours(Math.floor(mm/60),mm%60,0,0);
+    return t.getTime()-off;};
+  const wd=d=>d>=1&&d<=5;
+  if(wd(dow)&&m>=OPEN&&m<CLOSE)return {t:'ตลาดเปิดอยู่',c:'p-o',lb:'ปิดใน',at:at(0,CLOSE)};
+  if(wd(dow)&&m<OPEN)return {t:'ก่อนตลาดเปิด',c:'p-p',lb:'เปิดใน',at:at(0,OPEN)};
+  let a=1; while(!wd((dow+a)%7))a++;
+  return {t:(dow===0||dow===6)?'ตลาดปิด (สุดสัปดาห์)':'ตลาดปิดแล้ววันนี้',
+    c:'p-c',lb:'เปิดใน',at:at(a,OPEN)};
+}
+function dur(ms){
+  if(ms<0)ms=0;
+  const s=Math.floor(ms/1000), d=Math.floor(s/86400),
+    h=Math.floor(s%86400/3600), mi=Math.floor(s%3600/60);
+  if(d)return d+' วัน '+h+' ชม.';
+  if(h)return h+' ชม. '+mi+' นาที';
+  return mi+' นาที';
+}
+function renderClock(){
+  const t=z=>new Intl.DateTimeFormat('en-GB',{timeZone:z,hour:'2-digit',
+    minute:'2-digit',hour12:false}).format(new Date());
+  const s=mktStatus();
+  document.getElementById('clock').innerHTML=
+    '<span>วันนี้ <b>'+new Intl.DateTimeFormat('th-TH',{dateStyle:'full',
+      timeZone:'Asia/Bangkok'}).format(new Date())+'</b></span>'
+    +'<span>ไทย <b>'+t('Asia/Bangkok')+'</b></span>'
+    +'<span>นิวยอร์ก <b>'+t('America/New_York')+'</b></span>'
+    +'<span class="pill '+s.c+'">'+s.t+'</span>'
+    +'<span>'+s.lb+' <b>'+dur(s.at-Date.now())+'</b></span>';
+}
+
+/* ---------- วาดหน้า ---------- */
+function render(){
+  renderClock();
+  if(!DATA){
+    document.getElementById('kpis').innerHTML=
+      '<div class="ld" style="grid-column:1/-1">กด <b>↻ ดึงข้อมูล</b> มุมขวาบนเพื่อเริ่ม</div>';
+    document.getElementById('briefBody').innerHTML='<div class="ld">ยังไม่มีข้อมูล</div>';
+    document.getElementById('wl').innerHTML='<div class="ld">—</div>';
+    return;
+  }
+  const D=DATA.data;
+  const g=c=>D[c]?lastDay(D[c]):null;
+
+  document.getElementById('kpis').innerHTML=ASSETS.map(x=>{
+    const r=g(x.c);
+    const dec=(x.c==='^vix'||x.c==='dx.f')?2:(r&&r.close>1000?0:2);
+    return '<div class="kpi"><div class="n">'+esc(x.n)+'</div>'
+      +'<div class="v">'+(r?num(r.close,dec):'—')+'</div>'
+      +'<div class="c '+cl2(r&&r.pct)+'">'+(r?pc(r.pct):'—')+' <em>เมื่อคืน</em></div></div>';
+  }).join('');
+
+  /* ---- สรุปจากตัวเลข ---- */
+  const sp=g('^spx'),nq=g('^ndq'),dj=g('^dji'),vx=g('^vix'),
+        gd=g('xauusd'),oil=g('cl.f'),bt=g('btcusd'),dx=g('dx.f');
+  const bits=[];
+  if(sp&&nq&&dj){
+    const avg=(sp.pct+nq.pct+dj.pct)/3;
+    const dir=avg>0.8?'ปิดบวกแรง':avg>0.15?'ปิดบวก':avg<-0.8?'ปิดลบแรง':avg<-0.15?'ปิดลบ':'ปิดแทบไม่เปลี่ยนแปลง';
+    let t='ตลาดสหรัฐฯ '+dir+' เฉลี่ย '+pc(avg)+' — S&P 500 '+pc(sp.pct)
+      +', Nasdaq '+pc(nq.pct)+', Dow '+pc(dj.pct);
+    const sd=nq.pct-dj.pct;
+    if(Math.abs(sd)>0.5)t+=' ส่วนต่าง Nasdaq กับ Dow '+sd.toFixed(2)
+      +' จุดเปอร์เซ็นต์ บอกว่า'+(sd>0?'เงินยังอยู่ฝั่งหุ้นเติบโต':'เงินย้ายออกจากหุ้นเติบโต');
+    bits.push(t);
+  }
+  const other=[];
+  if(gd)other.push('ทองคำ '+pc(gd.pct));
+  if(oil)other.push('น้ำมัน '+pc(oil.pct));
+  if(bt)other.push('Bitcoin '+pc(bt.pct));
+  if(dx)other.push('ดอลลาร์ '+pc(dx.pct));
+  if(other.length)bits.push('สินทรัพย์อื่น — '+other.join(' · '));
+  if(vx)bits.push('VIX ปิดที่ '+num(vx.close)+' ('+pc(vx.pct)+') '
+    +(vx.close>25?'อยู่โซนกังวลสูง':vx.close>18?'อยู่โซนระมัดระวัง':'ตลาดยังสงบ'));
+
+  const aiPart=BRIEF
+    ? '<div style="margin-top:14px;padding-top:13px;border-top:1px solid var(--line)">'
+      +'<div style="font-size:11px;color:var(--pur);font-weight:700;letter-spacing:.1em;'
+      +'text-transform:uppercase;margin-bottom:7px">บทสรุปที่ AI เขียน · '
+      +esc(BRIEF.date||'')+'</div>'
+      +BRIEF.body.split(/\n{2,}/).map(p=>'<p>'+esc(p)+'</p>').join('')
+      +(BRIEF.sources&&BRIEF.sources.length
+        ? '<div class="sub" style="margin-top:8px">แหล่งข่าว: '
+          +BRIEF.sources.map(s=>'<a href="'+esc(s.url)+'" target="_blank" rel="noopener noreferrer">'
+            +esc(s.name)+'</a>').join(' · ')+'</div>' : '')
+      +'</div>'
+    : '<div class="warnbox" style="margin-top:14px;margin-bottom:0">'
+      +'<b>ยังไม่มีบทสรุปที่อ้างอิงข่าวจริง</b> — ข้อความด้านบนประกอบจากตัวเลขล้วน '
+      +'ไม่ได้อ่านข่าวหรือตีความเหตุการณ์<br>'
+      +'งานอัตโนมัติเขียนสรุปข่าวให้ทุกเช้า 7:00 น. และบันทึกไว้ในโฟลเดอร์ <b>news-log</b> '
+      +'ถ้าอยากให้ขึ้นตรงนี้ ต้องอัปไฟล์ <b>brief-latest.json</b> ขึ้นเว็บด้วย</div>';
+
+  document.getElementById('briefMeta').textContent=sp?('ข้อมูลวันที่ '+sp.date):'';
+  document.getElementById('briefBody').innerHTML=
+    bits.map(b=>'<p>'+b+'</p>').join('')+aiPart;
+
+  /* ---- watchlist ---- */
+  const rows=WL.map(s=>{const r=D[s+'.us']?lastDay(D[s+'.us']):null;
+    return r?{sym:s.toUpperCase(),r}:null}).filter(Boolean)
+    .sort((a,b)=>Math.abs(b.r.pct)-Math.abs(a.r.pct));
+  document.getElementById('wl').innerHTML=rows.length
+    ? '<table><thead><tr><th>หุ้น</th><th>ปิด</th><th>เปลี่ยนแปลง</th><th>ช่วงวัน</th></tr></thead><tbody>'
+      +rows.map(x=>'<tr><td><b>'+x.sym+'</b></td>'
+        +'<td class="mono">'+num(x.r.close)+'</td>'
+        +'<td class="mono '+cl2(x.r.pct)+'">'+pc(x.r.pct)+'</td>'
+        +'<td class="mono" style="color:var(--tx3);font-size:11.5px">'
+        +num(x.r.lo)+' – '+num(x.r.hi)+'</td></tr>').join('')
+      +'</tbody></table>'
+      +'<div class="note">เรียงตามขนาดการเคลื่อนไหว ไม่ว่าบวกหรือลบ — '
+      +'ตัวที่ขยับแรงคือตัวที่มีเรื่อง</div>'
+    : '<div class="ld">ไม่มีข้อมูล</div>';
+}
+
+/* ---- วิดเจ็ตปฏิทินและข่าว ---- */
+function tv(id,file,cfg,h){
+  const host=document.getElementById(id); if(!host)return;
+  host.innerHTML='';
+  const w=document.createElement('div');
+  w.className='tradingview-widget-container tvwrap';
+  const inner=document.createElement('div');
+  inner.className='tradingview-widget-container__widget';
+  if(h)inner.style.height=h;
+  w.appendChild(inner);
+  const sc=document.createElement('script');
+  sc.type='text/javascript'; sc.async=true;
+  sc.src='https://s3.tradingview.com/external-embedding/'+file;
+  sc.innerHTML=JSON.stringify(Object.assign(
+    {colorTheme:'dark',isTransparent:true,locale:'th'},cfg));
+  w.appendChild(sc); host.appendChild(w);
+}
+
+document.getElementById('bLoad').onclick=load;
+try{const c=JSON.parse(localStorage.getItem(KEY));
+  if(c&&Date.now()-c.t<18*3600*1000)DATA=c}catch(e){}
+loadBrief().then(render);
+render();
+setInterval(renderClock,30000);
+tv('cal','embed-widget-events.js',{width:'100%',height:420,
+  importanceFilter:'0,1',countryFilter:'us,eu,jp,gb,cn'});
+tv('news','embed-widget-timeline.js',{feedMode:'all_symbols',width:'100%',
+  height:460,displayMode:'regular'});
+</script>
+<script src="theme.js"></script>
+</body></html>
