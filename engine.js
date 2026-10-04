@@ -608,5 +608,178 @@ root.SCANENG.statsByRegime=statsByRegime;
 root.SCANENG.regimeDays=regimeDays;
 root.SCANENG.sizeStudy=sizeStudy;
 
+/* ==================================================================
+   btStyles — ทดสอบย้อนหลัง 5 สไตล์ลงทุนเชิงราคา
+
+   ข้อจำกัดที่ต้องพูดตรงๆ: ข้อมูลฟรีที่ใช้มีแค่ราคาและวอลุ่ม
+   ไม่มีงบการเงิน จึงจำลอง "สไตล์แบบบัฟเฟตต์" ตามจริงไม่ได้
+   ที่ทำได้คือสไตล์ที่คำนวณจากราคาได้ล้วนๆ และตั้งชื่อตามวิธี ไม่ใช่ตามตัวบุคคล
+
+   กันการมองอนาคต (look-ahead) สามชั้น
+     1. สัญญาณวันปรับพอร์ต i ใช้ข้อมูลถึงแท่ง i เท่านั้น
+     2. ซื้อขายที่ "ราคาเปิดของแท่ง i+1" ไม่ใช่ราคาปิดวันที่เห็นสัญญาณ
+     3. จัดอันดับเทียบกันเฉพาะหุ้นที่มีประวัติพอในวันนั้น
+        หุ้นที่เข้าตลาดภายหลังจะไม่ถูกนับย้อนไปในอดีต
+   ================================================================== */
+function styleDefs(){
+  return [
+    {id:'mom12', nm:'โมเมนตัม 12 เดือน',
+     ds:'เลือกหุ้นที่ขึ้นแรงสุดในรอบ 12 เดือน (เว้นเดือนสุดท้าย) ปรับพอร์ตทุกเดือน',
+     need:273, pick:'top'},
+    {id:'trend', nm:'เทรนด์ตาม MA200',
+     ds:'ถือเฉพาะหุ้นที่ราคาอยู่เหนือเส้น 200 วัน ถ้าไม่มีให้ถือเงินสด',
+     need:201, pick:'top'},
+    {id:'lowvol', nm:'ผันผวนต่ำ',
+     ds:'เลือกหุ้นที่ราคาแกว่งน้อยสุดในรอบ 60 วัน',
+     need:62, pick:'top'},
+    {id:'rev1', nm:'กลับตัวระยะสั้น',
+     ds:'เลือกหุ้นที่ร่วงแรงสุดในเดือนที่ผ่านมา',
+     need:23, pick:'top'},
+    {id:'ew', nm:'ถือเฉลี่ยทั้งกระดาน',
+     ds:'ถือทุกตัวเท่ากัน ไม่คัดเลือก ใช้เป็นเส้นเทียบ',
+     need:2, pick:'all'}
+  ];
+}
+
+/* คะแนนของสไตล์หนึ่ง ณ แท่ง i — ยิ่งสูงยิ่งน่าถือ  null = ไม่เข้าเกณฑ์ */
+function styleScore(id,c,i){
+  if(id==='mom12'){
+    /* เว้นเดือนสุดท้ายตามงานวิจัยดั้งเดิม เพื่อเลี่ยงแรงกลับตัวสั้น */
+    var a=c[i-252], b=c[i-21];
+    return (a>0&&b>0)?(b/a-1):null;
+  }
+  if(id==='trend'){
+    var s=0,w=200;
+    for(var j=i-w+1;j<=i;j++)s+=c[j];
+    var ma=s/w;
+    return (ma>0&&c[i]>ma)?(c[i]/ma-1):null;   /* ต่ำกว่าเส้น = ไม่ถือ */
+  }
+  if(id==='lowvol'){
+    var m=0,n=0,r=[];
+    for(var k=i-59;k<=i;k++){ if(c[k-1]>0){ var x=c[k]/c[k-1]-1; r.push(x); m+=x; n++ } }
+    if(n<40)return null;
+    m/=n; var v=0;
+    for(var q=0;q<r.length;q++)v+=(r[q]-m)*(r[q]-m);
+    v=Math.sqrt(v/(n-1));
+    return v>0?-v:null;                        /* ผันผวนน้อย = คะแนนสูง */
+  }
+  if(id==='rev1'){
+    var p=c[i-21];
+    return p>0?-(c[i]/p-1):null;               /* ร่วงแรง = คะแนนสูง */
+  }
+  if(id==='ew')return 0;
+  return null;
+}
+
+/* bars: { SYM: [{d,o,h,l,c,v}, ...] }  ทุกตัวต้องเรียงวันเก่า->ใหม่
+   opt: {pick:20, years:10, costBps:10}
+   คืนเส้นทุนของแต่ละสไตล์ + สถิติ */
+function btStyles(bars,opt){
+  opt=opt||{};
+  var PICK=opt.pick||20, YEARS=opt.years||10;
+  var COST=(opt.costBps==null?10:opt.costBps)/10000;   /* ค่าธรรมเนียม+สเปรด ต่อการซื้อขายหนึ่งขา */
+  var syms=Object.keys(bars);
+  if(!syms.length)return null;
+
+  /* ปฏิทินกลาง = ทุกวันที่ที่มีหุ้นอย่างน้อยหนึ่งตัวรายงาน */
+  var dset={};
+  syms.forEach(function(s){ bars[s].forEach(function(b){ dset[b.d]=1 }) });
+  var dates=Object.keys(dset).sort();
+  var span=YEARS*252+300;                 /* เผื่อประวัติสำหรับคิดสัญญาณ */
+  if(dates.length>span)dates=dates.slice(-span);
+  var di={}; dates.forEach(function(d,i){ di[d]=i });
+  var N=dates.length;
+  if(N<300)return null;
+
+  /* ปูข้อมูลแต่ละตัวลงปฏิทินกลาง วันที่ไม่มีข้อมูล = NaN ไม่ใช่เลขเดิม
+     ถ้าเติมเลขเดิมลงไป ความผันผวนจะต่ำกว่าความจริงและสไตล์ผันผวนต่ำจะเพี้ยน */
+  var C={},O={};
+  syms.forEach(function(s){
+    var c=new Float64Array(N).fill(NaN), o=new Float64Array(N).fill(NaN);
+    bars[s].forEach(function(b){ var i=di[b.d]; if(i!=null){ c[i]=b.c; o[i]=(b.o>0?b.o:b.c) } });
+    C[s]=c; O[s]=o;
+  });
+
+  var DEFS=styleDefs();
+  var start=301;
+  /* วันปรับพอร์ต = แท่งสุดท้ายของแต่ละเดือน (ตัดสินใจ) ซื้อขายแท่งถัดไป */
+  var rb=[];
+  for(var i=start;i<N-1;i++)
+    if(dates[i].slice(0,7)!==dates[i+1].slice(0,7))rb.push(i);
+
+  var res=DEFS.map(function(D){
+    var eq=1, curve=[], cdates=[], hold=[], peak=1, maxDD=0, trades=0, cash=0;
+    var monthly=[];
+    for(var k=0;k<rb.length;k++){
+      var i=rb[k];
+      /* ---- คัดเลือกจากข้อมูลถึงแท่ง i ---- */
+      var cand=[];
+      for(var si=0;si<syms.length;si++){
+        var s=syms[si], c=C[s];
+        if(!isFinite(c[i])||!isFinite(c[i-D.need]))continue;
+        var ok=true;
+        for(var t=i-D.need;t<=i;t+=21)if(!isFinite(c[t])){ok=false;break}
+        if(!ok)continue;
+        var sc=styleScore(D.id,c,i);
+        if(sc==null||!isFinite(sc))continue;
+        cand.push({s:s,sc:sc});
+      }
+      var next=[];
+      if(cand.length){
+        if(D.pick==='all')next=cand.map(function(x){return x.s});
+        else{
+          cand.sort(function(a,b){return b.sc-a.sc});
+          next=cand.slice(0,PICK).map(function(x){return x.s});
+        }
+      }
+      /* ---- ผลตอบแทนช่วงถือ: เปิดแท่ง i+1 ถึงเปิดแท่งปรับพอร์ตถัดไป+1 ---- */
+      var buy=i+1, sellIdx=(k+1<rb.length?rb[k+1]+1:N-1);
+      if(sellIdx<=buy){ continue }
+      var sum=0,cnt=0;
+      for(var hi=0;hi<next.length;hi++){
+        var s2=next[hi], o=O[s2];
+        var pb=o[buy], ps=o[sellIdx];
+        if(!isFinite(pb)||!isFinite(ps)||pb<=0)continue;
+        sum+=ps/pb-1; cnt++;
+      }
+      var r=cnt?sum/cnt:0;                 /* ไม่มีตัวเข้าเกณฑ์ = ถือเงินสด ผลตอบแทน 0 */
+      if(!cnt)cash++;
+      /* ค่าธรรมเนียม: คิดตามสัดส่วนที่เปลี่ยนตัว ทั้งขาออกและขาเข้า */
+      var prev={}; hold.forEach(function(s3){prev[s3]=1});
+      var kept=0; next.forEach(function(s3){ if(prev[s3])kept++ });
+      var turn=next.length?1-kept/next.length:0;
+      r-=turn*COST*2;
+      trades+=Math.round(turn*next.length);
+      eq*=(1+r);
+      hold=next;
+      curve.push(+eq.toFixed(6)); cdates.push(dates[sellIdx]);
+      monthly.push(+(r*100).toFixed(4));
+      if(eq>peak)peak=eq;
+      var dd=(peak-eq)/peak*100;
+      if(dd>maxDD)maxDD=dd;
+    }
+    var yrs=monthly.length/12;
+    var cagr=yrs>0&&eq>0?(Math.pow(eq,1/yrs)-1)*100:null;
+    var mean=0; monthly.forEach(function(x){mean+=x}); mean=monthly.length?mean/monthly.length:0;
+    var sd=0; monthly.forEach(function(x){sd+=(x-mean)*(x-mean)});
+    sd=monthly.length>1?Math.sqrt(sd/(monthly.length-1)):0;
+    var sharpe=sd>0?(mean/sd)*Math.sqrt(12):null;      /* ไม่หักดอกเบี้ยปลอดความเสี่ยง */
+    var win=monthly.filter(function(x){return x>0}).length;
+    return {id:D.id, nm:D.nm, ds:D.ds,
+      mult:+eq.toFixed(4), cagr:cagr==null?null:+cagr.toFixed(2),
+      maxDD:+maxDD.toFixed(2), sharpe:sharpe==null?null:+sharpe.toFixed(2),
+      winMo:monthly.length?+(win/monthly.length*100).toFixed(1):null,
+      months:monthly.length, cashMonths:cash, trades:trades,
+      hold:hold.slice(0,PICK), curve:curve, dates:cdates, monthly:monthly};
+  });
+  return {styles:res, pick:PICK, costBps:(opt.costBps==null?10:opt.costBps),
+          from:dates[start+1]||null, to:dates[N-1], symbols:syms.length,
+          note:'สไตล์เชิงราคา ไม่ใช่การลอกพอร์ตนักลงทุนตัวจริง เพราะข้อมูลฟรีไม่มีงบการเงิน'};
+}
+
+root.SCANENG.styleDefs=styleDefs;
+root.SCANENG.styleScore=styleScore;
+root.SCANENG.btStyles=btStyles;
+
 
 })(typeof globalThis!=='undefined'?globalThis:this);

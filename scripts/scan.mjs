@@ -85,6 +85,11 @@ async function getCsv(sym){
 }
 
 const done=[],failed=[];
+/* เก็บแท่งราคาไว้ทดสอบสไตล์ลงทุนในรอบเดียวกัน
+   ถ้าแยกเป็นอีกงาน ต้องดาวน์โหลดใหม่ทั้ง 536 ตัว เสี่ยงโดนจำกัดอัตราซ้ำสอง
+   ตัดให้เหลือ ~11.5 ปี เพื่อคุมหน่วยความจำ */
+const KEEP=Number(process.env.SCAN_KEEP_BARS||2900);
+const BARS={};
 const BRE={};              /* ตัวนับความกว้างตลาด แยกตามวันที่ */
 const BDAYS=Number(process.env.SCAN_BREADTH_DAYS||252);
 
@@ -138,6 +143,8 @@ async function worker(){
       m.sym=sym;
       done.push(m);
       addBreadth(bars);
+      BARS[sym]=(bars.length>KEEP?bars.slice(-KEEP):bars)
+        .map(b=>({d:b.d,o:b.o,c:b.c}));
       STAT.ok++; STAT.ms+=Date.now()-t1;
     }catch(e){
       const w=String(e&&(e.message||e.name)||e);
@@ -253,6 +260,26 @@ const out={
 };
 mkdirSync(dirname(OUT),{recursive:true});
 writeFileSync(OUT,JSON.stringify(out));
+
+/* ---- ทดสอบสไตล์ลงทุน แล้วเขียนแยกไฟล์ ----
+   แยกไฟล์เพราะหน้า Super Investor ต้องใช้ แต่หน้าสแกนไม่ต้องโหลดมาเปล่าๆ
+   ถ้าส่วนนี้ล้ม ไม่ให้ลาก scan.json ที่เขียนสำเร็จแล้วล้มตาม */
+try{
+  const SOUT=process.env.STYLES_OUT||join(ROOT,'styles.json');
+  const st=E.btStyles(BARS,{pick:Number(process.env.STYLES_PICK||20),
+                            years:Number(process.env.STYLES_YEARS||10),
+                            costBps:Number(process.env.STYLES_COST_BPS||10)});
+  if(!st)throw new Error('ข้อมูลไม่พอทดสอบสไตล์');
+  st.generated=new Date().toISOString();
+  writeFileSync(SOUT,JSON.stringify(st));
+  console.log(`\nเขียน ${SOUT}  (${(JSON.stringify(st).length/1024).toFixed(0)} KB)`);
+  console.log(`  ช่วง ${st.from} ถึง ${st.to} | ${st.symbols} ตัว | ปรับพอร์ต ${st.styles[0].months} เดือน`);
+  st.styles.forEach(x=>console.log(
+    `  ${x.nm.padEnd(22)} โต ${String(x.mult).padStart(7)} เท่า | ต่อปี ${String(x.cagr).padStart(6)}% `+
+    `| ขาดทุนลึกสุด ${String(x.maxDD).padStart(5)}% | ชนะ ${x.winMo}% ของเดือน`));
+}catch(e){
+  console.error('ทดสอบสไตล์ไม่สำเร็จ:',e.message,'— scan.json ยังเขียนสำเร็จปกติ');
+}
 console.log(`เสร็จใน ${((Date.now()-t0)/1000).toFixed(0)} วินาที`);
 console.log(`เขียน ${OUT}  (${(JSON.stringify(out).length/1024).toFixed(0)} KB)`);
 console.log(`วันอ้างอิง ${asof} | สแกนได้ ${done.length}/${UNIQ.length} | มี RS ${out.withRS}`);

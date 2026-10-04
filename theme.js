@@ -98,6 +98,7 @@
     {g:'วิเคราะห์', items:[
       {h:'scanner.html',n:'Quant Scanner',   i:'⚡'},
       {h:'theme-matrix.html',n:'Thematic Matrix', i:'🧩'},
+      {h:'super.html',  n:'Super Investor',   i:'⚖'},
       {h:'macro.html',  n:'Macro Scorecard', i:'🧭'},
       {h:'market.html', n:'ตลาด · กราฟ · ข่าว', i:'📈'}]},
     {g:'เวิร์กสเปซ', items:[

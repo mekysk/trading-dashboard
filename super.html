@@ -1,0 +1,346 @@
+<!DOCTYPE html><html lang="th"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Super Investor — Trading Dashboard</title>
+<style>
+:root{--bg:#0a0d13;--bg2:#10151e;--bg3:#161d29;--line:#222c3d;--tx:#e8eef8;
+--tx2:#96a3b8;--tx3:#5c6a80;--accent:#f5b942;--glow:245,185,66;--acc:#3b82f6;
+--up:#34C27D;--dn:#E5645A;--warn:#f59e0b;--pur:#a78bfa}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-size:14px;line-height:1.55;padding-bottom:40px;
+font-family:-apple-system,'Segoe UI','Leelawadee UI','Noto Sans Thai',Tahoma,sans-serif}
+.mono{font-family:ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+.up{color:var(--up)}.dn{color:var(--dn)}.fl{color:var(--tx2)}
+button{font-family:inherit;cursor:pointer}a{color:var(--acc);text-decoration:none}
+header{position:sticky;top:0;z-index:50;background:rgba(10,13,19,.96);
+backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.hbar{display:flex;align-items:center;gap:12px;padding:9px 16px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:15px}.logo span{color:var(--accent)}
+nav{display:flex;gap:2px;margin-left:6px;flex-wrap:wrap}
+nav a{color:var(--tx3);padding:6px 12px;font-size:12.5px;font-weight:600;border-radius:7px}
+nav a.on{color:var(--tx);background:var(--bg3)}
+.right{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{background:var(--bg3);border:1px solid var(--line);color:var(--tx2);
+padding:5px 11px;border-radius:7px;font-size:12px}
+.btn:hover{color:var(--tx)}
+.btn.go{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn.on{background:rgba(var(--glow),.16);border-color:var(--accent);color:var(--accent);font-weight:600}
+main{padding:18px;max-width:1500px;margin:0 auto}
+h1{font-size:27px;font-weight:800;letter-spacing:-.02em}
+.lead{font-size:12.5px;color:var(--tx2);margin:3px 0 14px;max-width:80ch;line-height:1.7}
+.sub{font-size:11px;color:var(--tx3);font-weight:400}
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:16px;margin-bottom:12px}
+.card h3{font-size:13px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;align-items:center}
+.chips .lb{font-size:10px;color:var(--tx3);text-transform:uppercase;letter-spacing:.09em;
+font-weight:700;margin-right:3px}
+input,select{background:var(--bg3);border:1px solid var(--line);color:var(--tx);
+border-radius:6px;padding:5px 9px;font-family:inherit;font-size:12.5px}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{text-align:right;font-size:10px;color:var(--tx3);text-transform:uppercase;
+letter-spacing:.07em;padding:5px 7px;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+td{padding:6px 7px;border-bottom:1px solid rgba(34,44,61,.5);text-align:right;white-space:nowrap}
+tr:hover td{background:rgba(255,255,255,.022)}
+.ld{color:var(--tx3);text-align:center;padding:26px 0;font-size:12.5px;line-height:1.9}
+.warnbox{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.28);
+border-radius:9px;padding:12px 14px;font-size:11.5px;color:var(--warn);line-height:1.8;margin-bottom:12px}
+.warnbox b{color:#ffd37a}
+.infobox{background:rgba(59,130,246,.07);border:1px solid rgba(59,130,246,.25);
+border-radius:9px;padding:11px 13px;font-size:11.5px;color:var(--tx2);line-height:1.75;margin-bottom:12px}
+.note{font-size:10.5px;color:var(--tx3);line-height:1.75;margin-top:11px;
+padding-top:10px;border-top:1px dashed var(--line)}
+.sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:9px}
+.sbox{background:var(--bg3);border:1px solid var(--line);border-radius:9px;padding:12px;
+cursor:pointer;transition:border-color .12s}
+.sbox:hover{border-color:var(--tx3)}
+.sbox.on{border-color:var(--accent);background:rgba(var(--glow),.07)}
+.sbox .nm{font-size:12.5px;font-weight:700;margin-bottom:2px}
+.sbox .ds{font-size:10.5px;color:var(--tx3);line-height:1.6;min-height:3.2em}
+.sbox .big{font-size:21px;font-weight:800;letter-spacing:-.02em;margin-top:7px;
+font-family:ui-monospace,monospace}
+.sbox .rw{display:flex;justify-content:space-between;font-size:10.5px;color:var(--tx3);padding:1px 0}
+.sbox .rw i{font-style:normal;font-family:ui-monospace,monospace;color:var(--tx2)}
+.sw{width:9px;height:9px;border-radius:3px;display:inline-block;flex:0 0 auto}
+.lgd{display:flex;gap:13px;flex-wrap:wrap;font-size:11px;color:var(--tx2);margin-top:9px}
+.lgd span{display:flex;align-items:center;gap:5px}
+.mgr{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}
+.mgr button{background:var(--bg3);border:1px solid var(--line);color:var(--tx2);
+border-radius:8px;padding:7px 11px;font-size:12px;text-align:left;line-height:1.35}
+.mgr button b{display:block;font-size:12.5px;color:var(--tx)}
+.mgr button .s{font-size:10px;color:var(--tx3)}
+.mgr button.on{border-color:var(--accent);background:rgba(var(--glow),.09)}
+.mgr button.bad{opacity:.45;cursor:not-allowed}
+.bar{height:7px;border-radius:4px;background:var(--acc);min-width:2px}
+.pill{font-size:9.5px;padding:1px 6px;border-radius:5px;font-weight:700;
+background:rgba(167,139,250,.16);color:var(--pur)}
+@media(max-width:700px){main{padding:12px}h1{font-size:22px}}
+</style>
+<link rel="stylesheet" href="theme.css">
+</head><body>
+
+<header><div class="hbar">
+  <div class="logo">TRADING <span>DASHBOARD</span></div>
+  <div class="right">
+    <span id="msg" class="sub"></span>
+    <button class="btn go" id="bLoad">↻ โหลดข้อมูล</button>
+  </div>
+</div></header>
+
+<main>
+<h1>Super Investor</h1>
+<p class="lead">สองส่วนที่แยกกันชัดเจน — <b>ส่วนบน</b> คือสไตล์ลงทุนเชิงราคาที่ทดสอบย้อนหลังด้วยกฎตายตัว
+เห็นทั้งผลตอบแทนและจุดที่เจ็บที่สุด &nbsp;<b>ส่วนล่าง</b> คือรายงาน 13F ของผู้จัดการกองทุนตัวจริงจาก SEC
+ซึ่งเป็นภาพย้อนหลัง ไม่ใช่พอร์ตวันนี้</p>
+
+<section class="card">
+  <h3>⚖ สไตล์ลงทุน — ทดสอบย้อนหลัง <span class="sub" id="stMeta"></span></h3>
+  <div class="infobox" id="stInfo">
+    <b>อ่านอย่างไรไม่ให้หลงทาง</b><br>
+    ทุกสไตล์ใช้กฎเดียวกันทั้งช่วงทดสอบ ไม่มีการปรับกฎย้อนหลัง
+    สัญญาณคิดจากข้อมูลถึงวันตัดสินใจเท่านั้น และซื้อขายที่ <b>ราคาเปิดของวันถัดไป</b>
+    ไม่ใช่ราคาปิดวันที่เห็นสัญญาณ<br>
+    ผลที่เห็นเป็นผลในอดีตของกฎชุดนี้บนรายชื่อหุ้นชุดนี้ ไม่ใช่คำแนะนำซื้อขาย
+    และไม่รับประกันว่าอนาคตจะซ้ำรอย
+  </div>
+  <div class="warnbox" id="stWarn" style="display:none"></div>
+  <div class="sgrid" id="stGrid"><div class="ld">ยังไม่ได้โหลด</div></div>
+  <div id="stChartWrap" style="display:none;margin-top:14px">
+    <div class="chips">
+      <span class="lb">มาตรา</span>
+      <button class="btn on" id="bLog" type="button">ล็อก</button>
+      <button class="btn" id="bLin" type="button">เส้นตรง</button>
+      <span class="lb" style="margin-left:10px">แสดง</span>
+      <button class="btn on" id="bAll" type="button">ทุกสไตล์</button>
+    </div>
+    <canvas id="cv" height="300" style="width:100%;height:300px;display:block"></canvas>
+    <div class="lgd" id="lgd"></div>
+    <div class="note" id="stNote"></div>
+  </div>
+</section>
+
+<section class="card">
+  <h3>🏛 รายงาน 13F ตัวจริง <span class="sub" id="fMeta"></span></h3>
+  <div class="warnbox">
+    <b>13F คือภาพย้อนหลัง ไม่ใช่พอร์ตวันนี้</b><br>
+    กฎ SEC ให้ยื่นได้ช้าถึง <b>45 วัน</b> หลังสิ้นไตรมาส ของที่เห็นคือสถานะ ณ วันสิ้นไตรมาสนั้น
+    ระหว่างนั้นผู้จัดการอาจขายทิ้งทั้งก้อนไปแล้ว<br>
+    และ 13F <b>ไม่รวม</b> สถานะขายชอร์ต พันธบัตร เงินสด อนุพันธ์บางประเภท และหุ้นที่ไม่จดในสหรัฐฯ
+    สัดส่วนที่เห็นจึงเป็นสัดส่วนของ "เฉพาะส่วนที่ต้องรายงาน" ไม่ใช่ของพอร์ตทั้งหมด
+  </div>
+  <div class="mgr" id="mgrList"><div class="ld">ยังไม่ได้โหลด</div></div>
+  <div id="fBody"></div>
+</section>
+</main>
+
+<script src="engine.js"></script>
+<script>
+var ST=null, F13=null, SEL={}, LOG=true, CUR=null;
+var COL=['#f5b942','#3b82f6','#34C27D','#a78bfa','#E5645A'];
+
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function msg(t){document.getElementById('msg').textContent=t||''}
+function n2(x,d){return x==null||!isFinite(x)?'—':Number(x).toFixed(d==null?2:d)}
+function sgn(x,d){ if(x==null||!isFinite(x))return '<span class="fl">—</span>';
+  var c=x>0?'up':(x<0?'dn':'fl');
+  return '<span class="'+c+'">'+(x>0?'+':'')+n2(x,d)+'%</span>' }
+/* ย่อเงินแบบอ่านง่าย — 13F รายใหญ่อยู่หลักแสนล้าน ตัวเลขเต็มอ่านไม่รู้เรื่อง */
+function money(v){
+  if(v==null||!isFinite(v))return '—';
+  var a=Math.abs(v);
+  if(a>=1e12)return (v/1e12).toFixed(2)+' ล้านล้าน';
+  if(a>=1e9)return (v/1e9).toFixed(2)+' พันล้าน';
+  if(a>=1e6)return (v/1e6).toFixed(1)+' ล้าน';
+  return Math.round(v).toLocaleString('en-US');
+}
+function thaiDate(s){
+  if(!s)return '—';
+  var p=String(s).slice(0,10).split('-');
+  if(p.length<3)return s;
+  var M=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  return Number(p[2])+' '+M[Number(p[1])-1]+' '+(Number(p[0])+543);
+}
+
+/* ---------------- ส่วนสไตล์ลงทุน ---------------- */
+function drawStyles(){
+  var g=document.getElementById('stGrid');
+  if(!ST||!ST.styles){ g.innerHTML='<div class="ld">ยังไม่มีไฟล์ styles.json<br>'
+    +'<span class="sub">ไฟล์นี้สร้างจากงานอัตโนมัติรอบกลางคืนพร้อมกับผลสแกน</span></div>'; return }
+  var best=Math.max.apply(null,ST.styles.map(function(s){return s.mult||0}));
+  g.innerHTML=ST.styles.map(function(s,i){
+    var on=SEL[s.id]!==false;
+    return '<div class="sbox'+(on?' on':'')+'" data-id="'+s.id+'">'
+      +'<div class="nm"><span class="sw" style="background:'+COL[i%5]+'"></span> '+esc(s.nm)
+      +(s.mult===best?' <span class="pill">สูงสุด</span>':'')+'</div>'
+      +'<div class="ds">'+esc(s.ds)+'</div>'
+      +'<div class="big">'+n2(s.mult,2)+'<span class="sub"> เท่า</span></div>'
+      +'<div class="rw"><span>ต่อปี</span><i>'+(s.cagr==null?'—':n2(s.cagr,1)+'%')+'</i></div>'
+      +'<div class="rw"><span>ขาดทุนลึกสุด</span><i class="dn">-'+n2(s.maxDD,1)+'%</i></div>'
+      +'<div class="rw"><span>ชนะกี่ % ของเดือน</span><i>'+(s.winMo==null?'—':n2(s.winMo,1)+'%')+'</i></div>'
+      +'<div class="rw"><span>ชาร์ป (ไม่หักดอกเบี้ย)</span><i>'+(s.sharpe==null?'—':n2(s.sharpe,2))+'</i></div>'
+      +(s.cashMonths?'<div class="rw"><span>เดือนที่ถือเงินสด</span><i>'+s.cashMonths+'</i></div>':'')
+      +'</div>';
+  }).join('');
+  g.querySelectorAll('.sbox').forEach(function(b){
+    b.onclick=function(){ var id=b.dataset.id;
+      SEL[id]=(SEL[id]===false); b.classList.toggle('on',SEL[id]!==false); draw() };
+  });
+  document.getElementById('stMeta').textContent=
+    ST.from+' ถึง '+ST.to+' · '+ST.symbols+' ตัว · ถือ '+ST.pick+' ตัวต่อรอบ · ค่าธรรมเนียม '
+    +ST.costBps+' bps ต่อขา';
+  var w=document.getElementById('stWarn');
+  w.style.display='block';
+  w.innerHTML='<b>ข้อจำกัดที่ต้องรู้ก่อนเชื่อตัวเลข</b><br>'
+    +esc(ST.note||'')+'<br>'
+    +'รายชื่อหุ้นที่ทดสอบคือรายชื่อที่ <b>ยังอยู่ในตลาดวันนี้</b> '
+    +'หุ้นที่ถูกถอนออกหรือล้มละลายไปแล้วไม่ได้ถูกนับ (survivorship bias) '
+    +'ผลที่เห็นจึงดีกว่าความจริงอยู่บ้างทุกสไตล์ — ใช้เทียบสไตล์ต่อสไตล์ได้ '
+    +'แต่อย่าเอาตัวเลขไปคาดหวังเป็นผลตอบแทนจริง';
+  document.getElementById('stChartWrap').style.display='block';
+  document.getElementById('stNote').innerHTML=
+    'ปรับพอร์ตทุกสิ้นเดือน ถือเท่ากันทุกตัว · ผลตอบแทนรวมค่าธรรมเนียมและสเปรดที่ประมาณไว้แล้ว '
+    +'คิดเฉพาะส่วนที่เปลี่ยนตัว · เดือนที่ไม่มีหุ้นเข้าเกณฑ์ถือเป็นถือเงินสด ผลตอบแทน 0% '
+    +'· ชาร์ปคิดจากผลตอบแทนรายเดือนคูณราก 12 และ <b>ไม่</b> หักดอกเบี้ยปลอดความเสี่ยง '
+    +'ช่วงดอกเบี้ยสูงจะดูดีเกินจริง';
+  draw();
+}
+
+function draw(){
+  if(!ST)return;
+  var cv=document.getElementById('cv');
+  var dpr=window.devicePixelRatio||1;
+  var W=cv.clientWidth, H=300;
+  cv.width=W*dpr; cv.height=H*dpr;
+  var x=cv.getContext('2d'); x.scale(dpr,dpr);
+  x.clearRect(0,0,W,H);
+  var cs=getComputedStyle(document.body);
+  var line=cs.getPropertyValue('--line').trim()||'#222c3d';
+  var tx3=cs.getPropertyValue('--tx3').trim()||'#5c6a80';
+
+  var use=ST.styles.map(function(s,i){return {s:s,c:COL[i%5]}})
+    .filter(function(o){return SEL[o.s.id]!==false});
+  var lg=document.getElementById('lgd');
+  lg.innerHTML=ST.styles.map(function(s,i){
+    return '<span style="opacity:'+(SEL[s.id]!==false?1:.35)+'"><span class="sw" style="background:'
+      +COL[i%5]+'"></span>'+esc(s.nm)+'</span>'}).join('');
+  if(!use.length){ x.fillStyle=tx3; x.font='12px sans-serif'; x.textAlign='center';
+    x.fillText('เลือกสไตล์ที่ต้องการดูอย่างน้อยหนึ่งอัน',W/2,H/2); return }
+
+  var L=52,R=10,T=12,B=24;
+  var n=Math.max.apply(null,use.map(function(o){return o.s.curve.length}));
+  var lo=Infinity,hi=-Infinity;
+  use.forEach(function(o){ o.s.curve.forEach(function(v){
+    if(v>0||!LOG){ if(v<lo)lo=v; if(v>hi)hi=v } }) });
+  if(!isFinite(lo)||!isFinite(hi)||hi<=0){ return }
+  if(LOG){ lo=Math.max(lo,1e-4) }else{ lo=Math.min(lo,1) }
+  var f=LOG?Math.log:function(v){return v};
+  var a=f(lo), b=f(hi); if(b-a<1e-9)b=a+1;
+  var px=function(i){return L+(W-L-R)*(n<2?0:i/(n-1))};
+  var py=function(v){ var t=(f(Math.max(v,lo))-a)/(b-a); return T+(H-T-B)*(1-t) };
+
+  /* เส้นแนวนอนที่ "1 เท่า" คือเส้นเท่าทุน ต้องเห็นชัด */
+  x.strokeStyle=line; x.lineWidth=1;
+  var ticks=LOG?[0.25,0.5,1,2,4,8,16,32,64]:[0,1,2,5,10,20,50];
+  x.font='10px ui-monospace,monospace'; x.textAlign='right';
+  ticks.forEach(function(t){
+    if(t<lo*0.95||t>hi*1.05)return;
+    var y=py(t);
+    x.strokeStyle=(t===1?'rgba(150,163,184,.5)':line);
+    x.beginPath();x.moveTo(L,y);x.lineTo(W-R,y);x.stroke();
+    x.fillStyle=(t===1?'#96a3b8':tx3);
+    x.fillText(t+'x',L-6,y+3.5);
+  });
+  /* ปีกำกับแกนล่าง */
+  var ds=use[0].s.dates||[];
+  x.textAlign='center'; x.fillStyle=tx3;
+  var seen={};
+  for(var i=0;i<ds.length;i++){ var y4=ds[i].slice(0,4);
+    if(!seen[y4]&&(i===0||Number(y4)%2===0)){ seen[y4]=1;
+      x.fillText(y4,px(i),H-7) } }
+
+  use.forEach(function(o){
+    x.strokeStyle=o.c; x.lineWidth=1.8; x.beginPath();
+    o.s.curve.forEach(function(v,i){ var X=px(i),Y=py(v);
+      if(i===0)x.moveTo(X,Y); else x.lineTo(X,Y) });
+    x.stroke();
+  });
+}
+
+/* ---------------- ส่วน 13F ---------------- */
+function drawMgr(){
+  var L=document.getElementById('mgrList');
+  if(!F13||!F13.managers){ L.innerHTML='<div class="ld">ยังไม่มีไฟล์ f13.json<br>'
+    +'<span class="sub">ไฟล์นี้สร้างจากงานอัตโนมัติ "ดึง 13F จาก SEC" ทุกวันจันทร์</span></div>';
+    document.getElementById('fBody').innerHTML=''; return }
+  document.getElementById('fMeta').textContent='ดึงเมื่อ '+thaiDate(F13.generated);
+  L.innerHTML=F13.managers.map(function(m,i){
+    var bad=!!m.err;
+    return '<button type="button" class="'+(bad?'bad':'')+(i===CUR?' on':'')+'" data-i="'+i+'"'
+      +(bad?' disabled':'')+'><b>'+esc(m.who)+'</b>'
+      +'<span class="s">'+esc(m.nm)+'<br>'
+      +(bad?esc(m.err):'ข้อมูล ณ '+thaiDate(m.period)+' · '+m.positions+' รายการ')+'</span></button>';
+  }).join('');
+  L.querySelectorAll('button[data-i]').forEach(function(b){
+    b.onclick=function(){ CUR=Number(b.dataset.i); drawMgr() };
+  });
+  if(CUR==null){ for(var k=0;k<F13.managers.length;k++)if(!F13.managers[k].err){CUR=k;break} }
+  var m=CUR==null?null:F13.managers[CUR];
+  var out=document.getElementById('fBody');
+  if(!m||m.err){ out.innerHTML='<div class="ld">เลือกผู้จัดการที่มีข้อมูล</div>'; return }
+  var mx=Math.max.apply(null,m.top.map(function(r){return r.pct||0}))||1;
+  var lagWarn=m.lagDays>120
+    ? '<div class="warnbox" style="margin-top:10px"><b>ข้อมูลเก่ากว่าปกติ</b><br>'
+      +'ข้อมูลชุดนี้เป็นสถานะเมื่อ '+m.lagDays+' วันก่อน '
+      +'อาจเป็นเพราะยังไม่ยื่นของไตรมาสล่าสุด หรือหยุดยื่นแล้ว</div>' : '';
+  out.innerHTML='<div class="chips" style="margin-top:4px">'
+    +'<span class="lb">สถานะ ณ</span><b>'+thaiDate(m.period)+'</b>'
+    +'<span class="lb" style="margin-left:10px">ยื่นเมื่อ</span><b>'+thaiDate(m.filed)+'</b>'
+    +'<span class="lb" style="margin-left:10px">ช้าจากวันนี้</span><b>'+m.lagDays+' วัน</b>'
+    +'<span class="lb" style="margin-left:10px">มูลค่ารวมที่รายงาน</span><b class="mono">$'
+    +money(m.total)+'</b>'
+    +'<a class="btn" style="margin-left:auto" href="'+esc(m.url)+'" target="_blank" rel="noopener">'
+    +'ดูเอกสารต้นทางที่ SEC ↗</a></div>'
+    +lagWarn
+    +'<table><thead><tr><th>บริษัท</th><th>สัดส่วน</th><th></th><th>มูลค่า (USD)</th>'
+    +'<th>จำนวนหุ้น</th></tr></thead><tbody>'
+    +m.top.map(function(r){
+      return '<tr><td>'+esc(r.nm)
+        +(r.put?' <span class="pill">'+esc(r.put)+'</span>':'')+'</td>'
+        +'<td class="mono">'+(r.pct==null?'—':n2(r.pct,2)+'%')+'</td>'
+        +'<td style="width:110px"><div class="bar" style="width:'
+        +Math.max(2,(r.pct||0)/mx*100)+'%"></div></td>'
+        +'<td class="mono">'+money(r.val)+'</td>'
+        +'<td class="mono">'+(r.sh?r.sh.toLocaleString('en-US'):'—')+'</td></tr>';
+    }).join('')
+    +'</tbody></table>'
+    +'<div class="note">แสดง '+m.top.length+' อันดับแรกจากทั้งหมด '+m.positions+' รายการ · '
+    +'สัดส่วนคิดจากมูลค่ารวมที่ "รายงานใน 13F" เท่านั้น ไม่ใช่ทั้งพอร์ต · '
+    +'ป้าย PUT/CALL คือสัญญาออปชัน ไม่ใช่การถือหุ้นตรง · '
+    +'หน่วยมูลค่า: '+esc(m.unit)+'</div>';
+}
+
+/* ---------------- โหลดไฟล์ ---------------- */
+async function one(f){
+  try{ var r=await fetch(f+'?t='+Date.now(),{cache:'no-store'});
+    if(!r.ok)return null; return await r.json() }catch(e){ return null }
+}
+async function load(){
+  msg('กำลังโหลด...');
+  var a=await one('styles.json'), b=await one('f13.json');
+  ST=a; F13=b; CUR=null;
+  drawStyles(); drawMgr();
+  var miss=[]; if(!a)miss.push('styles.json'); if(!b)miss.push('f13.json');
+  msg(miss.length?('ไม่พบ '+miss.join(' และ ')):'ข้อมูลครบ');
+}
+document.getElementById('bLoad').onclick=load;
+document.getElementById('bLog').onclick=function(){LOG=true;
+  this.classList.add('on');document.getElementById('bLin').classList.remove('on');draw()};
+document.getElementById('bLin').onclick=function(){LOG=false;
+  this.classList.add('on');document.getElementById('bLog').classList.remove('on');draw()};
+document.getElementById('bAll').onclick=function(){ SEL={};
+  document.querySelectorAll('.sbox').forEach(function(b){b.classList.add('on')}); draw() };
+addEventListener('resize',function(){ if(ST)draw() });
+load();
+</script>
+<script src="theme.js"></script>
+</body></html>
