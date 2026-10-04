@@ -41,7 +41,7 @@ async function get(url,asJson){
     try{
       const ctl=new AbortController();
       const t=setTimeout(()=>ctl.abort(),20000);
-      const r=await fetch(url,{signal:ctl.signal,headers:{'User-Agent':UA,'Accept-Encoding':'gzip'}});
+            const r=await fetch(url,{signal:ctl.signal,headers:{'User-Agent':UA,'Accept':'application/json, text/html, application/xml;q=0.9, */*;q=0.8','Accept-Language':'en-US,en;q=0.9','Accept-Encoding':'gzip, deflate','Referer':'https://www.sec.gov/'}});
       clearTimeout(t);
       if(r.status===429||r.status>=500)throw new Error('HTTP '+r.status);
             if(!r.ok)return console.log('   SEC ตอบ HTTP '+r.status+' ที่ '+url)||null;
