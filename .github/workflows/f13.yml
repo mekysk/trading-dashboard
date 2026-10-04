@@ -1,0 +1,33 @@
+name: ดึง 13F จาก SEC
+
+on:
+  schedule:
+    # ทุกวันจันทร์ 10:00 UTC — 13F ทยอยเข้ามาตลอดช่วง 45 วันหลังสิ้นไตรมาส
+    - cron: '0 10 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  f13:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: ดึง 13F
+        run: node scripts/f13.mjs
+      - name: บันทึกผลกลับเข้า repo
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add f13.json
+          if git diff --staged --quiet; then
+            echo "ไม่มีอะไรเปลี่ยน"
+          else
+            git commit -m "13F $(date -u +%Y-%m-%d)"
+            git push
+          fi
