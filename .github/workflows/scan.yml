@@ -1,1 +1,38 @@
+name: สแกนหุ้นรายคืน
 
+on:
+  schedule:
+    # 06:30 UTC = 13:30 ไทย — หลังตลาดสหรัฐฯ ปิดและข้อมูลวันก่อนนิ่งแล้ว
+    - cron: '30 6 * * 2,3,4,5,6'
+  workflow_dispatch:        # กดรันเองได้จากแท็บ Actions
+
+permissions:
+  contents: write
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: สแกน
+        run: node scripts/scan.mjs
+        env:
+          SCAN_WORKERS: '8'
+
+      - name: บันทึกผลกลับเข้า repo
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add scan.json
+          if git diff --staged --quiet; then
+            echo "ไม่มีอะไรเปลี่ยน"
+          else
+            git commit -m "สแกนหุ้น $(date -u +%Y-%m-%d)"
+            git push
+          fi
