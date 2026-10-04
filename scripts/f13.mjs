@@ -16,7 +16,7 @@ import {fileURLToPath} from 'node:url';
 const HERE=dirname(fileURLToPath(import.meta.url));
 const OUT=process.env.F13_OUT||join(HERE,'..','f13.json');
 /* SEC ขอให้ระบุผู้ติดต่อใน User-Agent และจำกัดไม่เกิน 10 คำขอต่อวินาที */
-const UA='trading-dashboard/1.0 (+https://github.com/mekysk/trading-dashboard)';
+const UA=process.env.F13_UA||'mekysk trading-dashboard mekysk@users.noreply.github.com';
 const GAP=Number(process.env.F13_GAP_MS||350);
 const TOPN=Number(process.env.F13_TOP||25);
 
@@ -44,7 +44,7 @@ async function get(url,asJson){
       const r=await fetch(url,{signal:ctl.signal,headers:{'User-Agent':UA,'Accept-Encoding':'gzip'}});
       clearTimeout(t);
       if(r.status===429||r.status>=500)throw new Error('HTTP '+r.status);
-      if(!r.ok)return null;
+            if(!r.ok)return console.log('   SEC ตอบ HTTP '+r.status+' ที่ '+url)||null;
       return asJson?await r.json():await r.text();
     }catch(e){ if(a===2)throw e; await sleep(1500*(a+1)) }
   }
