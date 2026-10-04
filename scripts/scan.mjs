@@ -14,6 +14,19 @@ const OUT=process.env.SCAN_OUT||join(ROOT,'scan.json');
 const WORKERS=Number(process.env.SCAN_WORKERS||8);
 const RETRY=2;
 
+/* ---- งบเวลา ----
+   รอบ 2026-10-04 ถูก GitHub ตัดทิ้งตอนครบ 30 นาทีพอดี คือสแกนไม่เสร็จในเวลา
+   ปัญหาคือ "ถูกฆ่ากลางทาง" แปลว่าไม่มีทั้งไฟล์ใหม่และคำอธิบายว่าติดที่ไหน
+   จึงตั้งเส้นตายของสคริปต์เองให้สั้นกว่าเพดานของ GitHub
+   พอหมดเวลา เลิกหยิบตัวใหม่ แล้วเดินไปด่านตรวจตามปกติ
+   ถ้าได้ไม่ถึงเกณฑ์ ด่านตรวจจะไม่เขียนทับและบอกเหตุผลออกมาในล็อก */
+const DEADLINE_MS=Number(process.env.SCAN_DEADLINE_MIN||20)*60000;
+const REQ_MS=Number(process.env.SCAN_REQ_MS||12000);     /* เดิม 20000 */
+const SYM_MS=Number(process.env.SCAN_SYM_MS||26000);     /* เพดานรวมต่อหุ้นหนึ่งตัว */
+const T_START=Date.now();
+const left=()=>DEADLINE_MS-(Date.now()-T_START);
+const STAT={ok:0,timeout:0,rate:0,http:0,short:0,other:0,ms:0};
+
 /* โหลดเครื่องคำนวณตัวเดียวกับที่หน้าเว็บใช้ */
 const engPath=[join(ROOT,'engine.js'),join(ROOT,'UPLOAD-ME','engine.js'),
                join(HERE,'engine.js')].find(p=>existsSync(p));
@@ -42,13 +55,17 @@ const SECLIST=[...new Set(Object.values(SEC).filter(Boolean))];
 
 async function getCsv(sym){
   const url='https://stooq.com/q/d/l/?s='+E.stooqSym(sym)+'&i=d';
+  const budget=Date.now()+SYM_MS;
   for(let a=0;a<=RETRY;a++){
+    /* เวลาที่เหลือของหุ้นตัวนี้ และของงานทั้งก้อน อะไรหมดก่อนใช้อันนั้น */
+    const ms=Math.min(REQ_MS,budget-Date.now(),left());
+    if(ms<1500)throw new Error('หมดเวลา');
     try{
-      const ctl=AbortController?new AbortController():null;
-      const t=ctl?setTimeout(()=>ctl.abort(),20000):null;
-      const r=await fetch(url,{signal:ctl?ctl.signal:undefined,
+      const ctl=new AbortController();
+      const t=setTimeout(()=>ctl.abort(),ms);
+      const r=await fetch(url,{signal:ctl.signal,
         headers:{'User-Agent':'Mozilla/5.0 (scan.mjs)'}});
-      if(t)clearTimeout(t);
+      clearTimeout(t);
       if(!r.ok)throw new Error('HTTP '+r.status);
       const txt=await r.text();
       if(/exceeded|limit/i.test(txt.slice(0,200)))throw new Error('โดนจำกัดอัตราการดึง');
@@ -57,8 +74,12 @@ async function getCsv(sym){
       if(!bars)throw new Error('ข้อมูลย้อนหลังน้อยกว่า 60 วัน');
       return bars;
     }catch(e){
-      if(a===RETRY)throw e;
-      await new Promise(r=>setTimeout(r,1200*(a+1)));
+      const m=String(e&&(e.message||e.name)||e);
+      if(a===RETRY||/หมดเวลา/.test(m))throw e;
+      /* รอถอยหลังสั้นลงจากเดิม 1200ms เพราะงบเวลาทั้งก้อนมีจำกัด */
+      const back=Math.min(700*(a+1),Math.max(0,budget-Date.now()-1500));
+      if(back<=0)throw e;
+      await new Promise(r=>setTimeout(r,back));
     }
   }
 }
@@ -104,10 +125,12 @@ function addBreadth(bars){
   }
 }
 
-let idx=0,n=0;
+let idx=0,n=0,quit=false;
 async function worker(){
   while(idx<UNIQ.length){
+    if(left()<=2000){ quit=true; break }
     const sym=UNIQ[idx++];
+    const t1=Date.now();
     try{
       const bars=await getCsv(sym);
       const m=E.metrics(bars);
@@ -115,8 +138,15 @@ async function worker(){
       m.sym=sym;
       done.push(m);
       addBreadth(bars);
+      STAT.ok++; STAT.ms+=Date.now()-t1;
     }catch(e){
-      failed.push({sym,why:String(e.message||e)});
+      const w=String(e&&(e.message||e.name)||e);
+      failed.push({sym,why:w});
+      if(/abort|หมดเวลา/i.test(w))STAT.timeout++;
+      else if(/จำกัดอัตรา/.test(w))STAT.rate++;
+      else if(/^HTTP/.test(w))STAT.http++;
+      else if(/น้อยกว่า 60/.test(w))STAT.short++;
+      else STAT.other++;
     }
     n++;
     if(n%25===0||n===UNIQ.length)
@@ -127,6 +157,17 @@ async function worker(){
 console.log(`เริ่มสแกน ${UNIQ.length} สัญลักษณ์ (${WORKERS} สายพร้อมกัน)`);
 const t0=Date.now();
 await Promise.all(Array.from({length:WORKERS},worker));
+
+const usedMin=((Date.now()-T_START)/60000).toFixed(1);
+console.log(`\nใช้เวลา ${usedMin} นาที  ดึงสำเร็จ ${done.length}/${UNIQ.length}`);
+console.log(`  เฉลี่ยต่อตัวที่สำเร็จ ${STAT.ok?Math.round(STAT.ms/STAT.ok):0} ms`);
+console.log(`  พลาดเพราะ: หมดเวลารอ ${STAT.timeout} · ถูกจำกัดอัตรา ${STAT.rate}`+
+            ` · ตอบไม่ใช่ 200 ${STAT.http} · ประวัติสั้น ${STAT.short} · อื่นๆ ${STAT.other}`);
+if(quit){
+  console.log(`  !! ชนเส้นตาย ${DEADLINE_MS/60000} นาที — ยังเหลือไม่ได้สแกน ${UNIQ.length-n} ตัว`);
+  console.log('     ถ้าเจอบ่อย: เพิ่ม timeout-minutes ใน scan.yml และ SCAN_DEADLINE_MIN ให้สูงขึ้น');
+  if(STAT.rate>STAT.ok*0.1)console.log('     เห็นการจำกัดอัตราเยอะ ลด SCAN_WORKERS ลงน่าจะเร็วกว่าเพิ่ม');
+}
 
 /* ---- ด่านตรวจก่อนเขียนทับ ----
    RS คิดจากการเทียบกันเองทั้งชุด ถ้าชุดไม่ครบ อันดับจะเพี้ยนทั้งกระดาน
