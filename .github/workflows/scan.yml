@@ -12,7 +12,7 @@ permissions:
 jobs:
   scan:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 50
     steps:
       - uses: actions/checkout@v4
 
@@ -24,6 +24,9 @@ jobs:
         run: node scripts/scan.mjs
         env:
           SCAN_WORKERS: '8'
+          # เส้นตายของสคริปต์ ต้องต่ำกว่า timeout-minutes ข้างบน
+          # เพื่อให้สคริปต์ได้สรุปสาเหตุลงล็อกก่อน GitHub ตัดงานทิ้ง
+          SCAN_DEADLINE_MIN: '40'
 
       - name: บันทึกผลกลับเข้า repo
         run: |
