@@ -63,8 +63,8 @@ border-radius:9px;padding:11px 13px;font-size:11.5px;color:var(--warn);line-heig
   <div class="logo">TRADING <span>DASHBOARD</span></div>
   <nav>
     <a href="brief.html" class="on">BRIEF</a><a href="weekly.html">WEEKLY</a>
-    <a href="index.html">PORT</a><a href="trade.html">TRADE</a>
-    <a href="macro.html">MACRO</a><a href="bot.html">BOT</a><a href="market.html">MARKET</a>
+    <a href="index.html">PORT</a>
+    <a href="macro.html">MACRO</a><a href="market.html">MARKET</a>
   </nav>
   <div class="right">
     <span id="msg" class="sub"></span>
@@ -89,19 +89,14 @@ border-radius:9px;padding:11px 13px;font-size:11.5px;color:var(--warn);line-heig
       <h3>📊 Watchlist เมื่อคืน <span class="sub">เรียงตามการเคลื่อนไหว</span></h3>
       <div id="wl"></div>
     </div>
-    <div class="card">
-      <h3>🗓 ปฏิทินเศรษฐกิจวันนี้ <span class="sub">เวลาไทย</span></h3>
-      <div id="cal"></div>
-    </div>
+    
   </div>
 
-  <div class="card">
-    <h3>📰 ข่าวล่าสุด</h3>
-    <div id="news"></div>
-    <div class="note">ฟีดจาก TradingView — พาดหัวภาษาอังกฤษตามต้นทาง ไม่แปลอัตโนมัติเพื่อลดความคลาดเคลื่อน</div>
-  </div>
+  
+  <div class="card"><div style="font-size:12.5px;line-height:1.85;color:var(--tx2)"><b>ปฏิทินเศรษฐกิจและฟีดข่าวย้ายไปหน้าของมันแล้ว</b><br><a href="events.html">ปฏิทินเหตุการณ์</a> — ตัวเลขเศรษฐกิจ วันประกาศงบ และเหตุการณ์ที่ขยับทองกับคริปโต · <a href="market.html">ตลาด · กราฟ · ข่าว</a> — ฟีดข่าวตลาดและข่าวคริปโต<br>หน้านี้เก็บไว้เฉพาะสิ่งที่ต้องอ่านตอนเช้า: เกิดอะไรขึ้นเมื่อคืน และหุ้นที่ติดตามขยับไปเท่าไหร่</div></div>
 </main>
 
+<script src="wl.js"></script>
 <script>
 /* ============================================================
    Morning Brief
@@ -115,7 +110,8 @@ const ASSETS=[
  {c:'^spx',n:'S&P 500'},{c:'^ndq',n:'Nasdaq'},{c:'^dji',n:'Dow Jones'},
  {c:'^vix',n:'VIX'},{c:'xauusd',n:'ทองคำ'},{c:'cl.f',n:'น้ำมัน WTI'},
  {c:'btcusd',n:'Bitcoin'},{c:'dx.f',n:'ดัชนีดอลลาร์'}];
-const WL=['aapl','msft','nvda','googl','amzn','meta','tsla'];
+/* รายชื่อมาจากชุดกลาง แก้ที่หน้าไหนก็เปลี่ยนตามกันหมด */
+const WL=WATCHLIST.get();
 
 const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
   .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -148,7 +144,7 @@ function lastDay(bars){
 async function load(){
   const m=document.getElementById('msg'), btn=document.getElementById('bLoad');
   btn.disabled=true;
-  const codes=[...ASSETS.map(x=>x.c),...WL.map(s=>s+'.us')];
+  const codes=[...ASSETS.map(x=>x.c),...WL.map(s=>s.toLowerCase()+'.us')];
   const data={}; const q=codes.slice(); let n=0;
   async function worker(){
     while(q.length){
@@ -289,8 +285,9 @@ function render(){
     bits.map(b=>'<p>'+b+'</p>').join('')+aiPart;
 
   /* ---- watchlist ---- */
-  const rows=WL.map(s=>{const r=D[s+'.us']?lastDay(D[s+'.us']):null;
-    return r?{sym:s.toUpperCase(),r}:null}).filter(Boolean)
+  const rows=WL.map(s=>{const c=s.toLowerCase()+'.us';
+    const r=D[c]?lastDay(D[c]):null;
+    return r?{sym:s,r}:null}).filter(Boolean)
     .sort((a,b)=>Math.abs(b.r.pct)-Math.abs(a.r.pct));
   document.getElementById('wl').innerHTML=rows.length
     ? '<table><thead><tr><th>หุ้น</th><th>ปิด</th><th>เปลี่ยนแปลง</th><th>ช่วงวัน</th></tr></thead><tbody>'
@@ -305,23 +302,7 @@ function render(){
     : '<div class="ld">ไม่มีข้อมูล</div>';
 }
 
-/* ---- วิดเจ็ตปฏิทินและข่าว ---- */
-function tv(id,file,cfg,h){
-  const host=document.getElementById(id); if(!host)return;
-  host.innerHTML='';
-  const w=document.createElement('div');
-  w.className='tradingview-widget-container tvwrap';
-  const inner=document.createElement('div');
-  inner.className='tradingview-widget-container__widget';
-  if(h)inner.style.height=h;
-  w.appendChild(inner);
-  const sc=document.createElement('script');
-  sc.type='text/javascript'; sc.async=true;
-  sc.src='https://s3.tradingview.com/external-embedding/'+file;
-  sc.innerHTML=JSON.stringify(Object.assign(
-    {colorTheme:'dark',isTransparent:true,locale:'th'},cfg));
-  w.appendChild(sc); host.appendChild(w);
-}
+
 
 document.getElementById('bLoad').onclick=load;
 try{const c=JSON.parse(localStorage.getItem(KEY));
@@ -329,10 +310,6 @@ try{const c=JSON.parse(localStorage.getItem(KEY));
 loadBrief().then(render);
 render();
 setInterval(renderClock,30000);
-tv('cal','embed-widget-events.js',{width:'100%',height:420,
-  importanceFilter:'0,1',countryFilter:'us,eu,jp,gb,cn'});
-tv('news','embed-widget-timeline.js',{feedMode:'all_symbols',width:'100%',
-  height:460,displayMode:'regular'});
 </script>
 <script src="theme.js"></script>
 </body></html>

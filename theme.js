@@ -90,7 +90,6 @@
       {h:'brief.html',  n:'Morning Brief', i:'☀'},
       {h:'weekly.html', n:'Market Weekly', i:'📅'}]},
     {g:'ตลาด', items:[
-      {h:'market.html', n:'ภาพรวม · ข่าว', i:'🌍'},
       {h:'heatmap.html',n:'Heat Map',       i:'🔥'},
       {h:'breadth.html',n:'Market Breadth', i:'📊'},
       {h:'sentiment.html',n:'กลัว · โลภ',  i:'😨'},
@@ -100,13 +99,12 @@
       {h:'scanner.html',n:'Quant Scanner',   i:'⚡'},
       {h:'theme-matrix.html',n:'Thematic Matrix', i:'🧩'},
       {h:'macro.html',  n:'Macro Scorecard', i:'🧭'},
-      {h:'trade.html',  n:'เทรด · กราฟ',     i:'📈'}]},
+      {h:'market.html', n:'ตลาด · กราฟ · ข่าว', i:'📈'}]},
     {g:'เวิร์กสเปซ', items:[
       {h:'index.html',  n:'พอร์ต',    i:'💼'},
       {h:'plan.html',   n:'แผนลงทุน · ปรับสมดุล', i:'🧭'},
       {h:'journal.html',n:'Backtest Journal', i:'📓'},
-      {h:'bot.html',    n:'Backtest อัตโนมัติ', i:'🤖'},
-      {h:'botlab.html', n:'Bot Lab · แยกสภาวะ', i:'🧪'}]}
+      {h:'botlab.html', n:'Bot Lab · ทดสอบกลยุทธ์', i:'🧪'}]}
   ];
   function curPage(){
     var f=(location.pathname.split('/').pop()||'index.html').toLowerCase();

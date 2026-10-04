@@ -146,6 +146,7 @@ display:grid;place-items:center;font-size:11px;font-weight:700}
   </div>
 </main>
 
+<script src="wl.js"></script>
 <script src="engine.js"></script>
 <script>
 /* ============================================================
@@ -175,7 +176,7 @@ const AGENTS=[
   sched:'เย็นวันอาทิตย์', needs:'agent-data.json'}
 ];
 const KPF='pro_pf', KPX='pro_px', KSEC='pro_sec', KHIST='pro_hist';
-const KJ='bt_trades_v1', KJC='bt_cfg_v1', KWL='ev_wl_v1';
+const KJ='bt_trades_v1', KJC='bt_cfg_v1';
 
 const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
   .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -289,7 +290,7 @@ function render(){
 /* ---------- ส่งออกข้อมูลให้เอเจนต์ ---------- */
 function exportData(){
   const pf=ld(KPF,[]), px=ld(KPX,{}), sec=ld(KSEC,{}), hist=ld(KHIST,[]);
-  const tr=ld(KJ,[]), cfg=ld(KJC,{}), wl=ld(KWL,[]);
+  const tr=ld(KJ,[]), cfg=ld(KJC,{}), wl=WATCHLIST.raw();
   const rows=pf.map(h=>{
     const sym=(h.sym||'').toUpperCase();
     const p=h.type==='cash'?1:(h.manual!=null&&h.manual!==''&&isFinite(h.manual)

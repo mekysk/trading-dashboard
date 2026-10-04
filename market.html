@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Trading Dashboard Pro — ตลาด + พอร์ต</title>
+<title>ตลาด · กราฟ · ข่าว — Trading Dashboard</title>
 <style>
 :root{--bg:#0b0e14;--bg2:#111721;--bg3:#161d2a;--line:#222c3d;--tx:#e6edf7;
 --tx2:#94a3b8;--tx3:#5d6b80;--gold:#f5b942;--acc:#3b82f6;--up:#22c55e;--warn:#f59e0b}
@@ -49,10 +49,6 @@ border-left:2px solid var(--tx3);border-radius:0 7px 7px 0;margin-top:14px}
 .tvwrap{border-radius:8px;overflow:hidden;background:var(--bg2)}
 #tape{border-bottom:1px solid var(--line)}
 .tvcopy{display:none}
-.sitenav{display:flex;gap:2px;margin-left:6px}
-.sitenav a{color:var(--tx3);padding:5px 11px;font-size:12.5px;font-weight:600;border-radius:7px;text-decoration:none}
-.sitenav a.on{color:var(--tx);background:var(--bg3)}
-.sitenav a:hover{color:var(--tx2)}
 .hide{display:none!important}
 @media(max-width:820px){main{padding:12px 9px}}
 table{width:100%;border-collapse:collapse;font-size:13px}
@@ -88,14 +84,12 @@ label.sub{display:inline-flex;align-items:center;gap:5px}
 @media(max-width:820px){.addrow{grid-template-columns:1fr 1fr}}
 
 </style>
-<link rel="stylesheet" href="theme.css">
 </head>
 <body>
 
 <header>
   <div class="hbar">
-    <div class="logo">TRADING <span>DASHBOARD</span></div>
-    <div class="sitenav"><a href="index.html">PORT</a><a href="trade.html">TRADE</a><a href="macro.html">MACRO</a><a href="bot.html">BOT</a><a class="on" href="#">MARKET</a><a href="weekly.html">WEEKLY</a></div>
+    <div class="logo">TRADING <span>DASHBOARD</span> <span style="font-size:10px;color:var(--tx3)">PRO</span></div>
     <span id="ms" class="pill c">—</span>
     <div class="clk">
       <div>ไทย <b id="c1">--:--</b></div>
@@ -109,9 +103,7 @@ label.sub{display:inline-flex;align-items:center;gap:5px}
     <button data-p="ch">กราฟ</button>
     <button data-p="sy">หุ้นรายตัว</button>
     <button data-p="nw">ข่าว</button>
-    <button data-p="cal">ปฏิทินเศรษฐกิจ</button>
-    <button data-p="pf">พอร์ต &amp; Rebalance</button>
-    <button data-p="heat">แผนที่ตลาด</button>
+    <button data-p="pf">สมุดซื้อขาย · แจ้งเตือน</button>
   </nav>
 </header>
 
@@ -198,15 +190,10 @@ label.sub{display:inline-flex;align-items:center;gap:5px}
   </div>
 </section>
 
-<section class="page" id="p-cal">
-  <div class="card"><h3>ปฏิทินเศรษฐกิจ <span class="sub">กรองความสำคัญและสกุลเงินได้ในวิดเจ็ต</span></h3>
-    <div id="calMain"></div></div>
-  <div class="note">
-    เวลาในวิดเจ็ตปรับเป็นโซนเวลาไทยให้แล้ว · ตัวเลข "Actual" จะขึ้นเมื่อประกาศจริง
-  </div>
-</section>
+
 
 <section class="page" id="p-pf">
+<div class="card" style="border-color:rgba(59,130,246,.3);background:rgba(59,130,246,.06)"><div style="font-size:12px;line-height:1.85;color:var(--tx2)"><b>แท็บนี้เหลือไว้เฉพาะของที่ไม่มีที่อื่น</b> — สมุดบันทึกซื้อขาย · แจ้งเตือนราคา · สรุปกองทุน SSF/RMF<br>ส่วนตารางพอร์ต ปรับสมดุล และแผน DCA ด้านล่าง มีเวอร์ชันที่ละเอียดกว่าอยู่ที่ <a href="index.html">หน้าพอร์ต</a> และ <a href="plan.html">หน้าแผนลงทุน</a> — ใช้สองหน้านั้นเป็นหลัก ของในแท็บนี้เก็บไว้เผื่อเคยชิน</div></div>
   <div id="shareIn" class="hide"></div>
   <div id="shareBox" class="card hide"></div>
   <div class="grid g4" id="pfStats" style="margin-bottom:14px"></div>
@@ -354,11 +341,7 @@ label.sub{display:inline-flex;align-items:center;gap:5px}
   </div>
 </section>
 
-<section class="page" id="p-heat">
-  <div class="card"><h3>แผนที่ความร้อนหุ้นสหรัฐฯ <span class="sub">ขนาด = มูลค่าตลาด · สี = %เปลี่ยนแปลง</span></h3>
-    <div id="heatStock"></div></div>
-  <div class="card" style="margin-top:12px"><h3>แผนที่ความร้อนคริปโต</h3><div id="heatCrypto"></div></div>
-</section>
+
 
 <div class="disc">
   ข้อมูลและวิดเจ็ตทั้งหมดโดย <a href="https://www.tradingview.com/" target="_blank" rel="noopener noreferrer">TradingView</a> ·
@@ -528,21 +511,8 @@ function buildNews() {
   tv('nwCrypto','embed-widget-timeline.js',
     {feedMode:'market',market:'crypto',width:'100%',height:620,displayMode:'regular'});
 }
-function buildCal() {
-  tv('calMain','embed-widget-events.js',
-    {width:'100%',height:620,importanceFilter:'0,1',countryFilter:'us,eu,jp,gb,cn'});
-}
-function buildHeat() {
-  tv('heatStock','embed-widget-stock-heatmap.js',{
-    dataSource:'SPX500',blockSize:'market_cap_basic',blockColor:'change',
-    grouping:'sector',width:'100%',height:520,hasTopBar:true,isDataSetEnabled:true,
-    isZoomEnabled:true,hasSymbolTooltip:true,
-  });
-  tv('heatCrypto','embed-widget-crypto-coins-heatmap.js',{
-    dataSource:'Crypto',blockSize:'market_cap_calc',blockColor:'24h_close_change|5',
-    width:'100%',height:420,hasTopBar:true,isZoomEnabled:true,hasSymbolTooltip:true,
-  });
-}
+
+
 
 
 /* ==================================================================
@@ -1402,8 +1372,6 @@ function go(p) {
   if (p === 'ch') buildChart();
   if (p === 'sy') buildSymbol();
   if (p === 'nw') buildNews();
-  if (p === 'cal') buildCal();
-  if (p === 'heat') buildHeat();
   if (p === 'pf') initPF();
 }
 function rebuildAll() {
@@ -1452,6 +1420,5 @@ function init() {
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
 else init();
 </script>
-<script src="theme.js"></script>
 </body>
 </html>

@@ -105,8 +105,8 @@ padding:3px 6px 3px 9px;font-size:12px;font-weight:600;display:flex;align-items:
     <a href="brief.html">BRIEF</a><a href="events.html" class="on">EVENTS</a>
     <a href="scanner.html">SCANNER</a><a href="flow.html">FLOW</a>
     <a href="weekly.html">WEEKLY</a><a href="index.html">PORT</a>
-    <a href="trade.html">TRADE</a><a href="macro.html">MACRO</a>
-    <a href="bot.html">BOT</a><a href="market.html">MARKET</a>
+    <a href="macro.html">MACRO</a>
+    <a href="market.html">MARKET</a>
   </nav>
   <div class="right">
     <span id="msg" class="sub"></span>
@@ -228,6 +228,7 @@ NVDA, Q3 FY27, 2026-11-19, , 1.20, , 54000"></textarea>
   </div>
 </main>
 
+<script src="wl.js"></script>
 <script src="engine.js"></script>
 <script>
 /* ============================================================
@@ -236,7 +237,7 @@ NVDA, Q3 FY27, 2026-11-19, , 1.20, , 54000"></textarea>
    ส่วนปฏิกิริยาราคา / RS / เทรนด์ คำนวณสดจากราคาจริง
    ============================================================ */
 const E=SCANENG;
-const KWL='ev_wl_v1', KER='ev_er_v1', KEV='ev_ev_v1', KPX='ev_px_v1';
+const KER='ev_er_v1', KEV='ev_ev_v1', KPX='ev_px_v1';
 const PROX=[u=>'https://api.allorigins.win/raw?url='+encodeURIComponent(u),
   u=>'https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent(u),
   u=>'https://corsproxy.io/?url='+encodeURIComponent(u)];
@@ -324,7 +325,7 @@ function reaction(bars,date,when){
 function loadLocal(){
   const g=(k,d)=>{ try{const v=JSON.parse(localStorage.getItem(k)); return v==null?d:v}
     catch(e){ return d } };
-  const w=g(KWL,null); if(Array.isArray(w))WL=w;
+  WL=WATCHLIST.raw();   /* ใช้รายชื่อชุดกลาง ไม่เก็บของตัวเอง */
   const a=g(KER,null); if(a&&typeof a==='object')ER=a;
   const b=g(KEV,null); if(b&&typeof b==='object')EV=b;
   const p=g(KPX,null); if(p&&p.t&&Date.now()-p.t<18*36e5)PX=p;
@@ -686,12 +687,12 @@ g('bPaste').onclick=()=>{
 g('bWlAdd').onclick=()=>{
   g('wlAdd').value.toUpperCase().split(/[\s,]+/).map(x=>x.trim()).filter(Boolean)
     .forEach(s=>{ if(WL.indexOf(s)<0)WL.push(s) });
-  g('wlAdd').value=''; sv(KWL,WL); render();
+  g('wlAdd').value=''; WL=WATCHLIST.set(WL); render();
 };
-g('bWlClear').onclick=()=>{ WL=[]; sv(KWL,WL); render() };
+g('bWlClear').onclick=()=>{ WL=WATCHLIST.set([]); render() };
 g('wl').addEventListener('click',e=>{
   const s=e.target.dataset?e.target.dataset.del:null;
-  if(!s)return; WL=WL.filter(x=>x!==s); sv(KWL,WL); render();
+  if(!s)return; WL=WATCHLIST.remove(s); render();
 });
 g('chips').addEventListener('click',e=>{
   const b=e.target.closest('button'); if(!b||!b.dataset.fl)return;

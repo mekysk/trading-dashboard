@@ -114,9 +114,9 @@ grid-template-areas:"a a" "b c" "d f" "e e"}}
     <div class="logo">TRADING <span>DASHBOARD</span></div>
     <nav>
       <a href="index.html">PORT</a>
-      <a href="trade.html">TRADE</a>
+      
       <a class="on" href="macro.html">MACRO</a>
-      <a href="bot.html">BOT</a>
+      
       <a href="market.html">MARKET</a>
       <a href="weekly.html">WEEKLY</a>
     </nav>
@@ -138,22 +138,9 @@ grid-template-areas:"a a" "b c" "d f" "e e"}}
 <div class="hero" id="hero"></div>
 
 <div class="grid">
-  <div class="card ga">
-    <h3>เงินอยู่ที่ไหน <span class="sub">ผลตอบแทน ETF ตัวแทนแต่ละตลาด</span>
-      <button class="btn xs" id="bFlow" style="margin-left:auto">↻ ดึงข้อมูล</button></h3>
-    <div id="flowBox"></div>
-    <div class="note" style="margin-top:12px;padding-top:10px"><b>แทนแผนที่โลก</b>
-      เพราะข้อมูลเงินไหลจริงไม่มีให้ใช้ฟรี — ตลาดไหนขึ้น = เงินไหลเข้าที่นั่น
-      <b>วัดได้จริงและตรวจสอบย้อนหลังได้</b><br>
-      ข้อมูลแคชไว้ 12 ชม. กดปุ่มเพื่อดึงใหม่</div>
-  </div>
+  
 
-  <div class="card gb">
-    <h3>Fear &amp; Greed รายสินทรัพย์</h3>
-    <div id="sent"></div>
-    <div class="note">คะแนนสูง = โลภ (ระวัง) · ต่ำ = กลัว (มักเป็นโอกาส)<br>
-      ถ่วงน้ำหนัก Tier A 0.5 · B 0.3 · C 0.2 ตามที่คุณตั้งไว้</div>
-  </div>
+  
 
   <div class="card gc">
     <h3>อ่านสถานการณ์ <span class="sub">แปลจากตัวเลข ไม่ใช่ความเห็น</span></h3>
@@ -245,6 +232,7 @@ grid-template-areas:"a a" "b c" "d f" "e e"}}
     • <b>ระบบนี้ยังไม่มีชั้น Risk Management</b> (ขาดทุนต่อไม้, portfolio heat, drawdown stop) ซึ่งสำคัญกว่าการวิเคราะห์
   </div>
 </div>
+<div class="card"><div style="font-size:12.5px;line-height:1.85;color:var(--tx2)"><b>ความกลัว · ความโลภ ย้ายไปอยู่หน้าของมันเองแล้ว</b> — <a href="sentiment.html">เปิดหน้ากลัว · โลภ</a> ซึ่งคำนวณจาก 7 องค์ประกอบ มีเส้นย้อนหลัง 1 ปี และบอกได้ว่าแต่ละองค์ประกอบคิดจากอะไร<br>ส่วน <b>แผนที่เงิน</b> ว่าเงินไปกองที่สินทรัพย์ประเภทไหน อยู่ในหน้าเดียวกันนั้นด้วย</div></div>
 </main>
 
 <script>
@@ -713,18 +701,6 @@ function render(){
     +'</tbody><tfoot><tr><td colspan="5">เงินสด / T-Bills</td>'
     +'<td class="mono">'+pc1(R.cash)+'</td></tr></tfoot></table></div>';
 
-  /* Fear & Greed */
-  document.getElementById('sent').innerHTML=R.assets.map(a=>{
-    const col=a.comp==null?'var(--tx3)':a.comp>=70?'var(--dn)':a.comp>30?'var(--warn)':'var(--up)';
-    const pill=a.band==='NEUTRAL'?'p-nu':(a.band.includes('GREED')?'p-bad':'p-ok');
-    return '<div class="sblock"><div class="top"><span class="nm">'+ASSET[a.key]+'</span>'
-      +'<span class="pill '+pill+'">'+esc(a.band)+'</span>'
-      +'<span class="sc" style="color:'+col+'">'+(a.comp==null?'—':a.comp)+'</span></div>'
-      +'<div class="gauge"><i style="left:'+(a.comp==null?50:a.comp)+'%"></i></div>'
-      +'<div class="gl"><span>กลัวสุด 0</span><span>โลภสุด 100</span></div>'
-      +'<div class="sub" style="margin-top:4px">Regime bucket: <b>'+esc(a.bucket)
-      +'</b> → ตัวคูณ ×'+a.mult+'</div></div>';
-  }).join('');
 
   /* อ่านสถานการณ์ */
   const bits=[];
@@ -764,8 +740,6 @@ function render(){
     +'<a href="https://www.naaim.org/" target="_blank" rel="noopener noreferrer">NAAIM</a> · '
     +'<a href="https://www.aaii.com/sentimentsurvey" target="_blank" rel="noopener noreferrer">AAII</a> · '
     +'<a href="https://www.gold.org/" target="_blank" rel="noopener noreferrer">WGC</a></div>';
-
-  renderFlows();
   renderVal();
   renderAB();
   renderSI();
@@ -774,45 +748,7 @@ function render(){
 
 
 /* ---------- วาดช่อง "เงินอยู่ที่ไหน" ---------- */
-function renderFlows(){
-  const el=document.getElementById('flowBox');
-  if(!FLOWS){
-    el.innerHTML='<div class="sub" style="padding:16px 0;text-align:center;line-height:1.8">'
-      +'ยังไม่มีข้อมูล — กดปุ่ม <b>↻ ดึงข้อมูล</b> ด้านบน<br>'
-      +'ใช้เวลาราว 10–20 วินาที แล้วเก็บไว้ 12 ชั่วโมง</div>';
-    return;
-  }
-  const age=Math.round((Date.now()-FLOWS.t)/60000);
-  const bar=(v,mx)=>{
-    if(v==null)return '<span class="bar"><span class="mid"></span></span>';
-    const w=Math.min(48,Math.abs(v)/mx*48);
-    const pos=v>=0;
-    return '<span class="bar"><i style="left:'+(pos?50:50-w)+'%;width:'+w
-      +'%;background:'+(pos?'var(--up)':'var(--dn)')+'"></i><span class="mid"></span></span>';
-  };
-  const tbl=(g,title)=>{
-    const rows=flowRows(g);
-    if(!rows.length)return '';
-    const mx=Math.max(8,...rows.map(r=>Math.abs(r.m1||0)));
-    return '<div class="gtitle" style="margin-top:'+(g==='ct'?'0':'14px')+'">'+title+'</div>'
-      +'<div class="axis" style="border:none;padding-bottom:2px">'
-      +'<span class="k" style="font-size:9.5px;color:var(--tx3);text-transform:uppercase">ตลาด</span>'
-      +'<span class="bar" style="background:none"></span>'
-      +'<span class="v" style="font-size:9.5px;color:var(--tx3)">1M</span>'
-      +'<span class="v" style="font-size:9.5px;color:var(--tx3)">3M</span>'
-      +'<span class="v" style="font-size:9.5px;color:var(--tx3)">YTD</span></div>'
-      +rows.map(r=>'<div class="axis"><span class="k">'+esc(r.n)+'</span>'
-        +bar(r.m1,mx)
-        +'<span class="v '+(r.m1>=0?'up':'dn')+'">'+(r.m1==null?'—':(r.m1>=0?'+':'')+r.m1.toFixed(1))+'</span>'
-        +'<span class="v '+(r.m3>=0?'up':'dn')+'">'+(r.m3==null?'—':(r.m3>=0?'+':'')+r.m3.toFixed(1))+'</span>'
-        +'<span class="v '+(r.ytd>=0?'up':'dn')+'">'+(r.ytd==null?'—':(r.ytd>=0?'+':'')+r.ytd.toFixed(1))+'</span>'
-        +'</div>').join('');
-  };
-  el.innerHTML=tbl('ct','รายประเทศ — เรียงตามผลตอบแทน 1 เดือน')
-    +tbl('as','รายสินทรัพย์')
-    +'<div class="sub" style="margin-top:9px">ดึงล่าสุด '+age+' นาทีที่แล้ว · '
-    +'แถบแสดงผลตอบแทน 1 เดือน</div>';
-}
+
 
 /* ---------- วาดช่อง "สินทรัพย์ไหนราคาต่ำ" ---------- */
 function renderVal(){
@@ -1063,14 +999,6 @@ function init(){
     el.style.display=open?'none':'block';
     document.getElementById(ar).textContent=open?'▼ กดเพื่อเปิด/ปิด':'▲ กดเพื่อเปิด/ปิด';};
   tg('tgl1','body1','ar1');tg('tgl2','body2','ar2');
-  loadFlowCache();
-  document.getElementById('bFlow').onclick=async()=>{
-    const b=document.getElementById('bFlow');
-    b.textContent='กำลังดึง…';b.disabled=true;
-    const okk=await fetchFlows((d,t)=>{b.textContent='ดึง '+d+'/'+t});
-    b.disabled=false;b.textContent='↻ ดึงข้อมูล';
-    if(!okk)alert('ดึงข้อมูลไม่สำเร็จ — ตัวกลางอาจใช้ไม่ได้ตอนนี้ ลองใหม่อีกครั้ง');
-    renderFlows();};
   document.getElementById('siDate').value=new Date().toISOString().slice(0,10);
   document.getElementById('siAdd').onclick=()=>{
     const g=id=>document.getElementById(id);

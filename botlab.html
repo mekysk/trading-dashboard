@@ -76,11 +76,11 @@ border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:12.5p
 <header><div class="hbar">
   <div class="logo">TRADING <span>DASHBOARD</span></div>
   <nav>
-    <a href="bot.html">BOT</a><a href="botlab.html" class="on">BOT LAB</a>
+    <a href="botlab.html" class="on">BOT LAB</a>
     <a href="journal.html">JOURNAL</a><a href="index.html">PORT</a>
     <a href="plan.html">แผนลงทุน</a><a href="heatmap.html">HEATMAP</a>
     <a href="breadth.html">BREADTH</a><a href="scanner.html">SCANNER</a>
-    <a href="trade.html">TRADE</a><a href="macro.html">MACRO</a>
+    <a href="macro.html">MACRO</a>
   </nav>
   <div class="right">
     <span id="msg" class="sub"></span>
@@ -148,6 +148,23 @@ border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:12.5p
     <h3>🔧 ปรับค่าแยกตามสภาวะตลาด</h3>
     <div id="opt"></div>
   </div>
+<div class="card">
+  <h3>🩹 แก้ไม้ <span class="sub">เพิ่มเงินตอนติดลบเพื่อถัวต้นทุน</span></h3>
+  <div class="warnbox">
+    <b>ก่อนดูตาราง ขอให้เข้าใจกลไกนี้ก่อน</b><br>
+    การแก้ไม้ทำให้<b>ชนะเล็กๆ ติดกันยาวมาก แล้วแพ้ครั้งเดียวหมดตัว</b> —
+    ไม่ใช่เพราะโชคร้าย แต่เพราะมันคือรูปแบบผลลัพธ์ตามธรรมชาติของวิธีนี้<br>
+    การทดสอบย้อนหลัง 5 ปี<b>มักไม่มีเหตุการณ์ที่ทำให้พังอยู่ในนั้น</b> มันเลยดูดีเสมอ
+    จนกว่าจะเจอของจริง · ตารางนี้แสดง<b>เงินที่ต้องมีจริง</b> ซึ่งเป็นตัวเลขที่ backtest ไม่เคยบอกคุณ
+  </div>
+  <div class="frm" style="margin-bottom:10px">
+    <label>ไม้แรก <input id="mBase" type="number" value="1000"></label>
+    <label>คูณไม้ละ <input id="mMult" type="number" step="any" value="2"></label>
+    <label>ราคาลงไม้ละ <input id="mDrop" type="number" step="any" value="10"> %</label>
+    <label>จำนวนไม้ <input id="mSteps" type="number" value="8"></label>
+  </div>
+  <div id="mgBox"></div>
+</div>
 </main>
 
 <script src="engine.js"></script>
@@ -264,7 +281,7 @@ function render(){
   if(!R){
     g('status').innerHTML='<div class="infobox"><b>ยังไม่ได้ทดสอบ</b> — '
       +'ใส่ชื่อสินทรัพย์แล้วกด <b>▶ ทดสอบ</b><br>'
-      +'หน้านี้ใช้เครื่องทดสอบตัวเดียวกับหน้า <a href="bot.html">BOT</a> '
+      +'หน้านี้ใช้เครื่องทดสอบตัวเดียวกับหน้า  '
       +'ตัวเลขจึงตรงกัน ของใหม่คือการแยกผลตามสภาวะตลาด</div>';
     ['eq','yearly','byreg','size'].forEach(i=>g(i).innerHTML='<div class="ld">—</div>');
     g('diag').innerHTML='';
@@ -520,10 +537,66 @@ function optimize(){
   g('optCard').scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
+function martingale(base,mult,steps,dropPct){
+  const rows=[];
+  let total=0,qty=0,cost=0;
+  for(let i=0;i<steps;i++){
+    const amt=base*Math.pow(mult,i);
+    const px=100*Math.pow(1-dropPct/100,i);   /* ราคาสมมติเริ่มที่ 100 */
+    total+=amt; cost+=amt; qty+=amt/px;
+    const avg=cost/qty;
+    const breakeven=(avg/px-1)*100;
+    rows.push({step:i+1,amt,px,total,avg,breakeven});
+  }
+  return rows;
+}
+
+/* ============================================================
+   หน้า BOT — ส่วนติดต่อผู้ใช้
+   ============================================================ */
+const usd=v=>(v==null||!isFinite(v))?'—':(v<0?'-$':'$')+Math.abs(v).toLocaleString('en-US',{maximumFractionDigits:0});
+
+
+function showMG(){
+  const gv=id=>+document.getElementById(id).value;
+  const base=gv('mBase')||1000, mult=gv('mMult')||2, steps=Math.min(15,gv('mSteps')||8), drop=gv('mDrop')||10;
+  const rows=martingale(base,mult,steps,drop);
+  const last=rows[rows.length-1];
+  const cap=params().capital;
+  document.getElementById('mgBox').innerHTML=
+    '<div style="overflow-x:auto"><table><thead><tr><th>ไม้ที่</th><th>ลงเพิ่ม</th>'
+    +'<th>ราคาสมมติ</th><th>เงินที่ใช้ไปแล้ว</th><th>ต้นทุนเฉลี่ย</th>'
+    +'<th>ต้องเด้งกี่ % ถึงเท่าทุน</th><th>% ของพอร์ต</th></tr></thead><tbody>'
+    +rows.map(r=>{
+      const ofCap=cap?r.total/cap*100:0;
+      const over=ofCap>100;
+      return '<tr'+(over?' style="opacity:.55"':'')+'><td><b>'+r.step+'</b></td>'
+        +'<td class="mono">'+usd(r.amt)+'</td>'
+        +'<td class="mono">'+r.px.toFixed(1)+'</td>'
+        +'<td class="mono'+(over?' dn':'')+'">'+usd(r.total)+'</td>'
+        +'<td class="mono">'+r.avg.toFixed(1)+'</td>'
+        +'<td class="mono t-w">+'+r.breakeven.toFixed(1)+'%</td>'
+        +'<td class="mono'+(over?' dn':'')+'">'+ofCap.toFixed(0)+'%'+(over?' ⛔':'')+'</td></tr>';
+    }).join('')+'</tbody></table></div>'
+    +'<div class="warnbox" style="margin-top:11px;margin-bottom:0">'
+    +'<b>ครบ '+steps+' ไม้ ต้องใช้เงิน '+usd(last.total)+' = '
+    +(last.total/base).toFixed(0)+' เท่าของไม้แรก'
+    +(cap?' และคิดเป็น '+(last.total/cap*100).toFixed(0)+'% ของทุนทั้งหมด':'')+'</b><br>'
+    +'และถึงตอนนั้นราคายังต้องเด้งขึ้นอีก <b>'+last.breakeven.toFixed(1)+'%</b> คุณถึงจะแค่<b>เท่าทุน</b><br>'
+    +'สังเกตว่า<b>ยิ่งแก้ไม้ ตัวเลขนี้ยิ่งสูงขึ้น ไม่ใช่ต่ำลง</b> — '
+    +'เพราะราคาร่วงเร็วกว่าที่ต้นทุนเฉลี่ยจะตามลงไปทัน '
+    +'ซึ่งสวนทางกับความรู้สึกของคนส่วนใหญ่ที่คิดว่าถัวแล้วจะกลับมาง่ายขึ้น</div>';
+}
+
+/* ---------- เริ่มทำงาน ---------- */
+
 g('bRun').onclick=run; g('bRun2').onclick=run; g('bOpt').onclick=optimize;
 ['fast','slow','cap','risk','fee','slip','stop','take','yrs'].forEach(i=>
   g(i).addEventListener('change',()=>{ if(BARS){compute();render()} }));
+['mBase','mMult','mDrop','mSteps'].forEach(i=>
+  g(i).addEventListener('input',showMG));
 render();
+showMG();
 </script>
 <script src="theme.js"></script>
 </body></html>

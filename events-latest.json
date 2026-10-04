@@ -1,0 +1,239 @@
+{
+  "generated": "2026-10-04T19:00:00+07:00",
+  "earnings": [
+    {
+      "sym": "JPM",
+      "period": "Q3 2026",
+      "date": "2026-10-13",
+      "when": "bmo",
+      "eps": null,
+      "epsEst": 5.88,
+      "rev": null,
+      "revEst": 50920,
+      "src": "https://www.marketbeat.com/stocks/NYSE/JPM/earnings/"
+    },
+    {
+      "sym": "UNH",
+      "period": "Q3 2026",
+      "date": "2026-10-13",
+      "when": "bmo",
+      "eps": null,
+      "epsEst": 3.79,
+      "rev": null,
+      "revEst": null,
+      "src": "https://www.marketbeat.com/stocks/NYSE/UNH/earnings/"
+    },
+    {
+      "sym": "NFLX",
+      "period": "Q3 2026",
+      "date": "2026-10-20",
+      "when": "amc",
+      "eps": null,
+      "epsEst": 0.822,
+      "rev": null,
+      "revEst": 12880,
+      "src": "https://www.marketbeat.com/stocks/NASDAQ/NFLX/earnings/"
+    },
+    {
+      "sym": "TSLA",
+      "period": "Q3 2026",
+      "date": "2026-10-21",
+      "when": "amc",
+      "eps": null,
+      "epsEst": 0.43,
+      "rev": null,
+      "revEst": null,
+      "src": "https://www.marketbeat.com/stocks/NASDAQ/TSLA/earnings/"
+    },
+    {
+      "sym": "MA",
+      "period": "Q3 2026",
+      "date": "2026-10-22",
+      "when": "amc",
+      "eps": null,
+      "epsEst": 5.11,
+      "rev": null,
+      "revEst": 9650,
+      "src": "https://www.marketbeat.com/stocks/NASDAQ/MA/earnings/"
+    },
+    {
+      "sym": "XOM",
+      "period": "Q3 2026",
+      "date": "2026-10-30",
+      "when": "bmo",
+      "eps": null,
+      "epsEst": 3.40,
+      "rev": null,
+      "revEst": 94880,
+      "src": "https://www.investing.com/equities/exxon-mobil-earnings"
+    },
+    {
+      "sym": "V",
+      "period": "Q4 2026",
+      "date": "2026-10-27",
+      "when": "amc",
+      "eps": null,
+      "epsEst": 3.43,
+      "rev": null,
+      "revEst": null,
+      "src": "https://www.tipranks.com/stocks/v/earnings"
+    },
+    {
+      "sym": "MSFT",
+      "period": "Q1 FY2027",
+      "date": "2026-10-28",
+      "when": "amc",
+      "eps": null,
+      "epsEst": 4.71,
+      "rev": null,
+      "revEst": 90590,
+      "src": "https://www.marketbeat.com/stocks/NASDAQ/MSFT/earnings/"
+    },
+    {
+      "sym": "GOOGL",
+      "period": "Q3 2026",
+      "date": "2026-10-28",
+      "when": "amc",
+      "eps": null,
+      "epsEst": 3.04,
+      "rev": null,
+      "revEst": 127240,
+      "src": "https://www.marketbeat.com/earnings/reports/2026-10-28-alphabet-inc-stock/"
+    },
+    {
+      "sym": "META",
+      "period": "Q3 2026",
+      "date": "2026-10-28",
+      "when": "amc",
+      "eps": null,
+      "epsEst": 6.34,
+      "rev": null,
+      "revEst": 63200,
+      "src": "https://www.marketbeat.com/stocks/NASDAQ/META/earnings/"
+    },
+    {
+      "sym": "AAPL",
+      "period": "Q4 FY2026",
+      "date": "2026-10-29",
+      "when": "amc",
+      "eps": null,
+      "epsEst": 1.98,
+      "rev": null,
+      "revEst": 113200,
+      "src": "https://www.marketbeat.com/stocks/NASDAQ/AAPL/earnings/"
+    },
+    {
+      "sym": "AMZN",
+      "period": "Q3 2026",
+      "date": "2026-10-29",
+      "when": "amc",
+      "eps": null,
+      "epsEst": 1.955,
+      "rev": null,
+      "revEst": 202140,
+      "src": "https://www.marketbeat.com/stocks/NASDAQ/AMZN/earnings/"
+    },
+    {
+      "sym": "LLY",
+      "period": "Q3 2026",
+      "date": "2026-10-29",
+      "when": "amc",
+      "eps": null,
+      "epsEst": 9.92,
+      "rev": null,
+      "revEst": 22400,
+      "src": "https://www.marketbeat.com/earnings/reports/2026-10-29-eli-lilly-and-company-stock/"
+    },
+    {
+      "sym": "AMD",
+      "period": "Q3 2026",
+      "date": "2026-11-03",
+      "when": "amc",
+      "eps": null,
+      "epsEst": 1.93,
+      "rev": null,
+      "revEst": 12980,
+      "src": "https://www.marketbeat.com/stocks/NASDAQ/AMD/earnings/"
+    },
+    {
+      "sym": "WMT",
+      "period": "Q3 FY2027",
+      "date": "2026-11-19",
+      "when": "amc",
+      "eps": null,
+      "epsEst": 0.64,
+      "rev": null,
+      "revEst": null,
+      "src": "https://www.tipranks.com/stocks/wmt/earnings"
+    },
+    {
+      "sym": "NVDA",
+      "period": "Q3 FY2027",
+      "date": "2026-11-25",
+      "when": "amc",
+      "eps": null,
+      "epsEst": 2.47,
+      "rev": null,
+      "revEst": 108000,
+      "src": "https://www.tipranks.com/stocks/nvda/earnings"
+    }
+  ],
+  "events": [
+    {
+      "date": "2026-10-02",
+      "cat": "macro",
+      "title": "สำนักงานสถิติแรงงาน : จำนวนงานนอกภาคเกษตร (NFP) สำหรับเดือนกันยายน",
+      "impact": "high",
+      "src": "https://fedratecalc.com/us-economic-calendar/october-2026/"
+    },
+    {
+      "date": "2026-10-14",
+      "cat": "macro",
+      "title": "สำนักข่าวสถิติ : ดัชนีราคาผู้บริโภค (CPI) สำหรับเดือนกันยายน",
+      "impact": "high",
+      "src": "https://fedratecalc.com/us-economic-calendar/october-2026/"
+    },
+    {
+      "date": "2026-10-15",
+      "cat": "macro",
+      "title": "ดัชนีราคาผลิตภัณฑ์ (PPI) และ ยอดขายปลีกรายเดือน (Retail Sales) ประจำเดือนกันยายน",
+      "impact": "med",
+      "src": "https://fedratecalc.com/us-economic-calendar/october-2026/"
+    },
+    {
+      "date": "2026-10-28",
+      "cat": "macro",
+      "title": "ประชุมความคิดเห็นของคณะกรรมการตลาดแบบเปิด (FOMC) + ประกาศดอกเบี้ยนโยบาย",
+      "impact": "high",
+      "src": "https://www.financecalendar.com/fomc-meetings/"
+    },
+    {
+      "date": "2026-10-29",
+      "cat": "macro",
+      "title": "GDP ประจำไตรมาส Q3 2026 (ประมาณการแรก) + PCE Inflation ประจำเดือนกันยายน",
+      "impact": "med",
+      "src": "https://fedratecalc.com/us-economic-calendar/october-2026/"
+    },
+    {
+      "date": "2026-11-06",
+      "cat": "macro",
+      "title": "จำนวนงานนอกภาคเกษตร (NFP) ประจำเดือนตุลาคม",
+      "impact": "high",
+      "src": "https://fedratecalc.com/us-economic-calendar/"
+    },
+    {
+      "date": "2026-11-10",
+      "cat": "macro",
+      "title": "ดัชนีราคาผู้บริโภค (CPI) ประจำเดือนตุลาคม",
+      "impact": "high",
+      "src": "https://fedratecalc.com/us-economic-calendar/"
+    },
+    {
+      "date": "2026-11-13",
+      "cat": "macro",
+      "title": "ดัชนีราคาผลิตภัณฑ์ (PPI) ประจำเดือนตุลาคม",
+      "impact": "med",
+      "src": "https://fedratecalc.com/us-economic-calendar/"
+    }
+  ]
+}

@@ -88,9 +88,9 @@ grid-template-areas:"a" "b" "c" "d" "e" "f" "g"}.addrow{grid-template-columns:1f
     <div class="logo">TRADING <span>DASHBOARD</span></div>
     <nav>
       <a class="on" href="index.html">PORT</a>
-      <a href="trade.html">TRADE</a>
+      
       <a href="macro.html">MACRO</a>
-      <a href="bot.html">BOT</a>
+      
       <a href="market.html">MARKET</a>
       <a href="weekly.html">WEEKLY</a>
     </nav>
@@ -133,19 +133,7 @@ grid-template-areas:"a" "b" "c" "d" "e" "f" "g"}.addrow{grid-template-columns:1f
       ตัวที่ไม่รู้จักจะขึ้นเป็น "ไม่ระบุ" ให้เลือกเองได้ แล้วระบบจะจำไว้</div>
   </div>
 
-  <div class="card gd">
-    <h3>Weekly DCA <span class="sub">แผนซื้อรายสัปดาห์</span></h3>
-    <div class="pr">
-      <label class="sub">สัปดาห์ละ <input id="dcaW" type="number" step="any" value="100" style="width:80px"> USD</label>
-      <select id="dcaMode" style="font-size:11.5px">
-        <option value="target">ตามน้ำหนักเป้า</option>
-        <option value="under">เติมตัวที่ต่ำกว่าเป้า</option>
-      </select>
-    </div>
-    <div id="dcaBox" style="margin-top:9px"></div>
-    <div class="note">DCA คือทยอยซื้อเป็นงวดเท่าๆ กัน เพื่อลดผลจากการจับจังหวะผิด
-      <b>ไม่ได้รับประกันกำไรและไม่ได้ป้องกันการขาดทุน</b></div>
-  </div>
+  
 
   <div class="card ge">
     <h3>สินทรัพย์ในพอร์ต · ราคาขึ้นลง</h3>
@@ -189,28 +177,12 @@ font-size:12px;resize:vertical"></textarea>
       เพราะแหล่งข้อมูลฟรีให้มาแค่นี้ · ช่องราคากรอกทับเองได้เสมอ</div>
   </div>
 
-  <div class="card gf">
-    <h3>วิเคราะห์ปรับ Balance · แผนลงทุน</h3>
-    <div class="pr">
-      <label class="sub">ปรับเมื่อเบี่ยงเกิน <input id="band" type="number" value="5" style="width:52px"> %</label>
-      <label class="sub">เติมเงิน <input id="addCash" type="number" step="any" value="0" style="width:80px"> USD</label>
-    </div>
-    <div id="rbBox" style="margin-top:9px"></div>
-    <div class="note">คำนวณจากน้ำหนักเป้าที่<b>คุณกรอกเอง</b> ไม่ได้ประเมินพื้นฐาน สภาพคล่อง ภาษี
-      หรือสถานการณ์ส่วนตัวของคุณ — <b>ไม่ใช่คำแนะนำการลงทุน</b></div>
-  </div>
+  
 
-  <div class="card gg">
-    <h3>แผนลงทุนรายปี</h3>
-    <div class="pr">
-      <label class="sub">เป้าทั้งปี <input id="yTgt" type="number" step="any" value="12000" style="width:90px"> USD</label>
-    </div>
-    <div id="yearBox" style="margin-top:10px"></div>
-    <div class="note">นับจาก<b>สมุดบันทึกซื้อขาย</b>เฉพาะรายการ "ซื้อ" ในปีนี้
-      ถ้ายังไม่ได้บันทึกไม้ไหน ยอดจะยังไม่ขึ้น</div>
-  </div>
+  
 
 </div>
+<div class="card"><div style="font-size:12.5px;line-height:1.85;color:var(--tx2)"><b>ปรับสมดุล · DCA · แผนรายปี ย้ายไปหน้าแผนลงทุนแล้ว</b> — <a href="plan.html">เปิดหน้าแผนลงทุน</a><br>หน้านั้นคำนวณได้ละเอียดกว่า: เลือกได้ว่าจะเติมเงินอย่างเดียวหรือซื้อขายปรับเต็ม บอกจำนวนหุ้นที่ต้องซื้อจริงหลังปัดเศษ และคำนวณให้ว่าต้องเติมเงินขั้นต่ำเท่าไหร่ถึงจะเข้าเป้าโดยไม่ต้องขายอะไรเลย<br>พอร์ตใช้ข้อมูลชุดเดียวกัน ไม่ต้องกรอกใหม่</div></div>
 </main>
 
 <script>
@@ -385,77 +357,9 @@ function targets(rs,tot){
   const s=raw.reduce((a,b)=>a+b,0)||1;
   return raw.map(v=>v/s*100);
 }
-function drawRB(){
-  const el=document.getElementById('rbBox');
-  const rs=rows().filter(r=>r.val!=null),tot=totalOf(rs);
-  const band=Number(document.getElementById('band').value)||5;
-  const add=Number(document.getElementById('addCash').value)||0;
-  if(!rs.length||!tot||!rs.some(r=>r.h.tgt!=null&&r.h.tgt!=='')){
-    el.innerHTML='<div class="ld">กรอกช่อง "เป้า %" ในตารางด้านซ้ายก่อน</div>';return;}
-  const tg=targets(rs,tot),after=tot+add;
-  el.innerHTML='<div style="overflow-x:auto"><table><thead><tr>'
-    +'<th>สินทรัพย์</th><th>ตอนนี้</th><th>เป้า</th><th>ส่วนต่าง</th><th>ทำอะไร</th></tr></thead><tbody>'
-    +rs.map((r,i)=>{
-      const now=r.val/tot*100,diff=tg[i]-now,usd=after*tg[i]/100-r.val;
-      const act=Math.abs(diff)<band?'<span class="flat">คงไว้</span>'
-        :usd>0?'<span class="up">ซื้อ '+money(Math.abs(usd))+(r.price?' <span style="font-size:10px">('+(Math.abs(usd)/r.price).toFixed(4)+' หน่วย)</span>':'')+'</span>'
-              :'<span class="dn">ลด '+money(Math.abs(usd))+(r.price?' <span style="font-size:10px">('+(Math.abs(usd)/r.price).toFixed(4)+' หน่วย)</span>':'')+'</span>';
-      return '<tr><td><b>'+esc(r.h.sym)+'</b></td><td class="mono">'+n2(now)+'%</td>'
-        +'<td class="mono" style="color:var(--gold)">'+n2(tg[i])+'%</td>'
-        +'<td class="mono '+cl(diff)+'">'+(diff>=0?'+':'')+n2(diff)+'%</td><td>'+act+'</td></tr>';
-    }).join('')+'</tbody></table></div>';
-}
-function drawDCA(){
-  const el=document.getElementById('dcaBox');
-  const amt=Number(document.getElementById('dcaW').value)||0;
-  const mode=document.getElementById('dcaMode').value;
-  const rs=rows(),tot=totalOf(rs);
-  const pool=rs.filter(r=>r.h.tgt!=null&&r.h.tgt!==''&&Number(r.h.tgt)>0);
-  if(!pool.length||!amt){el.innerHTML='<div class="ld">กรอกเป้า % ก่อน</div>';return;}
-  let w;
-  if(mode==='under'&&tot){
-    const gaps=pool.map(r=>Math.max(0,Number(r.h.tgt)-(r.val||0)/tot*100));
-    const g=gaps.reduce((a,b)=>a+b,0);
-    w=g>0?gaps:pool.map(r=>Number(r.h.tgt));
-  } else w=pool.map(r=>Number(r.h.tgt));
-  const ws=w.reduce((a,b)=>a+b,0)||1;
-  el.innerHTML='<table><thead><tr><th>ตัว</th><th>%</th><th>เงิน</th><th>หน่วย</th></tr></thead><tbody>'
-    +pool.map((r,i)=>{const sh=w[i]/ws*100,c=amt*sh/100;
-      return '<tr><td><b>'+esc(r.h.sym)+'</b></td><td class="mono">'+n2(sh)+'%</td>'
-        +'<td class="mono">'+money(c)+'</td>'
-        +'<td class="mono">'+(r.price?(c/r.price).toFixed(4):'—')+'</td></tr>';}).join('')
-    +'</tbody><tfoot><tr><td colspan="2">รวม/สัปดาห์</td><td class="mono">'+money(amt)+'</td><td></td></tr>'
-    +'<tr><td colspan="2" style="border-top:none">ต่อปี (52 สัปดาห์)</td>'
-    +'<td class="mono" style="border-top:none">'+money(amt*52)+'</td><td style="border-top:none"></td></tr>'
-    +'</tfoot></table>';
-}
-function drawYear(){
-  const el=document.getElementById('yearBox');
-  const tgt=Number(document.getElementById('yTgt').value)||0;
-  const y=new Date().getFullYear();
-  let invested=0,n=0;
-  TR.forEach(t=>{
-    if(t.side==='sell')return;
-    if(!t.date||!t.date.startsWith(String(y)))return;
-    invested+=(Number(t.qty)||0)*(Number(t.price)||0)+(Number(t.fee)||0);n++;
-  });
-  const pct=tgt?invested/tgt*100:0;
-  const dayOfYear=Math.floor((Date.now()-new Date(y,0,1))/86400000)+1;
-  const paceShould=tgt*dayOfYear/365;
-  const diff=invested-paceShould;
-  el.innerHTML=
-    '<div class="row"><span>เป้าทั้งปี '+y+'</span><b>'+money(tgt)+'</b></div>'
-    +'<div class="row"><span>ลงไปแล้ว ('+n+' ไม้)</span><b>'+money(invested)+'</b></div>'
-    +'<div class="bar" style="height:9px;margin:8px 0"><i style="width:'+Math.min(100,pct)+'%;background:'
-    +(pct>=100?'var(--up)':'var(--acc)')+'"></i></div>'
-    +'<div class="row"><span>คิดเป็น</span><b>'+n2(pct)+'%</b></div>'
-    +'<div class="row"><span>ควรลงถึงตอนนี้</span><b>'+money(paceShould)+'</b></div>'
-    +'<div class="row"><span>เร็ว/ช้ากว่าแผน</span><b class="'+cl(diff)+'">'
-    +(diff>=0?'+':'')+money(Math.abs(diff)).replace(/^[-]/,'')+'</b></div>'
-    +'<div class="row"><span>เหลืออีก</span><b>'+money(Math.max(0,tgt-invested))+'</b></div>'
-    +'<div class="row"><span>เฉลี่ยต่อสัปดาห์ที่เหลือ</span><b>'
-    +money(Math.max(0,tgt-invested)/Math.max(1,Math.ceil((365-dayOfYear)/7)))+'</b></div>';
-}
+
+
+
 /* บันทึกมูลค่าพอร์ตวันละครั้ง เพื่อให้หน้า MACRO คำนวณ alpha/beta ได้
    ต้องมีราคาครบพอสมควรถึงจะบันทึก ไม่งั้นเส้นประวัติจะเพี้ยน */
 function snapshot(){
@@ -481,7 +385,7 @@ function draw(){
     +'1. กรอกทีละรายการในกล่อง <b>"เพิ่มรายการใหม่"</b> ที่กรอบเส้นประด้านล่าง<br>'
     +'2. กดปุ่ม <b>"หรือวางทีเดียวหลายรายการ"</b> แล้ววางข้อมูลจาก Excel หรือหน้าเว็บโบรก<br>'
     +'3. กดปุ่ม <b>"นำเข้า"</b> มุมขวาบน ถ้ามีไฟล์ JSON ที่ส่งออกไว้แล้ว';
-  drawDonuts();drawTable();drawRB();drawDCA();drawYear();
+  drawDonuts();drawTable();
   snapshot();
 }
 
@@ -556,8 +460,6 @@ function parsePaste(text){
 
 /* ---------- เริ่มทำงาน ---------- */
 function init(){
-  document.getElementById('dcaW').value=ld(K.dcaw,100);
-  document.getElementById('yTgt').value=ld(K.ytgt,12000);
   const cb=document.getElementById('bCur');
   cb.textContent=CUR==='USD'?'แสดงเป็นบาท':'แสดงเป็นดอลลาร์';
   cb.onclick=()=>{CUR=CUR==='USD'?'THB':'USD';localStorage.setItem(K.cur,CUR);
@@ -611,9 +513,6 @@ function init(){
         +esc(bad.slice(0,3).join(' / '))+'</span>':'');
     document.getElementById('pasteTx').value='';};
   ['band','addCash'].forEach(i=>document.getElementById(i).oninput=drawRB);
-  document.getElementById('dcaW').oninput=()=>{sv(K.dcaw,Number(document.getElementById('dcaW').value)||0);drawDCA();};
-  document.getElementById('dcaMode').onchange=drawDCA;
-  document.getElementById('yTgt').oninput=()=>{sv(K.ytgt,Number(document.getElementById('yTgt').value)||0);drawYear();};
   draw();
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
