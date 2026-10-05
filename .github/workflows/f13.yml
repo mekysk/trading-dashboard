@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: write
+  pages: write
 
 jobs:
   f13:
@@ -30,4 +31,19 @@ jobs:
           else
             git commit -m "13F $(date -u +%Y-%m-%d)"
             git push
+          fi
+
+      - name: สั่งให้ GitHub Pages สร้างเว็บใหม่
+        # คอมมิตที่สร้างโดยหุ่นยนต์จะไม่ปลุกงานอื่นเอง (GitHub กันลูปไว้)
+        # ถ้าไม่เรียกตรงนี้ ไฟล์จะอยู่ใน repo แต่เปิดจากเว็บไม่เจอ จนกว่าคนจะคอมมิตเอง
+        if: always()
+        run: |
+          code=$(curl -s -o /tmp/p.txt -w "%{http_code}" -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            https://api.github.com/repos/${{ github.repository }}/pages/builds)
+          echo "สั่งสร้างเว็บใหม่ -> HTTP $code"
+          cat /tmp/p.txt
+          if [ "$code" != "201" ]; then
+            echo "สั่งไม่สำเร็จ — ไฟล์ยังอยู่ใน repo แต่ต้องรอคอมมิตถัดไปถึงจะขึ้นเว็บ"
           fi
