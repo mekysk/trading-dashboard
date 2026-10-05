@@ -384,7 +384,7 @@ try{
     }));
     okS++;
   }
-  writeFileSync(join(PXDIR,'_index.json'),JSON.stringify({
+  writeFileSync(join(PXDIR,'list.json')  /* ห้ามขึ้นต้นด้วย _ เพราะ GitHub Pages ตัดทิ้ง */,JSON.stringify({
     generated:new Date().toISOString(),
     bench:Object.keys(BENCH), stocks:pick}));
   console.log(`\nเขียนไฟล์ราคา ${PXDIR}  อ้างอิง ${okB}/${codes.length} · หุ้น ${okS} ตัว`);
