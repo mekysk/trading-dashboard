@@ -154,6 +154,24 @@ const done=[],failed=[];
    ตัดให้เหลือ ~11.5 ปี เพื่อคุมหน่วยความจำ */
 const KEEP=Number(process.env.SCAN_KEEP_BARS||2900);
 const BARS={};
+
+/* ---- สินทรัพย์อ้างอิงสำหรับหน้า Morning Brief / Market Weekly / Bot Lab ----
+   ไม่ได้อยู่ในรายชื่อสแกนเพราะไม่ใช่หุ้นรายตัว แต่ทุกหน้าต้องใช้
+   คีย์ซ้ายคือรหัสเดิมที่หน้าเว็บใช้อยู่ ขวาคือรหัสฝั่ง Yahoo */
+const BENCH={
+  '^spx':'^GSPC', '^ndq':'^IXIC', '^dji':'^DJI', '^vix':'^VIX',
+  'xauusd':'GC=F', 'cl.f':'CL=F', 'btcusd':'BTC-USD', 'dx.f':'DX-Y.NYB',
+  'xagusd':'SI=F', 'ethusd':'ETH-USD',
+  'spy.us':'SPY','qqq.us':'QQQ','dia.us':'DIA','iwm.us':'IWM','tlt.us':'TLT',
+  'hyg.us':'HYG','lqd.us':'LQD','gld.us':'GLD','uup.us':'UUP',
+  'xlk.us':'XLK','xlf.us':'XLF','xle.us':'XLE','xlv.us':'XLV','xly.us':'XLY',
+  'xlp.us':'XLP','xli.us':'XLI','xlu.us':'XLU','xlb.us':'XLB','xlre.us':'XLRE',
+  'xlc.us':'XLC'
+};
+const PXDIR=process.env.PX_DIR||join(ROOT,'px');
+const PXKEEP=Number(process.env.PX_KEEP_BARS||1300);
+/* ชื่อไฟล์ต้องปลอดภัยกับระบบไฟล์และ URL — ^ = ขึ้นต้นดัชนี, . และ = ในรหัสฟิวเจอร์ส */
+const pxName=code=>code.replace(/[^A-Za-z0-9._^-]/g,'_').replace(/\^/g,'idx-');
 const BRE={};              /* ตัวนับความกว้างตลาด แยกตามวันที่ */
 const BDAYS=Number(process.env.SCAN_BREADTH_DAYS||252);
 
@@ -325,6 +343,55 @@ const out={
 };
 mkdirSync(dirname(OUT),{recursive:true});
 writeFileSync(OUT,JSON.stringify(out));
+
+/* ---- ไฟล์ราคารายตัวสำหรับหน้าที่ต้องใช้แท่งราคา ----
+   เบราว์เซอร์ยิง Stooq และ Yahoo ตรงๆ ไม่ได้แล้ว (CORS) และตัวกลางฟรีก็ล่มหรือเก็บเงิน
+   จึงต้องเตรียมไฟล์ไว้ให้ หน้าเว็บแค่มาหยิบ เปิดปุ๊บติดปั๊บ
+   เก็บเฉพาะสินทรัพย์อ้างอิง ไม่เก็บทั้ง 536 ตัว เพราะ repo จะบวมวันละหลายสิบ MB */
+try{
+  mkdirSync(PXDIR,{recursive:true});
+  const r4=x=>x==null||!isFinite(x)?null:Math.round(x*10000)/10000;
+  let okB=0, badB=[];
+  const codes=Object.keys(BENCH);
+  for(const code of codes){
+    try{
+      const bars=await fetchOne('yahoo',BENCH[code],Date.now()+SYM_MS);
+      const b=bars.length>PXKEEP?bars.slice(-PXKEEP):bars;
+      writeFileSync(join(PXDIR,pxName(code)+'.json'),JSON.stringify({
+        code, yahoo:BENCH[code], n:b.length,
+        d:b.map(x=>x.d), o:b.map(x=>r4(x.o)), h:b.map(x=>r4(x.h)),
+        l:b.map(x=>r4(x.l)), c:b.map(x=>r4(x.c)), v:b.map(x=>Math.round(x.v||0))
+      }));
+      okB++;
+    }catch(e){ badB.push(code+' ('+(e.message||e)+')') }
+  }
+  /* หุ้นรายตัว: เขียนจากที่มีในหน่วยความจำ ไม่ต้องดึงซ้ำ
+     แต่จำกัดจำนวนไว้ เพราะไฟล์พวกนี้ถูกเขียนใหม่ทั้งก้อนทุกคืน
+     ถ้าเขียนครบ 518 ตัว repo จะโตวันละ ~10 MB เดือนเดียวก็ 300 MB
+     เลยเก็บเฉพาะตัวที่สภาพคล่องสูงสุด ซึ่งเป็นตัวที่คนเอาไปทดสอบจริง */
+  const PXTOP=Number(process.env.PX_TOP||140);
+  const pick=done.slice()
+    .filter(m=>m.avgDollarVol50!=null)
+    .sort((a,b)=>b.avgDollarVol50-a.avgDollarVol50)
+    .slice(0,PXTOP).map(m=>m.sym);
+  let okS=0;
+  for(const sym of pick){
+    if(!BARS[sym])continue;
+    const b=BARS[sym].length>PXKEEP?BARS[sym].slice(-PXKEEP):BARS[sym];
+    writeFileSync(join(PXDIR,pxName(sym.toLowerCase()+'.us')+'.json'),JSON.stringify({
+      code:sym.toLowerCase()+'.us', n:b.length,
+      d:b.map(x=>x.d), o:b.map(x=>r4(x.o)), c:b.map(x=>r4(x.c))
+    }));
+    okS++;
+  }
+  writeFileSync(join(PXDIR,'_index.json'),JSON.stringify({
+    generated:new Date().toISOString(),
+    bench:Object.keys(BENCH), stocks:pick}));
+  console.log(`\nเขียนไฟล์ราคา ${PXDIR}  อ้างอิง ${okB}/${codes.length} · หุ้น ${okS} ตัว`);
+  if(badB.length)console.log('  อ้างอิงที่ดึงไม่ได้: '+badB.slice(0,10).join(' , '));
+}catch(e){
+  console.error('เขียนไฟล์ราคาไม่สำเร็จ:',e.message,'— scan.json ยังเขียนสำเร็จปกติ');
+}
 
 /* ---- ทดสอบสไตล์ลงทุน แล้วเขียนแยกไฟล์ ----
    แยกไฟล์เพราะหน้า Super Investor ต้องใช้ แต่หน้าสแกนไม่ต้องโหลดมาเปล่าๆ
