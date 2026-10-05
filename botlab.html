@@ -203,11 +203,32 @@ function qual(n){
   return ['t-up','พอประมาณ'];
 }
 
+/* ---- อ่านราคาจากไฟล์ที่งานกลางคืนเตรียมไว้ ----
+   เบราว์เซอร์ยิง Stooq/Yahoo ตรงๆ ไม่ได้ (CORS) และตัวกลางฟรีล่มหรือเก็บเงินหมดแล้ว
+   ทดสอบเมื่อ 5 ต.ค. 2026: allorigins 408 · codetabs ล่ม · corsproxy 401 · ยิงตรง CORS
+   จึงเปลี่ยนมาอ่านไฟล์สำเร็จรูปแทน เปิดหน้าปุ๊บมีข้อมูลทันที ไม่ต้องรอ */
+function pxName(code){ return String(code).replace(/[^A-Za-z0-9._^-]/g,'_').replace(/\^/g,'idx-') }
+async function csvCode(code){
+  const r=await fetch('px/'+pxName(code)+'.json',{cache:'no-store'});
+  if(!r.ok)return null;
+  const j=await r.json();
+  if(!j||!j.d||!j.d.length)return null;
+  const out=[];
+  for(let i=0;i<j.d.length;i++){
+    const c=j.c?j.c[i]:null;
+    if(c==null||!isFinite(c))continue;
+    const o=j.o&&j.o[i]!=null?j.o[i]:c;
+    out.push({d:j.d[i],o:o,h:(j.h&&j.h[i]!=null?j.h[i]:Math.max(o,c)),
+      l:(j.l&&j.l[i]!=null?j.l[i]:Math.min(o,c)),c:c,v:(j.v&&j.v[i])||0});
+  }
+  return out.length?out:null;
+}
+/* หน้านี้รับชื่อหุ้นตัวใหญ่ เช่น SPY แปลงเป็นรหัสไฟล์ก่อน */
 async function csv(sym){
-  const url='https://stooq.com/q/d/l/?s='+E.stooqSym(sym)+'&i=d';
-  const t=await Promise.any(PROX.map(f=>fetch(f(url),{cache:'no-store'})
-    .then(r=>r.ok?r.text():Promise.reject(new Error('x')))));
-  return E.parseCsv(t);
+  const s=String(sym).trim().toLowerCase();
+  const direct=await csvCode(s);          /* เผื่อพิมพ์รหัสอ้างอิงมาเอง เช่น ^spx */
+  if(direct)return direct;
+  return await csvCode(s+'.us');
 }
 async function run(){
   const sym=g('sym').value.trim().toUpperCase();

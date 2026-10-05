@@ -399,28 +399,58 @@ function sq(sym,type){
   if(type==='gold')return 'xauusd';
   return /^[A-Z.\-]+$/.test(s)?s.toLowerCase()+'.us':null;
 }
+/* ---- ราคาล่าสุด อ่านจากไฟล์ที่งานกลางคืนเตรียมไว้ ----
+   เบราว์เซอร์ยิง Stooq/Yahoo ตรงๆ ไม่ได้ (CORS) ตัวกลางฟรีก็ล่มหรือเก็บเงินหมดแล้ว
+   หุ้นอ่านจาก scan.json ซึ่งมีราคาปิดและ %วันล่าสุดอยู่แล้ว ไม่ต้องมีไฟล์เพิ่ม
+   ทอง/คริปโต/ดัชนี อ่านจากไฟล์ px/ รายตัว
+   ราคาที่ได้เป็นราคาปิดของวันทำการล่าสุด ไม่ใช่ราคาวิ่งสด — กรอกเองทับได้เสมอ */
+function pxName(code){ return String(code).replace(/[^A-Za-z0-9._^-]/g,'_').replace(/\^/g,'idx-') }
 async function fetchPrices(){
   const m=document.getElementById('msg');
-  const map={},codes=[];
-  PF.forEach(h=>{const c=sq(h.sym,h.type);if(c&&!map[c]){map[c]=(h.sym||'').toUpperCase();codes.push(c)}});
+  const need={};
+  PF.forEach(h=>{const c=sq(h.sym,h.type); if(c)need[c]=(h.sym||'').toUpperCase()});
+  const codes=Object.keys(need);
   if(!codes.length){m.textContent='ไม่มีรายการที่ดึงราคาได้';return}
-  m.textContent='กำลังดึงราคา…';
-  const url='https://stooq.com/q/l/?s='+codes.join('+')+'&f=sd2t2ohlcv&h&e=csv';
-  const P=[u=>'https://api.allorigins.win/raw?url='+encodeURIComponent(u),
-    u=>'https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent(u),
-    u=>'https://corsproxy.io/?url='+encodeURIComponent(u)];
-  let csv=null;
-  try{csv=await Promise.any(P.map(f=>fetch(f(url),{cache:'no-store'})
-    .then(r=>r.ok?r.text():Promise.reject(new Error('HTTP'+r.status)))));}catch(e){}
-  if(!csv){m.innerHTML='<span style="color:var(--warn)">ดึงราคาไม่สำเร็จ — กรอกราคาเองในตารางได้เลย</span>';return}
-  let got=0;
-  csv.trim().split('\n').slice(1).forEach(line=>{
-    const a=line.split(','),sym=map[(a[0]||'').trim().toLowerCase()];
-    const op=parseFloat(a[3]),c=parseFloat(a[6]);
-    if(sym&&isFinite(c)){PX[sym]={price:c,chgPct:(isFinite(op)&&op)?(c-op)/op*100:null,t:Date.now()};got++}
-  });
+  m.textContent='กำลังอ่านราคา…';
+  let got=0, asof=null, miss=[];
+
+  const stocks=codes.filter(c=>/\.us$/.test(c));
+  if(stocks.length){
+    try{
+      const r=await fetch('scan.json',{cache:'no-store'});
+      if(r.ok){
+        const j=await r.json(); asof=j.asof;
+        const by={}; (j.rows||[]).forEach(x=>by[x.s]=x);
+        stocks.forEach(c=>{
+          const sym=need[c], row=by[sym];
+          if(row&&isFinite(row.c)){ PX[sym]={price:row.c,chgPct:(row.c1==null?null:row.c1),t:Date.now()}; got++ }
+          else miss.push(sym);
+        });
+      }else stocks.forEach(c=>miss.push(need[c]));
+    }catch(e){ stocks.forEach(c=>miss.push(need[c])) }
+  }
+
+  for(const c of codes.filter(x=>!/\.us$/.test(x))){
+    try{
+      const r=await fetch('px/'+pxName(c)+'.json',{cache:'no-store'});
+      if(!r.ok){ miss.push(need[c]); continue }
+      const j=await r.json(), n=j.c?j.c.length:0;
+      if(n<1){ miss.push(need[c]); continue }
+      const last=j.c[n-1], prev=n>1?j.c[n-2]:null;
+      PX[need[c]]={price:last, chgPct:(prev?((last-prev)/prev*100):null), t:Date.now()};
+      if(!asof&&j.d)asof=j.d[n-1];
+      got++;
+    }catch(e){ miss.push(need[c]) }
+  }
+
   sv(K.px,PX);
-  m.textContent='อัพเดต '+got+' รายการ · '+new Date().toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'});
+  if(!got){
+    m.innerHTML='<span style="color:var(--warn)">ยังไม่มีไฟล์ราคา — กรอกราคาเองในตารางได้เลย</span>';
+  }else{
+    m.innerHTML='ราคาปิด '+(asof||'—')+' · อัพเดต '+got+' รายการ'
+      +(miss.length?' · <span style="color:var(--warn)">ไม่พบ '+miss.slice(0,6).join(' ')
+        +(miss.length>6?' และอีก '+(miss.length-6):'')+'</span>':'');
+  }
   draw();
 }
 
