@@ -32,7 +32,7 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add scan.json styles.json
+          git add scan.json styles.json px
           if git diff --staged --quiet; then
             echo "ไม่มีอะไรเปลี่ยน"
           else
