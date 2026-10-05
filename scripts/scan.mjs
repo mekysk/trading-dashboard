@@ -53,35 +53,99 @@ for(const raw of readFileSync(uniPath,'utf8').split('\n')){
 const UNIQ=[...new Set(SYMS)];
 const SECLIST=[...new Set(Object.values(SEC).filter(Boolean))];
 
-async function getCsv(sym){
-  const url='https://stooq.com/q/d/l/?s='+E.stooqSym(sym)+'&i=d';
-  const budget=Date.now()+SYM_MS;
+/* ==================================================================
+   แหล่งข้อมูลราคา
+
+   รอบ 2026-10-04: Stooq ตอบ GitHub Actions 0 จาก 536 คำขอ
+   หมดเวลารอ 524 ตัว ถูกจำกัดอัตรา 0 ตัว
+   "เงียบจนหมดเวลา" ไม่ใช่ "ปฏิเสธ" คือลักษณะของการบล็อกไอพีศูนย์ข้อมูล
+   ไม่ใช่ปัญหาความเร็ว เพิ่มเวลารอหรือลดสายดึงเท่าไรก็ไม่ช่วย
+
+   จึงเปลี่ยนมาใช้ Yahoo เป็นหลัก และเก็บ Stooq ไว้เป็นสำรอง
+   เพราะ Stooq ยังใช้ได้ดีเมื่อเรียกจากเบราว์เซอร์ของผู้ใช้เอง
+   ================================================================== */
+const SRC=(process.env.SCAN_SOURCES||'yahoo,stooq').split(',').map(x=>x.trim()).filter(Boolean);
+const SRCSTAT={};
+
+/* Yahoo ใช้ขีดกลางแทนจุด เช่น BRK.B -> BRK-B  ส่วนดัชนีขึ้นต้นด้วย ^ */
+function yahooSym(s){ return s.replace(/\./g,'-') }
+
+function parseYahoo(txt){
+  var j=JSON.parse(txt);
+  var r=j&&j.chart&&j.chart.result&&j.chart.result[0];
+  if(!r||!r.timestamp)return null;
+  var q=r.indicators&&r.indicators.quote&&r.indicators.quote[0];
+  if(!q)return null;
+  var t=r.timestamp, bars=[];
+  for(var i=0;i<t.length;i++){
+    var o=q.open[i], h=q.high[i], l=q.low[i], c=q.close[i], v=q.volume[i];
+    /* แท่งที่ราคาปิดว่างคือวันที่ไม่มีการซื้อขายจริง ข้ามไป ไม่เติมค่าเดิมลงไป
+       ถ้าเติม ความผันผวนจะต่ำกว่าความจริงและวอลุ่มจะเพี้ยน */
+    if(c==null||!isFinite(c))continue;
+    bars.push({d:new Date(t[i]*1000).toISOString().slice(0,10),
+      o:(o==null?c:o), h:(h==null?c:h), l:(l==null?c:l), c:c, v:(v==null?0:v)});
+  }
+  if(bars.length<60)return null;
+  return bars;
+}
+
+function srcUrl(src,sym){
+  if(src==='yahoo')
+    return 'https://query1.finance.yahoo.com/v8/finance/chart/'+encodeURIComponent(yahooSym(sym))
+      +'?interval=1d&range=15y';
+  return 'https://stooq.com/q/d/l/?s='+E.stooqSym(sym)+'&i=d';
+}
+
+async function fetchOne(src,sym,budget){
+  const url=srcUrl(src,sym);
   for(let a=0;a<=RETRY;a++){
-    /* เวลาที่เหลือของหุ้นตัวนี้ และของงานทั้งก้อน อะไรหมดก่อนใช้อันนั้น */
     const ms=Math.min(REQ_MS,budget-Date.now(),left());
     if(ms<1500)throw new Error('หมดเวลา');
     try{
       const ctl=new AbortController();
       const t=setTimeout(()=>ctl.abort(),ms);
-      const r=await fetch(url,{signal:ctl.signal,
-        headers:{'User-Agent':'Mozilla/5.0 (scan.mjs)'}});
+      const r=await fetch(url,{signal:ctl.signal,headers:{
+        'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
+          +'(KHTML, like Gecko) Chrome/125.0 Safari/537.36',
+        'Accept':'*/*','Accept-Language':'en-US,en;q=0.9'}});
       clearTimeout(t);
       if(!r.ok)throw new Error('HTTP '+r.status);
       const txt=await r.text();
-      if(/exceeded|limit/i.test(txt.slice(0,200)))throw new Error('โดนจำกัดอัตราการดึง');
-      if(!/^\s*Date/i.test(txt))throw new Error('ไม่ใช่ไฟล์ CSV ที่คาดไว้');
-      const bars=E.parseCsv(txt);
+      let bars;
+      if(src==='yahoo'){ bars=parseYahoo(txt) }
+      else{
+        if(/exceeded|limit/i.test(txt.slice(0,200)))throw new Error('โดนจำกัดอัตราการดึง');
+        if(!/^\s*Date/i.test(txt))throw new Error('ไม่ใช่ไฟล์ CSV ที่คาดไว้');
+        bars=E.parseCsv(txt);
+      }
       if(!bars)throw new Error('ข้อมูลย้อนหลังน้อยกว่า 60 วัน');
       return bars;
     }catch(e){
       const m=String(e&&(e.message||e.name)||e);
       if(a===RETRY||/หมดเวลา/.test(m))throw e;
-      /* รอถอยหลังสั้นลงจากเดิม 1200ms เพราะงบเวลาทั้งก้อนมีจำกัด */
       const back=Math.min(700*(a+1),Math.max(0,budget-Date.now()-1500));
       if(back<=0)throw e;
       await new Promise(r=>setTimeout(r,back));
     }
   }
+}
+
+/* ลองทีละแหล่งตามลำดับ แหล่งแรกที่ได้ของถือว่าจบ
+   ถ้าแหล่งแรกล่มทั้งกระดาน แหล่งที่สองจะรับช่วงเองโดยไม่ต้องแก้โค้ด */
+async function getCsv(sym){
+  let last=null;
+  const budget=Date.now()+SYM_MS;
+  for(const src of SRC){
+    try{
+      const bars=await fetchOne(src,sym,budget);
+      SRCSTAT[src]=(SRCSTAT[src]||0)+1;
+      return bars;
+    }catch(e){
+      last=e;
+      if(/หมดเวลา/.test(String(e.message||e)))break;
+    }
+  }
+  throw last||new Error('ไม่มีแหล่งข้อมูลที่ใช้ได้');
 }
 
 const done=[],failed=[];
@@ -168,6 +232,7 @@ await Promise.all(Array.from({length:WORKERS},worker));
 const usedMin=((Date.now()-T_START)/60000).toFixed(1);
 console.log(`\nใช้เวลา ${usedMin} นาที  ดึงสำเร็จ ${done.length}/${UNIQ.length}`);
 console.log(`  เฉลี่ยต่อตัวที่สำเร็จ ${STAT.ok?Math.round(STAT.ms/STAT.ok):0} ms`);
+console.log(`  ได้ของจากแหล่ง: ${SRC.map(s=>s+' '+(SRCSTAT[s]||0)).join(' · ')}`);
 console.log(`  พลาดเพราะ: หมดเวลารอ ${STAT.timeout} · ถูกจำกัดอัตรา ${STAT.rate}`+
             ` · ตอบไม่ใช่ 200 ${STAT.http} · ประวัติสั้น ${STAT.short} · อื่นๆ ${STAT.other}`);
 if(quit){
