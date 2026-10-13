@@ -158,7 +158,12 @@ const E=SCANENG;
 const AGENTS=[
  {id:'morning-brief-thai', f:'agent-morning.json', av:'📰',
   nm:'นักข่าวเช้า', rl:'สรุปข่าวคืนที่ผ่านมาเป็นภาษาไทย',
-  sched:'ทุกเช้า 05:00 (จันทร์-เสาร์)', alt:'brief-latest.json'},
+  sched:'ทุกเช้า 08:00 (จันทร์-เสาร์)', alt:'brief-latest.json'},
+ /* ตัวนี้ไม่มีไฟล์ให้หน้าเว็บอ่าน เพราะเขียนลง Notion โดยตรง
+    ใส่ไว้เพื่อให้เห็นภาพทีมครบ ไม่ใช่เพื่อให้รอไฟล์ที่ไม่มีวันมา */
+ {id:'morning-brief-notion', f:null, av:'📓',
+  nm:'นักข่าวเช้า (Notion)', rl:'สรุปข่าวลง Notion รันได้แม้ปิดคอม',
+  sched:'ทุกเช้า 05:00 (จันทร์-เสาร์)', noFile:'เขียนลง Notion ไม่ได้เขียนไฟล์'},
  {id:'us-events-tracker', f:'agent-events.json', av:'📅',
   nm:'คนเฝ้าปฏิทิน', rl:'กำหนดการงบและเหตุการณ์ที่ขยับราคา',
   sched:'เย็นวันอาทิตย์', alt:'events-latest.json'},
@@ -173,7 +178,12 @@ const AGENTS=[
   sched:'เย็นวันอาทิตย์', needs:'agent-data.json'},
  {id:'portfolio-weekly-review', f:'agent-port.json', av:'💼',
   nm:'คนตรวจพอร์ต', rl:'ทบทวนพอร์ตรายสัปดาห์',
-  sched:'เย็นวันอาทิตย์', needs:'agent-data.json'}
+  sched:'เย็นวันอาทิตย์', needs:'agent-data.json'},
+ /* ตัวที่ปิดช่องว่างระหว่าง "เอเจนต์เขียนไฟล์ในเครื่อง" กับ "หน้าเว็บอ่านจากเน็ต"
+    ก่อนมีตัวนี้ 5 จาก 6 เอเจนต์ไม่เคยมีไฟล์ขึ้นเว็บเลยสักครั้ง */
+ {id:'agent-publisher', f:null, av:'🚚',
+  nm:'คนส่งของ', rl:'ส่งผลงานของทุกเอเจนต์ขึ้นเว็บ',
+  sched:'ทุกวัน 07:15 และ 21:15', noFile:'ไม่มีผลงานของตัวเอง มีหน้าที่ส่งอย่างเดียว'}
 ];
 const KPF='pro_pf', KPX='pro_px', KSEC='pro_sec', KHIST='pro_hist';
 const KJ='bt_trades_v1', KJC='bt_cfg_v1';
@@ -230,10 +240,16 @@ function render(){
     +'ไม่ใช่ AI ที่รันอยู่ในหน้าเว็บนี้</b><br>'
     +'หน้านี้อ่านไฟล์ผลงานที่เอเจนต์เขียนไว้เท่านั้น — '
     +'มีผลงาน '+have+' จาก '+AGENTS.length+' ตัว</div>';
-  st+='<div class="warnbox"><b>ถ้าเปิดหน้านี้จาก GitHub Pages แล้วการ์ดว่าง '
-    +'ไม่ได้แปลว่าเอเจนต์ไม่ทำงาน</b> — เอเจนต์เขียนไฟล์ลงเครื่องคุณ '
-    +'ต้องอัปไฟล์ <b>agent-*.json</b> ขึ้น GitHub ด้วย หน้าเว็บถึงจะเห็น<br>'
-    +'ถ้าเปิดจากเครื่องตัวเองโดยตรง จะเห็นทันทีไม่ต้องอัป</div>';
+  const miss=AGENTS.filter(a=>a.f&&!OUT[a.id]).map(a=>a.nm);
+  if(miss.length)
+    st+='<div class="warnbox"><b>ยังไม่เห็นผลงานของ '+miss.length+' ตัว: '
+      +esc(miss.join(' · '))+'</b><br>'
+      +'เอเจนต์เขียนไฟล์ลงเครื่องคุณ แต่หน้านี้อ่านจากอินเทอร์เน็ต สองฝั่งไม่เจอกันเอง<br>'
+      +'ตัวที่ปิดช่องว่างนี้คือ <b>คนส่งของ</b> รันวันละสองรอบ 07:15 และ 21:15 '
+      +'ถ้ายังว่างหลังรอบถัดไป แปลว่าการส่งขึ้นเว็บมีปัญหา — '
+      +'ดูข้อความที่คนส่งของรายงานในแชต<br>'
+      +'<span class="sub">หมายเหตุ: เอเจนต์รันเฉพาะตอนเปิดแอป Claude อยู่ '
+      +'ถ้าปิดคอมไว้ งานจะไปรันตอนเปิดครั้งถัดไป</span></div>';
   g('status').innerHTML=st;
 
   g('team').innerHTML=AGENTS.map(a=>{
@@ -242,7 +258,8 @@ function render(){
     const h=d?hoursAgo(d.generated||d.date):null;
     const lim=staleLimit(a);
     let cls='p-q', lab='ยังไม่มีผลงาน', box='';
-    if(!o){ cls='p-off'; lab='ยังไม่เคยรัน'; }
+    if(a.noFile){ cls='p-q'; lab='ตัวช่วย'; }
+    else if(!o){ cls='p-off'; lab='ยังไม่เคยรัน'; }
     else if(h!=null&&h>lim){ cls='p-off'; lab='เงียบไป '+Math.round(h/24)+' วัน'; }
     else if((d.status||'')==='attention'){ cls='p-att'; lab='มีเรื่องต้องดู'; }
     else { cls='p-ok'; lab='ปกติ'; }
@@ -473,14 +490,23 @@ const LANE=190;                 /* ระดับเท้าของคนท
 const SKIN=['#e8b98c','#c98f62','#f2d2ae','#a9714b','#e0a877','#d8a06a'];
 const SHIRT=['#5b8dd6','#d6775b','#6bbd8a','#b98ad6','#d6b85b','#5bc7d6'];
 const DESKS=[];
-for(let i=0;i<6;i++){
-  const col=i%3, row=(i/3)|0;
+/* จำนวนโต๊ะต้องเท่ากับจำนวนเอเจนต์จริง ไม่ใช่เลขตายตัว
+   ก่อนหน้านี้ตรึงไว้ที่ 6 พอเพิ่มเอเจนต์ ตัวที่เกินจะไม่มีโต๊ะแล้ววาดไม่ขึ้น */
+/* จัดเป็นสองแถวเสมอ แล้วคิดจำนวนคอลัมน์จากจำนวนเอเจนต์
+   ของเดิมตรึงไว้ 3 คอลัมน์ 2 แถว = 6 ที่ พอมี 8 ตัว
+   โต๊ะที่ 7 กับ 8 ไปทับโต๊ะที่ 4 กับ 5 พอดีเป๊ะ (ทดสอบแล้วเจอ)
+   สูตรนี้ขยายเองเมื่อเพิ่มเอเจนต์ ไม่ต้องกลับมาแก้เลขอีก */
+const COLS=Math.max(3,Math.ceil(AGENTS.length/2));
+const GAPX=Math.floor((RW-56)/COLS);
+for(let i=0;i<AGENTS.length;i++){
+  const col=i%COLS, row=(i/COLS)|0;
   /* ระยะห่างสองแถวต้องมากกว่าความสูงของกล่องคลิก
      ไม่งั้นคลิกแถวหน้าแล้วไปโดนคนแถวหลัง */
-  DESKS.push({x:28+col*98, y:row===0?100:142, row});
+  DESKS.push({x:28+col*GAPX, y:row===0?100:142, row});
 }
 /* ท่าทางของตัวละคร = สถานะของเอเจนต์ */
 function agentState(a){
+  if(a.noFile)return 'helper';              /* ไม่มีไฟล์ให้อ่านตั้งแต่ต้น ไม่ใช่ว่าไม่ได้ทำงาน */
   const o=OUT[a.id];
   if(!o)return 'away';                      /* ไม่เคยรัน = ยังไม่มาทำงาน */
   const h=hoursAgo(o.data.generated||o.data.date);
@@ -494,7 +520,8 @@ const STATE_INFO={
   alert:['#f59e0b','มีเรื่องต้องดู'],
   idle: ['#96a3b8','รันแล้วแต่ไม่เจออะไร'],
   sleep:['#E5645A','เงียบนานผิดปกติ'],
-  away: ['#5c6a80','ยังไม่เคยรัน']
+  away: ['#5c6a80','ยังไม่เคยรัน'],
+  helper:['#a78bfa','ตัวช่วย ไม่มีไฟล์ผลงาน']
 };
 /* ============================================================
    คนเดินในทางเดินหน้าห้อง
