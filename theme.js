@@ -160,7 +160,60 @@
     hbar.insertBefore(tg, hbar.firstChild);
   }
 
-  function boot(){ buildNav(); build(); }
+
+  /* ============================================================
+     แถบเตือนข้อมูลเก่า — ใส่ให้ทุกหน้าอัตโนมัติ
+
+     ปัญหาที่เจอจริงเมื่อ 13 ต.ค. 2026: งานสแกนรอบวันอังคารไม่ทำงาน
+     ข้อมูลบนเว็บจึงค้างอยู่ที่ราคาปิดวันศุกร์ที่ 9  เก่าไป 1 วันทำการ
+     แต่ไม่มีหน้าไหนบอกเลยสักหน้า เปิดมาเห็นตัวเลขสวยๆ เหมือนปกติ
+
+     สำหรับกระดานเทรด นี่อันตรายกว่าหน้าว่าง เพราะหน้าว่างยังรู้ว่าเสีย
+     แต่ตัวเลขเก่าที่ดูเหมือนใหม่ จะถูกเอาไปตัดสินใจจริง
+     ============================================================ */
+  var STALE_SKIP=['journal.html','plan.html','botlab.html'];  /* หน้าที่ไม่ได้พึ่ง scan.json */
+  function tradingDaysBetween(a,b){
+    /* นับเฉพาะวันจันทร์-ศุกร์ ไม่นับวันหยุดนักขัตฤกษ์ (ยอมคลาดได้ 1 วัน)
+       ถ้านับวันปฏิทินดิบ ทุกเช้าวันจันทร์จะขึ้นเตือนทั้งที่ข้อมูลถูกต้อง */
+    var n=0, d=new Date(a);
+    /* ต้องเพิ่มวันก่อนแล้วค่อยเช็กว่าเลยปลายทางหรือยัง
+       ถ้าเช็กก่อนเพิ่ม รอบสุดท้ายจะนับวันที่ยังมาไม่ถึงเข้าไปด้วย
+       ทำให้ขึ้นเตือนทั้งที่ข้อมูลยังสด (เจอตอนทดสอบ ศ.9 -> จ.12 ได้ 2 ทั้งที่ควรเป็น 1) */
+    while(true){
+      d.setUTCDate(d.getUTCDate()+1);
+      if(d>b)break;
+      var w=d.getUTCDay(); if(w>=1&&w<=5)n++;
+    }
+    return n;
+  }
+  function staleBar(){
+    if(STALE_SKIP.indexOf(curPage())>=0)return;
+    fetch('scan.json?t='+Date.now(),{cache:'no-store'}).then(function(r){
+      if(!r.ok)throw new Error('ไม่พบ scan.json');
+      return r.json();
+    }).then(function(j){
+      if(!j||!j.asof)return;
+      var asof=new Date(j.asof+'T00:00:00Z');
+      var now=new Date();
+      /* ราคาปิดของวันนี้จะมีก็ต่อเมื่อตลาดสหรัฐฯ ปิดแล้ว (ราว 03:00 ไทย)
+         จึงถือว่าข้อมูลล่าสุดที่ควรมี คือวันทำการก่อนหน้าวันนี้ */
+      var gap=tradingDaysBetween(asof,now)-1;
+      if(gap<=1)return;                       /* ช้า 1 วันทำการถือว่าปกติ */
+      var sev=gap>=3?'bad':'warn';
+      var bar=document.createElement('div');
+      bar.id='staleBar'; bar.className='stalebar '+sev;
+      bar.innerHTML='<b>ข้อมูลเก่า '+gap+' วันทำการ</b> — ตัวเลขบนหน้านี้คิดจากราคาปิด '
+        +j.asof+' งานสแกนรอบล่าสุดน่าจะไม่ทำงาน '
+        +'<a href="https://github.com/mekysk/trading-dashboard/actions/workflows/scan.yml" '
+        +'target="_blank" rel="noopener">ดูสถานะงาน ↗</a>'
+        +'<button type="button" class="x" title="ปิด">✕</button>';
+      bar.querySelector('.x').onclick=function(){ bar.remove() };
+      var main=document.querySelector('main');
+      if(main)main.insertBefore(bar,main.firstChild); else document.body.appendChild(bar);
+    }).catch(function(){ /* หน้าที่ไม่ได้ใช้ scan.json ก็ไม่ต้องเตือนอะไร */ });
+  }
+
+  function boot(){ buildNav(); build(); staleBar(); }
   if(document.readyState==='loading')
     document.addEventListener('DOMContentLoaded',boot);
   else boot();

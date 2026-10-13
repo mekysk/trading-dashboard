@@ -167,14 +167,23 @@ function drawStyles(){
   if(!ST||!ST.styles){ g.innerHTML='<div class="ld">ยังไม่มีไฟล์ styles.json<br>'
     +'<span class="sub">ไฟล์นี้สร้างจากงานอัตโนมัติรอบกลางคืนพร้อมกับผลสแกน</span></div>'; return }
   var best=Math.max.apply(null,ST.styles.map(function(s){return s.mult||0}));
+  /* เส้นเทียบ = ถือเฉลี่ยทั้งกระดาน ชุดหุ้นเดียวกัน ช่วงเดียวกัน
+     ตัวเลขดิบของทุกสไตล์ถูกอคติ survivorship ดันขึ้นพร้อมกันหมด
+     ส่วนที่ "เกินเส้นเทียบ" จึงเป็นตัวเดียวที่พอเทียบกันได้ เพราะอคติหักกันไปบางส่วน */
+  var bm=null;
+  ST.styles.forEach(function(s){ if(s.id==='ew')bm=s });
+  var bmCagr=bm&&bm.cagr!=null?bm.cagr:null;
   g.innerHTML=ST.styles.map(function(s,i){
     var on=SEL[s.id]!==false;
     return '<div class="sbox'+(on?' on':'')+'" data-id="'+s.id+'">'
       +'<div class="nm"><span class="sw" style="background:'+COL[i%5]+'"></span> '+esc(s.nm)
       +(s.mult===best?' <span class="pill">สูงสุด</span>':'')+'</div>'
       +'<div class="ds">'+esc(s.ds)+'</div>'
-      +'<div class="big">'+n2(s.mult,2)+'<span class="sub"> เท่า</span></div>'
-      +'<div class="rw"><span>ต่อปี</span><i>'+(s.cagr==null?'—':n2(s.cagr,1)+'%')+'</i></div>'
+      +'<div class="big">'+(s.cagr==null||bmCagr==null||s.id==='ew'?n2(s.mult,2)+'<span class="sub"> เท่า</span>'
+        :(s.cagr-bmCagr>0?'+':'')+n2(s.cagr-bmCagr,1)+'%<span class="sub"> เหนือเส้นเทียบ/ปี</span>')+'</div>'
+      +'<div class="rw"><span>ตัวเลขดิบ ต่อปี</span><i>'+(s.cagr==null?'—':n2(s.cagr,1)+'%')+'</i>'
+        +'<span class="sub" style="margin-left:4px">(เฟ้อ)</span></div>'
+      +'<div class="rw"><span>โตกี่เท่า</span><i>'+n2(s.mult,2)+'</i></div>'
       +'<div class="rw"><span>ขาดทุนลึกสุด</span><i class="dn">-'+n2(s.maxDD,1)+'%</i></div>'
       +'<div class="rw"><span>ชนะกี่ % ของเดือน</span><i>'+(s.winMo==null?'—':n2(s.winMo,1)+'%')+'</i></div>'
       +'<div class="rw"><span>ชาร์ป (ไม่หักดอกเบี้ย)</span><i>'+(s.sharpe==null?'—':n2(s.sharpe,2))+'</i></div>'
@@ -195,7 +204,12 @@ function drawStyles(){
     +'รายชื่อหุ้นที่ทดสอบคือรายชื่อที่ <b>ยังอยู่ในตลาดวันนี้</b> '
     +'หุ้นที่ถูกถอนออกหรือล้มละลายไปแล้วไม่ได้ถูกนับ (survivorship bias) '
     +'ผลที่เห็นจึงดีกว่าความจริงอยู่บ้างทุกสไตล์ — ใช้เทียบสไตล์ต่อสไตล์ได้ '
-    +'แต่อย่าเอาตัวเลขไปคาดหวังเป็นผลตอบแทนจริง';
+    +'แต่อย่าเอาตัวเลขไปคาดหวังเป็นผลตอบแทนจริง<br>'
+    +'<b>ตัวเลขใหญ่บนการ์ดจึงเป็น "ส่วนที่เกินเส้นเทียบต่อปี" ไม่ใช่ผลตอบแทนดิบ</b> '
+    +'เพราะอคติดันตัวเลขดิบของทุกสไตล์ขึ้นพร้อมกัน ส่วนต่างจึงหักกันไปได้บ้าง '
+    +'ส่วนเลขดิบยังแสดงไว้ให้เห็น แต่ติดป้ายว่าเฟ้อ'
+    +(bmCagr!=null?('<br>เส้นเทียบรอบนี้ (ถือเฉลี่ยทั้งกระดาน) ได้ '+n2(bmCagr,1)
+       +'% ต่อปี ขณะที่ S&P 500 จริงช่วงเดียวกันอยู่ราว 14-15% — ส่วนต่างตรงนี้คือขนาดของอคติโดยประมาณ'):'');
   document.getElementById('stChartWrap').style.display='block';
   document.getElementById('stNote').innerHTML=
     'ปรับพอร์ตทุกสิ้นเดือน ถือเท่ากันทุกตัว · ผลตอบแทนรวมค่าธรรมเนียมและสเปรดที่ประมาณไว้แล้ว '

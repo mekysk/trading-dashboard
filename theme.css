@@ -432,3 +432,15 @@ body.hasnav .logo, body.hasnav .sitenav, body.hasnav nav.sitelinks{ display:none
   }
   #navScrim.on{ display:block; }
 }
+
+
+/* แถบเตือนข้อมูลเก่า (theme.js เป็นคนใส่ให้) */
+.stalebar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;
+  border-radius:9px;padding:10px 13px;margin-bottom:12px;font-size:12px;line-height:1.7;
+  background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.35);color:#f59e0b}
+.stalebar.bad{background:rgba(229,100,90,.1);border-color:rgba(229,100,90,.4);color:#E5645A}
+.stalebar b{color:inherit}
+.stalebar a{color:inherit;text-decoration:underline;opacity:.9}
+.stalebar .x{margin-left:auto;background:none;border:0;color:inherit;opacity:.6;
+  font-size:13px;cursor:pointer;padding:0 4px}
+.stalebar .x:hover{opacity:1}
