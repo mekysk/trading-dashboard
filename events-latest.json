@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-04T19:00:00+07:00",
+  "generated": "2026-10-12T19:00:00+07:00",
   "earnings": [
     {
       "sym": "JPM",
@@ -9,8 +9,8 @@
       "eps": null,
       "epsEst": 5.88,
       "rev": null,
-      "revEst": 50920,
-      "src": "https://www.marketbeat.com/stocks/NYSE/JPM/earnings/"
+      "revEst": 51190,
+      "src": "https://www.marketbeat.com/earnings/reports/2026-10-13-jpmorgan-chase-co-stock/"
     },
     {
       "sym": "UNH",
@@ -18,10 +18,10 @@
       "date": "2026-10-13",
       "when": "bmo",
       "eps": null,
-      "epsEst": 3.79,
+      "epsEst": 4.14,
       "rev": null,
-      "revEst": null,
-      "src": "https://www.marketbeat.com/stocks/NYSE/UNH/earnings/"
+      "revEst": 111310,
+      "src": "https://www.unitedhealthgroup.com/newsroom/2026/2026-09-15-uhg-announces-q3-earnings-release-date.html"
     },
     {
       "sym": "NFLX",
@@ -29,10 +29,10 @@
       "date": "2026-10-20",
       "when": "amc",
       "eps": null,
-      "epsEst": 0.822,
+      "epsEst": 0.82,
       "rev": null,
       "revEst": 12880,
-      "src": "https://www.marketbeat.com/stocks/NASDAQ/NFLX/earnings/"
+      "src": "https://www.tipranks.com/stocks/nflx/earnings"
     },
     {
       "sym": "TSLA",
@@ -40,43 +40,21 @@
       "date": "2026-10-21",
       "when": "amc",
       "eps": null,
-      "epsEst": 0.43,
+      "epsEst": 0.45,
       "rev": null,
-      "revEst": null,
-      "src": "https://www.marketbeat.com/stocks/NASDAQ/TSLA/earnings/"
-    },
-    {
-      "sym": "MA",
-      "period": "Q3 2026",
-      "date": "2026-10-22",
-      "when": "amc",
-      "eps": null,
-      "epsEst": 5.11,
-      "rev": null,
-      "revEst": 9650,
-      "src": "https://www.marketbeat.com/stocks/NASDAQ/MA/earnings/"
-    },
-    {
-      "sym": "XOM",
-      "period": "Q3 2026",
-      "date": "2026-10-30",
-      "when": "bmo",
-      "eps": null,
-      "epsEst": 3.40,
-      "rev": null,
-      "revEst": 94880,
-      "src": "https://www.investing.com/equities/exxon-mobil-earnings"
+      "revEst": 27890,
+      "src": "https://www.marketbeat.com/earnings/reports/2026-10-21-tesla-inc-stock/"
     },
     {
       "sym": "V",
-      "period": "Q4 2026",
+      "period": "Q4 FY2026",
       "date": "2026-10-27",
       "when": "amc",
       "eps": null,
       "epsEst": 3.43,
       "rev": null,
       "revEst": null,
-      "src": "https://www.tipranks.com/stocks/v/earnings"
+      "src": "https://usa.visa.com/about-visa/newsroom/press-releases.releaseId.22841.html"
     },
     {
       "sym": "MSFT",
@@ -86,8 +64,8 @@
       "eps": null,
       "epsEst": 4.71,
       "rev": null,
-      "revEst": 90590,
-      "src": "https://www.marketbeat.com/stocks/NASDAQ/MSFT/earnings/"
+      "revEst": 90610,
+      "src": "https://www.marketbeat.com/earnings/reports/2026-10-28-microsoft-co-stock/"
     },
     {
       "sym": "GOOGL",
@@ -97,7 +75,7 @@
       "eps": null,
       "epsEst": 3.04,
       "rev": null,
-      "revEst": 127240,
+      "revEst": 126900,
       "src": "https://www.marketbeat.com/earnings/reports/2026-10-28-alphabet-inc-stock/"
     },
     {
@@ -106,21 +84,43 @@
       "date": "2026-10-28",
       "when": "amc",
       "eps": null,
-      "epsEst": 6.34,
+      "epsEst": 7.54,
       "rev": null,
       "revEst": 63200,
-      "src": "https://www.marketbeat.com/stocks/NASDAQ/META/earnings/"
+      "src": "https://www.marketbeat.com/earnings/reports/2026-10-28-facebook-inc-stock/"
+    },
+    {
+      "sym": "MA",
+      "period": "Q3 2026",
+      "date": "2026-10-29",
+      "when": "bmo",
+      "eps": null,
+      "epsEst": 5.15,
+      "rev": null,
+      "revEst": 9650,
+      "src": "https://www.marketbeat.com/earnings/reports/2026-10-29-mastercard-incorporated-stock/"
+    },
+    {
+      "sym": "LLY",
+      "period": "Q3 2026",
+      "date": "2026-10-29",
+      "when": "bmo",
+      "eps": null,
+      "epsEst": 9.92,
+      "rev": null,
+      "revEst": null,
+      "src": "https://www.marketbeat.com/earnings/reports/2026-10-29-eli-lilly-and-company-stock/"
     },
     {
       "sym": "AAPL",
       "period": "Q4 FY2026",
-      "date": "2026-10-29",
+      "date": "2026-11-02",
       "when": "amc",
       "eps": null,
-      "epsEst": 1.98,
+      "epsEst": 2.00,
       "rev": null,
-      "revEst": 113200,
-      "src": "https://www.marketbeat.com/stocks/NASDAQ/AAPL/earnings/"
+      "revEst": 113370,
+      "src": "https://9to5mac.com/2026/10/06/apple-sets-q4-2026-earnings-release-for-november-2/"
     },
     {
       "sym": "AMZN",
@@ -131,18 +131,18 @@
       "epsEst": 1.955,
       "rev": null,
       "revEst": 202140,
-      "src": "https://www.marketbeat.com/stocks/NASDAQ/AMZN/earnings/"
+      "src": "https://www.tipranks.com/stocks/amzn/earnings"
     },
     {
-      "sym": "LLY",
+      "sym": "XOM",
       "period": "Q3 2026",
-      "date": "2026-10-29",
-      "when": "amc",
+      "date": "2026-10-30",
+      "when": "",
       "eps": null,
-      "epsEst": 9.92,
+      "epsEst": 3.76,
       "rev": null,
-      "revEst": 22400,
-      "src": "https://www.marketbeat.com/earnings/reports/2026-10-29-eli-lilly-and-company-stock/"
+      "revEst": 110140,
+      "src": "https://www.marketbeat.com/earnings/reports/2026-10-30-exxon-mobil-co-stock/"
     },
     {
       "sym": "AMD",
@@ -152,81 +152,109 @@
       "eps": null,
       "epsEst": 1.93,
       "rev": null,
-      "revEst": 12980,
-      "src": "https://www.marketbeat.com/stocks/NASDAQ/AMD/earnings/"
-    },
-    {
-      "sym": "WMT",
-      "period": "Q3 FY2027",
-      "date": "2026-11-19",
-      "when": "amc",
-      "eps": null,
-      "epsEst": 0.64,
-      "rev": null,
-      "revEst": null,
-      "src": "https://www.tipranks.com/stocks/wmt/earnings"
+      "revEst": 13060,
+      "src": "https://ir.amd.com/news-events/press-releases/detail/1300/amd-to-report-fiscal-third-quarter-2026-financial-results"
     },
     {
       "sym": "NVDA",
       "period": "Q3 FY2027",
-      "date": "2026-11-25",
+      "date": "2026-11-17",
       "when": "amc",
       "eps": null,
       "epsEst": 2.47,
       "rev": null,
       "revEst": 108000,
-      "src": "https://www.tipranks.com/stocks/nvda/earnings"
+      "src": "https://unusualwhales.com/stock/NVDA/earnings"
+    },
+    {
+      "sym": "WMT",
+      "period": "Q3 FY2027",
+      "date": "2026-11-19",
+      "when": "bmo",
+      "eps": null,
+      "epsEst": 0.72,
+      "rev": null,
+      "revEst": 188200,
+      "src": "https://corporate.walmart.com/news/events/fy2027-q3-earnings-release"
     }
   ],
   "events": [
     {
       "date": "2026-10-02",
       "cat": "macro",
-      "title": "สำนักงานสถิติแรงงาน : จำนวนงานนอกภาคเกษตร (NFP) สำหรับเดือนกันยายน",
+      "title": "จำนวนงานนอกภาคเกษตร (NFP) ประจำเดือนกันยายน",
       "impact": "high",
-      "src": "https://fedratecalc.com/us-economic-calendar/october-2026/"
+      "src": "https://www.bls.gov/schedule/news_release/empsit.htm"
     },
     {
       "date": "2026-10-14",
       "cat": "macro",
-      "title": "สำนักข่าวสถิติ : ดัชนีราคาผู้บริโภค (CPI) สำหรับเดือนกันยายน",
+      "title": "ดัชนีราคาผู้บริโภค (CPI) ประจำเดือนกันยายน",
       "impact": "high",
-      "src": "https://fedratecalc.com/us-economic-calendar/october-2026/"
+      "src": "https://www.bls.gov/schedule/news_release/cpi.htm"
     },
     {
       "date": "2026-10-15",
       "cat": "macro",
-      "title": "ดัชนีราคาผลิตภัณฑ์ (PPI) และ ยอดขายปลีกรายเดือน (Retail Sales) ประจำเดือนกันยายน",
+      "title": "ดัชนีราคาผลิตภัณฑ์ (PPI) และยอดขายปลีก (Retail Sales) ประจำเดือนกันยายน",
       "impact": "med",
       "src": "https://fedratecalc.com/us-economic-calendar/october-2026/"
     },
     {
       "date": "2026-10-28",
       "cat": "macro",
-      "title": "ประชุมความคิดเห็นของคณะกรรมการตลาดแบบเปิด (FOMC) + ประกาศดอกเบี้ยนโยบาย",
+      "title": "ประชุม FOMC + ประกาศดอกเบี้ยนโยบาย (2 วัน 27-28 ต.ค.)",
       "impact": "high",
-      "src": "https://www.financecalendar.com/fomc-meetings/"
+      "src": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
     },
     {
       "date": "2026-10-29",
       "cat": "macro",
-      "title": "GDP ประจำไตรมาส Q3 2026 (ประมาณการแรก) + PCE Inflation ประจำเดือนกันยายน",
+      "title": "ประชุม ECB + แถลงดอกเบี้ยนโยบายยุโรป",
       "impact": "med",
-      "src": "https://fedratecalc.com/us-economic-calendar/october-2026/"
+      "src": "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html"
+    },
+    {
+      "date": "2026-10-29",
+      "cat": "macro",
+      "title": "GDP ไตรมาส Q3 2026 (ประมาณการแรก) + PCE Inflation เดือนกันยายน",
+      "impact": "med",
+      "src": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "date": "2026-10-30",
+      "cat": "macro",
+      "title": "ประชุมธนาคารกลางญี่ปุ่น (BOJ) + แถลงนโยบาย",
+      "impact": "med",
+      "src": "https://www.boj.or.jp/en/about/calendar/index.htm"
+    },
+    {
+      "date": "2026-10-30",
+      "cat": "crypto",
+      "title": "วันหมดอายุออปชัน Bitcoin รายเดือนบน Deribit (มูลค่าราว 1.0-1.1 หมื่นล้านดอลลาร์)",
+      "impact": "med",
+      "src": "https://www.tradingview.com/news/cryptobriefing:81184bf4d094b:0-35-of-deribit-s-bitcoin-options-open-interest-is-set-to-expire-october-30/"
     },
     {
       "date": "2026-11-06",
       "cat": "macro",
       "title": "จำนวนงานนอกภาคเกษตร (NFP) ประจำเดือนตุลาคม",
       "impact": "high",
-      "src": "https://fedratecalc.com/us-economic-calendar/"
+      "src": "https://www.bls.gov/schedule/news_release/empsit.htm"
     },
     {
       "date": "2026-11-10",
       "cat": "macro",
       "title": "ดัชนีราคาผู้บริโภค (CPI) ประจำเดือนตุลาคม",
       "impact": "high",
-      "src": "https://fedratecalc.com/us-economic-calendar/"
+      "src": "https://www.bls.gov/schedule/news_release/cpi.htm"
+    },
+    {
+      "date": "2026-11-11",
+      "cat": "crypto",
+      "title": "ก.ล.ต.สหรัฐฯ ครบกำหนดพิจารณากฎเกณฑ์ listing ออปชัน spot-crypto ETF ของ Nasdaq ISE",
+      "impact": "med",
+      "src": "https://cryptovot.com/sec-crypto-etf-options-rule-delayed-to-november-11"
     },
     {
       "date": "2026-11-13",
