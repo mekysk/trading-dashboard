@@ -64,7 +64,7 @@ const SECLIST=[...new Set(Object.values(SEC).filter(Boolean))];
    จึงเปลี่ยนมาใช้ Yahoo เป็นหลัก และเก็บ Stooq ไว้เป็นสำรอง
    เพราะ Stooq ยังใช้ได้ดีเมื่อเรียกจากเบราว์เซอร์ของผู้ใช้เอง
    ================================================================== */
-const SRC=(process.env.SCAN_SOURCES||'yahoo,stooq').split(',').map(x=>x.trim()).filter(Boolean);
+const SRC=(process.env.SCAN_SOURCES||'yahoo,yahoo2,stooq').split(',').map(x=>x.trim()).filter(Boolean);
 const SRCSTAT={};
 
 /* Yahoo ใช้ขีดกลางแทนจุด เช่น BRK.B -> BRK-B  ส่วนดัชนีขึ้นต้นด้วย ^ */
@@ -90,9 +90,11 @@ function parseYahoo(txt){
 }
 
 function srcUrl(src,sym){
-  if(src==='yahoo')
-    return 'https://query1.finance.yahoo.com/v8/finance/chart/'+encodeURIComponent(yahooSym(sym))
-      +'?interval=1d&range=15y';
+  /* query1 กับ query2 เป็นคนละเครื่องของ Yahoo ล่มไม่พร้อมกัน
+     เพิ่มมาเพราะทั้งระบบพึ่ง Yahoo แหล่งเดียว ถ้าล่มคือหยุดทั้งกระดาน */
+  if(src==='yahoo'||src==='yahoo2')
+    return 'https://query'+(src==='yahoo2'?'2':'1')+'.finance.yahoo.com/v8/finance/chart/'
+      +encodeURIComponent(yahooSym(sym))+'?interval=1d&range=15y';
   return 'https://stooq.com/q/d/l/?s='+E.stooqSym(sym)+'&i=d';
 }
 
@@ -112,7 +114,7 @@ async function fetchOne(src,sym,budget){
       if(!r.ok)throw new Error('HTTP '+r.status);
       const txt=await r.text();
       let bars;
-      if(src==='yahoo'){ bars=parseYahoo(txt) }
+      if(src==='yahoo'||src==='yahoo2'){ bars=parseYahoo(txt) }
       else{
         if(/exceeded|limit/i.test(txt.slice(0,200)))throw new Error('โดนจำกัดอัตราการดึง');
         if(!/^\s*Date/i.test(txt))throw new Error('ไม่ใช่ไฟล์ CSV ที่คาดไว้');
@@ -133,7 +135,7 @@ async function fetchOne(src,sym,budget){
 /* ลองทีละแหล่งตามลำดับ แหล่งแรกที่ได้ของถือว่าจบ
    ถ้าแหล่งแรกล่มทั้งกระดาน แหล่งที่สองจะรับช่วงเองโดยไม่ต้องแก้โค้ด */
 async function getCsv(sym){
-  let last=null;
+  let last=null, notFound=false;
   const budget=Date.now()+SYM_MS;
   for(const src of SRC){
     try{
@@ -142,11 +144,39 @@ async function getCsv(sym){
       return bars;
     }catch(e){
       last=e;
+      /* Yahoo ตอบ 403/404 = "ไม่มีสัญลักษณ์นี้" ซึ่งเป็นสัญญาณที่เชื่อถือได้
+         ต้องจำไว้ตรงนี้ ไม่งั้นจะถูกข้อความของแหล่งถัดไปกลบ
+         (เจอตอนทดสอบ: Stooq ตอบทีหลังว่า "ไม่ใช่ไฟล์ CSV" เลยนับ 403 ไม่ได้เลย) */
+      if((src==='yahoo'||src==='yahoo2')&&/HTTP (403|404)/.test(String(e.message||e)))
+        notFound=true;
       if(/หมดเวลา/.test(String(e.message||e)))break;
     }
   }
-  throw last||new Error('ไม่มีแหล่งข้อมูลที่ใช้ได้');
+  const err=last||new Error('ไม่มีแหล่งข้อมูลที่ใช้ได้');
+  if(notFound){
+    err.notFound=true;
+    err.message='ไม่พบสัญลักษณ์นี้ที่ Yahoo (403/404) · แหล่งสำรองก็ไม่ได้: '+err.message;
+  }
+  return Promise.reject(err);
 }
+
+/* ==================================================================
+   บันทึกสุขภาพรายตัว — แยก "ตายถาวร" ออกจาก "พลาดชั่วคราว"
+
+   รอบ 13 ต.ค. 2026 มี 19 ตัวดึงไม่ได้  403 จำนวน 11 ตัว หมดเวลารอ 8 ตัว
+   สองอย่างนี้ต่างกันโดยสิ้นเชิง
+     403 ซ้ำทุกรอบ  = หุ้นถูกซื้อกิจการ เปลี่ยนชื่อ หรือถอนออกจากตลาด
+     หมดเวลารอ      = เน็ตสะดุด คนละตัวทุกรอบ รอบหน้าก็หาย
+
+   ถ้าปนกัน ตัวเลข "พลาด 19 ตัว" จะกลายเป็นเสียงรบกวนที่ไม่มีใครดู
+   จึงนับว่าตัวไหน 403 ติดกันกี่รอบ ครบเกณฑ์ค่อยติดป้ายว่าน่าจะเลิกซื้อขาย
+   และ "ไม่ลบอัตโนมัติ" เพราะเดาผิดแล้วหุ้นดีจะหายไปจากกระดานเงียบๆ
+   ================================================================== */
+const HEALTH_PATH=process.env.SCAN_HEALTH||join(ROOT,'scan-health.json');
+const RETIRE_AFTER=Number(process.env.SCAN_RETIRE_AFTER||5);
+let HEALTH={};
+try{ if(existsSync(HEALTH_PATH))HEALTH=JSON.parse(readFileSync(HEALTH_PATH,'utf8')).symbols||{} }catch(e){}
+const isRetired=sym=>!!(HEALTH[sym]&&HEALTH[sym].gone>=RETIRE_AFTER);
 
 const done=[],failed=[];
 /* เก็บแท่งราคาไว้ทดสอบสไตล์ลงทุนในรอบเดียวกัน
@@ -162,6 +192,12 @@ const BENCH={
   '^spx':'^GSPC', '^ndq':'^IXIC', '^dji':'^DJI', '^vix':'^VIX',
   'xauusd':'GC=F', 'cl.f':'CL=F', 'btcusd':'BTC-USD', 'dx.f':'DX-Y.NYB',
   'xagusd':'SI=F', 'ethusd':'ETH-USD',
+  /* ETF ที่หน้า Money Flow · กลัว·โลภ · Macro Scorecard ต้องใช้ */
+  'veu.us':'VEU','eem.us':'EEM','ief.us':'IEF','shy.us':'SHY','bil.us':'BIL',
+  'slv.us':'SLV','dbc.us':'DBC','uso.us':'USO','vnq.us':'VNQ','ibit.us':'IBIT',
+  'rsp.us':'RSP','sphb.us':'SPHB','splv.us':'SPLV','vwo.us':'VWO',
+  'ewj.us':'EWJ','ewg.us':'EWG','ewu.us':'EWU','fxi.us':'FXI','ewy.us':'EWY',
+  'ewt.us':'EWT','inda.us':'INDA','vnm.us':'VNM','thd.us':'THD','ewz.us':'EWZ',
   'spy.us':'SPY','qqq.us':'QQQ','dia.us':'DIA','iwm.us':'IWM','tlt.us':'TLT',
   'hyg.us':'HYG','lqd.us':'LQD','gld.us':'GLD','uup.us':'UUP',
   'xlk.us':'XLK','xlf.us':'XLF','xle.us':'XLE','xlv.us':'XLV','xly.us':'XLY',
@@ -228,9 +264,17 @@ async function worker(){
       BARS[sym]=(bars.length>KEEP?bars.slice(-KEEP):bars)
         .map(b=>({d:b.d,o:b.o,c:b.c}));
       STAT.ok++; STAT.ms+=Date.now()-t1;
+      /* กลับมาดึงได้แล้ว = ล้างประวัติทิ้ง ตัวที่เคยติดป้ายก็ถอดป้ายเอง */
+      if(HEALTH[sym]&&HEALTH[sym].gone)console.log(`  ${sym} กลับมาดึงได้แล้ว ถอดป้ายให้`);
+      HEALTH[sym]={gone:0,lastOk:new Date().toISOString().slice(0,10)};
     }catch(e){
       const w=String(e&&(e.message||e.name)||e);
-      failed.push({sym,why:w});
+      failed.push({sym,why:w,gone:(HEALTH[sym]&&HEALTH[sym].gone)||0});
+      /* นับเฉพาะอาการที่บอกว่า "ไม่มีสัญลักษณ์นี้แล้ว" ไม่นับเน็ตสะดุด */
+      if(e&&e.notFound){
+        const h=HEALTH[sym]||{gone:0,lastOk:null};
+        h.gone=(h.gone||0)+1; h.lastWhy=w; HEALTH[sym]=h;
+      }
       if(/abort|หมดเวลา/i.test(w))STAT.timeout++;
       else if(/จำกัดอัตรา/.test(w))STAT.rate++;
       else if(/^HTTP/.test(w))STAT.http++;
@@ -270,8 +314,12 @@ if(!done.length){
   console.error('ดึงข้อมูลไม่ได้เลยสักตัว — ไม่เขียนทับไฟล์เดิม');
   process.exit(1);
 }
-if(done.length<UNIQ.length*MIN_RATIO){
-  console.error(`ดึงได้แค่ ${done.length}/${UNIQ.length} `+
+/* ตัวที่ติดป้ายว่าเลิกซื้อขายแล้ว ไม่ควรถูกนับเป็น "ความล้มเหลว"
+   ไม่งั้นพอหุ้นถูกซื้อกิจการสะสมมากขึ้นเรื่อยๆ ด่านตรวจจะเริ่มล้มทั้งที่ระบบปกติ */
+const RETIRED=Object.keys(HEALTH).filter(isRetired);
+const EXPECT=UNIQ.filter(s=>!isRetired(s)).length;
+if(done.length<EXPECT*MIN_RATIO){
+  console.error(`ดึงได้แค่ ${done.length}/${EXPECT} (ไม่นับตัวที่เลิกซื้อขาย ${RETIRED.length} ตัว) `+
     `(ต่ำกว่าเกณฑ์ ${Math.round(MIN_RATIO*100)}%) — ไม่เขียนทับไฟล์เดิม`);
   console.error('RS คิดจากการเทียบกันทั้งชุด ชุดไม่ครบ = อันดับเพี้ยนทั้งกระดาน');
   process.exit(1);
@@ -421,8 +469,27 @@ else console.log(`ติดกลุ่มครบทุกตัว (${SECLIST
 console.log(`ความกว้างตลาด ${B.dates.length} วัน | หุ้นต่อวันโดยทั่วไป ${medN} ตัว`
   + (dropped?` | ตัดวันที่ข้อมูลมาไม่ครบทิ้ง ${dropped} วัน`:''));
 if(stale.length)console.log(`ข้อมูลไม่ทันวันล่าสุด ${stale.length} ตัว: ${stale.slice(0,15).join(' ')}`);
+/* ---- บันทึกสุขภาพ + แยกรายงานสองกลุ่มให้ชัด ---- */
+try{
+  const gone=Object.keys(HEALTH).filter(isRetired).sort();
+  const watch=Object.keys(HEALTH).filter(s=>HEALTH[s].gone>0&&!isRetired(s)).sort();
+  writeFileSync(HEALTH_PATH,JSON.stringify({
+    updated:new Date().toISOString(), retireAfter:RETIRE_AFTER,
+    retired:gone, watching:watch, symbols:HEALTH},null,0));
+  if(gone.length){
+    console.log(`\nน่าจะเลิกซื้อขายแล้ว ${gone.length} ตัว (403/404 ติดกันครบ ${RETIRE_AFTER} รอบ)`);
+    console.log(`   ${gone.join(' ')}`);
+    console.log('   ยังลองดึงทุกรอบ ถ้ากลับมาได้จะถอดป้ายเอง — ไม่ลบจากรายชื่อให้อัตโนมัติ');
+    console.log('   ถ้าตรวจแล้วว่าเลิกจริง ค่อยลบออกจาก universe.txt ด้วยมือ');
+  }
+  if(watch.length)
+    console.log(`เฝ้าดูอยู่ ${watch.length} ตัว: ${watch.map(s=>s+'('+HEALTH[s].gone+')').join(' ')}`);
+}catch(e){ console.error('เขียนบันทึกสุขภาพไม่สำเร็จ:',e.message) }
+
 if(failed.length){
-  console.log(`ดึงไม่ได้ ${failed.length} ตัว:`);
-  failed.slice(0,30).forEach(f=>console.log(`   ${f.sym} — ${f.why}`));
-  if(failed.length>30)console.log(`   ...และอีก ${failed.length-30} ตัว`);
+  const perm=failed.filter(f=>f.gone>=RETIRE_AFTER-1);
+  const temp=failed.filter(f=>f.gone<RETIRE_AFTER-1);
+  console.log(`\nดึงไม่ได้ ${failed.length} ตัว — ถาวร ${perm.length} · ชั่วคราว ${temp.length}`);
+  temp.slice(0,20).forEach(f=>console.log(`   [ชั่วคราว] ${f.sym} — ${f.why}`));
+  if(temp.length>20)console.log(`   ...และอีก ${temp.length-20} ตัว`);
 }

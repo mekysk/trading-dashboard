@@ -16,7 +16,7 @@ import {fileURLToPath} from 'node:url';
 const HERE=dirname(fileURLToPath(import.meta.url));
 const OUT=process.env.F13_OUT||join(HERE,'..','f13.json');
 /* SEC ขอให้ระบุผู้ติดต่อใน User-Agent และจำกัดไม่เกิน 10 คำขอต่อวินาที */
-const UA=process.env.F13_UA||'mekysk trading-dashboard mekysk@users.noreply.github.com';
+const UA='trading-dashboard/1.0 (+https://github.com/mekysk/trading-dashboard)';
 const GAP=Number(process.env.F13_GAP_MS||350);
 const TOPN=Number(process.env.F13_TOP||25);
 
@@ -41,10 +41,10 @@ async function get(url,asJson){
     try{
       const ctl=new AbortController();
       const t=setTimeout(()=>ctl.abort(),20000);
-            const r=await fetch(url,{signal:ctl.signal,headers:{'User-Agent':UA,'Accept':'application/json, text/html, application/xml;q=0.9, */*;q=0.8','Accept-Language':'en-US,en;q=0.9','Accept-Encoding':'gzip, deflate','Referer':'https://www.sec.gov/'}});
+      const r=await fetch(url,{signal:ctl.signal,headers:{'User-Agent':UA,'Accept-Encoding':'gzip'}});
       clearTimeout(t);
       if(r.status===429||r.status>=500)throw new Error('HTTP '+r.status);
-            if(!r.ok)return console.log('   SEC ตอบ HTTP '+r.status+' ที่ '+url)||null;
+      if(!r.ok)return null;
       return asJson?await r.json():await r.text();
     }catch(e){ if(a===2)throw e; await sleep(1500*(a+1)) }
   }
@@ -118,7 +118,20 @@ for(const m of MGR){
   }catch(e){ rows.push({...m,err:String(e.message||e)}); console.log(`  ${m.nm} — ล้มเหลว ${e.message}`) }
 }
 const ok=rows.filter(r=>!r.err).length;
-if(!ok){ console.error('ดึงไม่ได้เลยสักราย — ไม่เขียนทับไฟล์เดิม'); process.exit(1) }
+if(!ok){
+  /* SEC บล็อกไอพีศูนย์ข้อมูล (403 ทุกราย) ทดสอบแล้วแก้ด้วย User-Agent ไม่ได้
+     ถ้าปล่อยให้งานล้มเหลว จะมีอีเมลแจ้งเตือนทุกสัปดาห์ไปเรื่อยๆ จนคนเลิกอ่าน
+     แล้วพอมีอะไรพังจริงก็จะไม่มีใครสังเกต จึงเขียนสถานะไว้แทนการล้ม
+     ไฟล์ f13.json เดิม (ถ้ามี) ไม่ถูกแตะ */
+  const note=join(HERE,'..','f13-status.json');
+  writeFileSync(note,JSON.stringify({checked:new Date().toISOString(),
+    ok:0, total:rows.length,
+    why:rows[0]&&rows[0].err||'ไม่ทราบสาเหตุ',
+    msg:'SEC ปฏิเสธคำขอจากเซิร์ฟเวอร์ GitHub (ไอพีศูนย์ข้อมูล) — ไม่ใช่ความผิดของสคริปต์'}));
+  console.log('ดึงไม่ได้เลยสักราย — เขียนสถานะไว้ที่ f13-status.json และไม่แตะไฟล์เดิม');
+  console.log('ไม่ทำให้งานล้มเหลว เพื่อไม่ให้อีเมลแจ้งเตือนรายสัปดาห์กลบเรื่องที่พังจริง');
+  process.exit(0);
+}
 writeFileSync(OUT,JSON.stringify({generated:new Date().toISOString(),
   warn:'13F ยื่นช้าได้ถึง 45 วันหลังสิ้นไตรมาส และไม่รวมชอร์ต พันธบัตร เงินสด หุ้นนอกสหรัฐฯ',
   managers:rows}));
