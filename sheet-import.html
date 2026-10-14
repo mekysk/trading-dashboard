@@ -1,0 +1,298 @@
+<!DOCTYPE html><html lang="th"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>นำเข้าพอร์ตจาก Google Sheet — Trading Dashboard</title>
+<style>
+:root{--bg:#0a0d13;--bg2:#10151e;--bg3:#161d29;--line:#222c3d;--tx:#e8eef8;
+--tx2:#96a3b8;--tx3:#5c6a80;--accent:#f5b942;--glow:245,185,66;--acc:#3b82f6;
+--up:#34C27D;--dn:#E5645A;--warn:#f59e0b;--pur:#a78bfa}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-size:14px;line-height:1.55;padding-bottom:40px;
+font-family:-apple-system,'Segoe UI','Leelawadee UI','Noto Sans Thai',Tahoma,sans-serif}
+button{font-family:inherit;cursor:pointer}a{color:var(--acc);text-decoration:none}
+header{position:sticky;top:0;z-index:50;background:rgba(10,13,19,.96);
+backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.hbar{display:flex;align-items:center;gap:12px;padding:9px 16px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:15px}.logo span{color:var(--accent)}
+.right{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{background:var(--bg3);border:1px solid var(--line);color:var(--tx2);
+padding:7px 13px;border-radius:7px;font-size:12.5px}
+.btn:hover{color:var(--tx)}
+.btn.go{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:600}
+.btn.warn{background:rgba(245,158,11,.14);border-color:var(--warn);color:var(--warn);font-weight:600}
+main{padding:18px;max-width:1000px;margin:0 auto}
+h1{font-size:25px;font-weight:800;letter-spacing:-.02em}
+.lead{font-size:12.5px;color:var(--tx2);margin:4px 0 14px;line-height:1.75;max-width:82ch}
+.sub{font-size:11px;color:var(--tx3)}
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:16px;margin-bottom:12px}
+.card h3{font-size:13px;font-weight:700;margin-bottom:11px}
+label{display:block;font-size:11.5px;color:var(--tx2);margin:9px 0 3px}
+input{width:100%;background:var(--bg3);border:1px solid var(--line);color:var(--tx);
+border-radius:7px;padding:8px 11px;font-family:inherit;font-size:13px}
+input:focus{outline:none;border-color:var(--acc)}
+table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px}
+th{text-align:right;font-size:10px;color:var(--tx3);text-transform:uppercase;
+letter-spacing:.07em;padding:5px 7px;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+td{padding:5px 7px;border-bottom:1px solid rgba(34,44,61,.5);text-align:right;white-space:nowrap}
+td.n{font-family:ui-monospace,monospace}
+.up{color:var(--up)}.dn{color:var(--dn)}
+.warnbox{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);
+border-radius:9px;padding:12px 14px;font-size:11.5px;color:var(--warn);line-height:1.85;margin-top:10px}
+.warnbox b{color:#ffd37a}
+.okbox{background:rgba(52,194,125,.09);border:1px solid rgba(52,194,125,.33);
+border-radius:9px;padding:11px 13px;font-size:12px;color:var(--up);line-height:1.8;margin-top:10px}
+.errbox{background:rgba(229,100,90,.09);border:1px solid rgba(229,100,90,.35);
+border-radius:9px;padding:11px 13px;font-size:12px;color:var(--dn);line-height:1.8;margin-top:10px}
+.step{font-size:12.5px;color:var(--tx2);line-height:1.95}
+.step b{color:var(--tx)}
+code{background:var(--bg3);padding:1px 6px;border-radius:4px;font-size:11.5px;word-break:break-all}
+.pill{font-size:9.5px;padding:1px 6px;border-radius:5px;font-weight:700;
+background:rgba(167,139,250,.16);color:var(--pur)}
+</style>
+<link rel="stylesheet" href="theme.css">
+</head><body>
+
+<header><div class="hbar">
+  <div class="logo">TRADING <span>DASHBOARD</span></div>
+  <div class="right"><span id="msg" class="sub"></span></div>
+</div></header>
+
+<main>
+<h1>นำเข้าพอร์ตจาก Google Sheet</h1>
+<p class="lead">ให้ชีตเป็นต้นทางหลัก แก้ที่ชีตแล้วกดดึงเข้ามาทับ
+หน้านี้<b>ไม่เขียนอะไรจนกว่าคุณจะเห็นตารางและยอดรวมก่อน</b> —
+ถ้าอ่านคอลัมน์เพี้ยน ยอดจะไม่ตรงกับแถว TOTAL ในชีต และคุณจะเห็นทันที</p>
+
+<section class="card">
+  <h3>1 · เปิดชีตให้ดึงได้ (ทำครั้งเดียว)</h3>
+  <p class="step">
+    ในชีต: <b>ไฟล์ → แชร์ → เผยแพร่ไปยังเว็บ</b><br>
+    เลือกแท็บ <b>PORT</b> · รูปแบบ <b>ค่าที่คั่นด้วยจุลภาค (.csv)</b> · กด <b>เผยแพร่</b><br>
+    ก๊อปลิงก์ที่ได้มาวางข้างล่าง (หน้าตาแบบ <code>.../d/e/2PACX-.../pub?gid=...&amp;single=true&amp;output=csv</code>)
+  </p>
+  <div class="warnbox">
+    <b>ลิงก์เผยแพร่คือลิงก์สาธารณะ</b> ใครได้ลิงก์ไปก็เปิดดูแท็บนั้นได้
+    เผยแพร่เฉพาะแท็บ PORT ที่มีแต่ชื่อหุ้นกับจำนวน อย่าเผยแพร่ทั้งไฟล์<br>
+    ถ้าไม่สบายใจ ใช้วิธีที่ 2 ข้างล่างแทนได้ ไม่ต้องเผยแพร่อะไรเลย
+  </div>
+</section>
+
+<section class="card">
+  <h3>2 · ดึงข้อมูล</h3>
+  <label>ลิงก์ CSV ที่เผยแพร่ไว้</label>
+  <input id="iUrl" placeholder="https://docs.google.com/spreadsheets/d/e/2PACX-.../pub?gid=0&single=true&output=csv" autocomplete="off">
+  <div style="margin-top:10px">
+    <button class="btn go" id="bFetch">ดึงจากลิงก์</button>
+    <span class="sub" style="margin:0 8px">หรือ</span>
+    <label style="display:inline;margin:0">
+      <input type="file" id="iFile" accept=".csv,text/csv" style="width:auto;display:inline-block;padding:4px">
+    </label>
+  </div>
+  <p class="sub" style="margin-top:7px">วิธีที่ 2 ไม่ต้องเผยแพร่: ในชีตกด
+    <b>ไฟล์ → ดาวน์โหลด → ค่าที่คั่นด้วยจุลภาค (.csv)</b> แล้วเลือกไฟล์ที่โหลดมา</p>
+  <div id="res"></div>
+</section>
+
+<section class="card" id="prevCard" style="display:none">
+  <h3>3 · ตรวจก่อนเขียน</h3>
+  <div id="prev"></div>
+  <div style="margin-top:12px">
+    <button class="btn warn" id="bWrite">เขียนลงเครื่องนี้</button>
+    <span class="sub" style="margin-left:8px">ของเดิมจะถูกดาวน์โหลดเก็บไว้ก่อนอัตโนมัติ</span>
+  </div>
+  <div id="res2"></div>
+</section>
+</main>
+
+<script>
+var g=function(i){return document.getElementById(i)};
+var URLKEY='sheet_src_v1';
+var SECMAP={TECH:'เทคโนโลยี',HEALTH:'สุขภาพ',SEMI:'เซมิคอนดักเตอร์',CYBER:'ไซเบอร์',
+  PROP:'อสังหา',SPACE:'อวกาศ',INFRA:'โครงสร้างพื้นฐาน',FUND:'กองทุน/ETF',
+  COM:'สินค้าจำเป็น',ENERGY:'พลังงาน',FIN:'การเงิน',IND:'อุตสาหกรรม',
+  MAT:'วัตถุดิบ',UTIL:'สาธารณูปโภค',REIT:'อสังหา',COMM:'สื่อสาร',CONS:'สินค้าฟุ่มเฟือย'};
+
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+
+/* ตัว CSV ต้องรองรับช่องที่มีเครื่องหมายคำพูดครอบและมีจุลภาคข้างใน
+   ไม่งั้นชื่อบริษัทที่มีคอมมาจะทำให้คอลัมน์เลื่อนทั้งแถว */
+function parseCSV(text){
+  var rows=[],row=[],cur='',q=false;
+  for(var i=0;i<text.length;i++){
+    var c=text[i];
+    if(q){
+      if(c==='"'){ if(text[i+1]==='"'){cur+='"';i++} else q=false }
+      else cur+=c;
+    }else{
+      if(c==='"')q=true;
+      else if(c===','){row.push(cur);cur=''}
+      else if(c==='\n'){row.push(cur);rows.push(row);row=[];cur=''}
+      else if(c!=='\r')cur+=c;
+    }
+  }
+  if(cur!==''||row.length){row.push(cur);rows.push(row)}
+  return rows;
+}
+function num(s){ if(s==null||s==='')return null;
+  var v=parseFloat(String(s).replace(/[$,%\s฿]/g,''));
+  return isFinite(v)?v:null }
+
+/* หาแถวหุ้นด้วยรูปแบบ "สัญลักษณ์ + กลุ่ม + ตัวเลข" แล้วอ่านคอลัมน์ถัดไปตามตำแหน่งคงที่
+   ไม่ยึดหัวตารางเพราะชีตนี้ไม่มีหัวตารางที่อ่านได้ */
+function parsePort(rows){
+  var out=[],seen={};
+  rows.forEach(function(r){
+    for(var c=0;c<r.length-10;c++){
+      var sym=(r[c]||'').trim(), sec=(r[c+1]||'').trim();
+      if(/^[A-Z][A-Z.\-]{0,5}$/.test(sym) && /^[A-Z]{3,6}$/.test(sec)
+         && num(r[c+2])!==null && num(r[c+7])!==null){
+        if(!seen[sym]){
+          seen[sym]=1;
+          out.push({sym:sym, sec:sec, qty:num(r[c+2])||0, avgCost:num(r[c+3])||0,
+            cost:num(r[c+4]), price:num(r[c+7]), value:num(r[c+8]),
+            pnl:num(r[c+9]), tgt:num(r[c+12])});
+        }
+        break;
+      }
+    }
+  });
+  /* หาแถว TOTAL ไว้เทียบยอด — นี่คือด่านตรวจว่าอ่านคอลัมน์ถูกไหม */
+  var tot=null;
+  rows.forEach(function(r){
+    var i=r.findIndex(function(c){return /^TOTAL$/i.test((c||'').trim())});
+    if(i>=0){ var n=r.slice(i+1).map(num).filter(function(x){return x!=null});
+      if(n.length>=3)tot={cost:n[0],value:n[1],pnl:n[2]} }
+  });
+  return {rows:out, total:tot};
+}
+
+var PEND=null;
+function preview(p){
+  var held=p.rows.filter(function(x){return x.qty>0});
+  var sum=function(k){return held.reduce(function(s,x){return s+(x[k]||x.qty*x[k==='cost'?'avgCost':'price']||0)},0)};
+  var cost=held.reduce(function(s,x){return s+x.qty*x.avgCost},0);
+  var val =held.reduce(function(s,x){return s+x.qty*x.price},0);
+  var ok=null;
+  if(p.total){
+    var dc=Math.abs(cost-p.total.cost), dv=Math.abs(val-p.total.value);
+    ok=(dc<1&&dv<1);
+  }
+  PEND={rows:p.rows, held:held, cost:cost, val:val};
+  g('prevCard').style.display='block';
+  g('prev').innerHTML=
+    '<p class="step">พบ <b>'+p.rows.length+'</b> สัญลักษณ์ · ถืออยู่จริง <b>'+held.length+'</b> ตัว · '
+    +'อีก '+(p.rows.length-held.length)+' ตัวจำนวนเป็น 0 จะเข้าเฉพาะ watchlist</p>'
+    +(p.total
+      ? '<div class="'+(ok?'okbox':'errbox')+'">'
+        +'<b>'+(ok?'ยอดตรงกับแถว TOTAL ในชีต':'ยอดไม่ตรงกับแถว TOTAL — อย่าเพิ่งเขียน')+'</b><br>'
+        +'ต้นทุน คำนวณได้ '+cost.toFixed(2)+' · ชีตบอก '+p.total.cost.toFixed(2)+'<br>'
+        +'มูลค่า คำนวณได้ '+val.toFixed(2)+' · ชีตบอก '+p.total.value.toFixed(2)
+        +(ok?'':'<br>แปลว่าอ่านคอลัมน์เพี้ยน กรุณาส่งภาพชีตมาให้ช่วยดู')
+        +'</div>'
+      : '<div class="warnbox">ไม่พบแถว TOTAL ในชีต จึงเทียบยอดให้ไม่ได้ '
+        +'ตรวจตัวเลขในตารางเองก่อนเขียน<br>คำนวณได้: ต้นทุน '+cost.toFixed(2)
+        +' · มูลค่า '+val.toFixed(2)+'</div>')
+    +'<table><thead><tr><th>สัญลักษณ์</th><th>กลุ่ม</th><th>จำนวน</th><th>ต้นทุน/หน่วย</th>'
+    +'<th>ราคา</th><th>มูลค่า</th><th>กำไร</th><th>เป้า %</th></tr></thead><tbody>'
+    +p.rows.map(function(x){
+      var v=x.qty*x.price, pl=v-x.qty*x.avgCost;
+      return '<tr'+(x.qty>0?'':' style="opacity:.45"')+'><td><b>'+esc(x.sym)+'</b>'
+        +(x.qty>0?'':' <span class="pill">เฝ้าดู</span>')+'</td>'
+        +'<td style="text-align:left">'+esc(SECMAP[x.sec]||x.sec)+'</td>'
+        +'<td class="n">'+(x.qty||'—')+'</td>'
+        +'<td class="n">'+(x.avgCost?x.avgCost.toFixed(2):'—')+'</td>'
+        +'<td class="n">'+(x.price?x.price.toFixed(2):'—')+'</td>'
+        +'<td class="n">'+(x.qty?v.toFixed(2):'—')+'</td>'
+        +'<td class="n '+(pl>0?'up':(pl<0?'dn':''))+'">'+(x.qty?(pl>0?'+':'')+pl.toFixed(2):'—')+'</td>'
+        +'<td class="n">'+(x.tgt!=null?x.tgt+'%':'—')+'</td></tr>';
+    }).join('')+'</tbody></table>';
+  g('res2').innerHTML='';
+}
+
+function load(text,src){
+  try{
+    var p=parsePort(parseCSV(text));
+    if(!p.rows.length)throw new Error('ไม่พบแถวหุ้นในไฟล์นี้ — แน่ใจว่าเป็นแท็บ PORT ไหม');
+    g('res').innerHTML='<div class="okbox">อ่านไฟล์สำเร็จจาก '+esc(src)+'</div>';
+    preview(p);
+  }catch(e){
+    g('res').innerHTML='<div class="errbox">'+esc(e.message||e)+'</div>';
+    g('prevCard').style.display='none';
+  }
+}
+
+g('bFetch').onclick=async function(){
+  var u=g('iUrl').value.trim();
+  if(!u){ g('res').innerHTML='<div class="errbox">ใส่ลิงก์ก่อน</div>'; return }
+  if(!/output=csv/.test(u))
+    g('res').innerHTML='<div class="warnbox">ลิงก์ไม่มี <code>output=csv</code> '
+      +'ถ้าดึงไม่ได้ให้กลับไปเลือกรูปแบบ .csv ตอนเผยแพร่</div>';
+  try{
+    var r=await fetch(u,{cache:'no-store'});
+    if(!r.ok)throw new Error('ดึงไม่ได้ (HTTP '+r.status+') — ชีตอาจยังไม่ได้เผยแพร่');
+    var t=await r.text();
+    if(/<html/i.test(t.slice(0,200)))throw new Error('ลิงก์นี้คืนหน้าเว็บ ไม่ใช่ CSV — ต้องใช้ลิงก์จาก "เผยแพร่ไปยังเว็บ" แบบ .csv');
+    try{ localStorage.setItem(URLKEY,u) }catch(e){}
+    load(t,'ลิงก์ที่เผยแพร่');
+  }catch(e){
+    var m=String(e.message||e);
+    if(/Failed to fetch/i.test(m))
+      m='เบราว์เซอร์ปิดกั้นการดึง — แปลว่าชีตยังไม่ได้เผยแพร่ หรือใช้ลิงก์ผิดแบบ '
+       +'ให้ใช้วิธีที่ 2 (ดาวน์โหลด .csv แล้วเลือกไฟล์) ก็ได้ผลเหมือนกัน';
+    g('res').innerHTML='<div class="errbox">'+esc(m)+'</div>';
+  }
+};
+
+g('iFile').onchange=function(e){
+  var f=e.target.files[0]; if(!f)return;
+  var r=new FileReader();
+  r.onload=function(){ load(String(r.result), f.name) };
+  r.readAsText(f,'utf-8');
+};
+
+g('bWrite').onclick=function(){
+  if(!PEND)return;
+  if(!confirm('เขียนพอร์ต '+PEND.held.length+' ตัวลงเครื่องนี้? ของเดิมจะถูกทับ'))return;
+  var KEYS=['pro_pf','pro_px','pro_sec','wl_v1','pro_cur'];
+  /* สำรองของเดิมก่อนเสมอ — ทับพอร์ตผิดแล้วกู้ไม่ได้ */
+  var before={};
+  KEYS.forEach(function(k){ var v=null; try{v=localStorage.getItem(k)}catch(e){}
+    if(v!=null)before[k]=v });
+  if(Object.keys(before).length){
+    var b=new Blob([JSON.stringify({savedAt:new Date().toISOString(),
+      note:'สำรองอัตโนมัติก่อนนำเข้าจากชีต',data:before},null,1)],{type:'application/json'});
+    var a=document.createElement('a'); a.href=URL.createObjectURL(b);
+    a.download='ก่อนนำเข้าจากชีต-'+new Date().toISOString().slice(0,19).replace(/[:T]/g,'-')+'.json';
+    a.click();
+  }
+  var pf=[],px={},sec={},wl=[];
+  PEND.rows.forEach(function(x){
+    wl.push(x.sym);
+    sec[x.sym]=SECMAP[x.sec]||x.sec;
+    if(x.price)px[x.sym]={price:x.price,chgPct:null,t:Date.now()};
+    if(x.qty>0)pf.push({sym:x.sym,type:'stock',qty:x.qty,cost:x.avgCost,
+      tgt:(x.tgt==null?null:x.tgt),manual:null});
+  });
+  try{
+    localStorage.setItem('pro_pf',JSON.stringify(pf));
+    localStorage.setItem('pro_px',JSON.stringify(px));
+    localStorage.setItem('pro_sec',JSON.stringify(sec));
+    localStorage.setItem('wl_v1',JSON.stringify(wl));
+    if(!localStorage.getItem('pro_cur'))localStorage.setItem('pro_cur','USD');
+    g('res2').innerHTML='<div class="okbox">เขียนแล้ว — พอร์ต <b>'+pf.length+'</b> ตัว · '
+      +'watchlist <b>'+wl.length+'</b> ตัว · ราคา <b>'+Object.keys(px).length+'</b> ตัว<br>'
+      +'เปิด <a href="index.html">หน้าพอร์ต</a> ได้เลย '
+      +'แล้วอย่าลืมไป <a href="sync.html">ซิงค์</a> กดส่งขึ้นคลาวด์</div>';
+  }catch(e){
+    g('res2').innerHTML='<div class="errbox">เขียนไม่สำเร็จ: '+esc(e.message||e)+'</div>';
+  }
+};
+
+(function init(){
+  var u=null; try{u=localStorage.getItem(URLKEY)}catch(e){}
+  if(u)g('iUrl').value=u;
+})();
+</script>
+<script src="theme.js"></script>
+</body></html>

@@ -106,6 +106,7 @@
       {h:'plan.html',   n:'แผนลงทุน · ปรับสมดุล', i:'🧭'},
       {h:'journal.html',n:'Backtest Journal', i:'📓'},
       {h:'botlab.html', n:'Bot Lab · ทดสอบกลยุทธ์', i:'🧪'},
+      {h:'sheet-import.html',n:'นำเข้าจากชีต', i:'📥'},
       {h:'sync.html',   n:'ซิงค์ข้ามเครื่อง', i:'☁'}]}
   ];
   function curPage(){
