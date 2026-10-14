@@ -105,7 +105,8 @@
       {h:'index.html',  n:'พอร์ต',    i:'💼'},
       {h:'plan.html',   n:'แผนลงทุน · ปรับสมดุล', i:'🧭'},
       {h:'journal.html',n:'Backtest Journal', i:'📓'},
-      {h:'botlab.html', n:'Bot Lab · ทดสอบกลยุทธ์', i:'🧪'}]}
+      {h:'botlab.html', n:'Bot Lab · ทดสอบกลยุทธ์', i:'🧪'},
+      {h:'sync.html',   n:'ซิงค์ข้ามเครื่อง', i:'☁'}]}
   ];
   function curPage(){
     var f=(location.pathname.split('/').pop()||'index.html').toLowerCase();
@@ -213,7 +214,49 @@
     }).catch(function(){ /* หน้าที่ไม่ได้ใช้ scan.json ก็ไม่ต้องเตือนอะไร */ });
   }
 
-  function boot(){ buildNav(); build(); staleBar(); }
+
+  /* ============================================================
+     ซิงค์ข้อมูลข้ามเครื่อง — เรียกตอนเปิดหน้า ถ้าตั้งค่าไว้แล้ว
+
+     ของส่วนตัว (พอร์ต สมุดเทรด watchlist) เก็บใน localStorage
+     ซึ่งแยกตามที่อยู่เว็บและแยกตามเครื่อง  เปิดคนละที่จึงไม่เห็นกัน
+     ตัวนี้ทำให้ตามกันได้ โดยข้อมูลถูกเข้ารหัสก่อนออกจากเครื่องเสมอ
+
+     กติกา: ห้ามทำให้หน้าเว็บพังถ้าซิงค์ล้มเหลว
+     ข้อมูลในเครื่องคือของจริง คลาวด์เป็นแค่สำเนา
+     ============================================================ */
+  function syncChip(txt,kind,title){
+    var bar=document.querySelector('.hbar'); if(!bar)return;
+    var host=bar.querySelector('.right')||bar;
+    var el=document.getElementById('syncChip');
+    if(!el){ el=document.createElement('a'); el.id='syncChip';
+      el.href='sync.html'; el.className='syncchip'; host.insertBefore(el,host.firstChild) }
+    el.className='syncchip '+(kind||'');
+    el.textContent=txt;
+    el.title=title||'ตั้งค่าซิงค์ข้ามเครื่อง';
+  }
+  function runSync(){
+    if(typeof SYNC==='undefined'||!SYNC.ready())return;   /* ยังไม่ตั้งค่า = เงียบไว้ */
+    syncChip('☁ กำลังซิงค์','busy');
+    SYNC.auto().then(function(r){
+      if(r.conflict){
+        syncChip('☁ ขัดกัน','bad',r.msg+' — กดเพื่อไปเลือกเอง');
+        return;
+      }
+      syncChip('☁ '+r.state,'ok','ซิงค์เรียบร้อย กดเพื่อดูรายละเอียด');
+      /* ถ้าดึงของใหม่ลงมา หน้าที่เปิดอยู่ยังถือข้อมูลเก่าในหน่วยความจำ
+         ต้องโหลดใหม่ ไม่งั้นผู้ใช้จะเห็นของเก่าแล้วเผลอแก้ทับของใหม่ */
+      if(r.reload){
+        syncChip('☁ ได้ข้อมูลใหม่ กำลังโหลดหน้า','ok');
+        setTimeout(function(){ location.reload() },700);
+      }
+    }).catch(function(e){
+      var m=String(e&&e.message||e);
+      syncChip('☁ ซิงค์ไม่สำเร็จ','bad',m);
+    });
+  }
+
+  function boot(){ buildNav(); build(); staleBar(); runSync(); }
   if(document.readyState==='loading')
     document.addEventListener('DOMContentLoaded',boot);
   else boot();

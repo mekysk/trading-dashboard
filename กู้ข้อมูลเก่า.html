@@ -1,0 +1,196 @@
+<!DOCTYPE html><html lang="th"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ย้ายข้อมูลพอร์ต · Trading Dashboard</title>
+<style>
+:root{--bg:#0a0d13;--bg2:#10151e;--bg3:#161d29;--line:#222c3d;--tx:#e8eef8;
+--tx2:#96a3b8;--tx3:#5c6a80;--accent:#f5b942;--acc:#3b82f6;--up:#34C27D;
+--dn:#E5645A;--warn:#f59e0b}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-size:14px;line-height:1.6;padding:20px;
+font-family:-apple-system,'Segoe UI','Leelawadee UI','Noto Sans Thai',Tahoma,sans-serif}
+main{max-width:860px;margin:0 auto}
+h1{font-size:25px;font-weight:800;margin-bottom:4px}
+.lead{font-size:12.5px;color:var(--tx2);margin-bottom:16px;line-height:1.75}
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:11px;
+padding:16px;margin-bottom:12px}
+.card h3{font-size:13px;font-weight:700;margin-bottom:10px}
+.btn{background:var(--bg3);border:1px solid var(--line);color:var(--tx);
+padding:9px 15px;border-radius:8px;font-size:13px;font-family:inherit;cursor:pointer;
+margin-right:7px;margin-top:4px}
+.btn:hover{border-color:var(--tx3)}
+.btn.go{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:600}
+.btn.warn{background:rgba(245,158,11,.14);border-color:var(--warn);color:var(--warn)}
+table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px}
+th{text-align:left;font-size:10px;color:var(--tx3);text-transform:uppercase;
+letter-spacing:.07em;padding:5px 7px;border-bottom:1px solid var(--line)}
+td{padding:6px 7px;border-bottom:1px solid rgba(34,44,61,.5)}
+td.n{text-align:right;font-family:ui-monospace,monospace}
+.ok{color:var(--up)}.no{color:var(--tx3)}
+.where{background:var(--bg3);border-radius:8px;padding:11px 13px;font-size:12px;
+margin-bottom:12px;border:1px solid var(--line)}
+.where b{color:var(--accent)}
+.warnbox{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);
+border-radius:9px;padding:12px 14px;font-size:11.5px;color:var(--warn);line-height:1.8}
+.okbox{background:rgba(52,194,125,.09);border:1px solid rgba(52,194,125,.33);
+border-radius:9px;padding:12px 14px;font-size:12px;color:var(--up);line-height:1.8;margin-top:10px}
+.step{font-size:12.5px;color:var(--tx2);line-height:1.9}
+.step b{color:var(--tx)}
+code{background:var(--bg3);padding:1px 6px;border-radius:4px;font-size:12px}
+</style></head><body><main>
+
+<h1>ย้ายข้อมูลพอร์ตข้ามตู้เซฟ</h1>
+<p class="lead">เบราว์เซอร์แยกที่เก็บข้อมูลตามที่อยู่เว็บ ของที่กรอกไว้ในไฟล์ที่เปิดจากเครื่อง
+จึงอยู่คนละที่กับเวอร์ชันบนเว็บ ทั้งที่ชื่อกุญแจเหมือนกันทุกตัว
+หน้านี้ใช้ย้ายของจากตู้หนึ่งไปอีกตู้</p>
+
+<div class="where" id="where"></div>
+
+<section class="card">
+  <h3>1 · ของที่อยู่ในตู้นี้</h3>
+  <div id="list"></div>
+  <button class="btn go" id="bExp">⬇ บันทึกเป็นไฟล์สำรอง</button>
+  <button class="btn" id="bRe">↻ ตรวจใหม่</button>
+</section>
+
+<section class="card">
+  <h3>2 · นำไฟล์สำรองเข้าตู้นี้</h3>
+  <p class="step">เลือกไฟล์ที่บันทึกไว้จากขั้นที่ 1 ของอีกตู้หนึ่ง</p>
+  <input type="file" id="f" accept=".json" style="margin:8px 0">
+  <div id="prev"></div>
+  <button class="btn warn" id="bImp" style="display:none">เขียนลงตู้นี้</button>
+  <div id="res"></div>
+</section>
+
+<section class="card">
+  <h3>วิธีใช้</h3>
+  <p class="step">
+    <b>ขั้นที่ 1</b> — เปิดหน้านี้ด้วยการ <b>ดับเบิลคลิกไฟล์จากโฟลเดอร์</b>
+    (ที่อยู่จะขึ้นต้นด้วย <code>file://</code>) แล้วกดบันทึกไฟล์สำรอง<br>
+    นี่คือตู้เดียวกับที่ <code>dashboard-pro.html</code> ใช้<br><br>
+    <b>ขั้นที่ 2</b> — เปิดหน้านี้จากเว็บ
+    <code>https://mekysk.github.io/trading-dashboard/กู้ข้อมูลเก่า.html</code>
+    แล้วเลือกไฟล์สำรองที่เพิ่งได้ กดเขียนลงตู้นี้<br><br>
+    <b>ขั้นที่ 3</b> — เปิดหน้าพอร์ตบนเว็บ ข้อมูลจะขึ้นแล้ว
+  </p>
+  <div class="warnbox" style="margin-top:10px">
+    <b>ก่อนเขียนทับ หน้านี้จะสำรองของเดิมให้อัตโนมัติ</b> เป็นไฟล์ชื่อ
+    <code>ก่อนเขียนทับ-....json</code> เผื่อย้ายผิดตู้แล้วอยากได้คืน<br>
+    และไฟล์สำรองนี้<b>ห้ามอัปขึ้น GitHub</b> เพราะมีพอร์ตจริงอยู่ข้างใน
+  </div>
+</section>
+
+<script>
+/* กุญแจทั้งหมดที่ระบบนี้เคยใช้ รวมของเก่าที่เลิกใช้แล้ว
+   เก็บครบดีกว่าตกหล่น เพราะย้ายรอบเดียวแล้วจบ */
+var KEYS=['pro_pf','pro_px','pro_tr','pro_sec','pro_hist','pro_cur','pro_fx',
+  'pro_wl','pro_al','pro_er','pro_ytgt','pro_dcaw',
+  'bt_trades_v1','bt_cfg_v1','wl_v1','ev_wl_v1','dash_theme','dash_mode'];
+var NAME={pro_pf:'รายการที่ถือ',pro_px:'ราคาที่บันทึกไว้',pro_tr:'รายการซื้อขาย',
+  pro_sec:'กลุ่มอุตสาหกรรม',pro_hist:'ประวัติมูลค่าพอร์ต',pro_cur:'สกุลเงินที่เลือก',
+  pro_fx:'อัตราแลกเปลี่ยน',pro_wl:'watchlist (เก่า)',pro_al:'การแจ้งเตือน',
+  pro_er:'บันทึกงบ',pro_ytgt:'เป้าหมายรายปี',pro_dcaw:'แผน DCA',
+  bt_trades_v1:'สมุดเทรด',bt_cfg_v1:'ตั้งค่าสมุดเทรด',wl_v1:'watchlist',
+  ev_wl_v1:'watchlist (เก่า)',dash_theme:'ธีมสี',dash_mode:'โหมดสว่าง/มืด'};
+var g=function(i){return document.getElementById(i)};
+
+function originLabel(){
+  var p=location.protocol;
+  if(p==='file:')return {t:'ตู้ของไฟล์ในเครื่อง',d:'file:// — ตู้เดียวกับ dashboard-pro.html',local:true};
+  return {t:'ตู้ของเว็บ '+location.host,d:location.origin,local:false};
+}
+function countOf(k,v){
+  try{var j=JSON.parse(v);
+    if(Array.isArray(j))return j.length+' รายการ';
+    if(j&&typeof j==='object')return Object.keys(j).length+' รายการ';
+    return String(j).slice(0,20);
+  }catch(e){ return String(v).slice(0,20) }
+}
+function scan(){
+  var o=originLabel();
+  g('where').innerHTML='ตอนนี้คุณอยู่ที่ <b>'+o.t+'</b><br>'
+    +'<span style="color:var(--tx3);font-size:11px">'+o.d+'</span>';
+  var rows=[],found=0,big=0;
+  KEYS.forEach(function(k){
+    var v=null; try{ v=localStorage.getItem(k) }catch(e){}
+    if(v==null){ rows.push('<tr><td class="no">'+(NAME[k]||k)
+      +' <span style="font-size:10px">'+k+'</span></td><td class="n no">—</td><td class="n no">—</td></tr>'); return }
+    found++; big+=v.length;
+    rows.push('<tr><td><span class="ok">●</span> '+(NAME[k]||k)
+      +' <span style="font-size:10px;color:var(--tx3)">'+k+'</span></td>'
+      +'<td class="n">'+countOf(k,v)+'</td><td class="n">'+v.length.toLocaleString()+'</td></tr>');
+  });
+  g('list').innerHTML='<table><thead><tr><th>ข้อมูล</th><th class="n">ขนาด</th>'
+    +'<th class="n">ไบต์</th></tr></thead><tbody>'+rows.join('')+'</tbody></table>'
+    +'<p class="step" style="margin-top:9px">พบข้อมูล <b>'+found+'</b> ชุด รวม '
+    +big.toLocaleString()+' ไบต์'
+    +(found===0?' — <span style="color:var(--warn)">ตู้นี้ว่างเปล่า ลองเปิดจากอีกที่หนึ่ง</span>':'')+'</p>';
+}
+
+function dl(obj,fn){
+  var b=new Blob([JSON.stringify(obj,null,1)],{type:'application/json'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(b); a.download=fn; a.click();
+  setTimeout(function(){URL.revokeObjectURL(a.href)},1000);
+}
+function dump(){
+  var d={};
+  KEYS.forEach(function(k){ var v=null; try{v=localStorage.getItem(k)}catch(e){}
+    if(v!=null)d[k]=v });
+  return d;
+}
+
+g('bRe').onclick=scan;
+g('bExp').onclick=function(){
+  var d=dump(), n=Object.keys(d).length;
+  if(!n){ alert('ตู้นี้ไม่มีข้อมูลให้บันทึก'); return }
+  dl({savedAt:new Date().toISOString(), from:location.origin||'file://',
+      keys:n, data:d}, 'สำรองข้อมูล-'+new Date().toISOString().slice(0,10)+'.json');
+};
+
+var PEND=null;
+g('f').onchange=function(e){
+  var file=e.target.files[0]; if(!file)return;
+  var r=new FileReader();
+  r.onload=function(){
+    try{
+      var j=JSON.parse(r.result);
+      var d=j.data||j;
+      if(!d||typeof d!=='object')throw new Error('รูปแบบไฟล์ไม่ถูกต้อง');
+      PEND=d;
+      var ks=Object.keys(d).filter(function(k){return KEYS.indexOf(k)>=0});
+      g('prev').innerHTML='<p class="step" style="margin-top:8px">ไฟล์นี้มาจาก <b>'
+        +(j.from||'ไม่ระบุ')+'</b> บันทึกเมื่อ '+(j.savedAt||'ไม่ระบุ').slice(0,16)
+        +'<br>จะเขียน '+ks.length+' ชุด: '
+        +ks.map(function(k){return (NAME[k]||k)+' ('+countOf(k,d[k])+')'}).join(' · ')+'</p>';
+      g('bImp').style.display='inline-block';
+      g('res').innerHTML='';
+    }catch(err){
+      PEND=null; g('bImp').style.display='none';
+      g('prev').innerHTML='<p class="step" style="color:var(--dn)">อ่านไฟล์ไม่ได้: '+err.message+'</p>';
+    }
+  };
+  r.readAsText(file);
+};
+
+g('bImp').onclick=function(){
+  if(!PEND)return;
+  /* สำรองของเดิมก่อนเสมอ — ย้ายผิดตู้แล้วเอาคืนไม่ได้คือความเสียหายที่กู้ไม่ได้ */
+  var before=dump();
+  if(Object.keys(before).length)
+    dl({savedAt:new Date().toISOString(), from:location.origin||'file://',
+        note:'สำรองอัตโนมัติก่อนเขียนทับ', keys:Object.keys(before).length, data:before},
+       'ก่อนเขียนทับ-'+new Date().toISOString().slice(0,19).replace(/[:T]/g,'-')+'.json');
+  var n=0, bad=[];
+  Object.keys(PEND).forEach(function(k){
+    if(KEYS.indexOf(k)<0)return;          /* ไม่เขียนกุญแจแปลกปลอม */
+    try{ localStorage.setItem(k,PEND[k]); n++ }catch(e){ bad.push(k) }
+  });
+  g('res').innerHTML='<div class="okbox">เขียนลงตู้นี้แล้ว <b>'+n+'</b> ชุด'
+    +(bad.length?'<br><span style="color:var(--warn)">เขียนไม่ได้ '+bad.length+' ชุด: '+bad.join(' ')+'</span>':'')
+    +'<br>เปิดหน้าพอร์ตได้เลย ถ้าเปิดค้างอยู่ให้กดรีเฟรชหนึ่งครั้ง</div>';
+  scan();
+};
+
+scan();
+</script>
+</main></body></html>

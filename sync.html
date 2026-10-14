@@ -1,0 +1,267 @@
+<!DOCTYPE html><html lang="th"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ซิงค์ข้อมูล — Trading Dashboard</title>
+<style>
+:root{--bg:#0a0d13;--bg2:#10151e;--bg3:#161d29;--line:#222c3d;--tx:#e8eef8;
+--tx2:#96a3b8;--tx3:#5c6a80;--accent:#f5b942;--glow:245,185,66;--acc:#3b82f6;
+--up:#34C27D;--dn:#E5645A;--warn:#f59e0b;--pur:#a78bfa}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-size:14px;line-height:1.55;padding-bottom:40px;
+font-family:-apple-system,'Segoe UI','Leelawadee UI','Noto Sans Thai',Tahoma,sans-serif}
+.mono{font-family:ui-monospace,Consolas,monospace}
+button{font-family:inherit;cursor:pointer}a{color:var(--acc);text-decoration:none}
+header{position:sticky;top:0;z-index:50;background:rgba(10,13,19,.96);
+backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.hbar{display:flex;align-items:center;gap:12px;padding:9px 16px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:15px}.logo span{color:var(--accent)}
+.right{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{background:var(--bg3);border:1px solid var(--line);color:var(--tx2);
+padding:7px 13px;border-radius:7px;font-size:12.5px}
+.btn:hover{color:var(--tx)}
+.btn.go{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:600}
+.btn.dan{background:rgba(229,100,90,.13);border-color:rgba(229,100,90,.45);color:var(--dn)}
+main{padding:18px;max-width:900px;margin:0 auto}
+h1{font-size:26px;font-weight:800;letter-spacing:-.02em}
+.lead{font-size:12.5px;color:var(--tx2);margin:4px 0 14px;line-height:1.75;max-width:80ch}
+.sub{font-size:11px;color:var(--tx3)}
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:16px;margin-bottom:12px}
+.card h3{font-size:13px;font-weight:700;margin-bottom:11px}
+label{display:block;font-size:11.5px;color:var(--tx2);margin:9px 0 3px}
+input{width:100%;background:var(--bg3);border:1px solid var(--line);color:var(--tx);
+border-radius:7px;padding:8px 11px;font-family:inherit;font-size:13px}
+input:focus{outline:none;border-color:var(--acc)}
+pre{background:var(--bg3);border:1px solid var(--line);border-radius:8px;padding:12px;
+font-size:11.5px;overflow-x:auto;line-height:1.65;margin-top:8px;white-space:pre-wrap}
+.warnbox{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);
+border-radius:9px;padding:12px 14px;font-size:11.5px;color:var(--warn);line-height:1.85}
+.warnbox b{color:#ffd37a}
+.okbox{background:rgba(52,194,125,.09);border:1px solid rgba(52,194,125,.33);
+border-radius:9px;padding:11px 13px;font-size:12px;color:var(--up);line-height:1.8;margin-top:10px}
+.errbox{background:rgba(229,100,90,.09);border:1px solid rgba(229,100,90,.35);
+border-radius:9px;padding:11px 13px;font-size:12px;color:var(--dn);line-height:1.8;margin-top:10px}
+.step{font-size:12.5px;color:var(--tx2);line-height:1.95}
+.step b{color:var(--tx)}
+code{background:var(--bg3);padding:1px 6px;border-radius:4px;font-size:12px}
+table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:6px}
+th{text-align:left;font-size:10px;color:var(--tx3);text-transform:uppercase;
+letter-spacing:.07em;padding:5px 7px;border-bottom:1px solid var(--line)}
+td{padding:6px 7px;border-bottom:1px solid rgba(34,44,61,.5)}
+td.n{text-align:right;font-family:ui-monospace,monospace}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+</style>
+<link rel="stylesheet" href="theme.css">
+</head><body>
+
+<header><div class="hbar">
+  <div class="logo">TRADING <span>DASHBOARD</span></div>
+  <div class="right"><span id="msg" class="sub"></span></div>
+</div></header>
+
+<main>
+<h1>ซิงค์ข้อมูลข้ามเครื่อง</h1>
+<p class="lead">พอร์ต สมุดเทรด และ watchlist เก็บอยู่ในเบราว์เซอร์ของแต่ละเครื่อง
+หน้านี้ทำให้มันตามกันไปทุกเครื่อง โดย<b>เข้ารหัสก่อนส่งขึ้นคลาวด์เสมอ</b>
+ผู้ให้บริการเห็นแต่ก้อนข้อมูลที่อ่านไม่ออก</p>
+
+<section class="card">
+  <h3>สถานะตอนนี้</h3>
+  <div id="stat"></div>
+</section>
+
+<section class="card">
+  <h3>1 · เตรียมที่เก็บ (ทำครั้งเดียว)</h3>
+  <p class="step">
+    <b>1.1</b> สมัครและสร้างโปรเจกต์ฟรีที่ <a href="https://supabase.com" target="_blank" rel="noopener">supabase.com</a><br>
+    <b>1.2</b> เข้าเมนู <b>SQL Editor</b> วางคำสั่งข้างล่างนี้ทั้งก้อน แล้วกด Run<br>
+    <b>1.3</b> เข้าเมนู <b>Project Settings → API</b> ก๊อป <b>Project URL</b> กับ <b>anon public key</b> มาใส่ในข้อ 2
+  </p>
+<pre id="sql">create table if not exists vault (
+  id          text primary key,
+  data        jsonb not null,
+  device      text,
+  updated_at  timestamptz not null default now()
+);
+
+alter table vault enable row level security;
+
+-- อนุญาตให้คีย์สาธารณะอ่านเขียนได้ แต่เนื้อข้อมูลถูกเข้ารหัสจากเบราว์เซอร์แล้ว
+-- ความปลอดภัยจริงอยู่ที่รหัสผ่านของคุณ ไม่ได้อยู่ที่กฎข้อนี้
+-- และชื่อแถวเป็นแฮชของรหัสผ่าน คนอื่นจึงหาแถวของคุณไม่เจอ
+create policy "vault read"   on vault for select using (true);
+create policy "vault write"  on vault for insert with check (true);
+create policy "vault update" on vault for update using (true);</pre>
+  <button class="btn" id="bCopy" style="margin-top:9px">คัดลอกคำสั่ง SQL</button>
+</section>
+
+<section class="card">
+  <h3>2 · ตั้งค่าเครื่องนี้</h3>
+  <label>Project URL</label>
+  <input id="iUrl" placeholder="https://xxxxxxxx.supabase.co" autocomplete="off">
+  <label>anon public key</label>
+  <input id="iKey" placeholder="eyJhbGciOi..." autocomplete="off">
+  <label>รหัสผ่านสำหรับเข้ารหัส — ต้องใส่เหมือนกันทุกเครื่อง</label>
+  <input id="iPass" type="password" placeholder="ตั้งให้ยาวและเดายาก" autocomplete="new-password">
+  <label>ชื่อเครื่องนี้ (ไว้ดูว่าใครส่งล่าสุด)</label>
+  <input id="iDev" placeholder="เช่น พีซีบ้าน / มือถือ" autocomplete="off">
+
+  <div class="warnbox" style="margin-top:12px">
+    <b>รหัสผ่านนี้กู้คืนไม่ได้</b> ไม่มีใครรู้ รวมถึงผมและ Supabase
+    ถ้าลืม ข้อมูลที่เข้ารหัสไว้จะเปิดไม่ได้อีกเลย — จดเก็บไว้ที่ปลอดภัยก่อน<br>
+    ข้อมูลในเครื่องยังอยู่ครบเสมอ คลาวด์เป็นแค่สำเนา ถ้าลืมรหัสก็แค่ตั้งใหม่แล้วส่งขึ้นไปใหม่
+  </div>
+
+  <div style="margin-top:12px">
+    <button class="btn go" id="bSave">บันทึกและทดสอบการเชื่อมต่อ</button>
+    <button class="btn dan" id="bForget">ลืมรหัสในเครื่องนี้</button>
+  </div>
+  <div id="res"></div>
+</section>
+
+<section class="card">
+  <h3>3 · ซิงค์</h3>
+  <p class="step">ปกติไม่ต้องกดเอง ทุกหน้าจะซิงค์ให้ตอนเปิด ปุ่มพวกนี้ไว้ใช้ตอนอยากบังคับทิศทาง</p>
+  <button class="btn go" id="bAuto">ซิงค์อัตโนมัติ</button>
+  <button class="btn" id="bPush">ส่งของเครื่องนี้ขึ้นไปทับ</button>
+  <button class="btn" id="bPull">เอาของบนคลาวด์มาทับเครื่องนี้</button>
+  <div id="res2"></div>
+  <div class="sub" style="margin-top:10px">
+    ถ้าทั้งสองฝั่งเปลี่ยนไปคนละทาง ระบบจะ<b>ไม่เลือกให้</b> แต่จะบอกให้คุณตัดสินเอง —
+    เลือกผิดแล้วข้อมูลหายกู้ไม่ได้
+  </div>
+</section>
+
+<section class="card">
+  <h3>ข้อมูลที่จะถูกซิงค์</h3>
+  <div id="keys"></div>
+</section>
+</main>
+
+<script src="sync.js"></script>
+<script>
+var g=function(i){return document.getElementById(i)};
+var NAME={pro_pf:'รายการที่ถือ',pro_px:'ราคาที่บันทึก',pro_tr:'รายการซื้อขาย',
+  pro_sec:'กลุ่มอุตสาหกรรม',pro_hist:'ประวัติมูลค่าพอร์ต',pro_cur:'สกุลเงิน',
+  pro_fx:'อัตราแลกเปลี่ยน',pro_wl:'watchlist (เก่า)',pro_al:'การแจ้งเตือน',
+  pro_er:'บันทึกงบ',pro_ytgt:'เป้าหมายรายปี',pro_dcaw:'แผน DCA',
+  bt_trades_v1:'สมุดเทรด',bt_cfg_v1:'ตั้งค่าสมุดเทรด',wl_v1:'watchlist'};
+
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function count(v){ try{var j=JSON.parse(v);
+  if(Array.isArray(j))return j.length+' รายการ';
+  if(j&&typeof j==='object')return Object.keys(j).length+' รายการ';
+  return String(j).slice(0,16) }catch(e){ return String(v).slice(0,16) } }
+
+function drawStat(){
+  var c=SYNC.cfg(), on=SYNC.ready();
+  var mark=null; try{ mark=JSON.parse(localStorage.getItem(SYNC.MARK)) }catch(e){}
+  g('stat').innerHTML=
+    '<span class="dot" style="background:'+(on?'var(--up)':'var(--tx3)')+'"></span>'
+    +(on?'<b>เปิดใช้งานอยู่</b>':'<b>ยังไม่ได้ตั้งค่า</b>')
+    +(c&&c.url?'<br><span class="sub">ที่เก็บ '+esc(c.url)+'</span>':'')
+    +(c&&c.device?'<br><span class="sub">เครื่องนี้ชื่อ '+esc(c.device)+'</span>':'')
+    +(mark&&mark.at?'<br><span class="sub">ซิงค์ล่าสุด '+esc(String(mark.at).slice(0,16).replace('T',' '))+'</span>':'');
+}
+function drawKeys(){
+  var snap=SYNC.snapshot(), rows=SYNC.KEYS.map(function(k){
+    var has=snap[k]!=null;
+    return '<tr><td>'+(has?'<span class="dot" style="background:var(--up)"></span>':'<span class="dot" style="background:var(--line)"></span>')
+      +(NAME[k]||k)+' <span class="sub">'+k+'</span></td>'
+      +'<td class="n">'+(has?count(snap[k]):'—')+'</td>'
+      +'<td class="n">'+(has?snap[k].length.toLocaleString():'—')+'</td></tr>';
+  }).join('');
+  g('keys').innerHTML='<table><thead><tr><th>ข้อมูล</th><th class="n">ขนาด</th>'
+    +'<th class="n">ไบต์</th></tr></thead><tbody>'+rows+'</tbody></table>'
+    +'<p class="sub" style="margin-top:8px">มีข้อมูล '+Object.keys(snap).length
+    +' จาก '+SYNC.KEYS.length+' ชุด · ธีมสีไม่ถูกซิงค์ ถือเป็นของแต่ละเครื่อง</p>';
+}
+function ok(el,m){ g(el).innerHTML='<div class="okbox">'+m+'</div>' }
+function err(el,m){ g(el).innerHTML='<div class="errbox">'+esc(m)+'</div>' }
+
+(function init(){
+  var c=SYNC.cfg()||{};
+  g('iUrl').value=c.url||''; g('iKey').value=c.key||''; g('iDev').value=c.device||'';
+  var p=null; try{p=localStorage.getItem(SYNC.PASS)}catch(e){}
+  if(p)g('iPass').value=p;
+  drawStat(); drawKeys();
+})();
+
+g('bCopy').onclick=function(){
+  navigator.clipboard.writeText(g('sql').textContent).then(function(){
+    g('bCopy').textContent='คัดลอกแล้ว';
+    setTimeout(function(){g('bCopy').textContent='คัดลอกคำสั่ง SQL'},1600);
+  });
+};
+
+g('bSave').onclick=async function(){
+  var url=g('iUrl').value.trim(), key=g('iKey').value.trim(),
+      p=g('iPass').value, dev=g('iDev').value.trim();
+  if(!url||!key||!p){ err('res','กรอก URL, anon key และรหัสผ่านให้ครบก่อน'); return }
+  if(p.length<8){ err('res','รหัสผ่านสั้นเกินไป ควรยาวอย่างน้อย 8 ตัว ยิ่งยาวยิ่งเดายาก'); return }
+  if(!/^https:\/\/.+\.supabase\.co/.test(url)){
+    err('res','Project URL ควรหน้าตาแบบ https://xxxxxxxx.supabase.co'); return }
+  SYNC.setCfg({url:url,key:key,device:dev||'ไม่ระบุ'});
+  SYNC.setPass(p);
+  g('res').innerHTML='<p class="sub">กำลังทดสอบ...</p>';
+  try{
+    var r=await SYNC.pull();
+    ok('res', r.found
+      ? 'เชื่อมต่อได้ และถอดรหัสข้อมูลบนคลาวด์สำเร็จ — รหัสผ่านตรงกับเครื่องอื่นแล้ว'
+        +'<br><span class="sub">ข้อมูลบนคลาวด์อัปเดตล่าสุด '+esc(String(r.at||'').slice(0,16).replace('T',' '))+'</span>'
+      : 'เชื่อมต่อได้ ยังไม่มีข้อมูลบนคลาวด์ — กด "ส่งของเครื่องนี้ขึ้นไปทับ" เพื่อเริ่มต้น');
+  }catch(e){
+    var m=String(e.message||e);
+    if(/ถอดรหัส|operation-specific|OperationError|รูปแบบข้อมูล/i.test(m))
+      m='เชื่อมต่อได้ แต่ถอดรหัสไม่ได้ — รหัสผ่านไม่ตรงกับที่ใช้ตอนส่งขึ้นไป';
+    err('res',m);
+  }
+  drawStat();
+};
+
+g('bForget').onclick=function(){
+  if(!confirm('ลบรหัสผ่านออกจากเครื่องนี้? ข้อมูลในเครื่องยังอยู่ครบ แค่หยุดซิงค์'))return;
+  SYNC.forget(); g('iPass').value=''; drawStat();
+  ok('res','ลบรหัสผ่านออกจากเครื่องนี้แล้ว ข้อมูลในเครื่องไม่ถูกแตะ');
+};
+
+g('bAuto').onclick=async function(){
+  g('res2').innerHTML='<p class="sub">กำลังซิงค์...</p>';
+  try{
+    var r=await SYNC.auto();
+    if(r.conflict){
+      g('res2').innerHTML='<div class="warnbox"><b>ขัดกัน</b><br>'+esc(r.msg)
+        +'<br>คลาวด์อัปเดตล่าสุด '+esc(String(r.remoteAt||'').slice(0,16).replace('T',' '))
+        +'<br>เลือกปุ่ม "ส่งขึ้นไปทับ" หรือ "เอามาทับเครื่องนี้" ด้วยตัวเอง</div>';
+    } else {
+      ok('res2', r.state+(r.keys?(' · เขียน '+r.keys+' ชุด'):'')
+        +(r.reload?'<br>กดรีเฟรชหน้าพอร์ตเพื่อเห็นข้อมูลใหม่':''));
+      drawKeys();
+    }
+  }catch(e){ err('res2',String(e.message||e)) }
+  drawStat();
+};
+g('bPush').onclick=async function(){
+  if(!confirm('ส่งข้อมูลของเครื่องนี้ไปทับบนคลาวด์?'))return;
+  try{ var r=await SYNC.push(); ok('res2','ส่งขึ้นคลาวด์แล้ว '+r.sent+' ชุด') }
+  catch(e){ err('res2',String(e.message||e)) }
+  drawStat();
+};
+g('bPull').onclick=async function(){
+  if(!confirm('เอาข้อมูลบนคลาวด์มาทับเครื่องนี้? ของเดิมในเครื่องจะถูกเขียนทับ'))return;
+  try{
+    var r=await SYNC.pull();
+    if(!r.found){ err('res2','ยังไม่มีข้อมูลบนคลาวด์'); return }
+    var n=SYNC.restore(r.data);
+    localStorage.setItem(SYNC.MARK,JSON.stringify({at:r.at,fp:SYNC.fingerprint(SYNC.snapshot())}));
+    ok('res2','เขียนลงเครื่องนี้แล้ว '+n+' ชุด<br>กดรีเฟรชหน้าพอร์ตเพื่อเห็นข้อมูลใหม่');
+    drawKeys();
+  }catch(e){
+    var m=String(e.message||e);
+    if(/OperationError|ถอดรหัส|รูปแบบข้อมูล/i.test(m))m='ถอดรหัสไม่ได้ — รหัสผ่านไม่ตรง';
+    err('res2',m);
+  }
+  drawStat();
+};
+</script>
+<script src="theme.js"></script>
+</body></html>

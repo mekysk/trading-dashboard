@@ -444,3 +444,13 @@ body.hasnav .logo, body.hasnav .sitenav, body.hasnav nav.sitelinks{ display:none
 .stalebar .x{margin-left:auto;background:none;border:0;color:inherit;opacity:.6;
   font-size:13px;cursor:pointer;padding:0 4px}
 .stalebar .x:hover{opacity:1}
+
+
+/* ป้ายสถานะซิงค์ (theme.js เป็นคนใส่) */
+.syncchip{display:inline-flex;align-items:center;gap:5px;font-size:11px;
+  padding:4px 10px;border-radius:7px;border:1px solid var(--line);
+  background:var(--bg3);color:var(--tx3);text-decoration:none;white-space:nowrap}
+.syncchip:hover{color:var(--tx)}
+.syncchip.ok{color:var(--up);border-color:rgba(52,194,125,.35)}
+.syncchip.bad{color:var(--dn);border-color:rgba(229,100,90,.45)}
+.syncchip.busy{color:var(--tx2)}
