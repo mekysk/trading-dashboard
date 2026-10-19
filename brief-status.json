@@ -1,16 +1,35 @@
 {
-  "ranAt": "2026-10-19T19:12:08.558Z",
+  "ranAt": "2026-10-19T19:19:48.086Z",
   "ok": true,
-  "model": "gemini-3.5-flash-lite",
+  "model": "gemini-3.8-flash",
   "grounded": false,
   "articlesRead": 2,
+  "articlesFailed": [
+    "marketwatch.com: HTTP 401",
+    "marketwatch.com: HTTP 401",
+    "marketwatch.com: HTTP 401",
+    "marketwatch.com: HTTP 401",
+    "marketwatch.com: HTTP 401",
+    "marketwatch.com: HTTP 401",
+    "marketwatch.com: HTTP 401",
+    "marketwatch.com: HTTP 401",
+    "investing.com: HTTP 403",
+    "marketwatch.com: HTTP 401",
+    "investing.com: HTTP 403",
+    "marketwatch.com: HTTP 401",
+    "investing.com: HTTP 403",
+    "investing.com: HTTP 403",
+    "investing.com: HTTP 403",
+    "investing.com: HTTP 403",
+    "investing.com: HTTP 403",
+    "investing.com: HTTP 403"
+  ],
   "citedUrls": 2,
   "modelsFailed": [
-    "gemini-3.8-flash+search: HTTP 429 — {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \",\n    \"stat",
-    "gemini-3.8-flash: HTTP 503 — {\n  \"error\": {\n    \"code\": 503,\n    \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\",\n    \"status\": \"UNAVAILABLE\"\n  }\n}\n"
+    "gemini-3.8-flash+search: HTTP 429 — {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \",\n    \"stat"
   ],
-  "chars": 2185,
-  "paragraphs": 5,
+  "chars": 2518,
+  "paragraphs": 6,
   "headlines": 45,
   "prices": 7,
   "qualityWarnings": [
@@ -27,5 +46,5 @@
     "Federal Reserve (12)"
   ],
   "feedsFailed": [],
-  "elapsed": "6.0s"
+  "elapsed": "90.6s"
 }
