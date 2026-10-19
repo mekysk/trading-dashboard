@@ -1,17 +1,9 @@
 {
-  "ranAt": "2026-10-19T17:22:56.536Z",
-  "ok": true,
-  "model": "gemini-flash-lite-latest",
-  "chars": 1640,
-  "headlines": 34,
-  "feedsOk": [
-    "CNBC Markets (2)",
-    "MarketWatch Top (10)",
-    "Investing.com (10)",
-    "Federal Reserve (12)"
-  ],
-  "feedsFailed": [
-    "CNBC Economy: HTTP 404",
-    "Yahoo Finance: HTTP 404"
-  ]
+  "ranAt": "2026-10-19T18:06:41.714Z",
+  "ok": false,
+  "reason": "หยุดเพราะโควตาหรือสิทธิ์ — gemini-flash-latest+search: HTTP 429 — {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \",\n    \"stat",
+  "stage": "ไม่ทราบขั้นตอน (ล้มนอกเส้นทางที่ดักไว้)",
+  "hasKey": true,
+  "keyLength": 53,
+  "elapsed": "1.6s"
 }
