@@ -198,6 +198,72 @@ function isRecent(d,hours){
   return (Date.now()-t) <= hours*3600*1000;
 }
 
+/* ---------------------------------------------------------------
+   ดึงเนื้อบทความเต็ม  —  ทางแทนการค้นเว็บของ Google
+
+   หลักฐานจากการรันจริง 2 รอบ: ขอค้นเว็บกับ 4 รุ่น ได้ 429 เหมือนกันหมด
+   ทั้ง gemini-3.8-flash, 3.5-flash-lite, flash-latest, flash-lite-latest
+   แปลว่ากุญแจฟรีใบนี้ไม่มีโควตาค้นเว็บเลย ไม่ใช่เรื่องชื่อรุ่นผิดอีกแล้ว
+
+   แต่สิ่งที่การค้นเว็บให้ คือ "เนื้อบทความเต็ม" ไม่ใช่เวทมนตร์อะไร
+   และเรามีลิงก์บทความอยู่แล้วจาก RSS  จึงไปอ่านเองเสียเลย
+   เครื่องของ GitHub ต่อเน็ตได้อิสระ ไม่ติด CORS แบบเบราว์เซอร์
+   ได้ผลแบบเดียวกัน ฟรี และไม่ต้องง้อโควตาใคร
+   --------------------------------------------------------------- */
+const ART_N  = Number(process.env.BRIEF_ARTICLES || 14);
+const ART_MS = Number(process.env.BRIEF_ART_MS || 9000);
+
+function readable(html){
+  /* ลอกแท็ก -> ถอดสัญลักษณ์ -> ลอกแท็กอีกรอบ  เหตุผลเดียวกับใน clean()
+     ถ้าลอกรอบเดียวแล้วค่อยถอด &lt;strong&gt; จะกลายเป็น <strong> โผล่กลับมา
+     ผมเคยแก้บั๊กนี้ไปแล้วใน clean() แล้วมาเขียนฟังก์ชันใหม่พลาดซ้ำที่เดิม */
+  const entity=t=>t
+    .replace(/&nbsp;/g,' ')
+    .replace(/&lt;/g,'<').replace(/&gt;/g,'>')
+    .replace(/&quot;/g,'"').replace(/&#39;|&apos;/g,"'")
+    .replace(/&#(\d+);/g,(m,d)=>String.fromCharCode(+d))
+    .replace(/&amp;/g,'&');        /* &amp; ท้ายสุดเสมอ */
+  const pre=String(html)
+    .replace(/<(script|style|noscript|svg|head)[\s\S]*?<\/\1>/gi,' ')
+    .replace(/<!--[\s\S]*?-->/g,' ')
+    .replace(/<\/(p|div|br|li|h[1-6])>/gi,'\n');
+  return entity(pre.replace(/<[^>]+>/g,' '))
+    .replace(/<[^>]+>/g,' ')       /* รอบสองสำหรับแท็กที่เพิ่งถูกถอดออกมา */
+    .replace(/[ \t]+/g,' ')
+    .split('\n').map(s=>s.trim())
+    /* เก็บเฉพาะบรรทัดที่ "เหมือนย่อหน้าข่าวจริง"
+       ยาวพอ  มีช่องว่างเยอะแบบประโยค  ไม่ใช่ลิงก์หรือบรรทัดข้อมูลเทคนิค
+       ถ้ากรองแค่ความยาว เมนูยาวๆ กับ URL จะผ่านเข้ามาเต็มไปหมด
+       แล้วพอตัดเอาแค่ 2,600 ตัวแรก อาจได้แต่ขยะไม่ได้เนื้อข่าวเลย */
+    .filter(s=>
+      s.length>60 &&
+      (s.match(/ /g)||[]).length>=8 &&        /* เป็นประโยค ไม่ใช่ป้ายกำกับ */
+      !/https?:\/\//.test(s) &&               /* ไม่ใช่ลิงก์ */
+      !/^[a-z][a-z0-9:_-]*:\s/i.test(s))      /* ไม่ใช่บรรทัดแบบ key: value */
+    .join('\n');
+}
+
+async function fetchArticles(items){
+  const picked=items.filter(x=>/^https?:\/\//.test(x.link)).slice(0,ART_N);
+  const out=[]; let fail=0;
+  /* ดึงพร้อมกันทีละ 5 เพื่อไม่ให้ช้าเกินไป และไม่ถล่มเว็บใครมากเกิน */
+  for(let i=0;i<picked.length;i+=5){
+    const batch=picked.slice(i,i+5);
+    const res=await Promise.all(batch.map(async x=>{
+      try{
+        const html=await get(x.link,ART_MS);
+        const txt=readable(html);
+        if(txt.length<400)throw new Error('เนื้อหาสั้นเกินไป '+txt.length+' ตัว');
+        return {...x, text:txt.slice(0,2600)};
+      }catch(e){ fail++; return null }
+    }));
+    out.push(...res.filter(Boolean));
+  }
+  log('  อ่านบทความเต็มได้ '+out.length+' จาก '+picked.length+' ลิงก์'
+    +(fail?' (อ่านไม่ได้ '+fail+')':''));
+  return out;
+}
+
 async function collect(){
   const seen=new Set(), items=[], ok=[], failed=[];
   for(const f of FEEDS){
@@ -259,7 +325,8 @@ const PROMPT = `คุณเขียนสรุปข่าวตลาดใ�
    ย่อหน้าอื่นห้ามมีการคาดเดาปนเลย
 
 ระดับความละเอียดที่ต้องการ
-คุณค้นเว็บได้ ให้ค้นหาข้อมูลเหล่านี้มาใส่ให้ครบที่สุดเท่าที่หาเจอ
+ข้างล่างมีเนื้อบทความเต็มให้แล้ว ไม่ใช่แค่หัวข้อ
+ตัวเลขรายละเอียดซ่อนอยู่ในเนื้อบทความ หน้าที่ของคุณคือขุดมันออกมาใช้
 อย่าพอใจกับภาพกว้าง ของที่มีค่าคือตัวเลขเฉพาะเจาะจง
   - หุ้นรายตัวที่ขยับแรงที่สุด พร้อมเปอร์เซ็นต์ เช่น Micron ลง 5.6%
   - กลุ่มอุตสาหกรรมไหนนำ กลุ่มไหนรั้งท้าย พร้อมตัวเลข
@@ -337,19 +404,30 @@ async function askModel(model,payload,useSearch){
   return {body, cites};
 }
 
-async function writeBrief(items, nums){
+async function writeBrief(items, nums, articles){
   const headlines = items.map((x,i)=>(i+1)+'. ['+x.src+'] '+x.title).join('\n');
+  const full = (articles||[]).map((a,i)=>
+    '=== บทความที่ '+(i+1)+' ['+a.src+'] '+a.title+'\n'+a.text).join('\n\n');
   const payload   = assertNoPrivateData(
     PROMPT
     + 'ตัวเลขตลาด (ราคาปิดจริง ใช้ตัวเลขชุดนี้เท่านั้น):\n'
     + (nums.length?nums.map(s=>'- '+s).join('\n'):'- ไม่มีข้อมูลราคาในรอบนี้')
-    + '\n\nหัวข้อข่าว:\n' + headlines);
+    + (full ? '\n\nเนื้อบทความเต็ม — ตัวเลขรายละเอียดอยู่ในนี้ ให้ขุดออกมาใช้:\n'+full : '')
+    + '\n\nหัวข้อข่าวอื่นที่ยังไม่ได้อ่านเนื้อเต็ม:\n' + headlines);
 
   const tried=[];
-  /* ลองแบบค้นเว็บก่อนทุกรุ่น ถ้าไม่ได้เลยค่อยถอยมาแบบไม่ค้น
-     บทสรุปที่ไม่ได้ค้นเว็บจะตื้นกว่ามาก แต่ยังดีกว่าไม่มีอะไรเลย */
-  for(const useSearch of [true,false]){
-    for(const m of MODELS){
+  /* เคยลองขอค้นเว็บกับทุกรุ่น ได้ 429 เหมือนกันหมดสองรอบติด
+     สรุปว่ากุญแจฟรีใบนี้ไม่มีโควตาค้นเว็บ จึงไม่ยิงซ้ำให้เสียเวลาอีก 4 ครั้ง
+     แต่ยังลองกับรุ่นแรกรุ่นเดียวไว้ เผื่อวันหนึ่ง Google เปิดให้
+     ตั้ง BRIEF_SEARCH=off เพื่อปิดสนิท หรือ on เพื่อลองทุกรุ่นเหมือนเดิม */
+  const searchMode=process.env.BRIEF_SEARCH||'probe';
+  const modes = searchMode==='off' ? [false]
+              : searchMode==='on'  ? [true,false]
+              : ['probe',false];
+  for(const mode of modes){
+    const useSearch = mode===true || mode==='probe';
+    const list = mode==='probe' ? MODELS.slice(0,1) : MODELS;
+    for(const m of list){
       try{
         log('  ลอง '+m+(useSearch?' (ค้นเว็บ)':' (ไม่ค้นเว็บ)'));
         const {body,cites}=await askModel(m,payload,useSearch);
@@ -489,10 +567,19 @@ async function main(){
   if(!nums.length)
     log('  (เตือน) ไม่พบไฟล์ราคาใน px/ บทสรุปจะไม่มีตัวเลขปิดกำกับ');
 
-  log('ส่งให้ Gemini เขียนสรุป');
+  log('อ่านเนื้อบทความเต็ม');
+  let articles=[];
+  try{
+    articles = await fetchArticles(items);
+  }catch(e){
+    /* อ่านบทความไม่ได้ไม่ใช่เหตุให้ทิ้งงาน ยังมีหัวข้อข่าวกับราคาให้เขียนได้ */
+    log('  อ่านบทความไม่สำเร็จ: '+e.message+' — เขียนจากหัวข้อข่าวแทน');
+  }
+
+  log('ส่งให้ Gemini เขียนสรุป ('+secs()+')');
   let W;
   try{
-    W = await writeBrief(items, nums);
+    W = await writeBrief(items, nums, articles);
   }catch(e){
     /* ระบุขั้นตอนให้ชัด ไม่ปล่อยให้ไปโผล่เป็น "ไม่ทราบขั้นตอน" ที่ตัวดักชั้นนอก */
     saveStatus({ok:false, stage:'เรียก Gemini', hasKey:true, keyLength:KEY.length,
@@ -511,7 +598,12 @@ async function main(){
   if(!/มุมมอง:/.test(body))warns.push('ไม่มีย่อหน้า "มุมมอง:" ที่แยกการตีความออกมา');
   if(/\*\*|^\s*[-*]\s/m.test(body))warns.push('มี markdown ปน');
   if(!/\d/.test(body.split(/\n{2,}/)[0]||''))warns.push('ย่อหน้าแรกไม่มีตัวเลขปิดกำกับ');
-  if(!grounded)warns.push('ไม่ได้ค้นเว็บ บทสรุปจะตื้นกว่าปกติมาก');
+  /* ไม่ได้ค้นเว็บ ไม่ใช่ปัญหาอีกต่อไปถ้าอ่านบทความเต็มมาแล้ว
+     เพราะสิ่งที่การค้นเว็บให้ ก็คือเนื้อบทความนั่นเอง
+     แต่ถ้าทั้งสองอย่างไม่มี ถึงจะเป็นเรื่องจริงจัง */
+  if(!grounded&&articles.length<4)
+    warns.push('ไม่ได้ค้นเว็บ และอ่านบทความเต็มได้แค่ '+articles.length
+      +' บทความ บทสรุปจะตื้นกว่าปกติมาก');
 
   /* นับความหนาแน่นของตัวเลข เป็นตัวชี้วัดว่า "ลึกจริง" หรือแค่ "ยาว"
      ต้องนับคำว่า เปอร์เซ็นต์ ด้วย ไม่ใช่นับแต่เครื่องหมาย %
@@ -546,6 +638,11 @@ async function main(){
   if(grounded&&cites.length){
     sources=cites.slice(0,12);
     log('แหล่งอ้างอิงเป็นลิงก์บทความจริง '+sources.length+' แหล่ง');
+  }else if(articles.length){
+    /* อ่านบทความไหนมา ก็อ้างบทความนั้น กดแล้วเจอข่าวตรงตัว
+       ดีกว่าอ้างชื่อฟีดซึ่งกดแล้วไปโผล่หน้ารวมข่าวที่เปลี่ยนไปแล้ว */
+    sources=articles.slice(0,12).map(a=>({name:a.title.slice(0,120), url:a.link}));
+    log('แหล่งอ้างอิงเป็นลิงก์บทความที่อ่านจริง '+sources.length+' แหล่ง');
   }else{
     const used=[...new Set(items.map(x=>x.src))];
     sources=used.map(n=>({name:n+' (ฟีดข่าว ไม่ใช่ลิงก์บทความ)',
@@ -558,13 +655,14 @@ async function main(){
     body,
     sources,
     meta:{ writtenBy:'github-actions/'+model, grounded:!!grounded,
-           headlines:items.length }
+           articlesRead:articles.length, headlines:items.length }
   };
   writeFileSync(OUT, JSON.stringify(out,null,2));
-  saveStatus({ok:true, model, grounded:!!grounded, citedUrls:sources.length,
-    modelsFailed:tried, chars:body.length, paragraphs:body.split(/\n{2,}/).length,
+  saveStatus({ok:true, model, grounded:!!grounded, articlesRead:articles.length,
+    citedUrls:sources.length, modelsFailed:tried,
+    chars:body.length, paragraphs:body.split(/\n{2,}/).length,
     headlines:items.length, prices:nums.length, qualityWarnings:warns,
-    feedsOk:ok, feedsFailed:failed});
+    feedsOk:ok, feedsFailed:failed, elapsed:secs()});
   log('เขียน '+OUT+' เรียบร้อย — วันที่ '+out.date);
 }
 
