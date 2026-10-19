@@ -98,6 +98,11 @@ border-radius:9px;padding:11px 13px;font-size:11.5px;color:var(--warn);line-heig
 
 <script src="sync.js"></script>
 <script src="wl.js"></script>
+<!-- theme.js ต้องมาก่อนสคริปต์ข้างล่าง เพราะข้างล่างเรียก TRADINGDAYS ตอน render()
+     ซึ่งทำงานทันทีแบบ synchronous  ถ้าวาง theme.js ไว้ท้ายไฟล์ตามเดิม
+     ป้ายเตือนจะขึ้นบ้างไม่ขึ้นบ้างแล้วแต่ว่าไฟล์ไหนโหลดเสร็จก่อน
+     ตัว theme.js รอ DOMContentLoaded อยู่แล้ว ย้ายขึ้นมาจึงไม่กระทบเมนู -->
+<script src="theme.js"></script>
 <script>
 /* ============================================================
    Morning Brief
@@ -271,11 +276,38 @@ function render(){
   if(vx)bits.push('VIX ปิดที่ '+num(vx.close)+' ('+pc(vx.pct)+') '
     +(vx.close>25?'อยู่โซนกังวลสูง':vx.close>18?'อยู่โซนระมัดระวัง':'ตลาดยังสงบ'));
 
+  /* ---- บทสรุปนี้เก่าแค่ไหน ----
+     เคสจริง 19 ต.ค. 2026: ไฟล์ในเครื่องเป็นของวันนั้น แต่บนเว็บยังเป็นของ 13 ต.ค.
+     เพราะตัวส่งของไม่ได้รันมา 5 วัน  หน้าเว็บโชว์วันที่ไว้เฉยๆ ไม่ได้เตือนอะไร
+     คนอ่านจึงเข้าใจว่าเป็นบทสรุปของวันนี้ แล้วเอาไปใช้ตัดสินใจ
+     บทวิเคราะห์ข่าวที่เก่าไปหลายวันอันตรายกว่าตัวเลขเก่า เพราะอ่านแล้วดูสมเหตุผลเสมอ */
+  const briefAge=(()=>{
+    if(!BRIEF||!BRIEF.date)return null;
+    const d=new Date(BRIEF.date+'T00:00:00Z');
+    if(isNaN(d))return null;
+    /* ใช้ตัวนับวันทำการตัวเดียวกับทั้งเว็บ (theme.js) ไม่เขียนใหม่
+       เพราะตัวนั้นเคยมีบั๊กนับเกิน 1 วัน และแก้ไปแล้ว */
+    return typeof TRADINGDAYS==='function'?TRADINGDAYS(d,new Date()):null;
+  })();
+  const ageTag=briefAge==null?''
+    : briefAge<=0 ? '<span style="color:var(--up);font-weight:700">· ของวันนี้</span>'
+    : briefAge===1 ? '<span style="color:var(--tx2)">· เมื่อวาน</span>'
+    : '<span style="color:var(--warn);font-weight:700">· เก่า '+briefAge+' วันทำการ</span>';
+  const ageWarn=(briefAge!=null&&briefAge>=2)
+    ? '<div class="warnbox" style="margin:0 0 11px">'
+      +'<b>บทสรุปนี้เก่าไป '+briefAge+' วันทำการ</b> — เขียนไว้เมื่อ '+esc(BRIEF.date)
+      +' ไม่ใช่ข่าววันนี้ เหตุการณ์หลังจากนั้นยังไม่ถูกนับรวม<br>'
+      +'ตัวเลขด้านบนยังสดอยู่ เพราะมาคนละทางกัน — '
+      +'<a href="https://github.com/mekysk/trading-dashboard/actions" target="_blank" '
+      +'rel="noopener">ดูว่างานเขียนสรุปทำงานไหม ↗</a></div>'
+    : '';
+
   const aiPart=BRIEF
     ? '<div style="margin-top:14px;padding-top:13px;border-top:1px solid var(--line)">'
       +'<div style="font-size:11px;color:var(--pur);font-weight:700;letter-spacing:.1em;'
       +'text-transform:uppercase;margin-bottom:7px">บทสรุปที่ AI เขียน · '
-      +esc(BRIEF.date||'')+'</div>'
+      +esc(BRIEF.date||'')+' '+ageTag+'</div>'
+      +ageWarn
       +BRIEF.body.split(/\n{2,}/).map(p=>'<p>'+esc(p)+'</p>').join('')
       +(BRIEF.sources&&BRIEF.sources.length
         ? '<div class="sub" style="margin-top:8px">แหล่งข่าว: '
@@ -319,5 +351,4 @@ loadBrief().then(render);
 render();
 setInterval(renderClock,30000);
 </script>
-<script src="theme.js"></script>
 </body></html>

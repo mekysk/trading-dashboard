@@ -257,6 +257,12 @@
     });
   }
 
+  /* เปิดให้หน้าอื่นเรียกใช้ตัวนับวันทำการได้
+     ตัวนี้เคยมีบั๊กนับเกิน 1 วัน แก้แล้วและทดสอบแล้ว
+     ถ้าหน้าอื่นเขียนตัวนับของตัวเองขึ้นมาใหม่ บั๊กเดิมจะกลับมาอีกรอบ
+     จึงให้ใช้ตัวเดียวกันทั้งเว็บ */
+  window.TRADINGDAYS=tradingDaysBetween;
+
   function boot(){ buildNav(); build(); staleBar(); runSync(); }
   if(document.readyState==='loading')
     document.addEventListener('DOMContentLoaded',boot);
