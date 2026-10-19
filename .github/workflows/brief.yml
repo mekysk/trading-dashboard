@@ -1,0 +1,75 @@
+name: เขียนบทสรุปข่าวเช้า
+
+# ย้ายงานเขียนบทสรุปจากพีซีขึ้นมาบนคลาวด์
+# เดิมเอเจนต์ในแอป Claude เขียนไว้ในเครื่อง แล้วต้องรัน publish-agents.bat
+# ส่งขึ้นเว็บอีกที  ถ้าพีซีปิดหรือลืมรัน เว็บจะค้างกับบทสรุปเก่าเงียบๆ
+# ตัวนี้ทำให้มือถือได้ของสดทุกวันโดยไม่ต้องแตะคอมเลย
+
+on:
+  schedule:
+    # 23:40 UTC = 06:40 ไทยของวันถัดไป — หลังตลาดสหรัฐฯ ปิดและข่าวสรุปวันออกครบแล้ว
+    # ตั้งวันอาทิตย์ถึงพฤหัส (UTC) เพื่อให้ตรงกับเช้าวันจันทร์ถึงศุกร์ของไทย
+    - cron: '40 23 * * 0,1,2,3,4'
+  workflow_dispatch:        # กดรันเองได้จากแท็บ Actions
+
+permissions:
+  contents: write
+  pages: write
+
+# กันไม่ให้รอบใหม่ทับรอบเก่าที่ยังทำงานอยู่
+concurrency:
+  group: brief
+  cancel-in-progress: false
+
+jobs:
+  brief:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: เขียนบทสรุป
+        run: node scripts/brief.mjs
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          # ถ้าอยากล็อกรุ่นใดรุ่นหนึ่ง ใส่ GEMINI_MODEL เป็น Secret เพิ่ม
+          GEMINI_MODEL: ${{ secrets.GEMINI_MODEL }}
+
+      - name: บันทึกผลกลับเข้า repo
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add brief-latest.json brief-status.json
+          if git diff --staged --quiet; then
+            echo "ไม่มีอะไรเปลี่ยน"
+          else
+            git commit -m "บทสรุปข่าว $(date -u +%Y-%m-%d)"
+            git push
+          fi
+
+      # GitHub ตั้งใจไม่ให้ commit ของบอทไปกระตุ้น workflow อื่น เพื่อกันลูป
+      # ผลพลอยเสียคือ Pages จะไม่สร้างใหม่เอง ไฟล์ขึ้น repo แล้วแต่เว็บยังเห็นของเก่า
+      # จึงต้องสั่งสร้างเองตรงนี้ ไม่งั้นเจอปัญหาเดิมในรูปแบบใหม่
+      - name: สั่งให้ GitHub Pages สร้างใหม่
+        if: success()
+        continue-on-error: true
+        run: |
+          curl -sS -X POST \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/${{ github.repository }}/pages/builds
+
+      # ถ้าสคริปต์ล้ม ไฟล์เก่ายังอยู่และหน้าเว็บจะขึ้นป้ายว่าเก่ากี่วันทำการเอง
+      # แต่ต้องมีร่องรอยไว้ให้ตามด้วย ไม่ใช่ล้มแล้วเงียบ
+      - name: เก็บสถานะไว้ดูย้อนหลัง
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: brief-status
+          path: brief-status.json
+          if-no-files-found: ignore
+          retention-days: 14
