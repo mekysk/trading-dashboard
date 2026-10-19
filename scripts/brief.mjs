@@ -38,10 +38,17 @@ const KEY      = process.env.GEMINI_API_KEY || '';
    รอบแรกที่รันจริง ตัวที่ใช้ได้คือ gemini-flash-lite-latest ซึ่งเป็นตัวท้ายสุด
    แปลว่าสามตัวแรกล้มหมด แต่ตอนนั้นไม่ได้เก็บเหตุผลไว้ จึงไม่รู้ว่าล้มเพราะอะไร
    ตอนนี้บันทึกเหตุผลลง brief-status.json แล้ว รอบหน้าจะตอบได้ว่าทำไม
-   (gemini 2.0 ถูกปิดไปตั้งแต่ 1 มิ.ย. 2026 จึงเอาออก และใส่รุ่น 3.x ที่ยังเปิดอยู่) */
+   (gemini 2.0 ถูกปิดไปตั้งแต่ 1 มิ.ย. 2026 จึงเอาออก)
+
+   หลักฐานจากการรันจริง
+     รอบ 1  flash-lite-latest ใช้ได้  (สามตัวก่อนหน้าล้ม)
+     รอบ 3  flash-latest+ค้นเว็บ ตอบ 429 ตั้งแต่ตัวแรก
+   429 ของ Google ไม่ได้แปลว่าใช้หมดทั้งบัญชี รุ่นที่ไม่มีโควตาฟรีก็ตอบ 429
+   จึงต้องไล่ลองต่อ ไม่ใช่หยุด  และเอาตัวที่พิสูจน์แล้วว่าใช้ได้ไว้ให้ถึงเร็วขึ้น */
 const MODELS = process.env.GEMINI_MODEL
   ? [process.env.GEMINI_MODEL]
-  : ['gemini-flash-latest','gemini-3.5-flash','gemini-2.5-flash','gemini-flash-lite-latest'];
+  : ['gemini-flash-latest','gemini-2.5-flash',
+     'gemini-flash-lite-latest','gemini-2.5-flash-lite'];
 
 /* ---------------------------------------------------------------
    ตัวเลขตลาดจริง อ่านจากไฟล์ราคาใน repo ที่งานสแกนเตรียมไว้
@@ -336,10 +343,17 @@ async function writeBrief(items, nums){
       }catch(e){
         tried.push(m+(useSearch?'+search':'')+': '+e.message);
         log('  ✗ '+m+' — '+e.message);
-        /* 429 คือใช้โควตาหมด ไม่ใช่ชื่อรุ่นผิด เปลี่ยนรุ่นก็ไม่ช่วย
-           401/403 คือกุญแจมีปัญหา ยิ่งไม่ควรยิงซ้ำให้โดนล็อก */
-        if(e.status===429||e.status===401||e.status===403)
-          throw new Error('หยุดเพราะโควตาหรือสิทธิ์ — '+tried.join(' · '));
+        /* 401/403 คือกุญแจผิดหรือไม่มีสิทธิ์ ลองรุ่นอื่นก็ไม่ช่วย หยุดเลย
+           ส่วน 429 "ห้ามหยุด" — ดูเหตุผลข้างล่าง */
+        if(e.status===401||e.status===403)
+          throw new Error('กุญแจใช้ไม่ได้ (HTTP '+e.status+') — '+tried.join(' · '));
+        /* 429 ของ Google ไม่ได้แปลว่า "ใช้หมดทั้งบัญชี" เสมอไป
+           โควตาแยกรายรุ่นและแยกตามว่าเปิดค้นเว็บด้วยไหม
+           รุ่นที่ไม่มีโควตาฟรีเลยก็ตอบ 429 เหมือนกัน ไม่ใช่ 403
+           รอบแรกที่สำเร็จ ใช้ gemini-flash-lite-latest ซึ่งเป็นตัวท้ายสุด
+           แปลว่าตัวอื่นใช้ไม่ได้แต่ตัวนั้นใช้ได้จริง
+           รอบนี้ผมดันสั่งให้หยุดทันทีที่เจอ 429 ตัวแรก จึงไม่เคยไปถึงตัวที่ใช้ได้
+           เป็นบั๊กที่ผมเพิ่งใส่เข้าไปเอง ตอนนี้ให้ไล่ลองต่อจนครบ */
       }
     }
     if(useSearch)log('  ค้นเว็บไม่ได้ทุกรุ่น ถอยไปใช้แบบอ่านหัวข้อข่าวอย่างเดียว');
@@ -396,7 +410,17 @@ async function main(){
     log('  (เตือน) ไม่พบไฟล์ราคาใน px/ บทสรุปจะไม่มีตัวเลขปิดกำกับ');
 
   log('ส่งให้ Gemini เขียนสรุป');
-  const {body, model, tried, grounded, cites} = await writeBrief(items, nums);
+  let W;
+  try{
+    W = await writeBrief(items, nums);
+  }catch(e){
+    /* ระบุขั้นตอนให้ชัด ไม่ปล่อยให้ไปโผล่เป็น "ไม่ทราบขั้นตอน" ที่ตัวดักชั้นนอก */
+    saveStatus({ok:false, stage:'เรียก Gemini', hasKey:true, keyLength:KEY.length,
+      reason:hideKey(e.message), headlines:items.length, prices:nums.length,
+      feedsOk:ok, feedsFailed:failed, elapsed:secs()});
+    throw e;
+  }
+  const {body, model, tried, grounded, cites} = W;
   log('ได้บทสรุป '+body.length+' ตัวอักษร'+(grounded?' (ค้นเว็บ)':' (ไม่ได้ค้นเว็บ)'));
 
   /* ตรวจว่าทำตามข้อห้ามที่เคยหลุดมาแล้วจริงไหม
