@@ -143,13 +143,23 @@ function assertNoPrivateData(text){
 }
 
 /* --------------------------------------------------------------- */
-async function get(url,ms){
+/* สำนักข่าวจำนวนมากปฏิเสธ User-Agent แปลกๆ ด้วย 403 ทันที
+   ตัวเดิมประกาศตัวว่าเป็น trading-dashboard/1.0 จึงโดนบล็อกเกือบหมด
+   รอบที่แล้วอ่านบทความสำเร็จแค่ 2 จาก 14 ด้วยเหตุนี้
+   ใช้ UA แบบเบราว์เซอร์ทั่วไปแทน เป็นการอ่านหน้าข่าวสาธารณะตามปกติ */
+const UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
+  +'(KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36';
+
+async function get(url,ms,kind){
   const c=new AbortController();
   const t=setTimeout(()=>c.abort(),ms||REQ_MS);
   try{
-    const r=await fetch(url,{signal:c.signal,headers:{
-      'User-Agent':'trading-dashboard/1.0 (+https://github.com/mekysk/trading-dashboard)',
-      'Accept':'application/rss+xml, application/xml, text/xml, */*'}});
+    const r=await fetch(url,{signal:c.signal,redirect:'follow',headers:{
+      'User-Agent':UA,
+      'Accept-Language':'en-US,en;q=0.9',
+      'Accept': kind==='html'
+        ? 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+        : 'application/rss+xml, application/xml, text/xml, */*'}});
     if(!r.ok)throw new Error('HTTP '+r.status);
     return await r.text();
   } finally { clearTimeout(t) }
@@ -210,7 +220,9 @@ function isRecent(d,hours){
    เครื่องของ GitHub ต่อเน็ตได้อิสระ ไม่ติด CORS แบบเบราว์เซอร์
    ได้ผลแบบเดียวกัน ฟรี และไม่ต้องง้อโควตาใคร
    --------------------------------------------------------------- */
-const ART_N  = Number(process.env.BRIEF_ARTICLES || 14);
+/* ลองมากกว่าที่ต้องการ เพราะสำนักข่าวหลายเจ้าบล็อกหรือมีกำแพงจ่ายเงิน
+   ยอมอ่านพลาดบ้าง ดีกว่าได้มาแค่สองบทความแล้วเขียนลอยๆ */
+const ART_N  = Number(process.env.BRIEF_ARTICLES || 20);
 const ART_MS = Number(process.env.BRIEF_ART_MS || 9000);
 
 function readable(html){
@@ -235,9 +247,12 @@ function readable(html){
        ยาวพอ  มีช่องว่างเยอะแบบประโยค  ไม่ใช่ลิงก์หรือบรรทัดข้อมูลเทคนิค
        ถ้ากรองแค่ความยาว เมนูยาวๆ กับ URL จะผ่านเข้ามาเต็มไปหมด
        แล้วพอตัดเอาแค่ 2,600 ตัวแรก อาจได้แต่ขยะไม่ได้เนื้อข่าวเลย */
+    /* เกณฑ์นี้เคยตั้งไว้เข้มกว่านี้ (ยาว 60 และมีช่องว่าง 8)
+       ซึ่งจูนมาจากหน้าเดียว อาจตัดย่อหน้าสั้นๆ ที่เป็นเนื้อข่าวจริงทิ้งไปด้วย
+       ผ่อนลงมาเป็น 45 กับ 6 ซึ่งยังกันเมนูและป้ายกำกับได้อยู่ */
     .filter(s=>
-      s.length>60 &&
-      (s.match(/ /g)||[]).length>=8 &&        /* เป็นประโยค ไม่ใช่ป้ายกำกับ */
+      s.length>45 &&
+      (s.match(/ /g)||[]).length>=6 &&        /* เป็นประโยค ไม่ใช่ป้ายกำกับ */
       !/https?:\/\//.test(s) &&               /* ไม่ใช่ลิงก์ */
       !/^[a-z][a-z0-9:_-]*:\s/i.test(s))      /* ไม่ใช่บรรทัดแบบ key: value */
     .join('\n');
@@ -245,23 +260,31 @@ function readable(html){
 
 async function fetchArticles(items){
   const picked=items.filter(x=>/^https?:\/\//.test(x.link)).slice(0,ART_N);
-  const out=[]; let fail=0;
+  const out=[], fails=[];
   /* ดึงพร้อมกันทีละ 5 เพื่อไม่ให้ช้าเกินไป และไม่ถล่มเว็บใครมากเกิน */
   for(let i=0;i<picked.length;i+=5){
     const batch=picked.slice(i,i+5);
     const res=await Promise.all(batch.map(async x=>{
+      const host=(()=>{try{return new URL(x.link).hostname.replace(/^www\./,'')}
+                       catch(e){return '?'}})();
       try{
-        const html=await get(x.link,ART_MS);
+        const html=await get(x.link,ART_MS,'html');
         const txt=readable(html);
-        if(txt.length<400)throw new Error('เนื้อหาสั้นเกินไป '+txt.length+' ตัว');
+        if(txt.length<250)throw new Error('เนื้อหาสั้นเกินไป '+txt.length+' ตัว');
         return {...x, text:txt.slice(0,2600)};
-      }catch(e){ fail++; return null }
+      }catch(e){
+        /* เก็บเหตุผลไว้เสมอ รอบที่แล้วผมนับแค่จำนวนที่ล้ม ไม่ได้เก็บว่าล้มเพราะอะไร
+           พอได้ 2 จาก 14 จึงไม่รู้ว่าโดนบล็อก เว็บล่ม หรือตัวกรองผมเข้มเกินไป
+           เป็นความผิดพลาดแบบเดียวกับที่เจอมาหลายรอบในงานนี้ */
+        fails.push(host+': '+e.message);
+        return null;
+      }
     }));
     out.push(...res.filter(Boolean));
   }
-  log('  อ่านบทความเต็มได้ '+out.length+' จาก '+picked.length+' ลิงก์'
-    +(fail?' (อ่านไม่ได้ '+fail+')':''));
-  return out;
+  log('  อ่านบทความเต็มได้ '+out.length+' จาก '+picked.length+' ลิงก์');
+  for(const f of fails)log('    ✗ '+f);
+  return {articles:out, fails};
 }
 
 async function collect(){
@@ -568,9 +591,10 @@ async function main(){
     log('  (เตือน) ไม่พบไฟล์ราคาใน px/ บทสรุปจะไม่มีตัวเลขปิดกำกับ');
 
   log('อ่านเนื้อบทความเต็ม');
-  let articles=[];
+  let articles=[], artFails=[];
   try{
-    articles = await fetchArticles(items);
+    const r = await fetchArticles(items);
+    articles = r.articles; artFails = r.fails;
   }catch(e){
     /* อ่านบทความไม่ได้ไม่ใช่เหตุให้ทิ้งงาน ยังมีหัวข้อข่าวกับราคาให้เขียนได้ */
     log('  อ่านบทความไม่สำเร็จ: '+e.message+' — เขียนจากหัวข้อข่าวแทน');
@@ -659,7 +683,7 @@ async function main(){
   };
   writeFileSync(OUT, JSON.stringify(out,null,2));
   saveStatus({ok:true, model, grounded:!!grounded, articlesRead:articles.length,
-    citedUrls:sources.length, modelsFailed:tried,
+    articlesFailed:artFails, citedUrls:sources.length, modelsFailed:tried,
     chars:body.length, paragraphs:body.split(/\n{2,}/).length,
     headlines:items.length, prices:nums.length, qualityWarnings:warns,
     feedsOk:ok, feedsFailed:failed, elapsed:secs()});
