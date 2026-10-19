@@ -348,27 +348,43 @@ async function writeBrief(items, nums){
 }
 
 /* --------------------------------------------------------------- */
+let statusWritten=false;
 function saveStatus(obj){
   writeFileSync(STATUS, JSON.stringify(
     {ranAt:new Date().toISOString(), ...obj}, null, 2));
+  statusWritten=true;
 }
+
+const T0=Date.now();
+const secs=()=>((Date.now()-T0)/1000).toFixed(1)+'s';
 
 async function main(){
   log('=== เขียนบทสรุปข่าวเช้า ===');
+  /* บอกตั้งแต่บรรทัดแรกว่ากุญแจมาถึงไหม และยาวกี่ตัว (ไม่เปิดเผยค่าจริง)
+     รอบที่แล้วงานล้มใน 1 วินาที ซึ่งเข้าได้กับทั้ง "ไม่มีกุญแจ" และ
+     "ดึงข่าวไม่ได้ทุกแหล่ง" แยกไม่ออกจากข้างนอก จึงต้องพิมพ์ให้ชัดตรงนี้ */
+  log('กุญแจ: '+(KEY?('พบ ยาว '+KEY.length+' ตัว'):'ไม่พบ')
+    +' · รุ่นที่จะลอง: '+MODELS.join(', '));
 
   if(!KEY){
     /* ล้มแบบดัง ไม่ใช่เขียนไฟล์ว่างแล้วเงียบ
        ไฟล์เก่ายังอยู่ หน้าเว็บจะขึ้นป้ายว่าเก่ากี่วันเอง */
-    saveStatus({ok:false, reason:'ไม่พบ GEMINI_API_KEY ใน Secrets'});
+    saveStatus({ok:false, stage:'ตรวจกุญแจ', hasKey:false,
+      reason:'ไม่พบ GEMINI_API_KEY ใน Secrets'});
     throw new Error('ไม่พบ GEMINI_API_KEY — ตั้งที่ Settings > Secrets > Actions');
   }
+  /* กุญแจ Google ขึ้นต้นด้วย AIza และยาวราว 39 ตัว
+     ถ้าสั้นผิดปกติ มักเป็นเพราะวางมาไม่ครบหรือวางชื่อโปรเจกต์มาแทน */
+  if(KEY.length<30)
+    log('  (เตือน) กุญแจสั้นผิดปกติ อาจวางมาไม่ครบ');
 
   log('ดึงข่าวจาก '+FEEDS.length+' แหล่ง');
   const {items, ok, failed} = await collect();
-  log('รวมข่าวที่ใช้ได้ '+items.length+' หัวข้อ');
+  log('รวมข่าวที่ใช้ได้ '+items.length+' หัวข้อ ('+secs()+')');
 
   if(items.length<5){
-    saveStatus({ok:false, reason:'ได้ข่าวแค่ '+items.length+' หัวข้อ น้อยเกินจะสรุป',
+    saveStatus({ok:false, stage:'ดึงข่าว', hasKey:true, keyLength:KEY.length,
+      reason:'ได้ข่าวแค่ '+items.length+' หัวข้อ น้อยเกินจะสรุป',
       feedsOk:ok, feedsFailed:failed});
     throw new Error('ข่าวน้อยเกินไป ('+items.length+') — '
       +'แหล่งที่ล้ม: '+(failed.join(' · ')||'ไม่มี'));
@@ -432,6 +448,19 @@ async function main(){
 }
 
 main().catch(e=>{
-  console.error('ล้มเหลว: '+e.message);
+  /* เขียนสถานะไว้เสมอไม่ว่าจะล้มด้วยเหตุใด
+     รอบที่ผ่านมามีแค่สองเส้นทางที่เขียนสถานะ คือไม่มีกุญแจกับข่าวน้อยเกินไป
+     พอล้มด้วยเหตุอื่น จึงไม่เหลือร่องรอยอะไรให้ตามเลย
+     ต้องเดาจากเวลาที่ใช้ไป 1 วินาที ซึ่งไม่ใช่วิธีที่ควรต้องใช้ */
+  /* เขียนเฉพาะตอนที่ยังไม่มีใครเขียน ไม่งั้นจะไปทับของที่ระบุขั้นตอนไว้ชัดแล้ว
+     ด้วยข้อความกว้างๆ ว่า "ไม่ทราบขั้นตอน" ซึ่งแย่กว่าเดิม (เจอตอนทดสอบ) */
+  if(!statusWritten){
+    try{
+      saveStatus({ok:false, reason:hideKey(e.message),
+        stage:'ไม่ทราบขั้นตอน (ล้มนอกเส้นทางที่ดักไว้)',
+        hasKey:!!KEY, keyLength:KEY?KEY.length:0, elapsed:secs()});
+    }catch(e2){ console.error('เขียนไฟล์สถานะไม่ได้ด้วย: '+e2.message) }
+  }
+  console.error('ล้มเหลว: '+hideKey(e.message));
   process.exit(1);
 });
