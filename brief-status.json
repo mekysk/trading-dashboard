@@ -1,22 +1,20 @@
 {
-  "ranAt": "2026-10-19T18:36:33.003Z",
+  "ranAt": "2026-10-19T19:12:08.558Z",
   "ok": true,
   "model": "gemini-3.5-flash-lite",
   "grounded": false,
-  "citedUrls": 7,
+  "articlesRead": 2,
+  "citedUrls": 2,
   "modelsFailed": [
     "gemini-3.8-flash+search: HTTP 429 — {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \",\n    \"stat",
-    "gemini-3.5-flash-lite+search: HTTP 429 — {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \",\n    \"stat",
-    "gemini-flash-latest+search: HTTP 429 — {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \",\n    \"stat",
-    "gemini-flash-lite-latest+search: HTTP 429 — {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \",\n    \"stat",
     "gemini-3.8-flash: HTTP 503 — {\n  \"error\": {\n    \"code\": 503,\n    \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\",\n    \"status\": \"UNAVAILABLE\"\n  }\n}\n"
   ],
-  "chars": 1861,
+  "chars": 2185,
   "paragraphs": 5,
   "headlines": 45,
   "prices": 7,
   "qualityWarnings": [
-    "ไม่ได้ค้นเว็บ บทสรุปจะตื้นกว่าปกติมาก"
+    "ไม่ได้ค้นเว็บ และอ่านบทความเต็มได้แค่ 2 บทความ บทสรุปจะตื้นกว่าปกติมาก"
   ],
   "feedsOk": [
     "CNBC Markets (2)",
@@ -28,5 +26,6 @@
     "CoinDesk (12)",
     "Federal Reserve (12)"
   ],
-  "feedsFailed": []
+  "feedsFailed": [],
+  "elapsed": "6.0s"
 }
