@@ -103,8 +103,16 @@ const MAX_ITEM = Number(process.env.BRIEF_MAX_ITEMS || 45);
    รอบแรกที่รันจริงได้ข่าวหุ้นมาเยอะแต่ไม่มีทองกับน้ำมันเลย บทสรุปจึงต้องเขียนว่า
    "ไม่พบข่าวเรื่องนี้ในรอบนี้" ทั้งที่ทองเป็นสินทรัพย์ที่เจ้าของพอร์ตถืออยู่
    จึงเพิ่มหมวดสินค้าโภคภัณฑ์ ค่าเงิน และคริปโตเข้ามาโดยเฉพาะ */
+/* เพิ่มฟีด CNBC หลายหมวด เพราะ cnbc.com เป็นแหล่งข่าวหุ้นสหรัฐฯ เจ้าเดียว
+   ที่พิสูจน์แล้วว่ายอมให้อ่านเนื้อบทความ (marketwatch กับ investing บล็อก)
+   ฟีดหมวดอื่นผมยังไม่ได้ยืนยันว่ามีจริง ถ้า 404 สคริปต์จะบันทึกไว้ใน
+   feedsFailed ให้เอง แล้วค่อยลบทิ้งทีหลัง ไม่ทำให้งานล้ม */
 const FEEDS = [
   { name:'CNBC Markets',       url:'https://www.cnbc.com/id/20910258/device/rss/rss.html' },
+  { name:'CNBC Top',           url:'https://www.cnbc.com/id/100003114/device/rss/rss.html' },
+  { name:'CNBC Finance',       url:'https://www.cnbc.com/id/10000664/device/rss/rss.html' },
+  { name:'CNBC Economy',       url:'https://www.cnbc.com/id/20910213/device/rss/rss.html' },
+  { name:'CNBC Earnings',      url:'https://www.cnbc.com/id/15839135/device/rss/rss.html' },
   { name:'MarketWatch Top',    url:'https://feeds.content.dowjones.io/public/rss/mw_topstories' },
   { name:'Investing หุ้น',     url:'https://www.investing.com/rss/news_25.rss' },
   { name:'Investing โภคภัณฑ์', url:'https://www.investing.com/rss/news_11.rss' },
@@ -272,14 +280,42 @@ function readable(html){
    ถ้าวันหนึ่งเขาเปิดให้ ก็แค่ลบชื่อออกจากรายการนี้ */
 const NO_FETCH=['marketwatch.com','investing.com'];
 
+/* ให้คะแนนความเกี่ยวข้องกับตลาด
+   รอบที่แล้วมันอ่านบทความเรื่อง "ภาษาโปรแกรมใหม่ของ Cardano" กับ
+   "เครื่องมือย้ายคริปโตโดยไม่ต้องก๊อปที่อยู่กระเป๋า" ซึ่งไม่เกี่ยวกับพอร์ตเลย
+   แล้วเอาไปเขียนเป็นย่อหน้าหนึ่งในบทสรุป เพราะมันมีแค่นั้นให้อ่าน
+   การเลือกว่าจะอ่านอะไร สำคัญพอๆ กับการอ่านได้ */
+const GOOD=/\b(stock|stocks|shares|equit|nasdaq|s&p|dow|russell|index|indices|futures|yield|treasur|bond|fed|fomc|rate cut|rate hike|inflation|cpi|ppi|gdp|jobs|payroll|earnings|revenue|guidance|profit|selloff|sell-off|rally|slump|rebound|chip|semiconductor|gold|bullion|oil|crude|wti|brent|bitcoin|btc|crypto market|dollar|currency|tariff|central bank)\b/i;
+const JUNK=/\b(how to|guide|review|airdrop|giveaway|sponsored|press release|programming language|wallet address|job loss|hiring|dating|recipe|horoscope|nft art|testnet|mainnet upgrade)\b/i;
+
+function relevance(x){
+  const t=(x.title+' '+(x.desc||''));
+  let s=0;
+  const hits=t.match(new RegExp(GOOD.source,'gi'));
+  if(hits)s+=Math.min(hits.length,6);
+  if(JUNK.test(t))s-=5;
+  /* ข่าวที่มีตัวเลขเปอร์เซ็นต์หรือราคาอยู่แล้ว มักเป็นข่าวตลาดจริง */
+  if(/\d+(\.\d+)?%/.test(t))s+=2;
+  if(/\$\s?[\d,]{3,}/.test(t))s+=1;
+  return s;
+}
+
 async function fetchArticles(items){
-  const picked=items.filter(x=>{
+  const ok=items.filter(x=>{
     if(!/^https?:\/\//.test(x.link))return false;
     try{
       const h=new URL(x.link).hostname.replace(/^www\./,'');
       return !NO_FETCH.some(d=>h===d||h.endsWith('.'+d));
     }catch(e){ return false }
-  }).slice(0,ART_N);
+  });
+  /* เรียงตามความเกี่ยวข้อง แล้วตัดตัวที่คะแนนติดลบทิ้ง
+     ยอมอ่านน้อยลง ดีกว่าอ่านเรื่องที่ไม่เกี่ยวแล้วเอาไปเขียน */
+  const picked=ok.map(x=>({x,s:relevance(x)}))
+    .filter(o=>o.s>0)
+    .sort((a,b)=>b.s-a.s)
+    .slice(0,ART_N).map(o=>o.x);
+  log('  คัดบทความที่เกี่ยวกับตลาดได้ '+picked.length
+    +' จากลิงก์ที่อ่านได้ '+ok.length);
   const out=[], fails=[];
   /* ดึงพร้อมกันทีละ 5 เพื่อไม่ให้ช้าเกินไป และไม่ถล่มเว็บใครมากเกิน */
   for(let i=0;i<picked.length;i+=5){
@@ -368,6 +404,11 @@ const PROMPT = `คุณเขียนสรุปข่าวตลาดใ�
 4ข. เขียนเป็นภาษาไทยล้วน ยกเว้นชื่อเฉพาะภาษาอังกฤษ
    ห้ามมีตัวอักษรภาษาอื่นปนเด็ดขาด เช่น อักษรเกาหลี จีน หรือญี่ปุ่น
 5. เรื่องไหนหาไม่เจอ ให้เขียนสั้นๆ ว่าไม่พบข้อมูลในรอบนี้ ห้ามเดาแทน
+5ก. ข่าวที่ไม่เกี่ยวกับตลาดหุ้นสหรัฐฯ ทองคำ น้ำมัน ค่าเงิน หรือ Bitcoin
+   ให้ข้ามไปเลย ห้ามเอามาเขียนเพื่อให้ครบจำนวนย่อหน้า
+   เช่น ข่าวเทคโนโลยีของเหรียญเล็กๆ ข่าวตลาดหุ้นประเทศอื่นที่ไม่กระทบสหรัฐฯ
+   หรือข่าวสังคมทั่วไป  บทสรุปสั้นแต่ตรงประเด็น ดีกว่ายาวแล้วมีเรื่องไม่เกี่ยวปน
+   ถ้าข่าวในรอบนี้มีสาระน้อย ให้เขียนสั้นลงได้ ไม่ต้องฝืนให้ครบ
 6. ห้ามใช้ markdown ห้ามดอกจัน ห้ามหัวข้อย่อย ห้าม bullet
    เขียนเป็นย่อหน้าธรรมดาคั่นด้วยบรรทัดว่าง
 
