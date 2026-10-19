@@ -1,5 +1,5 @@
 {
-  "ranAt": "2026-10-19T19:26:53.990Z",
+  "ranAt": "2026-10-19T20:04:16.297Z",
   "ok": true,
   "model": "gemini-3.5-flash-lite",
   "grounded": false,
@@ -10,8 +10,8 @@
     "gemini-3.8-flash+search: HTTP 429 — {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \",\n    \"stat",
     "gemini-3.8-flash: HTTP 503 — {\n  \"error\": {\n    \"code\": 503,\n    \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\",\n    \"status\": \"UNAVAILABLE\"\n  }\n}\n"
   ],
-  "chars": 1865,
-  "paragraphs": 5,
+  "chars": 2391,
+  "paragraphs": 6,
   "headlines": 45,
   "prices": 7,
   "qualityWarnings": [],
@@ -21,10 +21,10 @@
     "Investing หุ้น (10)",
     "Investing โภคภัณฑ์ (10)",
     "Investing ค่าเงิน (4)",
-    "Investing คริปโต (6)",
+    "Investing คริปโต (7)",
     "CoinDesk (12)",
     "Federal Reserve (12)"
   ],
   "feedsFailed": [],
-  "elapsed": "7.0s"
+  "elapsed": "8.4s"
 }
