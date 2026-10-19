@@ -176,7 +176,14 @@ function parseFeed(xml){
     let link=pick(b,'link');
     if(!link){ const m=b.match(/<link[^>]*href="([^"]+)"/i); if(m)link=m[1] }
     const date=pick(b,'pubDate')||pick(b,'published')||pick(b,'updated')||'';
-    out.push({title:clean(title), link:(link||'').trim(), date:date.trim()});
+    /* ฟีดส่วนใหญ่แนบย่อหน้าสรุปมาให้ในช่อง description อยู่แล้ว
+       และหลายเจ้าใส่ตัวเลขจริงไว้ในนั้น เช่น CoinDesk เขียนว่า
+       "Bitcoin rose 0.8% to around $82,700 as China's GDP beat estimates"
+       ของฟรีที่ไม่ต้องยิงขออ่านหน้าเว็บ จึงไม่มีทางโดน 401/403
+       ผมมองข้ามช่องนี้มาตั้งแต่ต้น ทั้งที่มันแก้ปัญหาเว็บบล็อกได้ครึ่งหนึ่ง */
+    const desc=pick(b,'description')||pick(b,'summary')||'';
+    out.push({title:clean(title), link:(link||'').trim(), date:date.trim(),
+      desc:clean(desc).slice(0,400)});
   }
   return out;
 }
@@ -258,8 +265,21 @@ function readable(html){
     .join('\n');
 }
 
+/* เว็บที่พิสูจน์แล้วว่าไม่ให้อ่านบทความ ข้ามไปเลย อย่าเสียเวลายิง
+   หลักฐานจากการรันจริง 19 ต.ค. — marketwatch 401 สิบครั้ง · investing 403 แปดครั้ง
+   ยังใช้หัวข้อข่าวของสองเจ้านี้ต่อไป แค่ไม่ไปขออ่านเนื้อเต็ม
+   รอบที่แล้วเสียเวลาไป 90 วินาทีกับการยิงหาเว็บที่ไม่มีวันตอบ
+   ถ้าวันหนึ่งเขาเปิดให้ ก็แค่ลบชื่อออกจากรายการนี้ */
+const NO_FETCH=['marketwatch.com','investing.com'];
+
 async function fetchArticles(items){
-  const picked=items.filter(x=>/^https?:\/\//.test(x.link)).slice(0,ART_N);
+  const picked=items.filter(x=>{
+    if(!/^https?:\/\//.test(x.link))return false;
+    try{
+      const h=new URL(x.link).hostname.replace(/^www\./,'');
+      return !NO_FETCH.some(d=>h===d||h.endsWith('.'+d));
+    }catch(e){ return false }
+  }).slice(0,ART_N);
   const out=[], fails=[];
   /* ดึงพร้อมกันทีละ 5 เพื่อไม่ให้ช้าเกินไป และไม่ถล่มเว็บใครมากเกิน */
   for(let i=0;i<picked.length;i+=5){
@@ -288,25 +308,36 @@ async function fetchArticles(items){
 }
 
 async function collect(){
-  const seen=new Set(), items=[], ok=[], failed=[];
+  const seen=new Set(), ok=[], failed=[], perFeed=[];
   for(const f of FEEDS){
     try{
       const xml=await get(f.url);
       const list=parseFeed(xml).filter(x=>isRecent(x.date,36));
-      let n=0;
+      const mine=[];
       for(const x of list){
         const k=x.title.toLowerCase().slice(0,70);
         if(seen.has(k))continue;           /* ข่าวเดียวกันมักโผล่หลายแหล่ง */
-        seen.add(k); items.push({...x,src:f.name}); n++;
-        if(n>=12)break;                    /* กันแหล่งเดียวกลบแหล่งอื่น */
+        seen.add(k); mine.push({...x,src:f.name});
+        if(mine.length>=12)break;          /* กันแหล่งเดียวกลบแหล่งอื่น */
       }
-      ok.push(f.name+' ('+n+')');
-      log('  ✓ '+f.name+' — '+n+' ข่าว');
+      perFeed.push(mine);
+      ok.push(f.name+' ('+mine.length+')');
+      log('  ✓ '+f.name+' — '+mine.length+' ข่าว');
     }catch(e){
+      perFeed.push([]);
       failed.push(f.name+': '+e.message);
       log('  ✗ '+f.name+' — '+e.message);
     }
   }
+  /* สลับหยิบทีละแหล่งวนไป ไม่ใช่ต่อท้ายกันไปเรื่อยๆ
+     ของเดิมเรียงตามลำดับฟีด ทำให้ 20 ลิงก์แรกเป็นของสองแหล่งแรกล้วน
+     ซึ่งบังเอิญเป็นสองเจ้าที่บล็อกการอ่านบทความพอดี (401 กับ 403)
+     ส่วนแหล่งที่อ่านได้จริงถูกผลักไปท้ายแถวจนไม่เคยถูกเลือกเลย
+     สลับแบบนี้ทำให้ทุกแหล่งมีสิทธิ์เท่ากัน และหัวข้อข่าวก็กระจายหมวดด้วย */
+  const items=[];
+  for(let i=0;i<12;i++)
+    for(const list of perFeed)
+      if(list[i])items.push(list[i]);
   return {items:items.slice(0,MAX_ITEM), ok, failed};
 }
 
@@ -428,7 +459,11 @@ async function askModel(model,payload,useSearch){
 }
 
 async function writeBrief(items, nums, articles){
-  const headlines = items.map((x,i)=>(i+1)+'. ['+x.src+'] '+x.title).join('\n');
+  /* แนบย่อหน้าสรุปของแต่ละข่าวไปด้วย ถ้าฟีดให้มา
+     ต่างกันมากระหว่าง "Gold rises as Warsh remarks curb Fed hike bets"
+     กับบรรทัดเดียวกันที่มีตัวเลขต่อท้ายว่าขึ้นกี่เปอร์เซ็นต์ไปที่เท่าไหร่ */
+  const headlines = items.map((x,i)=>
+    (i+1)+'. ['+x.src+'] '+x.title+(x.desc?'\n   '+x.desc:'')).join('\n');
   const full = (articles||[]).map((a,i)=>
     '=== บทความที่ '+(i+1)+' ['+a.src+'] '+a.title+'\n'+a.text).join('\n\n');
   const payload   = assertNoPrivateData(
