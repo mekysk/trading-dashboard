@@ -33,11 +33,29 @@ jobs:
           node-version: '20'
 
       - name: เขียนบทสรุป
+        id: write
         run: node scripts/brief.mjs
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           # ถ้าอยากล็อกรุ่นใดรุ่นหนึ่ง ใส่ GEMINI_MODEL เป็น Secret เพิ่ม
           GEMINI_MODEL: ${{ secrets.GEMINI_MODEL }}
+
+      # ไฟล์สถานะต้องขึ้นเว็บแม้งานจะล้ม  นี่คือจุดที่ออกแบบผิดในรอบแรก
+      # เดิมขั้นตอน commit ทำงานเฉพาะตอนสำเร็จ พอล้มจึงไม่มีอะไรขึ้นเว็บเลย
+      # เหลือแค่ไฟล์แนบที่ต้องล็อกอินถึงจะโหลดได้  กลายเป็นว่ายิ่งพังยิ่งดูไม่ได้
+      # ซึ่งตรงข้ามกับที่ควรเป็น เพราะตอนพังคือตอนที่ต้องการข้อมูลมากที่สุด
+      - name: ส่งไฟล์สถานะขึ้นเว็บ แม้งานจะล้ม
+        if: failure()
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f brief-status.json || true
+          if git diff --staged --quiet; then
+            echo "ไม่มีไฟล์สถานะให้ส่ง"
+          else
+            git commit -m "สถานะงานเขียนบทสรุป (ล้มเหลว) $(date -u +%Y-%m-%dT%H:%M)"
+            git push
+          fi
 
       - name: บันทึกผลกลับเข้า repo
         run: |
