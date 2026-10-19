@@ -1,50 +1,30 @@
 {
-  "ranAt": "2026-10-19T19:19:48.086Z",
+  "ranAt": "2026-10-19T19:26:53.990Z",
   "ok": true,
-  "model": "gemini-3.8-flash",
+  "model": "gemini-3.5-flash-lite",
   "grounded": false,
-  "articlesRead": 2,
-  "articlesFailed": [
-    "marketwatch.com: HTTP 401",
-    "marketwatch.com: HTTP 401",
-    "marketwatch.com: HTTP 401",
-    "marketwatch.com: HTTP 401",
-    "marketwatch.com: HTTP 401",
-    "marketwatch.com: HTTP 401",
-    "marketwatch.com: HTTP 401",
-    "marketwatch.com: HTTP 401",
-    "investing.com: HTTP 403",
-    "marketwatch.com: HTTP 401",
-    "investing.com: HTTP 403",
-    "marketwatch.com: HTTP 401",
-    "investing.com: HTTP 403",
-    "investing.com: HTTP 403",
-    "investing.com: HTTP 403",
-    "investing.com: HTTP 403",
-    "investing.com: HTTP 403",
-    "investing.com: HTTP 403"
-  ],
-  "citedUrls": 2,
+  "articlesRead": 8,
+  "articlesFailed": [],
+  "citedUrls": 8,
   "modelsFailed": [
-    "gemini-3.8-flash+search: HTTP 429 — {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \",\n    \"stat"
+    "gemini-3.8-flash+search: HTTP 429 — {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \",\n    \"stat",
+    "gemini-3.8-flash: HTTP 503 — {\n  \"error\": {\n    \"code\": 503,\n    \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\",\n    \"status\": \"UNAVAILABLE\"\n  }\n}\n"
   ],
-  "chars": 2518,
-  "paragraphs": 6,
+  "chars": 1865,
+  "paragraphs": 5,
   "headlines": 45,
   "prices": 7,
-  "qualityWarnings": [
-    "ไม่ได้ค้นเว็บ และอ่านบทความเต็มได้แค่ 2 บทความ บทสรุปจะตื้นกว่าปกติมาก"
-  ],
+  "qualityWarnings": [],
   "feedsOk": [
     "CNBC Markets (2)",
     "MarketWatch Top (10)",
     "Investing หุ้น (10)",
     "Investing โภคภัณฑ์ (10)",
     "Investing ค่าเงิน (4)",
-    "Investing คริปโต (7)",
+    "Investing คริปโต (6)",
     "CoinDesk (12)",
     "Federal Reserve (12)"
   ],
   "feedsFailed": [],
-  "elapsed": "90.6s"
+  "elapsed": "7.0s"
 }
