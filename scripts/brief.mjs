@@ -91,7 +91,11 @@ function marketNumbers(){
   return out;
 }
 const REQ_MS   = Number(process.env.BRIEF_REQ_MS || 20000);
-const MAX_ITEM = Number(process.env.BRIEF_MAX_ITEMS || 45);
+/* พอเพิ่มจำนวนฟีด แต่ละฟีดจะได้โควตาในรายการรวมน้อยลง
+   ตอนมี 8 ฟีด เพดาน 45 แปลว่าได้ฟีดละราว 5 ข่าว
+   พอเป็น 10 ฟีด เหลือฟีดละ 4 ซึ่งทำให้แหล่งที่อ่านเนื้อได้มีตัวเลือกน้อยลง
+   ขยายเพดานตามจำนวนฟีด */
+const MAX_ITEM = Number(process.env.BRIEF_MAX_ITEMS || 70);
 
 /* แหล่งข่าวที่เปิด RSS ให้ใช้ฟรี ไม่ต้องใช้กุญแจ
    เลือกหลายแหล่งเพราะแหล่งเดียวล่มแล้วจบ และมุมมองเดียวก็เอียงง่าย */
@@ -109,10 +113,13 @@ const MAX_ITEM = Number(process.env.BRIEF_MAX_ITEMS || 45);
    feedsFailed ให้เอง แล้วค่อยลบทิ้งทีหลัง ไม่ทำให้งานล้ม */
 const FEEDS = [
   { name:'CNBC Markets',       url:'https://www.cnbc.com/id/20910258/device/rss/rss.html' },
+  /* ผลการลองจริง 20 ต.ค.
+       CNBC Top       ให้ 12 หัวข้อ  เก็บไว้
+       CNBC Finance   ให้  1 หัวข้อ  เก็บไว้ ได้น้อยแต่ไม่เสียหาย
+       CNBC Earnings  ให้  0 หัวข้อ  ตัดทิ้ง
+       CNBC Economy   ตอบ 404        ตัดทิ้ง */
   { name:'CNBC Top',           url:'https://www.cnbc.com/id/100003114/device/rss/rss.html' },
   { name:'CNBC Finance',       url:'https://www.cnbc.com/id/10000664/device/rss/rss.html' },
-  { name:'CNBC Economy',       url:'https://www.cnbc.com/id/20910213/device/rss/rss.html' },
-  { name:'CNBC Earnings',      url:'https://www.cnbc.com/id/15839135/device/rss/rss.html' },
   { name:'MarketWatch Top',    url:'https://feeds.content.dowjones.io/public/rss/mw_topstories' },
   { name:'Investing หุ้น',     url:'https://www.investing.com/rss/news_25.rss' },
   { name:'Investing โภคภัณฑ์', url:'https://www.investing.com/rss/news_11.rss' },
@@ -285,7 +292,11 @@ const NO_FETCH=['marketwatch.com','investing.com'];
    "เครื่องมือย้ายคริปโตโดยไม่ต้องก๊อปที่อยู่กระเป๋า" ซึ่งไม่เกี่ยวกับพอร์ตเลย
    แล้วเอาไปเขียนเป็นย่อหน้าหนึ่งในบทสรุป เพราะมันมีแค่นั้นให้อ่าน
    การเลือกว่าจะอ่านอะไร สำคัญพอๆ กับการอ่านได้ */
-const GOOD=/\b(stock|stocks|shares|equit|nasdaq|s&p|dow|russell|index|indices|futures|yield|treasur|bond|fed|fomc|rate cut|rate hike|inflation|cpi|ppi|gdp|jobs|payroll|earnings|revenue|guidance|profit|selloff|sell-off|rally|slump|rebound|chip|semiconductor|gold|bullion|oil|crude|wti|brent|bitcoin|btc|crypto market|dollar|currency|tariff|central bank)\b/i;
+/* เพิ่มคำที่พลาดไปรอบที่แล้ว
+   \bfed\b ไม่จับคำว่า Federal Reserve เพราะ Federal ไม่ใช่คำว่า fed
+   ข่าวของธนาคารกลางสหรัฐฯ ทั้ง 12 หัวข้อจึงได้ 0 คะแนนและถูกคัดทิ้งหมด
+   ทั้งที่เป็นแหล่งที่ยอมให้อ่านเนื้อและเกี่ยวกับตลาดโดยตรง */
+const GOOD=/\b(stock|stocks|shares|equit|nasdaq|s&p|dow|russell|index|indices|futures|yield|treasur|bond|fed|federal reserve|fomc|powell|warsh|monetary|interest rate|rate cut|rate hike|rates|inflation|cpi|ppi|gdp|jobs|payroll|unemployment|earnings|revenue|guidance|profit|selloff|sell-off|rally|slump|rebound|chip|semiconductor|gold|bullion|oil|crude|wti|brent|bitcoin|btc|ether|crypto market|dollar|currency|forex|tariff|central bank|wall street|market|markets|investor|trading)\b/i;
 const JUNK=/\b(how to|guide|review|airdrop|giveaway|sponsored|press release|programming language|wallet address|job loss|hiring|dating|recipe|horoscope|nft art|testnet|mainnet upgrade)\b/i;
 
 function relevance(x){
@@ -308,14 +319,20 @@ async function fetchArticles(items){
       return !NO_FETCH.some(d=>h===d||h.endsWith('.'+d));
     }catch(e){ return false }
   });
-  /* เรียงตามความเกี่ยวข้อง แล้วตัดตัวที่คะแนนติดลบทิ้ง
-     ยอมอ่านน้อยลง ดีกว่าอ่านเรื่องที่ไม่เกี่ยวแล้วเอาไปเขียน */
-  const picked=ok.map(x=>({x,s:relevance(x)}))
-    .filter(o=>o.s>0)
-    .sort((a,b)=>b.s-a.s)
+  /* เรียงตามความเกี่ยวข้อง เอาตัวที่ได้คะแนนก่อน
+     แต่ถ้าได้น้อยเกินไป ให้เติมด้วยตัวที่คะแนน 0 (ยังไม่ติดลบ) จนครบขั้นต่ำ
+     รอบที่แล้วผมตัดที่ s>0 เฉยๆ แล้วเหลือ 3 บทความ ซึ่งน้อยกว่าตอนไม่คัดเลย
+     ตัวคัดกรองที่เข้มจนอดอยาก แย่กว่าตัวคัดกรองที่ปล่อยผ่านบ้าง
+     ตัวที่ติดลบ (ข่าวไม่เกี่ยวชัดเจน) ไม่เอาเด็ดขาดไม่ว่าจะขาดแค่ไหน */
+  const scored=ok.map(x=>({x,s:relevance(x)})).sort((a,b)=>b.s-a.s);
+  const strong=scored.filter(o=>o.s>0);
+  const spare =scored.filter(o=>o.s===0);
+  const MIN=Number(process.env.BRIEF_MIN_ARTICLES||8);
+  const picked=[...strong, ...spare.slice(0,Math.max(0,MIN-strong.length))]
     .slice(0,ART_N).map(o=>o.x);
-  log('  คัดบทความที่เกี่ยวกับตลาดได้ '+picked.length
-    +' จากลิงก์ที่อ่านได้ '+ok.length);
+  log('  คัดบทความได้ '+picked.length+' (ตรงประเด็น '+strong.length
+    +' · เติม '+(picked.length-Math.min(strong.length,picked.length))
+    +') จากลิงก์ที่อ่านได้ '+ok.length);
   const out=[], fails=[];
   /* ดึงพร้อมกันทีละ 5 เพื่อไม่ให้ช้าเกินไป และไม่ถล่มเว็บใครมากเกิน */
   for(let i=0;i<picked.length;i+=5){
@@ -344,26 +361,37 @@ async function fetchArticles(items){
 }
 
 async function collect(){
-  const seen=new Set(), ok=[], failed=[], perFeed=[];
-  for(const f of FEEDS){
+  const ok=[], failed=[];
+  /* ดึงฟีดพร้อมกัน ไม่ใช่ทีละอัน
+     รอบที่แล้วใช้เวลารวม 92 วินาที ส่วนใหญ่หมดไปกับการยืนรอฟีดทีละเจ้า
+     ฟีดไม่ได้ขึ้นต่อกัน จึงไม่มีเหตุผลต้องรอให้เสร็จทีละอัน */
+  const raw=await Promise.all(FEEDS.map(async f=>{
     try{
       const xml=await get(f.url);
-      const list=parseFeed(xml).filter(x=>isRecent(x.date,36));
-      const mine=[];
-      for(const x of list){
-        const k=x.title.toLowerCase().slice(0,70);
-        if(seen.has(k))continue;           /* ข่าวเดียวกันมักโผล่หลายแหล่ง */
-        seen.add(k); mine.push({...x,src:f.name});
-        if(mine.length>=12)break;          /* กันแหล่งเดียวกลบแหล่งอื่น */
-      }
-      perFeed.push(mine);
-      ok.push(f.name+' ('+mine.length+')');
-      log('  ✓ '+f.name+' — '+mine.length+' ข่าว');
-    }catch(e){
+      return {f, list:parseFeed(xml).filter(x=>isRecent(x.date,36))};
+    }catch(e){ return {f, err:e.message} }
+  }));
+
+  /* ตัดข่าวซ้ำหลังจากได้มาครบแล้ว ต้องทำตามลำดับเดิมเสมอ
+     ไม่งั้นผลจะเปลี่ยนไปมาตามว่าฟีดไหนตอบก่อน */
+  const seen=new Set(), perFeed=[];
+  for(const r of raw){
+    if(r.err){
       perFeed.push([]);
-      failed.push(f.name+': '+e.message);
-      log('  ✗ '+f.name+' — '+e.message);
+      failed.push(r.f.name+': '+r.err);
+      log('  ✗ '+r.f.name+' — '+r.err);
+      continue;
     }
+    const mine=[];
+    for(const x of r.list){
+      const k=x.title.toLowerCase().slice(0,70);
+      if(seen.has(k))continue;             /* ข่าวเดียวกันมักโผล่หลายแหล่ง */
+      seen.add(k); mine.push({...x,src:r.f.name});
+      if(mine.length>=12)break;            /* กันแหล่งเดียวกลบแหล่งอื่น */
+    }
+    perFeed.push(mine);
+    ok.push(r.f.name+' ('+mine.length+')');
+    log('  ✓ '+r.f.name+' — '+mine.length+' ข่าว');
   }
   /* สลับหยิบทีละแหล่งวนไป ไม่ใช่ต่อท้ายกันไปเรื่อยๆ
      ของเดิมเรียงตามลำดับฟีด ทำให้ 20 ลิงก์แรกเป็นของสองแหล่งแรกล้วน
