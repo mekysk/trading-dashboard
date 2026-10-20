@@ -188,6 +188,32 @@
     }
     return n;
   }
+  /* ป้ายวันที่ข้อมูล ข้างปุ่มดึงข้อมูล
+     แถบเตือนตัวใหญ่จะขึ้นเฉพาะตอนข้อมูลเก่าจริงๆ ซึ่งแปลว่าเวลาปกติ
+     จะไม่มีอะไรบอกเลยว่าตัวเลขบนหน้าเป็นของวันไหน ต้องเดาเอง
+     ป้ายนี้บอกตลอดเวลา และเปลี่ยนสีตามอายุข้อมูล */
+  var THMON=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.',
+             'ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  function thDate(d){ return d.getUTCDate()+' '+THMON[d.getUTCMonth()] }
+  function dateChip(asof,gap){
+    var bar=document.querySelector('.hbar'); if(!bar)return;
+    var host=bar.querySelector('.right')||bar;
+    var el=document.getElementById('dataChip');
+    if(!el){
+      el=document.createElement('span');
+      el.id='dataChip'; el.className='syncchip';
+      /* วางไว้หน้าสุดของกลุ่มปุ่ม จะได้อยู่ติดกับปุ่มดึงข้อมูล */
+      host.insertBefore(el,host.firstChild);
+    }
+    var age = gap<=0 ? 'ล่าสุด'
+            : gap===1 ? 'เมื่อวาน'
+            : 'เก่า '+gap+' วันทำการ';
+    el.className='syncchip '+(gap>=3?'bad':gap>=2?'warn':'ok');
+    el.textContent='📅 ข้อมูล '+thDate(asof);
+    el.title='ตัวเลขบนหน้านี้คิดจากราคาปิดวันที่ '
+      +asof.toISOString().slice(0,10)+' · '+age;
+  }
+
   function staleBar(){
     if(STALE_SKIP.indexOf(curPage())>=0)return;
     fetch('scan.json?t='+Date.now(),{cache:'no-store'}).then(function(r){
@@ -200,6 +226,7 @@
       /* ราคาปิดของวันนี้จะมีก็ต่อเมื่อตลาดสหรัฐฯ ปิดแล้ว (ราว 03:00 ไทย)
          จึงถือว่าข้อมูลล่าสุดที่ควรมี คือวันทำการก่อนหน้าวันนี้ */
       var gap=tradingDaysBetween(asof,now)-1;
+      dateChip(asof,gap);                     /* ป้ายขึ้นเสมอ ไม่ว่าเก่าหรือใหม่ */
       if(gap<=1)return;                       /* ช้า 1 วันทำการถือว่าปกติ */
       var sev=gap>=3?'bad':'warn';
       var bar=document.createElement('div');

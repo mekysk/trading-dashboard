@@ -454,3 +454,8 @@ body.hasnav .logo, body.hasnav .sitenav, body.hasnav nav.sitelinks{ display:none
 .syncchip.ok{color:var(--up);border-color:rgba(52,194,125,.35)}
 .syncchip.bad{color:var(--dn);border-color:rgba(229,100,90,.45)}
 .syncchip.busy{color:var(--tx2)}
+/* ข้อมูลเก่า 2 วันทำการ — ยังไม่ถึงขั้นแดง แต่ไม่ควรเป็นสีเทาเฉยๆ
+   เพราะสีเทาอ่านว่า "ปกติ" ซึ่งเป็นคนละความหมายกับ "เริ่มเก่าแล้ว" */
+/* ใส่ค่าสำรองไว้ เพราะบางหน้า (เช่น heat.html) ไม่ได้นิยาม --warn เอง
+   ถ้าไม่ใส่ ป้ายจะไม่มีสีเฉพาะหน้านั้น แล้วไม่มีใครสังเกตเห็น */
+.syncchip.warn{color:var(--warn,#f59e0b);border-color:rgba(245,158,11,.4)}
