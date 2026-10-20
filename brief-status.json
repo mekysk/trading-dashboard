@@ -1,25 +1,27 @@
 {
-  "ranAt": "2026-10-20T11:04:52.765Z",
+  "ranAt": "2026-10-20T11:15:51.223Z",
   "ok": true,
   "model": "gemini-3.5-flash-lite",
   "grounded": false,
-  "articlesRead": 7,
+  "articlesRead": 12,
   "articlesFailed": [],
-  "citedUrls": 7,
+  "citedUrls": 12,
   "modelsFailed": [
     "gemini-3.8-flash+search: HTTP 429 — {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \",\n    \"stat",
     "gemini-3.8-flash: This operation was aborted"
   ],
-  "chars": 2859,
-  "paragraphs": 6,
-  "headlines": 45,
+  "chars": 2238,
+  "paragraphs": 4,
+  "headlines": 70,
   "prices": 7,
-  "qualityWarnings": [],
+  "qualityWarnings": [
+    "ได้แค่ 4 ย่อหน้า",
+    "ตัวเลขน่าสงสัย: น้ำมัน WTI เขียนราคา 111.42 แต่ราคาจริง 101.41"
+  ],
   "feedsOk": [
     "CNBC Markets (2)",
     "CNBC Top (12)",
     "CNBC Finance (3)",
-    "CNBC Earnings (0)",
     "MarketWatch Top (10)",
     "Investing หุ้น (10)",
     "Investing โภคภัณฑ์ (10)",
@@ -28,8 +30,6 @@
     "CoinDesk (12)",
     "Federal Reserve (12)"
   ],
-  "feedsFailed": [
-    "CNBC Economy: HTTP 404"
-  ],
-  "elapsed": "126.1s"
+  "feedsFailed": [],
+  "elapsed": "130.1s"
 }
