@@ -1,35 +1,24 @@
 {
-  "ranAt": "2026-10-20T11:15:51.223Z",
-  "ok": true,
-  "model": "gemini-3.5-flash-lite",
-  "grounded": false,
-  "articlesRead": 12,
-  "articlesFailed": [],
-  "citedUrls": 12,
-  "modelsFailed": [
-    "gemini-3.8-flash+search: HTTP 429 — {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \",\n    \"stat",
-    "gemini-3.8-flash: This operation was aborted"
-  ],
-  "chars": 2238,
-  "paragraphs": 4,
+  "ranAt": "2026-10-20T14:05:22.685Z",
+  "ok": false,
+  "stage": "เรียก Gemini",
+  "hasKey": true,
+  "keyLength": 53,
+  "reason": "เรียก Gemini ไม่สำเร็จทุกรุ่น — gemini-3.8-flash+search: HTTP 429 — {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \",\n    \"stat · gemini-3.8-flash: HTTP 503 — {\n  \"error\": {\n    \"code\": 503,\n    \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\",\n    \"status\": \"UNAVAILABLE\"\n  }\n}\n · gemini-3.5-flash-lite: HTTP 503 — {\n  \"error\": {\n    \"code\": 503,\n    \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\",\n    \"status\": \"UNAVAILABLE\"\n  }\n}\n · gemini-flash-latest: HTTP 503 — {\n  \"error\": {\n    \"code\": 503,\n    \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\",\n    \"status\": \"UNAVAILABLE\"\n  }\n}\n · gemini-flash-lite-latest: HTTP 503 — {\n  \"error\": {\n    \"code\": 503,\n    \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\",\n    \"status\": \"UNAVAILABLE\"\n  }\n}\n",
   "headlines": 70,
   "prices": 7,
-  "qualityWarnings": [
-    "ได้แค่ 4 ย่อหน้า",
-    "ตัวเลขน่าสงสัย: น้ำมัน WTI เขียนราคา 111.42 แต่ราคาจริง 101.41"
-  ],
   "feedsOk": [
     "CNBC Markets (2)",
     "CNBC Top (12)",
-    "CNBC Finance (3)",
+    "CNBC Finance (4)",
     "MarketWatch Top (10)",
     "Investing หุ้น (10)",
     "Investing โภคภัณฑ์ (10)",
     "Investing ค่าเงิน (8)",
-    "Investing คริปโต (8)",
+    "Investing คริปโต (10)",
     "CoinDesk (12)",
     "Federal Reserve (12)"
   ],
   "feedsFailed": [],
-  "elapsed": "130.1s"
+  "elapsed": "31.6s"
 }
