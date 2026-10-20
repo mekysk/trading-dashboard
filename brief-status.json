@@ -1,32 +1,30 @@
 {
-  "ranAt": "2026-10-19T20:08:06.791Z",
+  "ranAt": "2026-10-20T02:05:34.045Z",
   "ok": true,
-  "model": "gemini-3.5-flash-lite",
+  "model": "gemini-3.8-flash",
   "grounded": false,
   "articlesRead": 3,
   "articlesFailed": [],
   "citedUrls": 3,
   "modelsFailed": [
-    "gemini-3.8-flash+search: HTTP 429 — {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \",\n    \"stat",
-    "gemini-3.8-flash: HTTP 503 — {\n  \"error\": {\n    \"code\": 503,\n    \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\",\n    \"status\": \"UNAVAILABLE\"\n  }\n}\n"
+    "gemini-3.8-flash+search: HTTP 429 — {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \",\n    \"stat"
   ],
-  "chars": 1804,
-  "paragraphs": 5,
+  "chars": 2888,
+  "paragraphs": 6,
   "headlines": 45,
   "prices": 7,
   "qualityWarnings": [
-    "ไม่ได้ค้นเว็บ และอ่านบทความเต็มได้แค่ 3 บทความ บทสรุปจะตื้นกว่าปกติมาก",
-    "มีตัวเลขเปอร์เซ็นต์แค่ 7 ตัว ถือว่าบางไป"
+    "ไม่ได้ค้นเว็บ และอ่านบทความเต็มได้แค่ 3 บทความ บทสรุปจะตื้นกว่าปกติมาก"
   ],
   "feedsOk": [
     "CNBC Markets (2)",
     "CNBC Top (12)",
-    "CNBC Finance (0)",
+    "CNBC Finance (1)",
     "CNBC Earnings (0)",
     "MarketWatch Top (10)",
     "Investing หุ้น (10)",
     "Investing โภคภัณฑ์ (10)",
-    "Investing ค่าเงิน (4)",
+    "Investing ค่าเงิน (5)",
     "Investing คริปโต (7)",
     "CoinDesk (12)",
     "Federal Reserve (12)"
@@ -34,5 +32,5 @@
   "feedsFailed": [
     "CNBC Economy: HTTP 404"
   ],
-  "elapsed": "18.4s"
+  "elapsed": "92.6s"
 }
