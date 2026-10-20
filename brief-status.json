@@ -1,36 +1,35 @@
 {
-  "ranAt": "2026-10-20T02:05:34.045Z",
+  "ranAt": "2026-10-20T11:04:52.765Z",
   "ok": true,
-  "model": "gemini-3.8-flash",
+  "model": "gemini-3.5-flash-lite",
   "grounded": false,
-  "articlesRead": 3,
+  "articlesRead": 7,
   "articlesFailed": [],
-  "citedUrls": 3,
+  "citedUrls": 7,
   "modelsFailed": [
-    "gemini-3.8-flash+search: HTTP 429 — {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \",\n    \"stat"
+    "gemini-3.8-flash+search: HTTP 429 — {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \",\n    \"stat",
+    "gemini-3.8-flash: This operation was aborted"
   ],
-  "chars": 2888,
+  "chars": 2859,
   "paragraphs": 6,
   "headlines": 45,
   "prices": 7,
-  "qualityWarnings": [
-    "ไม่ได้ค้นเว็บ และอ่านบทความเต็มได้แค่ 3 บทความ บทสรุปจะตื้นกว่าปกติมาก"
-  ],
+  "qualityWarnings": [],
   "feedsOk": [
     "CNBC Markets (2)",
     "CNBC Top (12)",
-    "CNBC Finance (1)",
+    "CNBC Finance (3)",
     "CNBC Earnings (0)",
     "MarketWatch Top (10)",
     "Investing หุ้น (10)",
     "Investing โภคภัณฑ์ (10)",
-    "Investing ค่าเงิน (5)",
-    "Investing คริปโต (7)",
+    "Investing ค่าเงิน (8)",
+    "Investing คริปโต (8)",
     "CoinDesk (12)",
     "Federal Reserve (12)"
   ],
   "feedsFailed": [
     "CNBC Economy: HTTP 404"
   ],
-  "elapsed": "92.6s"
+  "elapsed": "126.1s"
 }
