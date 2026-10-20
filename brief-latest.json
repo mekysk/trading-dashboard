@@ -1,60 +1,30 @@
 {
   "date": "2026-10-20",
-  "body": "ตลาดหุ้นสหรัฐฯ ในการซื้อขายล่าสุด S&P 500 ปิดที่ 7,690.73 จุด เพิ่มขึ้น 0.41% ดัชนี Nasdaq ปิดที่ 26,430.89 จุด เพิ่มขึ้น 1.11% และดัชนี Dow Jones ปิดที่ 51,966.03 จุด ลดลง 0.07% ขณะที่ดัชนีความผันผวน VIX ปิดที่ 18.68 เพิ่มขึ้น 1.30% ด้านความเคลื่อนไหวในภาคธุรกิจ Salesforce ประกาศเข้าซื้อกิจการ Braze มูลค่า 5,660 ล้านออนซ์โดยผู้ถือหุ้น Braze จะได้รับเงินสด 47.50 ดอลลาร์ต่อหุ้น ส่งผลให้ราคาหุ้น Braze พุ่งขึ้น 50% ในการซื้อขายก่อนเปิดตลาด ขณะที่หุ้น Salesforce ปรับตัวลดลงประมาณ 1% นอกจากนี้ ตลาดกำลังรอดูผลประกอบการของ SpaceX ซึ่งตลาดออปชันประเมินความผันผวนไว้ที่ราว 6% หลังการประกาศผลประกอบการ\n\nข้อมูลเศรษฐกิจสหรัฐฯ ที่เพิ่งรายงานระบุว่าตลาดที่อยู่อาศัยในเดือนกันยายนอยู่ในภาวะซบเซา โดยยอดขายบ้านรอปิดการขาย (Pending Home Sales) ลดลง 7.3% จากเดือนสิงหาคม และลดลง 11.3% เมื่อเทียบกับช่วงเดียวกันของปีก่อน ซึ่งต่ำกว่าที่ตลาดคาดการณ์ไว้ สอดคล้องกับอัตราดอกเบี้ยสินเชื่อบ้านแบบคงที่ 30 ปีที่ปรับตัวสูงขึ้นจากราว 6.8% สู่ระดับ 7.6% ภายในสิ้นเดือนเดียวกัน ขณะที่การเริ่มสร้างบ้าน (Housing Starts) ลดลง 4.56% สู่ระดับ 859,000 ยูนิตในอัตรา annualized ซึ่งเป็นระดับต่ำสุดนับตั้งแต่เดือนกันยายน 2025 ด้านภาคเทคโนโลยีและปัญญาประดิษฐ์มีประเด็นเจรจาระหว่าง Anthropic กับ Nscale เกี่ยวกับการเช่าพื้นที่ศูนย์ข้อมูลแห่งที่สองในรัฐเวสต์เวอร์จิเนีย มูลค่าราว 45,000 ล้านออนซ์\n\nราคาทองคำปิดที่ 4,139.5 ดอลลาร์ต่อออนซ์ ลดลง 0.50% ราคาน้ำมันดิบ WTI ปิดที่ 101.02 ดอลลาร์ต่อบาร์เรล ลดลง 2.55% และราคา Bitcoin ปิดที่ 81,367.62 ดอลลาร์ ลดลง 0.59% ท่ามกลางแรงกดดันจากความกังวลด้านเงินเฟ้อและทิศทางนโยบายธนาคารกลางสหรัฐฯ ในส่วนของกฎระเบียบสินทรัพย์ดิจิทัล รัฐสภาฝรั่งเศสได้อนุมัติร่างกฎหมายเก็บภาษีกำไรจากการขายสินทรัพย์ดิจิทัลประเภทสเตเบิลคอยน์ในอัตรา 31% โดยจะมีผลตั้งแต่เดือนมกราคม 2027 เป็นต้นไป\n\nปฏิทินเศรษฐกิจและเหตุการณ์สำคัญในระยะนี้อยู่ที่การทยอยประกาศผลประกอบการของบริษัทจดทะเบียนขนาดใหญ่ในสหรัฐฯ เพื่อทิศทางของตลาดหุ้นท่ามกลางภาวะดอกเบี้ยและแรงกดดันจากต้นทุนพลังงาน\n\nมุมมอง: ตลาดหุ้นและสินทรัพย์เสี่ยงยังคงเผชิญแรงกดดันจากตัวเลขเศรษฐกิจภาคอสังหาริมทรัพย์ที่ชะลอตัวอย่างหนักตามทิศทางต้นทุนทางการเงิน ขณะที่ความเคลื่อนไหวของราคาสินทรัพย์ดิจิทัลและโภคภัณฑ์สะท้อนความระมัดระวังของผู้เล่นในตลาดต่อปัจจัยเงินเฟ้อและมาตรการกำกับดูแลจากภาครัฐที่เริ่มมีความเข้มข้นขึ้นในหลายภูมิภาค",
+  "body": "ตลาดสหรัฐฯ วันจันทร์ 19 ต.ค. ปิดแบบแยกทาง โดย Nasdaq บวกราว 1.1% S&P 500 +0.41% และ Dow −0.07% (รายงาน 16:19 ET ยืนยันได้แหล่งเดียว ส่วนแถบราคาอีกแหล่งให้ตัวเลขต่างกันเกิน 0.3% จึงถือว่าตัวเลขขัดกัน) แรงหนุนมาจากการรีบาวด์ของกลุ่มเทคและ AI หลังถูกเทขายหนักสัปดาห์ก่อนที่ Nasdaq ร่วง 4.5% ขณะที่น้ำมัน WTI ขยับขึ้นเหนือ 103.73 ดอลลาร์ (14:43 ET) หลัง Houthi อ้างโจมตีเป้าหมายในซาอุดีอาระเบีย และดัชนีความเชื่อมั่นผู้สร้างบ้านลงมาที่ 29 ต่ำสุดตั้งแต่เดือนมิถุนายน 2012\n\nทองคำสปอตอยู่ที่ 4,139.90 ดอลลาร์ ณ 17:00 EST วันที่ 19 ต.ค. ลดลง 24.20 ดอลลาร์ หรือ 0.58% โดยเคยยืนเหนือ 4,180 ดอลลาร์ในช่วงเช้าก่อนถูกขายลงตลอดวัน ตัวเลขนี้ยืนยันได้สองแหล่งคือ Kitco และ Mitrade ที่ต่างกันไม่ถึง 0.1% ด้าน Bitcoin อยู่ราว 82,249 ดอลลาร์ ณ 12:04 UTC วันที่ 19 ต.ค. ลดลงราว 2% ในรอบสัปดาห์ และยังไม่พบราคาล่าสุดหลังเที่ยงวันจันทร์ตามเวลา UTC ส่วนกองทุน Spot Bitcoin ETF ไหลออกสุทธิ 228.58 ล้านดอลลาร์ ในสัปดาห์สิ้นสุด 16 ต.ค. ซึ่งเป็นสัปดาห์ที่สองติดกัน\n\nหุ้นที่มีข่าวจริงและอยู่ในพอร์ตของคุณ ได้แก่ PLTR ปิด +4.36% NVDA ที่ประกาศเรื่องมาตรฐานหน่วยความจำจนหนุนกลุ่มชิปทั้งกลุ่ม TSLA ปิดบวก (TheStreet ให้ +3.74% ส่วนอีกแหล่งให้ +3.1% ที่ 365.59 ดอลลาร์ ถือว่าตัวเลขขัดกัน) และ META ปิด −0.54% ฝั่งรายการเฝ้าดู AMZN ปิด +4.95% แรงสุด หลัง Morgan Stanley ปรับเป้าเป็น 350 ดอลลาร์จาก 335 ดอลลาร์ และ Micron +2.95% ราคาหุ้นรายตัวทั้งหมดในรอบนี้ยืนยันได้แหล่งเดียว และเปอร์เซ็นต์กำไรในไฟล์พอร์ตซึ่งสร้างไว้ตั้งแต่ 14 ต.ค. ไม่ตรงกับระยะห่างจากต้นทุนที่คำนวณด้วยราคาล่าสุด จึงควรตรวจกับโบรกเกอร์ก่อนใช้\n\nสิ่งที่ต้องจับตาวันนี้คือ NFLX และ SpaceX แจ้งงบหลังปิดตลาด พร้อม GE Aerospace ก่อนเปิด และตัวเลข Housing starts ส่วนคืนวันพุธ 21 ต.ค. TSLA และ META แจ้งงบหลังปิดพร้อมกัน ซึ่งทั้งคู่อยู่ในพอร์ตของคุณ ถัดไปคือประชุม FOMC วันที่ 27–28 ต.ค. ที่ตลาดราว 85% คาดว่าเฟดจะคงดอกเบี้ย และ AMZN แจ้งงบ Q3 วันที่ 29 ต.ค. มุมมอง: การเด้งรอบนี้เป็นการฟื้นหลังแรงขายหนัก ไม่ใช่การเปลี่ยนภาพใหญ่ เพราะเงินเฟ้อ ราคาน้ำมัน และความกังวลเรื่องต้นทุนเงินทุน AI ยังเป็นประเด็นเดิม มุมมอง: ทองที่ลงทั้งที่ความเสี่ยงภูมิรัฐศาสตร์สูงสะท้อนว่าแรงกดจากยีลด์และดอกเบี้ยมีน้ำหนักกว่าแรงซื้อสินทรัพย์ปลอดภัยในรอบนี้",
   "sources": [
     {
-      "name": "Bitcoin drops to $81,400 as Asian chip stocks tumble, options traders seek downside protection",
-      "url": "https://www.coindesk.com/markets/2026/10/20/bitcoin-drops-to-usd81-400-as-asian-chip-stocks-tumble-options-traders-seek-downside-protection"
+      "name": "Kitco — ราคาโลหะมีค่า",
+      "url": "https://www.kitco.com/price/precious-metals"
     },
     {
-      "name": "JPMorgan sees 10% annual bitcoin returns, topping stocks, bonds and gold over next decade",
-      "url": "https://www.coindesk.com/markets/2026/10/20/jpmorgan-sees-10-annual-bitcoin-returns-topping-stocks-bonds-and-gold-over-next-decade"
+      "name": "Yahoo Finance — Stock market news Oct 19",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/stock-market-news-oct-19-071100481.html"
     },
     {
-      "name": "South Korean IPO slump adds to AI market jitters as Brent crude tops $111",
-      "url": "https://www.coindesk.com/markets/2026/10/20/south-korean-ipo-plunge-deepens-ai-market-jitters-as-brent-tops-usd111"
+      "name": "Yahoo Finance — Bitcoin & Ethereum prices Oct 19",
+      "url": "https://finance.yahoo.com/personal-finance/investing/article/bitcoin-and-ethereum-prices-today-monday-october-19-2026-crypto-prices-hold-as-oil-slides-back-from-5-month-highs-114729829.html"
     },
     {
-      "name": "Live updates: Bitcoin reclaims $83,000 as stocks turn higher",
-      "url": "https://www.coindesk.com/markets/2026/10/20/live-updates-market-jitters-persist-as-the-ai-selloff-deepens"
+      "name": "TheStreet — Stock Market Today Oct 19 (สื่อรอง)",
+      "url": "https://www.thestreet.com/stock-market-today/stock-market-today-oct-19-2026-nasdaq-futures-climb-as-tech-rebound-from-sell-off"
     },
     {
-      "name": "Investors look to earnings to reset the bull market. The key level to watch on the S&P 500",
-      "url": "https://www.cnbc.com/2026/10/20/santoli-key-sp-500-level-to-watch.html"
+      "name": "Mitrade — Gold, Fed pause odds, crude rally (สื่อรอง)",
+      "url": "https://www.mitrade.com/insights/commodity-analysis/gold/gold-fed-pause-odds-crude-rally"
     },
     {
-      "name": "Microsoft, Alphabet and Goldman Sachs join objections to OKX-ICE tokenized stock trading",
-      "url": "https://www.coindesk.com/business/2026/10/19/microsoft-alphabet-and-goldman-sachs-join-objections-to-okx-ice-tokenized-stock-trading"
-    },
-    {
-      "name": "Salesforce announces $5.66 billion deal for Braze, sending BRZE stock soaring 50%",
-      "url": "https://www.cnbc.com/2026/10/20/salesforce-braze-acquisition-deal.html"
-    },
-    {
-      "name": "What options traders expect from SpaceX earnings after the bell",
-      "url": "https://www.cnbc.com/2026/10/20/spacex-reports-after-the-bell-heres-what-options-traders-expect-.html"
-    },
-    {
-      "name": "September data shows housing market in a deep freeze",
-      "url": "https://www.cnbc.com/2026/10/20/september-data-shows-housing-market-in-a-deep-freeze.html"
-    },
-    {
-      "name": "France's parliament approves vote to hit stablecoin trades with 31% capital gains tax",
-      "url": "https://www.coindesk.com/policy/2026/10/20/france-s-parliament-approves-vote-to-hit-crypto-to-stablecoin-trades-with-31-levy"
-    },
-    {
-      "name": "Novo's next-generation obesity drug shows 25% weight loss in women in late-stage analysis",
-      "url": "https://www.cnbc.com/2026/10/20/novo-cagrisema-women-weight-loss-analysis.html"
-    },
-    {
-      "name": "India’s finance minister says market liquidity makes it easier for investors to exit",
-      "url": "https://www.cnbc.com/2026/10/18/india-ai-nifty50-sensex-investors.html"
+      "name": "crypto.news — Crypto week ahead Oct 19 (ชั้น 3)",
+      "url": "https://crypto.news/crypto-week-ahead-five-events-bitcoin-october-19-2026/"
     }
-  ],
-  "meta": {
-    "writtenBy": "github-actions/gemini-flash-lite-latest",
-    "grounded": false,
-    "articlesRead": 15,
-    "headlines": 70
-  }
+  ]
 }
