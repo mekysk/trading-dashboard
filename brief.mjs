@@ -91,7 +91,11 @@ function marketNumbers(){
   return out;
 }
 const REQ_MS   = Number(process.env.BRIEF_REQ_MS || 20000);
-const MAX_ITEM = Number(process.env.BRIEF_MAX_ITEMS || 45);
+/* พอเพิ่มจำนวนฟีด แต่ละฟีดจะได้โควตาในรายการรวมน้อยลง
+   ตอนมี 8 ฟีด เพดาน 45 แปลว่าได้ฟีดละราว 5 ข่าว
+   พอเป็น 10 ฟีด เหลือฟีดละ 4 ซึ่งทำให้แหล่งที่อ่านเนื้อได้มีตัวเลือกน้อยลง
+   ขยายเพดานตามจำนวนฟีด */
+const MAX_ITEM = Number(process.env.BRIEF_MAX_ITEMS || 70);
 
 /* แหล่งข่าวที่เปิด RSS ให้ใช้ฟรี ไม่ต้องใช้กุญแจ
    เลือกหลายแหล่งเพราะแหล่งเดียวล่มแล้วจบ และมุมมองเดียวก็เอียงง่าย */
@@ -109,10 +113,13 @@ const MAX_ITEM = Number(process.env.BRIEF_MAX_ITEMS || 45);
    feedsFailed ให้เอง แล้วค่อยลบทิ้งทีหลัง ไม่ทำให้งานล้ม */
 const FEEDS = [
   { name:'CNBC Markets',       url:'https://www.cnbc.com/id/20910258/device/rss/rss.html' },
+  /* ผลการลองจริง 20 ต.ค.
+       CNBC Top       ให้ 12 หัวข้อ  เก็บไว้
+       CNBC Finance   ให้  1 หัวข้อ  เก็บไว้ ได้น้อยแต่ไม่เสียหาย
+       CNBC Earnings  ให้  0 หัวข้อ  ตัดทิ้ง
+       CNBC Economy   ตอบ 404        ตัดทิ้ง */
   { name:'CNBC Top',           url:'https://www.cnbc.com/id/100003114/device/rss/rss.html' },
   { name:'CNBC Finance',       url:'https://www.cnbc.com/id/10000664/device/rss/rss.html' },
-  { name:'CNBC Economy',       url:'https://www.cnbc.com/id/20910213/device/rss/rss.html' },
-  { name:'CNBC Earnings',      url:'https://www.cnbc.com/id/15839135/device/rss/rss.html' },
   { name:'MarketWatch Top',    url:'https://feeds.content.dowjones.io/public/rss/mw_topstories' },
   { name:'Investing หุ้น',     url:'https://www.investing.com/rss/news_25.rss' },
   { name:'Investing โภคภัณฑ์', url:'https://www.investing.com/rss/news_11.rss' },
@@ -285,7 +292,11 @@ const NO_FETCH=['marketwatch.com','investing.com'];
    "เครื่องมือย้ายคริปโตโดยไม่ต้องก๊อปที่อยู่กระเป๋า" ซึ่งไม่เกี่ยวกับพอร์ตเลย
    แล้วเอาไปเขียนเป็นย่อหน้าหนึ่งในบทสรุป เพราะมันมีแค่นั้นให้อ่าน
    การเลือกว่าจะอ่านอะไร สำคัญพอๆ กับการอ่านได้ */
-const GOOD=/\b(stock|stocks|shares|equit|nasdaq|s&p|dow|russell|index|indices|futures|yield|treasur|bond|fed|fomc|rate cut|rate hike|inflation|cpi|ppi|gdp|jobs|payroll|earnings|revenue|guidance|profit|selloff|sell-off|rally|slump|rebound|chip|semiconductor|gold|bullion|oil|crude|wti|brent|bitcoin|btc|crypto market|dollar|currency|tariff|central bank)\b/i;
+/* เพิ่มคำที่พลาดไปรอบที่แล้ว
+   \bfed\b ไม่จับคำว่า Federal Reserve เพราะ Federal ไม่ใช่คำว่า fed
+   ข่าวของธนาคารกลางสหรัฐฯ ทั้ง 12 หัวข้อจึงได้ 0 คะแนนและถูกคัดทิ้งหมด
+   ทั้งที่เป็นแหล่งที่ยอมให้อ่านเนื้อและเกี่ยวกับตลาดโดยตรง */
+const GOOD=/\b(stock|stocks|shares|equit|nasdaq|s&p|dow|russell|index|indices|futures|yield|treasur|bond|fed|federal reserve|fomc|powell|warsh|monetary|interest rate|rate cut|rate hike|rates|inflation|cpi|ppi|gdp|jobs|payroll|unemployment|earnings|revenue|guidance|profit|selloff|sell-off|rally|slump|rebound|chip|semiconductor|gold|bullion|oil|crude|wti|brent|bitcoin|btc|ether|crypto market|dollar|currency|forex|tariff|central bank|wall street|market|markets|investor|trading)\b/i;
 const JUNK=/\b(how to|guide|review|airdrop|giveaway|sponsored|press release|programming language|wallet address|job loss|hiring|dating|recipe|horoscope|nft art|testnet|mainnet upgrade)\b/i;
 
 function relevance(x){
@@ -308,14 +319,20 @@ async function fetchArticles(items){
       return !NO_FETCH.some(d=>h===d||h.endsWith('.'+d));
     }catch(e){ return false }
   });
-  /* เรียงตามความเกี่ยวข้อง แล้วตัดตัวที่คะแนนติดลบทิ้ง
-     ยอมอ่านน้อยลง ดีกว่าอ่านเรื่องที่ไม่เกี่ยวแล้วเอาไปเขียน */
-  const picked=ok.map(x=>({x,s:relevance(x)}))
-    .filter(o=>o.s>0)
-    .sort((a,b)=>b.s-a.s)
+  /* เรียงตามความเกี่ยวข้อง เอาตัวที่ได้คะแนนก่อน
+     แต่ถ้าได้น้อยเกินไป ให้เติมด้วยตัวที่คะแนน 0 (ยังไม่ติดลบ) จนครบขั้นต่ำ
+     รอบที่แล้วผมตัดที่ s>0 เฉยๆ แล้วเหลือ 3 บทความ ซึ่งน้อยกว่าตอนไม่คัดเลย
+     ตัวคัดกรองที่เข้มจนอดอยาก แย่กว่าตัวคัดกรองที่ปล่อยผ่านบ้าง
+     ตัวที่ติดลบ (ข่าวไม่เกี่ยวชัดเจน) ไม่เอาเด็ดขาดไม่ว่าจะขาดแค่ไหน */
+  const scored=ok.map(x=>({x,s:relevance(x)})).sort((a,b)=>b.s-a.s);
+  const strong=scored.filter(o=>o.s>0);
+  const spare =scored.filter(o=>o.s===0);
+  const MIN=Number(process.env.BRIEF_MIN_ARTICLES||8);
+  const picked=[...strong, ...spare.slice(0,Math.max(0,MIN-strong.length))]
     .slice(0,ART_N).map(o=>o.x);
-  log('  คัดบทความที่เกี่ยวกับตลาดได้ '+picked.length
-    +' จากลิงก์ที่อ่านได้ '+ok.length);
+  log('  คัดบทความได้ '+picked.length+' (ตรงประเด็น '+strong.length
+    +' · เติม '+(picked.length-Math.min(strong.length,picked.length))
+    +') จากลิงก์ที่อ่านได้ '+ok.length);
   const out=[], fails=[];
   /* ดึงพร้อมกันทีละ 5 เพื่อไม่ให้ช้าเกินไป และไม่ถล่มเว็บใครมากเกิน */
   for(let i=0;i<picked.length;i+=5){
@@ -327,7 +344,9 @@ async function fetchArticles(items){
         const html=await get(x.link,ART_MS,'html');
         const txt=readable(html);
         if(txt.length<250)throw new Error('เนื้อหาสั้นเกินไป '+txt.length+' ตัว');
-        return {...x, text:txt.slice(0,2600)};
+        /* 2,600 ตัวต่อบทความ คูณ 12 บท ยาวเกินจำเป็น
+           ตัวเลขสำคัญมักอยู่ช่วงต้นของข่าว ย่อลงได้โดยไม่เสียสาระ */
+        return {...x, text:txt.slice(0,1900)};
       }catch(e){
         /* เก็บเหตุผลไว้เสมอ รอบที่แล้วผมนับแค่จำนวนที่ล้ม ไม่ได้เก็บว่าล้มเพราะอะไร
            พอได้ 2 จาก 14 จึงไม่รู้ว่าโดนบล็อก เว็บล่ม หรือตัวกรองผมเข้มเกินไป
@@ -344,26 +363,37 @@ async function fetchArticles(items){
 }
 
 async function collect(){
-  const seen=new Set(), ok=[], failed=[], perFeed=[];
-  for(const f of FEEDS){
+  const ok=[], failed=[];
+  /* ดึงฟีดพร้อมกัน ไม่ใช่ทีละอัน
+     รอบที่แล้วใช้เวลารวม 92 วินาที ส่วนใหญ่หมดไปกับการยืนรอฟีดทีละเจ้า
+     ฟีดไม่ได้ขึ้นต่อกัน จึงไม่มีเหตุผลต้องรอให้เสร็จทีละอัน */
+  const raw=await Promise.all(FEEDS.map(async f=>{
     try{
       const xml=await get(f.url);
-      const list=parseFeed(xml).filter(x=>isRecent(x.date,36));
-      const mine=[];
-      for(const x of list){
-        const k=x.title.toLowerCase().slice(0,70);
-        if(seen.has(k))continue;           /* ข่าวเดียวกันมักโผล่หลายแหล่ง */
-        seen.add(k); mine.push({...x,src:f.name});
-        if(mine.length>=12)break;          /* กันแหล่งเดียวกลบแหล่งอื่น */
-      }
-      perFeed.push(mine);
-      ok.push(f.name+' ('+mine.length+')');
-      log('  ✓ '+f.name+' — '+mine.length+' ข่าว');
-    }catch(e){
+      return {f, list:parseFeed(xml).filter(x=>isRecent(x.date,36))};
+    }catch(e){ return {f, err:e.message} }
+  }));
+
+  /* ตัดข่าวซ้ำหลังจากได้มาครบแล้ว ต้องทำตามลำดับเดิมเสมอ
+     ไม่งั้นผลจะเปลี่ยนไปมาตามว่าฟีดไหนตอบก่อน */
+  const seen=new Set(), perFeed=[];
+  for(const r of raw){
+    if(r.err){
       perFeed.push([]);
-      failed.push(f.name+': '+e.message);
-      log('  ✗ '+f.name+' — '+e.message);
+      failed.push(r.f.name+': '+r.err);
+      log('  ✗ '+r.f.name+' — '+r.err);
+      continue;
     }
+    const mine=[];
+    for(const x of r.list){
+      const k=x.title.toLowerCase().slice(0,70);
+      if(seen.has(k))continue;             /* ข่าวเดียวกันมักโผล่หลายแหล่ง */
+      seen.add(k); mine.push({...x,src:r.f.name});
+      if(mine.length>=12)break;            /* กันแหล่งเดียวกลบแหล่งอื่น */
+    }
+    perFeed.push(mine);
+    ok.push(r.f.name+' ('+mine.length+')');
+    log('  ✓ '+r.f.name+' — '+mine.length+' ข่าว');
   }
   /* สลับหยิบทีละแหล่งวนไป ไม่ใช่ต่อท้ายกันไปเรื่อยๆ
      ของเดิมเรียงตามลำดับฟีด ทำให้ 20 ลิงก์แรกเป็นของสองแหล่งแรกล้วน
@@ -431,8 +461,10 @@ const PROMPT = `คุณเขียนสรุปข่าวตลาดใ�
   - ระดับราคาทองคำ น้ำมัน Bitcoin และค่าเงิน พร้อมเปอร์เซ็นต์
   - เหตุการณ์ที่มีกำหนดวันเวลาชัดเจนในสัปดาห์นี้
 
-เขียนให้ยาวพอจะใส่รายละเอียดพวกนี้ได้ครบ ประมาณ 6-9 ย่อหน้า
+เขียนให้ยาวพอจะใส่รายละเอียดพวกนี้ได้ครบ อย่างน้อย 5 ย่อหน้า ไม่เกิน 8
 บทสรุปที่สั้นแต่ลอยๆ ไร้ประโยชน์กว่าบทสรุปที่ยาวแต่มีตัวเลขจริง
+ข้อ 5ก ที่ให้ข้ามข่าวไม่เกี่ยว ไม่ได้แปลว่าให้เขียนสั้นลงเรื่อยๆ
+ให้ตัดเฉพาะเรื่องที่ไม่เกี่ยว แล้วลงลึกกับเรื่องที่เกี่ยวแทน
 
 ลำดับเนื้อหา
 ย่อหน้า 1     ตลาดหุ้นสหรัฐฯ คืนที่ผ่านมา พร้อมตัวเลขปิดและตัวที่ขยับแรง
@@ -499,12 +531,18 @@ async function askModel(model,payload,useSearch){
   return {body, cites};
 }
 
-async function writeBrief(items, nums, articles){
+async function writeBrief(items, nums, articles, extra){
   /* แนบย่อหน้าสรุปของแต่ละข่าวไปด้วย ถ้าฟีดให้มา
      ต่างกันมากระหว่าง "Gold rises as Warsh remarks curb Fed hike bets"
      กับบรรทัดเดียวกันที่มีตัวเลขต่อท้ายว่าขึ้นกี่เปอร์เซ็นต์ไปที่เท่าไหร่ */
+  /* 70 หัวข้อพร้อมย่อหน้าสรุปทุกอัน บวกบทความเต็มอีก 12 บท
+     ทำให้คำสั่งยาวจนรุ่นที่ดีที่สุดคิดไม่ทันใน 2 นาทีแล้วหลุดไปใช้รุ่นเล็ก
+     ย่อหน้าสรุปมีค่าที่สุดกับข่าวอันดับต้นๆ ที่ไม่ได้อ่านเนื้อเต็ม
+     อันท้ายๆ ใส่แค่หัวข้อพอ */
+  const DESC_N=Number(process.env.BRIEF_DESC_ITEMS||28);
   const headlines = items.map((x,i)=>
-    (i+1)+'. ['+x.src+'] '+x.title+(x.desc?'\n   '+x.desc:'')).join('\n');
+    (i+1)+'. ['+x.src+'] '+x.title
+    +(x.desc&&i<DESC_N?'\n   '+x.desc:'')).join('\n');
   const full = (articles||[]).map((a,i)=>
     '=== บทความที่ '+(i+1)+' ['+a.src+'] '+a.title+'\n'+a.text).join('\n\n');
   const payload   = assertNoPrivateData(
@@ -512,9 +550,18 @@ async function writeBrief(items, nums, articles){
     + 'ตัวเลขตลาด (ราคาปิดจริง ใช้ตัวเลขชุดนี้เท่านั้น):\n'
     + (nums.length?nums.map(s=>'- '+s).join('\n'):'- ไม่มีข้อมูลราคาในรอบนี้')
     + (full ? '\n\nเนื้อบทความเต็ม — ตัวเลขรายละเอียดอยู่ในนี้ ให้ขุดออกมาใช้:\n'+full : '')
-    + '\n\nหัวข้อข่าวอื่นที่ยังไม่ได้อ่านเนื้อเต็ม:\n' + headlines);
+    + '\n\nหัวข้อข่าวอื่นที่ยังไม่ได้อ่านเนื้อเต็ม:\n' + headlines
+    + (extra||''));
 
   const tried=[];
+  const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+  /* 503 คือ "ตอนนี้คนใช้เยอะ เดี๋ยวลองใหม่" ซึ่งเป็นคำสั่งให้รอ ไม่ใช่ให้เลิก
+     20 ต.ค. 14:05 ทุกรุ่นตอบ 503 พร้อมกัน งานทั้งรอบจึงล้มใน 31 วินาที
+     งานนี้รันวันละครั้งตอนเช้า ถ้าเจอจังหวะที่ Google แน่นแล้วยอมแพ้ทันที
+     ก็เท่ากับวันนั้นไม่มีบทสรุปเลย ทั้งที่รออีกนิดเดียวก็น่าจะได้
+     จึงวนซ้ำทั้งชุดได้ถึง 3 รอบ เว้นระยะ 20 แล้ว 45 วินาที */
+  const ROUNDS=Number(process.env.BRIEF_RETRY_ROUNDS||3);
+  const WAITS=[20000,45000];
   /* เคยลองขอค้นเว็บกับทุกรุ่น ได้ 429 เหมือนกันหมดสองรอบติด
      สรุปว่ากุญแจฟรีใบนี้ไม่มีโควตาค้นเว็บ จึงไม่ยิงซ้ำให้เสียเวลาอีก 4 ครั้ง
      แต่ยังลองกับรุ่นแรกรุ่นเดียวไว้ เผื่อวันหนึ่ง Google เปิดให้
@@ -523,7 +570,13 @@ async function writeBrief(items, nums, articles){
   const modes = searchMode==='off' ? [false]
               : searchMode==='on'  ? [true,false]
               : ['probe',false];
-  for(const mode of modes){
+  for(let round=0; round<ROUNDS; round++){
+   if(round>0){
+     log('  ทุกรุ่นตอบว่าคนใช้เยอะ (503) — รอ '+(WAITS[round-1]/1000)+' วินาทีแล้วลองใหม่');
+     await sleep(WAITS[round-1]);
+   }
+   let sawBusy=false;
+   for(const mode of modes){
     const useSearch = mode===true || mode==='probe';
     const list = mode==='probe' ? MODELS.slice(0,1) : MODELS;
     for(const m of list){
@@ -534,8 +587,11 @@ async function writeBrief(items, nums, articles){
         return {body:body.replace(/\*\*/g,'').replace(/^\s*[-*]\s+/gm,''),
                 model:m, grounded:useSearch, cites, tried};
       }catch(e){
-        tried.push(m+(useSearch?'+search':'')+': '+e.message);
+        /* บันทึกเหตุผลเฉพาะรอบแรก ไม่งั้นรอบวนซ้ำจะทำให้ไฟล์สถานะยาวสามเท่า
+           โดยที่เนื้อหาเหมือนกันหมด */
+        if(round===0)tried.push(m+(useSearch?'+search':'')+': '+e.message);
         log('  ✗ '+m+' — '+e.message);
+        if(e.status===503)sawBusy=true;
         /* 401/403 คือกุญแจผิดหรือไม่มีสิทธิ์ ลองรุ่นอื่นก็ไม่ช่วย หยุดเลย
            ส่วน 429 "ห้ามหยุด" — ดูเหตุผลข้างล่าง */
         if(e.status===401||e.status===403)
@@ -549,7 +605,12 @@ async function writeBrief(items, nums, articles){
            เป็นบั๊กที่ผมเพิ่งใส่เข้าไปเอง ตอนนี้ให้ไล่ลองต่อจนครบ */
       }
     }
-    if(useSearch)log('  ค้นเว็บไม่ได้ทุกรุ่น ถอยไปใช้แบบอ่านหัวข้อข่าวอย่างเดียว');
+    if(useSearch&&round===0)
+      log('  ค้นเว็บไม่ได้ทุกรุ่น ถอยไปใช้แบบอ่านหัวข้อข่าวอย่างเดียว');
+   }
+   /* วนซ้ำเฉพาะตอนที่สาเหตุคือ "คนใช้เยอะ" ซึ่งรอแล้วหายได้
+      ถ้าล้มด้วยเหตุอื่น เช่น โควตาหมดหรือชื่อรุ่นผิด รออีกกี่รอบก็เหมือนเดิม */
+   if(!sawBusy)break;
   }
   throw new Error('เรียก Gemini ไม่สำเร็จทุกรุ่น — '+tried.join(' · '));
 }
@@ -677,9 +738,20 @@ async function main(){
   }
 
   log('ส่งให้ Gemini เขียนสรุป ('+secs()+')');
-  let W;
+  let W, fixNote='';
   try{
     W = await writeBrief(items, nums, articles);
+    /* ถ้าตัวเลขราคาขัดกับของจริง ลองใหม่อีกครั้งโดยชี้จุดที่ผิดให้ชัด
+       ถ้ายังผิดอีก จะไปจบที่การทิ้งงานข้างล่าง ไม่ปล่อยขึ้นเว็บ */
+    const bad1=checkPrices(W.body,nums);
+    if(bad1.length){
+      log('  ตัวเลขราคาไม่ตรง ลองใหม่อีกครั้ง: '+bad1.join(' · '));
+      fixNote='\n\nสำคัญมาก รอบที่แล้วคุณเขียนตัวเลขผิดดังนี้\n'
+        +bad1.map(s=>'- '+s).join('\n')
+        +'\nให้ใช้ตัวเลขจากส่วนตัวเลขตลาดแบบตรงตัวเท่านั้น ห้ามสลับหลัก ห้ามปัดเอง';
+      const W2=await writeBrief(items, nums, articles, fixNote);
+      if(checkPrices(W2.body,nums).length<bad1.length)W=W2;
+    }
   }catch(e){
     /* ระบุขั้นตอนให้ชัด ไม่ปล่อยให้ไปโผล่เป็น "ไม่ทราบขั้นตอน" ที่ตัวดักชั้นนอก */
     saveStatus({ok:false, stage:'เรียก Gemini', hasKey:true, keyLength:KEY.length,
@@ -725,11 +797,30 @@ async function main(){
      ตัวเลขผิดแบบนี้อันตรายกว่าเขียนน่าเบื่อ เพราะอ่านแล้วดูน่าเชื่อ */
   const priceWarn=checkPrices(body,nums);
   if(priceWarn.length)warns.push('ตัวเลขน่าสงสัย: '+priceWarn.join(' · '));
+  /* ราคาผิดคือเรื่องร้ายแรงกว่าบทสรุปเก่า
+     รอบ 20 ต.ค. มันเขียนน้ำมัน WTI ที่ 111.42 ทั้งที่ราคาจริง 101.41
+     สลับตัวเลขเฉยๆ แต่คนอ่านไม่มีทางรู้ เพราะทั้งบทดูน่าเชื่อถือ
+     ตอนนั้นตัวตรวจจับได้ แต่ผมตั้งให้เตือนอย่างเดียว มันจึงขึ้นเว็บไปแล้ว
+     เตือนในไฟล์ที่ไม่มีใครเปิด เท่ากับไม่ได้เตือน
+     ต่อไปถ้าแก้ไม่ได้ ให้ทิ้งงานทั้งรอบ ของเก่ายังอยู่และมีป้ายบอกอายุ
+     ของเก่าที่รู้ว่าเก่า ปลอดภัยกว่าของใหม่ที่ตัวเลขผิด */
 
   if(warns.length)log('(เตือนคุณภาพ) '+warns.join(' · '));
 
   /* ตรวจอีกรอบ "ขาออก" — เผื่อโมเดลถูกป้อนอะไรแปลกมาแล้วสะท้อนกลับ */
   assertNoPrivateData(body);
+
+  /* ด่านสุดท้าย ถ้าตัวเลขราคายังขัดกับของจริงหลังจากให้แก้แล้ว ไม่ปล่อยขึ้นเว็บ
+     หน้าเว็บจะยังแสดงบทสรุปเก่าพร้อมป้ายบอกว่าเก่ากี่วันทำการ
+     คนอ่านจะรู้ตัวว่ากำลังอ่านของเก่า ซึ่งดีกว่าอ่านของใหม่ที่ราคาผิด */
+  if(priceWarn.length){
+    saveStatus({ok:false, stage:'ตรวจตัวเลขขาออก', model, grounded:!!grounded,
+      articlesRead:articles.length, retried:!!fixNote,
+      reason:'ตัวเลขราคาขัดกับข้อมูลจริง ไม่ยอมเผยแพร่: '+priceWarn.join(' · '),
+      qualityWarnings:warns, feedsOk:ok, feedsFailed:failed, elapsed:secs()});
+    throw new Error('ตัวเลขราคาผิดหลังจากให้แก้แล้ว — '+priceWarn.join(' · ')
+      +' · ไม่เผยแพร่ ของเก่ายังอยู่');
+  }
 
   /* แหล่งอ้างอิง
      ถ้าค้นเว็บได้ ใช้ลิงก์บทความจริงที่โมเดลอ้างถึง กดแล้วเจอข่าวนั้นเลย
