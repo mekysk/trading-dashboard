@@ -492,8 +492,12 @@ async function askModel(model,payload,useSearch){
   };
   if(useSearch)req.tools=[{google_search:{}}];
 
+  /* gemini-3.8-flash ไม่เคยเขียนจบทันสักครั้ง ติด abort ที่ 120 วินาทีทุกรอบ
+     การรอมันจนครบ 2 นาทีแล้วค่อยถอย คือการจ่ายเวลา 2 นาทีเพื่อผลลัพธ์ศูนย์
+     ลดเหลือ 70 วินาที ถ้ารุ่นไหนเขียนจบได้ก็จบภายในนั้นอยู่แล้ว
+     รุ่นที่เขียนจบจริงคือ gemini-3.5-flash-lite ใช้เวลาไม่ถึงนาที */
   const c=new AbortController();
-  const t=setTimeout(()=>c.abort(),120000);   /* ค้นเว็บด้วยจึงช้ากว่าเดิม */
+  const t=setTimeout(()=>c.abort(),Number(process.env.BRIEF_CALL_MS||70000));
   let r;
   try{
     r=await fetch(url,{method:'POST',signal:c.signal,
@@ -531,7 +535,7 @@ async function askModel(model,payload,useSearch){
   return {body, cites};
 }
 
-async function writeBrief(items, nums, articles, extra){
+async function writeBrief(items, nums, articles, extra, forceModel){
   /* แนบย่อหน้าสรุปของแต่ละข่าวไปด้วย ถ้าฟีดให้มา
      ต่างกันมากระหว่าง "Gold rises as Warsh remarks curb Fed hike bets"
      กับบรรทัดเดียวกันที่มีตัวเลขต่อท้ายว่าขึ้นกี่เปอร์เซ็นต์ไปที่เท่าไหร่ */
@@ -554,6 +558,14 @@ async function writeBrief(items, nums, articles, extra){
     + (extra||''));
 
   const tried=[];
+  const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+  /* 503 คือ "ตอนนี้คนใช้เยอะ เดี๋ยวลองใหม่" ซึ่งเป็นคำสั่งให้รอ ไม่ใช่ให้เลิก
+     20 ต.ค. 14:05 ทุกรุ่นตอบ 503 พร้อมกัน งานทั้งรอบจึงล้มใน 31 วินาที
+     งานนี้รันวันละครั้งตอนเช้า ถ้าเจอจังหวะที่ Google แน่นแล้วยอมแพ้ทันที
+     ก็เท่ากับวันนั้นไม่มีบทสรุปเลย ทั้งที่รออีกนิดเดียวก็น่าจะได้
+     จึงวนซ้ำทั้งชุดได้ถึง 3 รอบ เว้นระยะ 20 แล้ว 45 วินาที */
+  const ROUNDS=Number(process.env.BRIEF_RETRY_ROUNDS||3);
+  const WAITS=[20000,45000];
   /* เคยลองขอค้นเว็บกับทุกรุ่น ได้ 429 เหมือนกันหมดสองรอบติด
      สรุปว่ากุญแจฟรีใบนี้ไม่มีโควตาค้นเว็บ จึงไม่ยิงซ้ำให้เสียเวลาอีก 4 ครั้ง
      แต่ยังลองกับรุ่นแรกรุ่นเดียวไว้ เผื่อวันหนึ่ง Google เปิดให้
@@ -562,9 +574,16 @@ async function writeBrief(items, nums, articles, extra){
   const modes = searchMode==='off' ? [false]
               : searchMode==='on'  ? [true,false]
               : ['probe',false];
-  for(const mode of modes){
+  for(let round=0; round<ROUNDS; round++){
+   if(round>0){
+     log('  ทุกรุ่นตอบว่าคนใช้เยอะ (503) — รอ '+(WAITS[round-1]/1000)+' วินาทีแล้วลองใหม่');
+     await sleep(WAITS[round-1]);
+   }
+   let sawBusy=false;
+   for(const mode of modes){
     const useSearch = mode===true || mode==='probe';
-    const list = mode==='probe' ? MODELS.slice(0,1) : MODELS;
+    const list = forceModel ? [forceModel]
+               : mode==='probe' ? MODELS.slice(0,1) : MODELS;
     for(const m of list){
       try{
         log('  ลอง '+m+(useSearch?' (ค้นเว็บ)':' (ไม่ค้นเว็บ)'));
@@ -573,8 +592,11 @@ async function writeBrief(items, nums, articles, extra){
         return {body:body.replace(/\*\*/g,'').replace(/^\s*[-*]\s+/gm,''),
                 model:m, grounded:useSearch, cites, tried};
       }catch(e){
-        tried.push(m+(useSearch?'+search':'')+': '+e.message);
+        /* บันทึกเหตุผลเฉพาะรอบแรก ไม่งั้นรอบวนซ้ำจะทำให้ไฟล์สถานะยาวสามเท่า
+           โดยที่เนื้อหาเหมือนกันหมด */
+        if(round===0)tried.push(m+(useSearch?'+search':'')+': '+e.message);
         log('  ✗ '+m+' — '+e.message);
+        if(e.status===503)sawBusy=true;
         /* 401/403 คือกุญแจผิดหรือไม่มีสิทธิ์ ลองรุ่นอื่นก็ไม่ช่วย หยุดเลย
            ส่วน 429 "ห้ามหยุด" — ดูเหตุผลข้างล่าง */
         if(e.status===401||e.status===403)
@@ -588,7 +610,12 @@ async function writeBrief(items, nums, articles, extra){
            เป็นบั๊กที่ผมเพิ่งใส่เข้าไปเอง ตอนนี้ให้ไล่ลองต่อจนครบ */
       }
     }
-    if(useSearch)log('  ค้นเว็บไม่ได้ทุกรุ่น ถอยไปใช้แบบอ่านหัวข้อข่าวอย่างเดียว');
+    if(useSearch&&round===0)
+      log('  ค้นเว็บไม่ได้ทุกรุ่น ถอยไปใช้แบบอ่านหัวข้อข่าวอย่างเดียว');
+   }
+   /* วนซ้ำเฉพาะตอนที่สาเหตุคือ "คนใช้เยอะ" ซึ่งรอแล้วหายได้
+      ถ้าล้มด้วยเหตุอื่น เช่น โควตาหมดหรือชื่อรุ่นผิด รออีกกี่รอบก็เหมือนเดิม */
+   if(!sawBusy)break;
   }
   throw new Error('เรียก Gemini ไม่สำเร็จทุกรุ่น — '+tried.join(' · '));
 }
@@ -727,7 +754,10 @@ async function main(){
       fixNote='\n\nสำคัญมาก รอบที่แล้วคุณเขียนตัวเลขผิดดังนี้\n'
         +bad1.map(s=>'- '+s).join('\n')
         +'\nให้ใช้ตัวเลขจากส่วนตัวเลขตลาดแบบตรงตัวเท่านั้น ห้ามสลับหลัก ห้ามปัดเอง';
-      const W2=await writeBrief(items, nums, articles, fixNote);
+      /* ตอนลองใหม่ ให้ใช้รุ่นที่เพิ่งเขียนสำเร็จเลย ไม่ต้องไล่ทั้งรายการอีกรอบ
+         ไม่งั้นจะไปรอรุ่นที่หมดเวลาซ้ำอีก 70 วินาทีโดยไม่ได้อะไร
+         รอบ 20 ต.ค. ใช้เวลารวม 309 วินาที ส่วนใหญ่มาจากการไล่ซ้ำแบบนี้ */
+      const W2=await writeBrief(items, nums, articles, fixNote, W.model);
       if(checkPrices(W2.body,nums).length<bad1.length)W=W2;
     }
   }catch(e){
