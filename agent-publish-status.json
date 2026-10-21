@@ -1,6 +1,6 @@
 {
-  "ranAt": "2026-10-20T21:49:51.7015142+07:00",
-  "sent": 8,
-  "files": " agent-morning.json agent-events.json agent-scan.json agent-risk.json agent-coach.json agent-port.json brief-latest.json events-latest.json",
+  "ranAt": "2026-10-21T22:00:06.4946044+07:00",
+  "sent": 7,
+  "files": " agent-morning.json agent-events.json agent-scan.json agent-risk.json agent-coach.json agent-port.json events-latest.json",
   "result": "sending"
 }
