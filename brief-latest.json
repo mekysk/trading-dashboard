@@ -1,30 +1,60 @@
 {
-  "date": "2026-10-20",
-  "body": "ตลาดสหรัฐฯ วันจันทร์ 19 ต.ค. ปิดแบบแยกทาง โดย Nasdaq บวกราว 1.1% S&P 500 +0.41% และ Dow −0.07% (รายงาน 16:19 ET ยืนยันได้แหล่งเดียว ส่วนแถบราคาอีกแหล่งให้ตัวเลขต่างกันเกิน 0.3% จึงถือว่าตัวเลขขัดกัน) แรงหนุนมาจากการรีบาวด์ของกลุ่มเทคและ AI หลังถูกเทขายหนักสัปดาห์ก่อนที่ Nasdaq ร่วง 4.5% ขณะที่น้ำมัน WTI ขยับขึ้นเหนือ 103.73 ดอลลาร์ (14:43 ET) หลัง Houthi อ้างโจมตีเป้าหมายในซาอุดีอาระเบีย และดัชนีความเชื่อมั่นผู้สร้างบ้านลงมาที่ 29 ต่ำสุดตั้งแต่เดือนมิถุนายน 2012\n\nทองคำสปอตอยู่ที่ 4,139.90 ดอลลาร์ ณ 17:00 EST วันที่ 19 ต.ค. ลดลง 24.20 ดอลลาร์ หรือ 0.58% โดยเคยยืนเหนือ 4,180 ดอลลาร์ในช่วงเช้าก่อนถูกขายลงตลอดวัน ตัวเลขนี้ยืนยันได้สองแหล่งคือ Kitco และ Mitrade ที่ต่างกันไม่ถึง 0.1% ด้าน Bitcoin อยู่ราว 82,249 ดอลลาร์ ณ 12:04 UTC วันที่ 19 ต.ค. ลดลงราว 2% ในรอบสัปดาห์ และยังไม่พบราคาล่าสุดหลังเที่ยงวันจันทร์ตามเวลา UTC ส่วนกองทุน Spot Bitcoin ETF ไหลออกสุทธิ 228.58 ล้านดอลลาร์ ในสัปดาห์สิ้นสุด 16 ต.ค. ซึ่งเป็นสัปดาห์ที่สองติดกัน\n\nหุ้นที่มีข่าวจริงและอยู่ในพอร์ตของคุณ ได้แก่ PLTR ปิด +4.36% NVDA ที่ประกาศเรื่องมาตรฐานหน่วยความจำจนหนุนกลุ่มชิปทั้งกลุ่ม TSLA ปิดบวก (TheStreet ให้ +3.74% ส่วนอีกแหล่งให้ +3.1% ที่ 365.59 ดอลลาร์ ถือว่าตัวเลขขัดกัน) และ META ปิด −0.54% ฝั่งรายการเฝ้าดู AMZN ปิด +4.95% แรงสุด หลัง Morgan Stanley ปรับเป้าเป็น 350 ดอลลาร์จาก 335 ดอลลาร์ และ Micron +2.95% ราคาหุ้นรายตัวทั้งหมดในรอบนี้ยืนยันได้แหล่งเดียว และเปอร์เซ็นต์กำไรในไฟล์พอร์ตซึ่งสร้างไว้ตั้งแต่ 14 ต.ค. ไม่ตรงกับระยะห่างจากต้นทุนที่คำนวณด้วยราคาล่าสุด จึงควรตรวจกับโบรกเกอร์ก่อนใช้\n\nสิ่งที่ต้องจับตาวันนี้คือ NFLX และ SpaceX แจ้งงบหลังปิดตลาด พร้อม GE Aerospace ก่อนเปิด และตัวเลข Housing starts ส่วนคืนวันพุธ 21 ต.ค. TSLA และ META แจ้งงบหลังปิดพร้อมกัน ซึ่งทั้งคู่อยู่ในพอร์ตของคุณ ถัดไปคือประชุม FOMC วันที่ 27–28 ต.ค. ที่ตลาดราว 85% คาดว่าเฟดจะคงดอกเบี้ย และ AMZN แจ้งงบ Q3 วันที่ 29 ต.ค. มุมมอง: การเด้งรอบนี้เป็นการฟื้นหลังแรงขายหนัก ไม่ใช่การเปลี่ยนภาพใหญ่ เพราะเงินเฟ้อ ราคาน้ำมัน และความกังวลเรื่องต้นทุนเงินทุน AI ยังเป็นประเด็นเดิม มุมมอง: ทองที่ลงทั้งที่ความเสี่ยงภูมิรัฐศาสตร์สูงสะท้อนว่าแรงกดจากยีลด์และดอกเบี้ยมีน้ำหนักกว่าแรงซื้อสินทรัพย์ปลอดภัยในรอบนี้",
+  "date": "2026-10-21",
+  "body": "ตลาดหุ้นสหรัฐฯ ปิดการซื้อขายล่าสุดในแดนบวกเป็นส่วนใหญ่ โดยดัชนี S&P 500 ปิดที่ 7,690.73 จุด เพิ่มขึ้น 0.41% และ Nasdaq ปิดที่ 26,430.89 จุด เพิ่มขึ้น 1.11% ขณะที่ Dow Jones ปิดลดลงเล็กน้อยที่ 51,966.03 จุด หรือลดลง 0.07% ด้านดัชนีความผันผวน VIX ปรับตัวขึ้น 1.30% มาปิดที่ระดับ 18.68 การเคลื่อนไหวของหุ้นรายตัวเผชิญแรงขายเฉพาะตัว นำโดย Netflix ที่ราคาหุ้นร่วงลงมากกว่า 6% หลังปรับลดคาดการณ์รายได้ไตรมาสถัดไป ขณะที่ Capital One พุ่งขึ้นประมาณ 4% ในช่วงนอกเวลาทำการหลังรายงานผลการดำเนินงานที่ดีกว่าคาด\n\nรายงานผลประกอบการไตรมาส 3 ประจำปี 2026 ของ Netflix มีกำไรต่อหุ้นอยู่ที่ 0.87 ดอลลาร์ สูงกว่าที่นักวิเคราะห์คาดการณ์ไว้ที่ 0.82 ดอลลาร์ กำไรสุทธิอยู่ที่ 3.66 พันล้านดอลลาร์ เพิ่มขึ้นจาก 2.55 พันล้านดอลลาร์ในปีก่อนหน้า และรายได้ขยายตัวเกือบ 12% เมื่อเทียบเป็นรายปี อย่างไรก็ตาม บริษัทคาดการณ์รายได้ไตรมาส 4 ที่ 13.44 พันล้านดอลลาร์ ซึ่งเติบโตชะลอตัวและสร้างความกังวลต่อแนวโน้มธุรกิจโฆษณา ทางด้าน United Airlines รายงานกำไรต่อหุ้นปรับลดไตรมาส 3 ที่ 2.54 ดอลลาร์ พลาดเป้าคาดการณ์ที่ 2.57 ดอลลาร์ แม้กำไรสุทธิจะโต 8.5% สู่ระดับ 1.03 พันล้านดอลลาร์ พร้อมปรับลดคาดการณ์กำไรไตรมาส 4 เหลือ 0.50 ถึง 1.50 ดอลลาร์ต่อหุ้น เทียบกับที่ตลาดคาดไว้ 1.76 ดอลลาร์ เนื่องจากต้นทุนเชื้อเพลิงพุ่งสูงเป็นเฉลี่ย 4.80 ดอลลาร์ต่อแกลลอนในไตรมาสสุดท้าย ขณะที่ Capital One Financial รายงานรายได้ 16.34 พันล้านดอลลาร์ สูงกว่าคาดการณ์ที่ 16.27 พันล้านดอลลาร์ และกำไรต่อหุ้นปรับลด 6.69 ดอลลาร์ สูงกว่าคาดการณ์ที่ 5.50 ดอลลาร์ โดยได้แรงหนุนจากรายได้ดอกเบี้ยสุทธิที่เพิ่มขึ้น 4% จากไตรมาสก่อน\n\nด้านแรงขับเคลื่อนทางเศรษฐกิจและนโยบายการเงิน ตัวเลขภาคอสังหาริมทรัพย์ของสหรัฐฯ เดือนกันยายนส่งสัญญาณชะลอตัวลง ทั้งใบอนุญาตก่อสร้าง ยอดเริ่มสร้างบ้านใหม่ และดัชนียอดขายบ้านที่รอการปิดการขายจากสมาคมนายหน้าอสังหาริมทรัพย์แห่งชาติที่ร่วงลงแตะระดับต่ำสุดเป็นประวัติการณ์ ท่ามกลางอัตราดอกเบี้ยสินเชื่อบ้านที่ทรงตัวสูงระดับ 7.43% ข้อมูลดังกล่าวสะท้อนแรงกดดันต่อระบบเศรษฐกิจในจังหวะที่ธนาคารกลางสหรัฐฯ ยังคงประเมินความจำเป็นในการปรับขึ้นอัตราดอกเบี้ยเพื่อควบคุมแรงกดดันเงินเฟ้อ ส่วนข้อมูลการค้าระหว่างประเทศ ตัวเลขการส่งออกของญี่ปุ่นในเดือนกันยายนขยายตัว 16.7% ชะลอลงจากเดิมและต่ำกว่าที่นักวิเคราะห์คาดการณ์ไว้ที่ 20.1% ขณะที่การนำเข้าขยายตัว 18.9% ต่ำกว่าที่คาดการณ์ไว้ที่ 19.6% เช่นกัน\n\nในตลาดสินทรัพย์ทางเลือก สินค้าโภคภัณฑ์ และเงินตราต่างประเทศ ราคาทองคำปิดที่ 4,139.5 ดอลลาร์ต่อออนซ์ ลดลง 0.50% ท่ามกลางแรงกดดันจากทิศทางอัตราดอกเบี้ยและบรรยากาศความตึงเครียดทางภูมิรัฐศาสตร์ สัญญาน้ำมันดิบ WTI ปิดที่ 101.02 ดอลลาร์ต่อบาร์เรล ลดลง 2.55% ส่วน Bitcoin ปิดที่ระดับ 81,367.62 ดอลลาร์ ลดลง 0.59% ในฝั่งตลาดคริปโตเคอร์เรนซี รัฐสภาฝรั่งเศสผ่านการลงมติเรียกเก็บภาษีกำไรจากการซื้อขายสเตเบิลคอยน์ในอัตรา 31% ด้านความเคลื่อนไหวทางกฎหมายและการกำกับดูแล สถาบันการเงินรายใหญ่อย่าง Microsoft, Alphabet และ Goldman Sachs ได้ร่วมยื่นคัดค้านโครงการซื้อขายหุ้นแบบแปลงเป็นโทเคนของแพลตฟอร์ม OKX ร่วมกับ ICE ส่วนข้อมูลดัชนีค่าเงินดอลลาร์สหรัฐและอัตราแลกเปลี่ยนหลักอื่นไม่พบข้อมูลในรอบนี้\n\nสำหรับเหตุการณ์และกำหนดการสำคัญที่จะเกิดขึ้น CFTC มีกำหนดจัดเสวนาเกี่ยวกับปัญญาประดิษฐ์และระบบการเงินอัตโนมัติในวันที่ 28 ตุลาคม 2026 นอกจากนี้ ธนาคารกลางสหรัฐฯ ได้ประกาศขยายระยะเวลารับฟังความคิดเห็นต่อข้อเสนอการปรับปรุงข้อบังคับ Regulation O ออกไปจนถึงวันที่ 4 พฤศจิกายน 2026\n\nมุมมอง: ดัชนีหุ้นกลุ่มเทคโนโลยียังมีแรงพยุงตัว แต่ภาพรวมเริ่มสะท้อนความผันผวนจากการที่ตลาดเข้าสู่ช่วงตรวจสอบความคุ้มค่าของการลงทุน โดยเฉพาะผลกระทบของต้นทุนพลังงานและอัตราดอกเบี้ยสูงที่เริ่มกัดกร่อนคาดการณ์ผลกำไรในอนาคตของภาคเอกชน ขณะที่ตลาดสินทรัพย์เสี่ยงรวมถึงบิตคอยน์และทองคำยังเผชิญแรงกดดันด้านกฎเกณฑ์ใหม่และนโยบายการเงินที่ยังตึงตัว",
   "sources": [
     {
-      "name": "Kitco — ราคาโลหะมีค่า",
-      "url": "https://www.kitco.com/price/precious-metals"
+      "name": "Australian data center operator NextDC's shares plunge 40% after it slashes earnings forecast",
+      "url": "https://www.cnbc.com/2026/10/21/australia-data-center-operator-nexdc-datacenter.html"
     },
     {
-      "name": "Yahoo Finance — Stock market news Oct 19",
-      "url": "https://finance.yahoo.com/markets/stocks/articles/stock-market-news-oct-19-071100481.html"
+      "name": "Netflix posts third-quarter earnings beat, but shares fall on advertising and revenue guidance",
+      "url": "https://www.cnbc.com/2026/10/20/netflix-nflx-earnings-q3-2026.html"
     },
     {
-      "name": "Yahoo Finance — Bitcoin & Ethereum prices Oct 19",
-      "url": "https://finance.yahoo.com/personal-finance/investing/article/bitcoin-and-ethereum-prices-today-monday-october-19-2026-crypto-prices-hold-as-oil-slides-back-from-5-month-highs-114729829.html"
+      "name": "BlackRock seeks to shield bitcoin investors from losses after rival fund weathers 50% crash",
+      "url": "https://www.coindesk.com/markets/2026/10/20/blackrock-seeks-to-shield-bitcoin-investors-from-losses-after-rival-fund-weathers-50-crash"
     },
     {
-      "name": "TheStreet — Stock Market Today Oct 19 (สื่อรอง)",
-      "url": "https://www.thestreet.com/stock-market-today/stock-market-today-oct-19-2026-nasdaq-futures-climb-as-tech-rebound-from-sell-off"
+      "name": "U.S. CFTC sets agenda for AI forum, exploring trading and agentic finance",
+      "url": "https://www.coindesk.com/policy/2026/10/20/u-s-cftc-sets-agenda-for-ai-forum-exploring-trading-and-agentic-finance"
     },
     {
-      "name": "Mitrade — Gold, Fed pause odds, crude rally (สื่อรอง)",
-      "url": "https://www.mitrade.com/insights/commodity-analysis/gold/gold-fed-pause-odds-crude-rally"
+      "name": "Microsoft, Alphabet and Goldman Sachs join objections to OKX-ICE tokenized stock trading",
+      "url": "https://www.coindesk.com/business/2026/10/19/microsoft-alphabet-and-goldman-sachs-join-objections-to-okx-ice-tokenized-stock-trading"
     },
     {
-      "name": "crypto.news — Crypto week ahead Oct 19 (ชั้น 3)",
-      "url": "https://crypto.news/crypto-week-ahead-five-events-bitcoin-october-19-2026/"
+      "name": "Elice's huge stock swings show AI's spending boom is getting more investor scrutiny",
+      "url": "https://www.cnbc.com/2026/10/21/ai-boom-spending-profit.html"
+    },
+    {
+      "name": "Housing is flashing warning signs just as the Fed weighs more interest rate hikes",
+      "url": "https://www.cnbc.com/2026/10/20/housing-mortgage-rates-real-estate-federal-reserve.html"
+    },
+    {
+      "name": "Japan exports post huge miss in September as growth slows to 16.7%",
+      "url": "https://www.cnbc.com/2026/10/21/japan-trade-exports-semiconductor-yen.html"
+    },
+    {
+      "name": "The Coinbase allegations expose Bitcoin's corporate governance gap",
+      "url": "https://www.coindesk.com/opinion/2026/10/20/the-coinbase-allegations-expose-bitcoin-s-corporate-governance-gap"
+    },
+    {
+      "name": "United Airlines slashes 2026 profit outlook on fuel prices, but travelers keep booking despite higher fares",
+      "url": "https://www.cnbc.com/2026/10/20/united-airlines-ual-3q-2026-earnings.html"
+    },
+    {
+      "name": "Capital One's strong quarter and progressing Discover integration are rewarded on Wall Street",
+      "url": "https://www.cnbc.com/investingclub/2026/10/20/capital-one-strong-quarter-and-progressing-discover-integration-are-rewarded.html"
+    },
+    {
+      "name": "France's parliament approves vote to hit stablecoin trades with 31% capital gains tax",
+      "url": "https://www.coindesk.com/policy/2026/10/20/france-s-parliament-approves-vote-to-hit-crypto-to-stablecoin-trades-with-31-levy"
     }
-  ]
+  ],
+  "meta": {
+    "writtenBy": "github-actions/gemini-3.8-flash",
+    "grounded": false,
+    "articlesRead": 15,
+    "headlines": 70
+  }
 }
