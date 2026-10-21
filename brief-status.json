@@ -1,17 +1,17 @@
 {
-  "ranAt": "2026-10-21T14:23:33.674Z",
+  "ranAt": "2026-10-21T14:30:52.036Z",
   "ok": true,
   "model": "gemini-3.5-flash-lite",
   "grounded": false,
-  "articlesRead": 11,
+  "articlesRead": 14,
   "articlesFailed": [],
-  "citedUrls": 11,
+  "citedUrls": 12,
   "modelsFailed": [
     "gemini-3.8-flash+search: HTTP 429 — {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \",\n    \"stat",
     "gemini-3.8-flash: HTTP 503 — {\n  \"error\": {\n    \"code\": 503,\n    \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\",\n    \"status\": \"UNAVAILABLE\"\n  }\n}\n"
   ],
-  "chars": 2204,
-  "paragraphs": 5,
+  "chars": 2477,
+  "paragraphs": 6,
   "headlines": 70,
   "prices": 7,
   "qualityWarnings": [],
@@ -24,9 +24,10 @@
     "Investing โภคภัณฑ์ (10)",
     "Investing ค่าเงิน (7)",
     "Investing คริปโต (7)",
-    "CoinDesk (12)",
-    "Federal Reserve (12)"
+    "CoinDesk (12)"
   ],
-  "feedsFailed": [],
-  "elapsed": "25.9s"
+  "feedsFailed": [
+    "Federal Reserve: HTTP 404"
+  ],
+  "elapsed": "19.3s"
 }
