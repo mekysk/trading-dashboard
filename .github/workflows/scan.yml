@@ -2,18 +2,28 @@ name: สแกนหุ้นรายคืน
 
 on:
   schedule:
-    # 06:30 UTC = 13:30 ไทย — หลังตลาดสหรัฐฯ ปิดและข้อมูลวันก่อนนิ่งแล้ว
-    - cron: '30 6 * * 2,3,4,5,6'
+    # 23:00 UTC = 06:00 ไทยของวันถัดไป
+    #
+    # ย้ายมาจาก 06:30 UTC (13:30 ไทย) เมื่อ 21 ต.ค. 2026
+    # เหตุผล: งานเขียนบทสรุปข่าวอ่านไฟล์ราคาที่งานนี้เขียน แต่เดิมมันรัน
+    # ตอน 06:40 ไทย ซึ่งเร็วกว่างานสแกน 7 ชั่วโมง  บทสรุปจึงหยิบราคา
+    # ของรอบก่อนหน้าไปใช้เสมอ ช้ากว่าตัวเลขบนหน้าเว็บอยู่หนึ่งวันทำการ
+    # ตอนนี้สแกนก่อน แล้วบทสรุปตามทีหลัง 1 ชั่วโมงครึ่ง
+    #
+    # ระยะห่างจากตลาดปิด (16:00 ET) เหลือ 3 ชั่วโมง และ 2 ชั่วโมงหลัง
+    # สหรัฐฯ ถอยเวลาต้นเดือนพฤศจิกายน เพราะไทยไม่ปรับเวลาตามฤดูกาล
+    # ถ้าวันไหนข้อมูลมาไม่ทัน asof จะไม่ขยับ และป้ายวันที่บนหน้าเว็บ
+    # จะเปลี่ยนสีเตือนเอง ไม่ใช่ความเสี่ยงแบบเงียบ
+    - cron: '0 23 * * 1,2,3,4,5'
   workflow_dispatch:        # กดรันเองได้จากแท็บ Actions
 
 permissions:
   contents: write
-  pages: write
 
 jobs:
   scan:
     runs-on: ubuntu-latest
-    timeout-minutes: 50
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
 
@@ -25,33 +35,15 @@ jobs:
         run: node scripts/scan.mjs
         env:
           SCAN_WORKERS: '8'
-          # เส้นตายของสคริปต์ ต้องต่ำกว่า timeout-minutes ข้างบน
-          # เพื่อให้สคริปต์ได้สรุปสาเหตุลงล็อกก่อน GitHub ตัดงานทิ้ง
-          SCAN_DEADLINE_MIN: '40'
 
       - name: บันทึกผลกลับเข้า repo
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add scan.json styles.json px scan-health.json
+          git add scan.json
           if git diff --staged --quiet; then
             echo "ไม่มีอะไรเปลี่ยน"
           else
-            git commit -m "สแกนหุ้น + สไตล์ลงทุน $(date -u +%Y-%m-%d)"
+            git commit -m "สแกนหุ้น $(date -u +%Y-%m-%d)"
             git push
-          fi
-
-      - name: สั่งให้ GitHub Pages สร้างเว็บใหม่
-        # คอมมิตที่สร้างโดยหุ่นยนต์จะไม่ปลุกงานอื่นเอง (GitHub กันลูปไว้)
-        # ถ้าไม่เรียกตรงนี้ ไฟล์จะอยู่ใน repo แต่เปิดจากเว็บไม่เจอ จนกว่าคนจะคอมมิตเอง
-        if: always()
-        run: |
-          code=$(curl -s -o /tmp/p.txt -w "%{http_code}" -X POST \
-            -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-            https://api.github.com/repos/${{ github.repository }}/pages/builds)
-          echo "สั่งสร้างเว็บใหม่ -> HTTP $code"
-          cat /tmp/p.txt
-          if [ "$code" != "201" ]; then
-            echo "สั่งไม่สำเร็จ — ไฟล์ยังอยู่ใน repo แต่ต้องรอคอมมิตถัดไปถึงจะขึ้นเว็บ"
           fi
