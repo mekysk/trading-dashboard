@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-18T19:00:00+07:00",
+  "generated": "2026-10-26T19:00:00+07:00",
   "earnings": [
     {
       "sym": "JPM",
@@ -28,33 +28,33 @@
       "period": "Q3 2026",
       "date": "2026-10-20",
       "when": "amc",
-      "eps": null,
+      "eps": 0.87,
       "epsEst": 0.82,
-      "rev": null,
-      "revEst": 12870,
-      "src": "https://news.alphastreet.com/netflix-nflx-q3-2026-preview-eps-est-0-82-reports-october-20/"
+      "rev": 12870,
+      "revEst": 12880,
+      "src": "https://247wallst.com/cards/netflix-q3-2026-earnings-nflx-01m5deq0f119rjb4fjrht5sjde"
     },
     {
       "sym": "META",
       "period": "Q3 FY26",
       "date": "2026-10-21",
       "when": "amc",
-      "eps": null,
-      "epsEst": 6.76,
-      "rev": null,
-      "revEst": 63300,
-      "src": "https://investor.atmeta.com/investor-news/press-release-details/2026/Meta-to-Announce-Third-Quarter-2026-Results/default.aspx"
+      "eps": 7.4,
+      "epsEst": 6.54,
+      "rev": 64600,
+      "revEst": 63340,
+      "src": "https://www.marketbeat.com/stocks/NASDAQ/FB/earnings/"
     },
     {
       "sym": "TSLA",
       "period": "Q3 FY26",
       "date": "2026-10-21",
       "when": "amc",
-      "eps": null,
+      "eps": 0.48,
       "epsEst": 0.45,
-      "rev": null,
-      "revEst": 27920,
-      "src": "https://www.sec.gov/Archives/edgar/data/0001318605/000162828026064366/exhibit991111111.htm"
+      "rev": 28046,
+      "revEst": 28340,
+      "src": "https://www.teslarati.com/tesla-tsla-q3-2026-earnings-results/"
     },
     {
       "sym": "V",
@@ -65,18 +65,7 @@
       "epsEst": 3.43,
       "rev": null,
       "revEst": 12315,
-      "src": "https://finance.yahoo.com/markets/stocks/articles/visa-announce-fiscal-fourth-quarter-200500263.html"
-    },
-    {
-      "sym": "MSFT",
-      "period": "Q1 FY27",
-      "date": "2026-10-28",
-      "when": "amc",
-      "eps": null,
-      "epsEst": 4.71,
-      "rev": null,
-      "revEst": 90610,
-      "src": "https://www.marketbeat.com/earnings/reports/2026-10-28-microsoft-co-stock/"
+      "src": "https://chartrow.com/quote/v/earnings"
     },
     {
       "sym": "GOOGL",
@@ -90,6 +79,17 @@
       "src": "https://www.tipranks.com/stocks/googl/earnings"
     },
     {
+      "sym": "MSFT",
+      "period": "Q1 FY27",
+      "date": "2026-10-28",
+      "when": "amc",
+      "eps": null,
+      "epsEst": 4.71,
+      "rev": null,
+      "revEst": 90610,
+      "src": "https://www.marketbeat.com/earnings/reports/2026-10-28-microsoft-co-stock/"
+    },
+    {
       "sym": "AMZN",
       "period": "Q3 2026",
       "date": "2026-10-29",
@@ -99,17 +99,6 @@
       "rev": null,
       "revEst": 202140,
       "src": "https://www.marketbeat.com/earnings/reports/2026-10-29-amazoncom-inc-stock/"
-    },
-    {
-      "sym": "MA",
-      "period": "Q3 2026",
-      "date": "2026-10-29",
-      "when": "bmo",
-      "eps": null,
-      "epsEst": 5.16,
-      "rev": null,
-      "revEst": null,
-      "src": "https://www.marketbeat.com/earnings/reports/2026-10-29-mastercard-incorporated-stock/"
     },
     {
       "sym": "LLY",
@@ -123,15 +112,26 @@
       "src": "https://investor.lilly.com/news-releases/news-release-details/lilly-confirms-date-and-conference-call-third-quarter-2026"
     },
     {
+      "sym": "MA",
+      "period": "Q3 2026",
+      "date": "2026-10-29",
+      "when": "bmo",
+      "eps": null,
+      "epsEst": 5.16,
+      "rev": null,
+      "revEst": null,
+      "src": "https://www.marketbeat.com/earnings/reports/2026-10-29-mastercard-incorporated-stock/"
+    },
+    {
       "sym": "XOM",
       "period": "Q3 FY26",
       "date": "2026-10-30",
       "when": "bmo",
       "eps": null,
-      "epsEst": null,
+      "epsEst": 3.87,
       "rev": null,
       "revEst": 110140,
-      "src": "https://investor.exxonmobil.com/company-information/press-releases/detail/1212/exxonmobil-to-release-third-quarter-2026-financial-results"
+      "src": "https://stocktwits.com/news-articles/Markets/Equity/xom-stock-climbs-on-4-5-b-refining-lift-estimate-goldman-sees-q3-eps-exceeding-wall-street-expectations/cZxKaeZRBsU"
     },
     {
       "sym": "AAPL",
@@ -156,6 +156,17 @@
       "src": "https://ir.amd.com/news-events/press-releases/detail/1300/amd-to-report-fiscal-third-quarter-2026-financial-results"
     },
     {
+      "sym": "NVDA",
+      "period": "Q3 FY27",
+      "date": "2026-11-17",
+      "when": "amc",
+      "eps": null,
+      "epsEst": 2.47,
+      "rev": null,
+      "revEst": 103800,
+      "src": "https://www.wallstreethorizon.com/nvidia-earnings-calendar"
+    },
+    {
       "sym": "WMT",
       "period": "Q3 FY27",
       "date": "2026-11-19",
@@ -167,15 +178,15 @@
       "src": "https://www.marketbeat.com/stocks/NASDAQ/WMT/earnings/"
     },
     {
-      "sym": "NVDA",
+      "sym": "CRM",
       "period": "Q3 FY27",
-      "date": "2026-11-17",
+      "date": "2026-12-01",
       "when": "amc",
       "eps": null,
-      "epsEst": 2.47,
+      "epsEst": 3.47,
       "rev": null,
-      "revEst": 103800,
-      "src": "https://www.tipranks.com/stocks/nvda/earnings"
+      "revEst": null,
+      "src": "https://bullstory.io/en/stocks/crm/earnings/2027-q3"
     }
   ],
   "events": [
@@ -243,11 +254,25 @@
       "src": "https://www.bea.gov/news/schedule"
     },
     {
+      "date": "2026-11-25",
+      "cat": "macro",
+      "title": "สหรัฐฯ ประกาศ GDP ไตรมาส 3/2026 (ประมาณการครั้งที่ 2)",
+      "impact": "med",
+      "src": "https://fedratecalc.com/us-economic-calendar/"
+    },
+    {
       "date": "2026-11-27",
       "cat": "crypto",
       "title": "ออปชัน BTC/ETH หมดอายุรายเดือนที่ Deribit",
       "impact": "med",
       "src": "https://finance.yahoo.com/markets/options/articles/happens-bitcoin-billions-options-expire-160041374.html"
+    },
+    {
+      "date": "2026-12-04",
+      "cat": "macro",
+      "title": "สหรัฐฯ ประกาศตัวเลขจ้างงานนอกภาคเกษตร (NFP) เดือน พ.ย.",
+      "impact": "high",
+      "src": "https://fedratecalc.com/us-economic-calendar/"
     }
   ]
 }
