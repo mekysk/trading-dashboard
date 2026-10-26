@@ -1,82 +1,16 @@
 {
-  "generated": "2026-10-26T20:03:00+07:00",
+  "generated": "2026-10-25T20:00:00+07:00",
   "earnings": [
-    {
-      "sym": "JPM",
-      "period": "Q3 2026",
-      "date": "2026-10-13",
-      "when": "bmo",
-      "eps": 5.75,
-      "epsEst": 5.94,
-      "rev": 50170,
-      "revEst": 51230,
-      "src": "https://www.hudson-labs.com/research/jpmorgan-q3-2026-earnings-preview-revenue-guidance-outlook"
-    },
-    {
-      "sym": "UNH",
-      "period": "Q3 FY26",
-      "date": "2026-10-13",
-      "when": "bmo",
-      "eps": 4.69,
-      "epsEst": 4.12,
-      "rev": 112700,
-      "revEst": 111310,
-      "src": "https://www.investing.com/news/transcripts/earnings-call-transcript-unitedhealth-beats-q3-2026-estimates-lifts-outlook-93CH-4946803"
-    },
-    {
-      "sym": "NFLX",
-      "period": "Q3 2026",
-      "date": "2026-10-20",
-      "when": "amc",
-      "eps": 0.87,
-      "epsEst": 0.82,
-      "rev": 12870,
-      "revEst": 12880,
-      "src": "https://247wallst.com/cards/netflix-q3-2026-earnings-nflx-01m5deq0f119rjb4fjrht5sjde"
-    },
-    {
-      "sym": "META",
-      "period": "Q3 FY26",
-      "date": "2026-10-21",
-      "when": "amc",
-      "eps": 7.4,
-      "epsEst": 6.54,
-      "rev": 64600,
-      "revEst": 63340,
-      "src": "https://www.marketbeat.com/stocks/NASDAQ/FB/earnings/"
-    },
-    {
-      "sym": "TSLA",
-      "period": "Q3 FY26",
-      "date": "2026-10-21",
-      "when": "amc",
-      "eps": 0.48,
-      "epsEst": 0.45,
-      "rev": 28046,
-      "revEst": 28340,
-      "src": "https://www.teslarati.com/tesla-tsla-q3-2026-earnings-results/"
-    },
     {
       "sym": "V",
       "period": "Q4 FY26",
       "date": "2026-10-27",
       "when": "amc",
       "eps": null,
-      "epsEst": 3.43,
+      "epsEst": 3.44,
       "rev": null,
-      "revEst": 12315,
-      "src": "https://chartrow.com/quote/v/earnings"
-    },
-    {
-      "sym": "GOOGL",
-      "period": "Q3 2026",
-      "date": "2026-10-28",
-      "when": "amc",
-      "eps": null,
-      "epsEst": 2.94,
-      "rev": null,
-      "revEst": 127450,
-      "src": "https://www.tipranks.com/stocks/googl/earnings"
+      "revEst": 12090,
+      "src": "https://news.alphastreet.com/visa-q4-2026-earnings-preview-october-27-street-expects-3-44-eps/amp/"
     },
     {
       "sym": "MSFT",
@@ -84,10 +18,21 @@
       "date": "2026-10-28",
       "when": "amc",
       "eps": null,
-      "epsEst": 4.71,
+      "epsEst": 4.72,
       "rev": null,
-      "revEst": 90610,
+      "revEst": 90700,
       "src": "https://www.marketbeat.com/earnings/reports/2026-10-28-microsoft-co-stock/"
+    },
+    {
+      "sym": "GOOGL",
+      "period": "Q3 2026",
+      "date": "2026-10-28",
+      "when": "amc",
+      "eps": null,
+      "epsEst": 3.03,
+      "rev": null,
+      "revEst": 127920,
+      "src": "https://www.marketbeat.com/earnings/reports/2026-10-28-alphabet-inc-stock/"
     },
     {
       "sym": "AMZN",
@@ -97,19 +42,8 @@
       "eps": null,
       "epsEst": 1.96,
       "rev": null,
-      "revEst": 202140,
-      "src": "https://www.marketbeat.com/earnings/reports/2026-10-29-amazoncom-inc-stock/"
-    },
-    {
-      "sym": "LLY",
-      "period": "Q3 FY26",
-      "date": "2026-10-29",
-      "when": "bmo",
-      "eps": null,
-      "epsEst": null,
-      "rev": null,
-      "revEst": 22320,
-      "src": "https://investor.lilly.com/news-releases/news-release-details/lilly-confirms-date-and-conference-call-third-quarter-2026"
+      "revEst": 202200,
+      "src": "https://www.stocktitan.net/news/AMZN/amazon-com-to-webcast-third-quarter-2026-financial-results-kc6pmgy0vv91.html"
     },
     {
       "sym": "MA",
@@ -119,8 +53,19 @@
       "eps": null,
       "epsEst": 5.16,
       "rev": null,
-      "revEst": null,
+      "revEst": 9660,
       "src": "https://www.marketbeat.com/earnings/reports/2026-10-29-mastercard-incorporated-stock/"
+    },
+    {
+      "sym": "LLY",
+      "period": "Q3 FY26",
+      "date": "2026-10-29",
+      "when": "bmo",
+      "eps": null,
+      "epsEst": 5.70,
+      "rev": null,
+      "revEst": 22580,
+      "src": "https://www.marketbeat.com/earnings/reports/2026-10-29-eli-lilly-and-company-stock/"
     },
     {
       "sym": "XOM",
@@ -128,10 +73,10 @@
       "date": "2026-10-30",
       "when": "bmo",
       "eps": null,
-      "epsEst": 3.87,
+      "epsEst": 4.10,
       "rev": null,
-      "revEst": 110140,
-      "src": "https://stocktwits.com/news-articles/Markets/Equity/xom-stock-climbs-on-4-5-b-refining-lift-estimate-goldman-sees-q3-eps-exceeding-wall-street-expectations/cZxKaeZRBsU"
+      "revEst": 105430,
+      "src": "https://www.marketbeat.com/earnings/reports/2026-10-30-exxon-mobil-co-stock/"
     },
     {
       "sym": "AAPL",
@@ -141,30 +86,30 @@
       "eps": null,
       "epsEst": 1.99,
       "rev": null,
-      "revEst": 113370,
+      "revEst": 113300,
       "src": "https://www.macrumors.com/2026/10/06/apple-q4-2026-earnings-nov-2/"
     },
     {
       "sym": "AMD",
-      "period": "Q3 FY26",
+      "period": "Q3 2026",
       "date": "2026-11-03",
       "when": "amc",
       "eps": null,
       "epsEst": 1.94,
       "rev": null,
       "revEst": 13060,
-      "src": "https://ir.amd.com/news-events/press-releases/detail/1300/amd-to-report-fiscal-third-quarter-2026-financial-results"
+      "src": "https://www.marketbeat.com/earnings/reports/2026-11-3-advanced-micro-devices-inc-stock/"
     },
     {
       "sym": "NVDA",
       "period": "Q3 FY27",
-      "date": "2026-11-17",
+      "date": "2026-11-18",
       "when": "amc",
       "eps": null,
-      "epsEst": 2.47,
+      "epsEst": 2.49,
       "rev": null,
-      "revEst": 103800,
-      "src": "https://www.wallstreethorizon.com/nvidia-earnings-calendar"
+      "revEst": 108800,
+      "src": "https://www.marketbeat.com/earnings/reports/2026-11-18-nvidia-co-stock/"
     },
     {
       "sym": "WMT",
@@ -172,21 +117,76 @@
       "date": "2026-11-19",
       "when": "bmo",
       "eps": null,
-      "epsEst": 0.72,
+      "epsEst": 0.64,
       "rev": null,
-      "revEst": 188200,
-      "src": "https://www.marketbeat.com/stocks/NASDAQ/WMT/earnings/"
+      "revEst": 188700,
+      "src": "https://www.marketbeat.com/instant-alerts/walmart-nasdaqwmt-issues-q3-2027-earnings-guidance-2026-08-20/"
     },
     {
       "sym": "CRM",
       "period": "Q3 FY27",
-      "date": "2026-12-01",
+      "date": "2026-12-02",
       "when": "amc",
       "eps": null,
-      "epsEst": 3.47,
+      "epsEst": 3.45,
+      "rev": null,
+      "revEst": 11500,
+      "src": "https://www.marketbeat.com/stocks/NYSE/CRM/earnings/"
+    },
+    {
+      "sym": "UNH",
+      "period": "Q3 FY26",
+      "date": "2026-10-13",
+      "when": "bmo",
+      "eps": 4.69,
+      "epsEst": 4.14,
+      "rev": 112700,
+      "revEst": 111310,
+      "src": "https://finance.yahoo.com/healthcare/articles/unh-tops-q3-earnings-lower-160600320.html"
+    },
+    {
+      "sym": "JPM",
+      "period": "Q3 2026",
+      "date": "2026-10-13",
+      "when": "bmo",
+      "eps": 5.75,
+      "epsEst": 5.93,
       "rev": null,
       "revEst": null,
-      "src": "https://bullstory.io/en/stocks/crm/earnings/2027-q3"
+      "src": "https://www.investing.com/analysis/bank-earnings-q3-2026-goldman-30-beat-jpmorgan-misses-revenue-200689491"
+    },
+    {
+      "sym": "NFLX",
+      "period": "Q3 2026",
+      "date": "2026-10-20",
+      "when": "amc",
+      "eps": 0.87,
+      "epsEst": 0.82,
+      "rev": 12870,
+      "revEst": 12870,
+      "src": "https://www.stocktitan.net/news/NFLX/netflix-q3-2026-earnings-revenue-12-billion-35pct-margin.html"
+    },
+    {
+      "sym": "META",
+      "period": "Q3 2026",
+      "date": "2026-10-21",
+      "when": "amc",
+      "eps": 3.83,
+      "epsEst": 3.57,
+      "rev": 64600,
+      "revEst": 63340,
+      "src": "https://www.cnbc.com/2026/10/21/meta-earnings-q3-2026-live-updates.html"
+    },
+    {
+      "sym": "TSLA",
+      "period": "Q3 2026",
+      "date": "2026-10-21",
+      "when": "amc",
+      "eps": 0.48,
+      "epsEst": 0.45,
+      "rev": 28050,
+      "revEst": null,
+      "src": "https://electrek.co/2026/10/21/tesla-tsla-q3-2026-financial-results/"
     }
   ],
   "events": [
@@ -195,84 +195,98 @@
       "cat": "macro",
       "title": "FOMC ประกาศดอกเบี้ย + แถลงข่าว",
       "impact": "high",
-      "src": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
-    },
-    {
-      "date": "2026-10-28",
-      "cat": "macro",
-      "title": "ECB ประชุมคณะกรรมการนโยบายการเงิน",
-      "impact": "med",
-      "src": "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html"
+      "src": "https://www.cmegroup.com/knowledge-hub/fomc-meeting-fed-decision-day/"
     },
     {
       "date": "2026-10-29",
       "cat": "macro",
-      "title": "สหรัฐฯ ประกาศ GDP ไตรมาส 3/2026 (ประมาณการแรก)",
+      "title": "ECB ประชุมประกาศดอกเบี้ย",
       "impact": "med",
-      "src": "https://www.bea.gov/news/schedule"
+      "src": "https://www.financecalendar.com/event/ecb-rate-decision-october-2026/"
     },
     {
       "date": "2026-10-29",
       "cat": "macro",
-      "title": "สหรัฐฯ ประกาศดัชนี PCE (ข้อมูลเดือน ก.ย. 2026)",
-      "impact": "high",
-      "src": "https://www.bea.gov/news/schedule"
+      "title": "GDP สหรัฐฯ Q3 2026 (ประมาณการครั้งแรก)",
+      "impact": "med",
+      "src": "https://www.bea.gov/news/schedule/full"
     },
     {
       "date": "2026-10-30",
       "cat": "macro",
-      "title": "BOJ ประชุมนโยบายการเงิน (วันที่ 2) + รายงาน Outlook",
+      "title": "ธนาคารกลางญี่ปุ่น (BOJ) ประชุมประกาศนโยบาย",
       "impact": "med",
-      "src": "https://www.boj.or.jp/en/mopo/mpmsche_minu/opinion_2026/index.htm"
+      "src": "https://www.financecalendar.com/bank-of-japan-rate-decisions/"
     },
     {
       "date": "2026-10-30",
       "cat": "crypto",
-      "title": "ออปชัน BTC/ETH หมดอายุรายเดือนที่ Deribit",
+      "title": "วันหมดอายุออปชัน Bitcoin รายเดือน (Deribit)",
+      "impact": "low",
+      "src": "https://blog.e8markets.com/article/deribits-644b-bitcoin-options-expiry-what-traders-should-expect-around-80k"
+    },
+    {
+      "date": "2026-11-05",
+      "cat": "macro",
+      "title": "ธนาคารกลางอังกฤษ (BOE) ประชุมประกาศดอกเบี้ย",
       "impact": "med",
-      "src": "https://cryptobriefing.com/deribit-bitcoin-options-october-30-expiry/"
+      "src": "https://www.financecalendar.com/bank-of-england-mpc-meetings/"
     },
     {
       "date": "2026-11-06",
       "cat": "macro",
-      "title": "สหรัฐฯ ประกาศตัวเลขจ้างงานนอกภาคเกษตร (NFP) เดือน ต.ค.",
+      "title": "ตัวเลขจ้างงานนอกภาคเกษตรสหรัฐฯ (NFP) เดือน ต.ค.",
       "impact": "high",
-      "src": "https://www.bls.gov/schedule/2026/04_sched_list.htm"
+      "src": "https://www.financecalendar.com/us-jobs-report/"
     },
     {
       "date": "2026-11-10",
       "cat": "macro",
-      "title": "สหรัฐฯ ประกาศ CPI เดือน ต.ค. 2026",
+      "title": "เงินเฟ้อสหรัฐฯ CPI เดือน ต.ค.",
       "impact": "high",
-      "src": "https://www.bls.gov/schedule/news_release/cpi.htm"
+      "src": "https://nowflation.com/cpi-release-dates"
     },
     {
-      "date": "2026-11-25",
-      "cat": "macro",
-      "title": "สหรัฐฯ ประกาศดัชนี PCE (ข้อมูลเดือน ต.ค. 2026)",
-      "impact": "high",
-      "src": "https://www.bea.gov/news/schedule"
-    },
-    {
-      "date": "2026-11-25",
-      "cat": "macro",
-      "title": "สหรัฐฯ ประกาศ GDP ไตรมาส 3/2026 (ประมาณการครั้งที่ 2)",
+      "date": "2026-11-11",
+      "cat": "crypto",
+      "title": "ก.ล.ต.สหรัฐฯ ตัดสินกฎออปชัน ETF คริปโตของ Nasdaq ISE",
       "impact": "med",
-      "src": "https://fedratecalc.com/us-economic-calendar/"
+      "src": "https://cryptovot.com/sec-crypto-etf-options-rule-delayed-to-november-11"
+    },
+    {
+      "date": "2026-11-15",
+      "cat": "crypto",
+      "title": "ก.ล.ต.สหรัฐฯ ตัดสิน ETF VanEck JitoSOL (staking Solana)",
+      "impact": "med",
+      "src": "https://fintechlaw.ai/blog/vaneck-jitosol-etf-the-sec-just-spent-its-last-extension"
+    },
+    {
+      "date": "2026-11-25",
+      "cat": "macro",
+      "title": "เงินเฟ้อ PCE เดือน ต.ค. (ดัชนีที่เฟดใช้อ้างอิง)",
+      "impact": "high",
+      "src": "https://www.financecalendar.com/event/us-personal-income-and-outlays-pce-november-2026/"
+    },
+    {
+      "date": "2026-11-25",
+      "cat": "macro",
+      "title": "GDP สหรัฐฯ Q3 2026 (ประมาณการครั้งที่สอง)",
+      "impact": "med",
+      "src": "https://www.bea.gov/news/schedule/full"
     },
     {
       "date": "2026-11-27",
       "cat": "crypto",
-      "title": "ออปชัน BTC/ETH หมดอายุรายเดือนที่ Deribit",
-      "impact": "med",
-      "src": "https://finance.yahoo.com/markets/options/articles/happens-bitcoin-billions-options-expire-160041374.html"
+      "title": "วันหมดอายุออปชัน Bitcoin รายเดือน (Deribit)",
+      "impact": "low",
+      "src": "https://www.mexc.com/crypto-pulse/article/bitcoin-options-expiry-calendar-162666"
     },
     {
       "date": "2026-12-04",
       "cat": "macro",
-      "title": "สหรัฐฯ ประกาศตัวเลขจ้างงานนอกภาคเกษตร (NFP) เดือน พ.ย.",
+      "title": "ตัวเลขจ้างงานนอกภาคเกษตรสหรัฐฯ (NFP) เดือน พ.ย.",
       "impact": "high",
-      "src": "https://fedratecalc.com/us-economic-calendar/"
+      "src": "https://www.financecalendar.com/us-jobs-report/"
     }
   ]
 }
