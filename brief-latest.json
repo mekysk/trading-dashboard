@@ -1,48 +1,44 @@
 {
-  "date": "2026-10-23",
-  "body": "ตลาดหุ้นสหรัฐฯ เคลื่อนไหวในทิศทางที่แตกต่างกันเมื่อปิดทำการ โดยดัชนี S&P 500 ปิดที่ 7,712.57 จุด เพิ่มขึ้นร้อยละ 0.28 ดัชนี Nasdaq ปิดที่ 26,424.82 จุด ลดลงร้อยละ 0.02 และดัชนี Dow Jones ปิดที่ 52,495.88 จุด เพิ่มขึ้นร้อยละ 1.02 ขณะที่ดัชนีความผันผวน VIX ปิดที่ 17.3 จุด ลดลงร้อยละ 0.06 แรงกดดันในตลาดหุ้นส่วนใหญ่มาจากกลุ่มเทคโนโลยีและปัญหากลุ่มทุนปัญญาประดิษฐ์ โดยหุ้น Meta ปรับตัวลดลงเกือบ 7% หลังรายงานกระแสเงินสดอิสระติดลบ 2.12 พันล้านดอลลาร์ และปรับเพิ่มกรอบการลงทุนปีนี้เป็น 1.35 แสนล้านถึง 1.45 แสนล้านดอลลาร์ นอกจากนี้ หุ้น Moderna ร่วงลงมากถึง 25% จากการรั่วไหลของข้อมูลวัคซีนโรคมะเร็งก่อนการประกาศผลอย่างเป็นทางการ\n\nตลาดพันธบัตรสหรัฐฯ เผชิญแรงซื้อสินทรัพย์ปลอดภัยอย่างหนัก ส่งให้อัตราผลตอบแทนพันธบัตรรัฐบาลอายุ 10 ปี ดิ่งลงมากกว่า 17 จุดพื้นฐาน มาอยู่ที่ระดับ 4.972% ซึ่งเป็นการหลุดต่ำกว่าระดับ 5% ครั้งแรกนับตั้งแต่วันที่ 23 กันยายน และทำสถิติปรับลดลงวันเดียวมากที่สุดนับตั้งแต่วันที่ 10 มีนาคม 2023 อัตราผลตอบแทนพันธบัตรอายุ 2 ปี ลดลงกว่า 16 จุดพื้นฐาน มาอยู่ที่ 4.659% และอัตราผลตอบแทนพันธบัตรอายุ 30 ปี ลดลงกว่า 14 จุดพื้นฐาน มาอยู่ที่ 5.296% ทางด้านตัวเลขเศรษฐกิจกระทรวงแรงงานสหรัฐฯ เปิดเผยตัวเลขผู้ยื่นขอสวัสดิการว่างงานครั้งแรกประจำสัปดาห์สิ้นสุดวันที่ 17 ตุลาคม อยู่ที่ 194,000 ราย ซึ่งต่ำกว่าที่ตลาดคาดการณ์ไว้\n\nราคาทองคำปิดที่ 4,159.4 ดอลลาร์ต่อออนซ์ เพิ่มขึ้นร้อยละ 0.41 ราคาน้ำมันดิบ WTI ปิดที่ 98.52 ดอลลาร์ต่อบาร์เรล ลดลงร้อยละ 3.21 จากความกังวลด้านอุปทานและสถานการณ์ในตะวันออกกลาง ด้านคริปโทเคอร์เรนซี Bitcoin ปิดที่ 83,477.86 ดอลลาร์ เพิ่มขึ้นร้อยละ 0.65 ท่ามกลางแรงซื้อขายที่ผันผวนตามความเสี่ยงในตลาดทุนโดยรวม\n\nธนาคารกลางไอร์แลนด์ประกาศปรับเงินบริษัท Coinbase Ireland เป็นจำนวน 3.6 ล้านดอลลาร์ เนื่องด้วยความล้มเหลวในการคุ้มครองเงินทุนของลูกค้า ขณะที่บริษัท SpaceX รายงานกำไรจากการลงทุนในบริษัท The Boring Co. จำนวน 561 ล้านดอลลาร์ในไตรมาสที่สาม หลังจากที่มีการระดมทุน 3 พันล้านดอลลาร์เมื่อเดือนที่ผ่านมา\n\nมุมมอง: ความกังวลต่อการใช้จ่ายมหาศาลในเทคโนโลยีปัญญาประดิษฐ์และราคาน้ำมันที่อยู่ในระดับสูง ส่งผลให้เกิดภาวะการลงทุนแบบระมัดระวังและการไหลเข้าสู่สินทรัพย์ปลอดภัยอย่างชัดเจน สะท้อนผ่านอัตราผลตอบแทนพันธบัตรที่ลดลงอย่างรวดเร็วและการเทขายในหุ้นกลุ่มเทคโนโลยีขนาดใหญ่ ขณะที่ตลาดสินทรัพย์ดิจิทัลและทองคำยังคงทรงตัวท่ามกลางแรงกดดันรอบด้าน",
+  "date": "2026-10-26",
+  "body": "ดัชนีตลาดหุ้นสหรัฐฯ ปิดการซื้อขายผสมผสาน โดย S&P 500 ปิดที่ 7,712.57 จุด เพิ่มขึ้น 0.28% ดัชนี Nasdaq ปิดที่ 26,424.82 จุด ลดลง 0.02% และดัชนี Dow Jones ปิดที่ 52,495.88 จุด เพิ่มขึ้น 1.02% ขณะที่ดัชนีความผันผวน VIX ปิดที่ 17.3 จุด ลดลง 0.06% ในส่วนของตลาดหุ้นต่างประเทศ กองทุนซื้อขายแลกเปลี่ยน iShares MSCI Brazil ETF ดิ่งลงเกือบ 20% ในการซื้อขายข้ามคืน หลังการเลือกตั้งประธานาธิบดีบราซิล\n\nบรรยากาศการลงทุนขับเคลื่อนด้วยความเคลื่อนไหวในภาคเทคโนโลยีและการเมืองระดับโลก โดยอีลอน มัสก์ เปิดเผยว่าบริษัท สเปซเอ็กซ์ ปิดดีลระดมทุนด้วยหนี้สินมูลค่า 40,000 ล้านดอลลาร์สหรัฐ เพื่อจัดซื้อหน่วยประมวลผลกราฟิกหรือจีพียูสำหรับการใช้งานด้านปัญญาประดิษฐ์ ซึ่งคาดว่าจะส่งมอบในช่วงครึ่งแรกของปี 2569 พร้อมทั้งเตือนถึงความเสี่ยงที่บริษัทคลาวด์ขนาดเล็กกลุ่มเอไอเนโอคลาวด์อาจเผชิญภาวะล้มละลายและการควบรวมกิจการ ขณะเดียวกัน ซอฟต์แบงก์ กรุ๊ป มีแผนลงทุนด้านเทคโนโลยีมูลค่า 50,000 ล้านดอลลาร์สหรัฐในประเทศมาเลเซีย เพื่อสนับสนุนเป้าหมายการเป็นประเทศแห่งปัญญาประดิษฐ์ภายในปี 2573 ด้านการเมืองระหว่างประเทศ ลูอิส อินาซิโอ ลูลา ดา ซิลวา ชนะการเลือกตั้งประธานาธิบดีบราซิลสมัยที่ 4 ด้วยคะแนนเสียง 51.8% ต่อ 48.2% แต่โบล소나โร ปฏิเสธความพ่ายแพ้และเตรียมยื่นคำร้องให้โมฆะผลการเลือกตั้ง\n\nราคาทองคำปิดที่ 4,159.4 ดอลลาร์สหรัฐต่อออนซ์ เพิ่มขึ้น 0.41% ราคาน้ำมันดิบ WTI ปิดที่ 98.52 ดอลลาร์สหรัฐต่อบาร์เรล ลดลง 3.21% และบิตคอยน์ปิดที่ 83,477.86 ดอลลาร์สหรัฐ เพิ่มขึ้น 0.65% ขณะที่ธนาคารในสหราชอาณาจักรเผชิญเรื่องร้องเรียนมากกว่า 10,000 ครั้งภายในระยะเวลา 3 เดือน เกี่ยวกับมาตรการจำกัดการทำธุรกรรมคริปโตเคอเรนซี\n\nตลาดยังคงจับตาการประชุมของธนาคารกลางสหรัฐฯ ที่กำลังจะมีขึ้น รวมถึงการเปิดเผยผลประกอบการของบริษัทจดทะเบียนในสหรัฐฯ ที่มีกำหนดรายงานตัวเลขในรอบสัปดาห์นี้\n\nมุมมอง: ความเคลื่อนไหวของตลาดในรอบนี้สะท้อนแรงกดดันจากความเสี่ยงทางการเมืองในลาตินอเมริกาและความกังวลต่อเสถียรภาพของโครงสร้างพื้นฐานด้านปัญญาประดิษฐ์ขนาดเล็ก ขณะที่ตัวเลขสินทรัพย์ดิจิทัลและโภคภัณฑ์ยังคงทรงตัวท่ามกลางการรอคอยผลการตัดสินใจด้านนโยบายการเงินของธนาคารกลางสหรัฐฯ ในระยะใกล้นี้",
   "sources": [
     {
-      "name": "Bitcoin, gold trim early losses as yen gives up gains. Oil stays near $100",
-      "url": "https://www.coindesk.com/markets/2026/10/23/bitcoin-gold-trim-early-losses-as-yen-gives-up-gains-oil-stays-near-usd100"
+      "name": "Bitcoin slips under $80,000 as traders de-risk ahead of Fed meeting",
+      "url": "https://www.coindesk.com/markets/2026/10/26/bitcoin-slips-under-usd80-000-as-traders-de-risk-ahead-of-fed-meeting"
     },
     {
-      "name": "10-year Treasury yield tumbles below 5% to lowest level in nearly a month",
-      "url": "https://www.cnbc.com/2026/10/22/treasurys-bonds-ai-yields.html"
+      "name": "‘Ticking time bomb’: The world's pension funds face an ageing crisis",
+      "url": "https://www.cnbc.com/2026/10/26/pension-funds-ageing-crisis-risk-investment.html"
     },
     {
-      "name": "Meta stock sinks nearly 7% as AI spend pushes free cash flow negative",
-      "url": "https://www.cnbc.com/2026/10/22/meta-stock-q3-earnings-free-cash-flow.html"
+      "name": "Latvia targets tokenization rules in 2027 with commercial property in focus",
+      "url": "https://www.coindesk.com/business/2026/10/25/latvia-targets-tokenization-rules-in-2027-with-commercial-property-in-focus"
     },
     {
-      "name": "Jobless claims near the lowest since the 1960s as low-fire trend continues",
-      "url": "https://www.cnbc.com/2026/10/22/jobless-claims-record-low-weekly.html"
+      "name": "Brazil's Lula wins historic presidential election; Bolsonaro reportedly refuses to concede",
+      "url": "https://www.cnbc.com/2026/10/26/brazil-lula-win-presidential-election-runoff-vote.html"
     },
     {
-      "name": "Trump asked Musk to lift Starlink slowdown, WSJ reports",
-      "url": "https://www.cnbc.com/2026/10/22/trump-musk-starlink-ukraine.html"
+      "name": "SpaceX closes $40 billion debt deal for AI chips, Elon Musk says",
+      "url": "https://www.cnbc.com/2026/10/26/spacex-closes-40-billion-debt-deal-for-ai-chips-elon-musk-.html"
     },
     {
-      "name": "Moderna shares plunge after cancer vaccine data leaks — despite positive results",
-      "url": "https://www.cnbc.com/2026/10/22/moderna-stock-cancer-vaccine-data-leak.html"
+      "name": "Elon Musk issues a warning for 'AI neoclouds' as SpaceX borrows $40 billion for chips",
+      "url": "https://www.coindesk.com/markets/2026/10/26/elon-musk-confirms-usd40-billion-spacex-debt-deal-for-ai-chips-warns-of-neocloud-shakeout"
     },
     {
-      "name": "SpaceX records $561 million investment gain from stake in Elon Musk's Boring Co.",
-      "url": "https://www.cnbc.com/2026/10/22/spacex-records-561-million-investment-gain-from-stake-in-boring-co.html"
+      "name": "SoftBank reportedly plans $50 billion tech investment in aspiring 'AI nation' Malaysia",
+      "url": "https://www.cnbc.com/2026/10/26/softbank-masayoshi-son-malaysia-ai-billions.html"
     },
     {
-      "name": "A16z is the latest VC giant to widen bets beyond crypto and into AI and emerging tech",
-      "url": "https://www.coindesk.com/business/2026/10/22/a16z-is-the-latest-vc-giant-to-widen-bets-beyond-crypto-and-into-ai-and-emerging-tech"
-    },
-    {
-      "name": "Irish central bank fines Coinbase Ireland $3.6 million over fund safeguarding failures",
-      "url": "https://www.coindesk.com/policy/2026/10/22/irish-central-bank-fines-coinbase-ireland-usd3-6-million-over-fund-safeguarding-failures"
+      "name": "UK banks face 10,000 complaints in 3 months over crypto restrictions",
+      "url": "https://www.coindesk.com/policy/2026/10/22/uk-banks-face-10-000-complaints-in-3-months-over-crypto-restrictions"
     }
   ],
   "meta": {
     "writtenBy": "github-actions/gemini-3.5-flash-lite",
     "grounded": false,
-    "articlesRead": 9,
-    "headlines": 70
+    "articlesRead": 8,
+    "headlines": 60
   }
 }
