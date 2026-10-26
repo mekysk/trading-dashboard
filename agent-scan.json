@@ -1,6 +1,6 @@
 {
   "agent": "scan-watcher",
-  "generated": "2026-10-26T20:01:31+07:00",
+  "generated": "2026-10-26T20:02:14+07:00",
   "asof": "2026-10-23",
   "status": "attention",
   "headline": "META (ถือ 7.6%) หลุด MA50 + RS ร่วง 63→42 · HIMS หลุด MA50 · GOOGL/NVDA/TSM ห่าง MA50 ลึกขึ้น · ฝั่งบวก LLY/ABBV/MSFT/PLTR ยังผ่าน Trend Template",
@@ -66,5 +66,5 @@
       "d": "นอกรายชื่อ · RS 95 · ผ่าน Trend Template ครบ · ห่างไฮ -1.6%"
     }
   ],
-  "note": "รันบน cloud: ดึง mekysk.github.io ไม่ได้ (proxy 403 connect_rejected) จึงใช้ scan.json จาก repo (asof 2026-10-23, 527/546 ตัว, ล้มเหลว 19) · เทียบรอบก่อนกับ scan.json asof 2026-10-21 จากประวัติ git · positions.txt สร้างเมื่อ 2026-10-14 น้ำหนักอาจไม่ตรงปัจจุบัน · รายงานนี้บอกว่าเกิดอะไรขึ้น ไม่ใช่คำแนะนำให้ซื้อขาย"
+  "note": "scan.json ยังเป็นรอบเดิม (asof 2026-10-23 · generated 2026-10-24T01:24Z) ยังไม่มีผลสแกนใหม่ สัญญาณจึงเหมือนรอบก่อน · เทียบ RS/MA50 กับ scan.json asof 2026-10-21 จากประวัติ git · ดึง mekysk.github.io ไม่ได้ (proxy 403 connect_rejected) จึงใช้ไฟล์ใน repo · positions.txt สร้างเมื่อ 2026-10-14 น้ำหนักอาจไม่ตรงปัจจุบัน · รายงานนี้บอกว่าเกิดอะไรขึ้น ไม่ใช่คำแนะนำให้ซื้อขาย"
 }
