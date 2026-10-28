@@ -1,5 +1,5 @@
 {
-  "ranAt": "2026-10-27T05:23:24.932Z",
+  "ranAt": "2026-10-28T06:01:50.829Z",
   "ok": true,
   "model": "gemini-3.5-flash-lite",
   "grounded": false,
@@ -10,23 +10,23 @@
     "gemini-3.8-flash+search: HTTP 429 — {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \",\n    \"stat",
     "gemini-3.8-flash: This operation was aborted"
   ],
-  "chars": 2170,
+  "chars": 2065,
   "paragraphs": 5,
   "headlines": 70,
   "prices": 7,
   "qualityWarnings": [],
   "feedsOk": [
-    "CNBC Markets (1)",
+    "CNBC Markets (3)",
     "CNBC Top (12)",
     "CNBC Finance (0)",
     "MarketWatch Top (10)",
     "Investing หุ้น (10)",
     "Investing โภคภัณฑ์ (10)",
     "Investing ค่าเงิน (6)",
-    "Investing คริปโต (6)",
+    "Investing คริปโต (10)",
     "CoinDesk (12)",
     "Federal Reserve (12)"
   ],
   "feedsFailed": [],
-  "elapsed": "79.1s"
+  "elapsed": "75.3s"
 }
