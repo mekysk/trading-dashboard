@@ -1,9 +1,9 @@
 {
-  "ranAt": "2026-10-29T06:12:00.810Z",
+  "ranAt": "2026-10-30T06:11:53.678Z",
   "ok": true,
   "model": "gemini-3.5-flash-lite",
   "grounded": false,
-  "articlesRead": 9,
+  "articlesRead": 10,
   "articlesFailed": [
     "coindesk.com: HTTP 429",
     "coindesk.com: HTTP 429",
@@ -12,30 +12,28 @@
     "coindesk.com: HTTP 429",
     "coindesk.com: HTTP 429"
   ],
-  "citedUrls": 9,
+  "citedUrls": 10,
   "modelsFailed": [
     "gemini-3.8-flash+search: HTTP 429 — {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \",\n    \"stat",
     "gemini-3.8-flash: This operation was aborted"
   ],
-  "chars": 3273,
-  "paragraphs": 6,
+  "chars": 2284,
+  "paragraphs": 5,
   "headlines": 70,
   "prices": 7,
-  "qualityWarnings": [
-    "มีตัวอักษรต่างภาษาหลุดมา 1 ตัว: 콧"
-  ],
+  "qualityWarnings": [],
   "feedsOk": [
-    "CNBC Markets (3)",
+    "CNBC Markets (6)",
     "CNBC Top (12)",
     "CNBC Finance (0)",
     "MarketWatch Top (10)",
-    "Investing หุ้น (10)",
+    "Investing หุ้น (9)",
     "Investing โภคภัณฑ์ (10)",
-    "Investing ค่าเงิน (6)",
-    "Investing คริปโต (5)",
+    "Investing ค่าเงิน (7)",
+    "Investing คริปโต (10)",
     "CoinDesk (12)",
     "Federal Reserve (12)"
   ],
   "feedsFailed": [],
-  "elapsed": "81.1s"
+  "elapsed": "76.1s"
 }
