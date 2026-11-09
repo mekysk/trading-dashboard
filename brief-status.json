@@ -1,37 +1,41 @@
 {
-  "ranAt": "2026-11-06T07:09:14.309Z",
+  "ranAt": "2026-11-09T07:00:42.668Z",
   "ok": true,
   "model": "gemini-3.5-flash-lite",
   "grounded": false,
-  "articlesRead": 12,
+  "articlesRead": 3,
   "articlesFailed": [
+    "coindesk.com: HTTP 429",
+    "coindesk.com: HTTP 429",
     "coindesk.com: HTTP 429",
     "coindesk.com: HTTP 429",
     "coindesk.com: HTTP 429",
     "coindesk.com: HTTP 429"
   ],
-  "citedUrls": 12,
+  "citedUrls": 3,
   "modelsFailed": [
-    "gemini-3.8-flash+search: HTTP 429 — {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \",\n    \"stat",
-    "gemini-3.8-flash: HTTP 503 — {\n  \"error\": {\n    \"code\": 503,\n    \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\",\n    \"status\": \"UNAVAILABLE\"\n  }\n}\n"
+    "gemini-3.8-flash+search: HTTP 429 — {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \",\n    \"status\": ",
+    "gemini-3.8-flash: This operation was aborted"
   ],
-  "chars": 2225,
-  "paragraphs": 6,
+  "chars": 1527,
+  "paragraphs": 5,
   "headlines": 70,
   "prices": 7,
-  "qualityWarnings": [],
+  "qualityWarnings": [
+    "ไม่ได้ค้นเว็บ และอ่านบทความเต็มได้แค่ 3 บทความ บทสรุปจะตื้นกว่าปกติมาก"
+  ],
   "feedsOk": [
-    "CNBC Markets (5)",
+    "CNBC Markets (1)",
     "CNBC Top (12)",
-    "CNBC Finance (4)",
+    "CNBC Finance (0)",
     "MarketWatch Top (10)",
     "Investing หุ้น (10)",
     "Investing โภคภัณฑ์ (10)",
-    "Investing ค่าเงิน (10)",
-    "Investing คริปโต (10)",
-    "CoinDesk (12)",
+    "Investing ค่าเงิน (3)",
+    "Investing คริปโต (3)",
+    "CoinDesk (9)",
     "Federal Reserve (12)"
   ],
   "feedsFailed": [],
-  "elapsed": "21.3s"
+  "elapsed": "73.5s"
 }

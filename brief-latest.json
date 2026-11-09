@@ -1,60 +1,24 @@
 {
-  "date": "2026-11-06",
-  "body": "ตลาดหุ้นสหรัฐฯ เผชิญแรงเทขายรุนแรงในรอบซื้อขายล่าสุด โดยดัชนี S&P 500 ปิดที่ 7,712.57 จุด เพิ่มขึ้น 0.28% ดัชนี Nasdaq Composite ปิดที่ 26,424.82 จุด ลดลง 0.02% และดัชนี Dow Jones ปิดที่ 52,495.88 จุด เพิ่มขึ้น 1.02% ขณะที่ดัชนีความผันผวน VIX ปิดที่ 17.3 ลดลง 0.06% แรงกดดันหลักมาจากภาคเทคโนโลยีและกลุ่มปัญญาประดิษฐ์ โดยกลุ่ม Magnificent Seven สูญญากาศมูลค่าตลาดรวมกันมากกว่า 1 ล้านล้านดอลลาร์ และหุ้น Nvidia ปรับตัวลดลงมากกว่า 9% ส่งผลให้ Nasdaq ดิ่งลงเข้าสู่เขตปรับฐาน\n\nผลการเลือกตั้งกลางเทอมของสหรัฐฯ ซึ่งพรรคเดโมแครตคว้าชัยชนะครองทั้งสภาผู้แทนราษฎรและวุฒิสภา สร้างความกังวลให้แก่นักลงทุนว่าอาจนำไปสู่มาตรการควบคุมศูนย์ข้อมูลและข้อจำกัดที่เข้มงวดขึ้นต่ออุตสาหกรรมปัญญาประดิษฐ์ ส่งผลสะเทือนลามไปยังหุ้นกลุ่มเทคโนโลยีในเอเชีย โดย SK Hynix ดิ่งลงกว่า 8% Samsung Electronics ลดลง 7% และ TSMC ร่วงลง 9.6% นอกจากนี้ หุ้น Tesla และ SpaceX ของ Elon Musk มูลค่าตลาดรวมกันหายไปกว่า 420,000 ล้านดอลลาร์ในรอบสองวันหลังการเลือกตั้ง เนื่องจากความกังวลเรื่องการตรวจสอบจากสภา\n\nธนาคารกลางอังกฤษประกาศปรับขึ้นอัตราดอกเบี้ย 25 สแปซิสพอยต์ สู่ระดับ 4% ซึ่งเป็นการปรับขึ้นครั้งแรกนับตั้งแต่เดือนสิงหาคมปี 2023 โดยมีมติ 8 ต่อ 1 เสียง ขณะที่กรรมการบางส่วนส่งสัญญาณว่าอัตราเงินเฟ้ออาจพุ่งเข้าใกล้ระดับ 5% ภายในกลางปี 2027 จากผลกระทบด้านราคาพลังงาน ด้านเจ้าหน้าที่ธนาคารกลางสหรัฐฯ โทมัส บาร์กิน ระบุว่ามีความเป็นไปได้ที่จะมีการปรับขึ้นอัตราดอกเบี้ยเพิ่มเติมในอนาคตด้วยความระมัดระวัง เพื่อควบคุมความเสี่ยงด้านเงินเฟ้อ\n\nราคาทองคำปิดที่ 4,159.4 ดอลลาร์ต่อออนซ์ เพิ่มขึ้น 0.41% ราคาน้ำมันดิบ WTI ปิดที่ 98.52 ดอลลาร์ต่อบาร์เรล ลดลง 3.21% แต่ราคาน้ำมันยังคงได้รับแรงหนุนจากความเสี่ยงด้านภูมิรัฐศาสตร์หลังความตึงเครียดระหว่างสหรัฐฯ และอิหร่าน ขณะที่ Bitcoin ปิดที่ 83,477.86 ดอลลาร์ เพิ่มขึ้น 0.65% ท่ามกลางภาวะตลาดสินทรัพย์เสี่ยงที่เผชิญความผันผวนสูง\n\nกำหนดการสำคัญในระยะถัดไปคือการประกาศตัวเลขการจ้างงานนอกภาคเกษตรประจำเดือนตุลาคมจากสำนักงานสถิติแรงงานสหรัฐฯ ซึ่งตลาดคาดการณ์ว่าการจ้างงานจะเพิ่มขึ้น 59,000 ตำแหน่ง และอัตราการว่างงานจะทรงตัวอยู่ที่ระดับ 4.2%\n\nมุมมอง: ตลาดการเงินกำลังเผชิญจุดเปลี่ยนสำคัญจากความเสี่ยงด้านนโยบายการเมืองภายในสหรัฐฯ และมาตรการกำกับดูแลเทคโนโลยีที่เข้มงวดขึ้น ซึ่งสร้างแรงกระแทกต่อหุ้นกลุ่มปัญญาประดิษฐ์อย่างรุนแรง ขณะที่ทิศทางอัตราดอกเบี้ยและตัวเลขเศรษฐกิจจริงจะเป็นตัวกำหนดกรอบความเคลื่อนไหวของสินทรัพย์ต่างๆ ในระยะสั้น",
+  "date": "2026-11-09",
+  "body": "ตลาดหุ้นสหรัฐฯ ปิดทำการซื้อขายโดย S&P 500 ปิดที่ 7,712.57 เพิ่มขึ้น 0.28% Nasdaq ปิดที่ 26,424.82 ลดลง 0.02% และ Dow Jones ปิดที่ 52,495.88 เพิ่มขึ้น 1.02% ขณะที่ดัชนีความผันผวน VIX ปิดที่ 17.3 ลดลง 0.06% โดยตลาดหุ้นเผชิญแรงกดดันจากหุ้นกลุ่มปัญญาประดิษฐ์และศูนย์ข้อมูล หลังผลการเลือกตั้งกลางเทอมส่งผลให้ผู้สมัครที่สนับสนุนการจำกัดการพัฒนาศูนย์ข้อมูลได้รับชัยชนะในรัฐเท็กซัสและโอไฮโอ\n\nเศรษฐกิจจีนรายงานตัวเลขดัชนีราคาผู้ผลิต หรือ PPI ประจำเดือนตุลาคม เพิ่มขึ้น 5.7% สูงกว่าที่รอยเตอร์คาดการณ์ไว้ที่ 5.3% และเป็นการเติบโตในอัตราที่เร็วที่สุดนับตั้งแต่เดือนมิถุนายน 2022 ขับเคลื่อนโดยภาคการทำเหมืองและวัตถุดิบ ขณะที่ดัชนีราคาผู้บริโภค หรือ CPI เดือนตุลาคม ชะลอตัวลงเหลือ 0.7% ต่ำกว่าที่ตลาดคาดการณ์ที่ 0.8% และลดลงจากระดับ 0.9% ในเดือนกันยายน\n\nราคาทองคำปิดที่ 4,159.4 ดอลลาร์ต่อออนซ์ เพิ่มขึ้น 0.41% ราคาน้ำมันดิบ WTI ปิดที่ 98.52 ดอลลาร์ต่อบาร์เรล ลดลง 3.21% และ Bitcoin ปิดที่ 83,477.86 ดอลลาร์ เพิ่มขึ้น 0.65% ด้านตลาดสินทรัพย์ดิจิทัลยังคงเผชิญแรงกดดันจากความไม่แน่นอนด้านกฎระเบียบและการปิดตัวในบางภูมิภาคของแพลตฟอร์มซื้อขาย\n\nปฏิทินเศรษฐกิจและเหตุการณ์สำคัญในสัปดาห์นี้มีกำหนดการรายงานผลประกอบการของบริษัทคลาวด์สำหรับปัญญาประดิษฐ์อย่าง โคอร์วีฟ ในวันอังคาร ซึ่งตลาดจับตาดูเพื่อประเมินทิศทางความต้องการลงทุนในเทคโนโลยีปัญญาประดิษฐ์ท่ามกลางความกังวลของนักลงทุน\n\nมุมมอง: ตลาดหุ้นสหรัฐฯ กำลังเคลื่อนไหวอยู่ท่ามกลางความขัดแย้งระหว่างความกังวลเรื่องกฎระเบียบที่อาจเข้ามาระงับการเติบโตของโครงสร้างพื้นฐานปัญญาประดิษฐ์ กับปัจจัยพื้นฐานทางเศรษฐกิจที่ยังมีรายงานผลประกอบการและตัวเลขเงินเฟ้อจากต่างประเทศเข้ามาเป็นตัวกำหนดทิศทางรายสัปดาห์",
   "sources": [
     {
-      "name": "Nasdaq sell-off batters Asian chip stocks as SK Hynix, Samsung, Softbank, TSMC tumble",
-      "url": "https://www.cnbc.com/2026/11/06/tech-stocks-sk-hynix-samsung-softbank.html"
+      "name": "China wholesale inflation hits highest in more than four years as consumer measure slows",
+      "url": "https://www.cnbc.com/2026/11/09/china-wholesale-inflation-rises-consumer.html"
     },
     {
-      "name": "Bank of England hikes interest rate for the first time since Iran war, warns inflation will near 5%",
-      "url": "https://www.cnbc.com/2026/11/05/interest-rates-inflation-uk.html"
+      "name": "Here are the 2 big things we're watching in the stock market in the week ahead",
+      "url": "https://www.cnbc.com/investingclub/2026/11/08/here-are-the-2-big-things-were-watching-in-the-stock-market-in-the-week-ahead.html"
     },
     {
-      "name": "India as an AI hedge? The country's stocks could see robust inflows as markets globally tank",
-      "url": "https://www.cnbc.com/2026/11/06/india-ai-tech-hedge-nifty50.html"
-    },
-    {
-      "name": "Renewed U.S.-Iran tension could push oil past $100: Rapidan Energy",
-      "url": "https://www.cnbc.com/2026/11/06/us-iran-war-trump-hormuz-oil-midterms.html"
-    },
-    {
-      "name": "Barkin sees interest rate hikes ahead, but at a gradual pace",
-      "url": "https://www.cnbc.com/2026/11/05/barkin-sees-interest-rate-hikes-ahead-but-at-a-gradual-pace.html"
-    },
-    {
-      "name": "Magnificent 7 loses $1 trillion. The most eye-popping stats from Thursday's tech stock plunge",
-      "url": "https://www.cnbc.com/2026/11/05/stock-market-selloff-ai-fears.html"
-    },
-    {
-      "name": "Elon Musk's Tesla and SpaceX lose over $420 billion in combined market cap after midterms",
-      "url": "https://www.cnbc.com/2026/11/05/tesla-spacex-stocks-fall-after-2026-midterms.html"
-    },
-    {
-      "name": "Oil prices rise as investors weigh renewed U.S.-Iran conflict risks after midterm elections",
-      "url": "https://www.cnbc.com/2026/11/06/oil-price-today-brent-wti.html"
-    },
-    {
-      "name": "Nasdaq drops into correction territory — here’s what typically happens next",
-      "url": "https://www.cnbc.com/2026/11/05/nasdaq-drops-into-correction-territory-heres-what-typically-happens-next.html"
-    },
-    {
-      "name": "10-year Treasury yield slides as traders mull over Democrats' midterm victories, oil prices drop",
-      "url": "https://www.cnbc.com/2026/11/03/treasury-yields-fall-as-democrats-win-big-in-us-midterm-elections.html"
-    },
-    {
-      "name": "Analysis: The Democrats have one chance to extract concessions from Trump. Markets will hate it",
-      "url": "https://www.cnbc.com/2026/11/04/democrats-trump-debt-ceiling-fight.html"
-    },
-    {
-      "name": "The October jobs report is out Friday. Here's everything to expect",
-      "url": "https://www.cnbc.com/2026/11/05/october-jobs-report-preview.html"
+      "name": "Cathie Wood 'always feels better when the market is worried' — here's why",
+      "url": "https://www.cnbc.com/2026/11/08/cathie-wood-ai-selloff.html"
     }
   ],
   "meta": {
     "writtenBy": "github-actions/gemini-3.5-flash-lite",
     "grounded": false,
-    "articlesRead": 12,
+    "articlesRead": 3,
     "headlines": 70
   }
 }
