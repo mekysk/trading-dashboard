@@ -73,7 +73,7 @@ async function get(url,asJson){
   }
 }
 const bad=x=>!x||x.__status;
-const tag=(x,t)=>{const m=x.match(new RegExp('<(?:\\w+:)?'+t+'[^>]*>([\\s\\S]*?)</(?:\\w+:)?'+t+'>','i'));return m?m[1].trim():null};
+const tag=(x,t)=>{const m=x.match(new RegExp('<(?:\\w+:)?'+t+'[^>]*>([\\s\\S]*?)</(?:\\w+:)?'+t+'>','i'));return m?m[1].trim().replace(/&amp;/g,'&').replace(/&apos;|&#39;/g,"'"):null};
 const days=(a,b)=>(Date.parse(b)-Date.parse(a))/864e5;
 
 /* อ่านตารางรายการถือของการยื่น 1 ครั้ง → {cusip:{nm,val,sh,opt}} */
