@@ -94,8 +94,7 @@
       {h:'heatmap.html',n:'Heat Map',       i:'🔥'},
       {h:'breadth.html',n:'Market Breadth', i:'📊'},
       {h:'sentiment.html',n:'กลัว · โลภ',  i:'😨'},
-      {h:'flow.html',   n:'Money Flow',    i:'⇄'},
-      {h:'events.html', n:'ปฏิทินเหตุการณ์',i:'📅'}]},
+      {h:'flow.html',   n:'Money Flow',    i:'⇄'}]},
     {g:'วิเคราะห์', items:[
       {h:'scanner.html',n:'Quant Scanner',   i:'⚡'},
       {h:'theme-matrix.html',n:'Thematic Matrix', i:'🧩'},
