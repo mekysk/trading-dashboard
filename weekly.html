@@ -93,25 +93,17 @@ border-radius:9px;padding:11px 13px;font-size:11.5px;color:var(--warn);line-heig
     <select id="wkSel" style="min-width:190px"><option>สัปดาห์ล่าสุด</option></select>
   </div>
 
+  <div class="wtabs" style="display:flex;gap:6px;margin:4px 0 14px">
+    <button class="btn on" data-t="tabW">📝 สรุปสัปดาห์</button>
+    <button class="btn" data-t="tabE">📅 ปฏิทินเหตุการณ์</button>
+  </div>
+  <div id="tabW">
   <div class="kpis" id="kpis"></div>
 
   <div class="card art">
     <h3>📝 สรุปสัปดาห์ <span class="sub" id="artMeta"></span></h3>
     <div id="artBody"></div>
   </div>
-
-  <div class="card" id="evCard" style="padding:16px 0 0">
-    <h3 style="padding:0 16px">📅 ปฏิทินเหตุการณ์ <span class="sub">งบหุ้น · ข่าวมหภาค · ปฏิทินเศรษฐกิจ</span>
-      <a href="events.html" target="_blank" style="margin-left:auto;font-weight:400;font-size:11px">เปิดเต็มหน้า ↗</a></h3>
-    <iframe id="evFrame" src="events.html" scrolling="no" title="ปฏิทินเหตุการณ์"
-      style="display:block;width:100%;border:0;height:700px;background:transparent;border-radius:0 0 11px 11px"></iframe>
-  </div>
-  <script>
-  (function(){var fr=document.getElementById('evFrame');
-    function fit(){try{var d=fr.contentDocument;var h=Math.max(d.body.scrollHeight,d.documentElement.scrollHeight);if(h>0)fr.style.height=h+'px';}catch(e){}}
-    fr.addEventListener('load',function(){fit();try{new ResizeObserver(fit).observe(fr.contentDocument.body);}catch(e){}setTimeout(fit,2000);setTimeout(fit,6000);});
-  })();
-  </script>
 
   <div class="g2">
     <div class="card">
@@ -134,6 +126,37 @@ border-radius:9px;padding:11px 13px;font-size:11.5px;color:var(--warn);line-heig
   </div>
 
   <div class="warnbox" id="limits" style="display:none"></div>
+  </div>
+  <div id="tabE" style="display:none">
+  <div class="card" id="evCard" style="padding:16px 0 0">
+    <h3 style="padding:0 16px">📅 ปฏิทินเหตุการณ์ <span class="sub">งบหุ้น · ข่าวมหภาค · ปฏิทินเศรษฐกิจ</span>
+      <a href="events.html" target="_blank" style="margin-left:auto;font-weight:400;font-size:11px">เปิดเต็มหน้า ↗</a></h3>
+    <iframe id="evFrame" src="events.html" scrolling="no" title="ปฏิทินเหตุการณ์"
+      style="display:block;width:100%;border:0;height:700px;background:transparent;border-radius:0 0 11px 11px"></iframe>
+  </div>
+  <script>
+  (function(){var fr=document.getElementById('evFrame');
+    function fit(){try{var d=fr.contentDocument;var h=Math.max(d.body.scrollHeight,d.documentElement.scrollHeight);if(h>0)fr.style.height=h+'px';}catch(e){}}
+    window.__evFit=fit;
+    fr.addEventListener('load',function(){fit();try{new ResizeObserver(fit).observe(fr.contentDocument.body);}catch(e){}setTimeout(fit,2000);setTimeout(fit,6000);});
+  })();
+  </script>
+
+  </div>
+  <script>
+  (function(){
+    var bs=document.querySelectorAll('.wtabs .btn');
+    function show(t){
+      bs.forEach(function(b){b.classList.toggle('on',b.dataset.t===t);});
+      document.getElementById('tabW').style.display=t==='tabW'?'':'none';
+      document.getElementById('tabE').style.display=t==='tabE'?'':'none';
+      if(t==='tabE'&&window.__evFit){window.__evFit();setTimeout(window.__evFit,300);}
+      history.replaceState(null,'',t==='tabE'?'#events':'#');
+    }
+    bs.forEach(function(b){b.onclick=function(){show(b.dataset.t);};});
+    if(location.hash==='#events')show('tabE');
+  })();
+  </script>
 </main>
 
 <script>
