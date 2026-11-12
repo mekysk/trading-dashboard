@@ -94,8 +94,8 @@
     {g:'วิเคราะห์', items:[
       {h:'analyze.html',n:'Analyze', i:'⚡'},]},
     {g:'เวิร์กสเปซ', items:[
-      {h:'https://docs.google.com/spreadsheets/d/1Ay9xgrcKup0fbnALb0jq6_97AHXwryKVGSQo_baQDjc/edit#gid=418511816', n:'VI Portfolio (Sheet) ↗', i:'💼'},
-      {h:'https://claude.ai/artifact/R1yMrVAeCBkfiL4iUg3nWP', n:'Trading Log (Sheet) ↗', i:'📓'},
+      {h:'https://docs.google.com/spreadsheets/d/1SyV2Ui6xF454p96AngoxNFMUPF0TnLyTovqx2J7v-kk/edit#gid=1629886240', n:'VI Portfolio (Sheet) ↗', i:'💼'},
+      {h:'https://docs.google.com/spreadsheets/d/1SyV2Ui6xF454p96AngoxNFMUPF0TnLyTovqx2J7v-kk/edit#gid=38686137', n:'Trading Log (Sheet) ↗', i:'📓'},
       {h:'botlab.html', n:'Bot Lab · ทดสอบกลยุทธ์', i:'🧪'},
       {h:'sheet-import.html',n:'นำเข้าจากชีต', i:'📥'},
       {h:'sync.html',   n:'ซิงค์ข้ามเครื่อง', i:'☁'}]}
