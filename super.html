@@ -281,23 +281,41 @@ function draw(){
 }
 
 /* ---------------- ส่วน 13F ---------------- */
+function chgHtml(m){
+  var C=m.chg; if(!C)return '';
+  function col(t,cls,L,showChg){
+    return '<div style="flex:1;min-width:200px"><div class="lb" style="margin-bottom:4px"><b class="'+cls+'">'+t+'</b> ('+L.length+')</div>'
+      +(L.length?L.map(function(r){return '<div style="font-size:12px;display:flex;gap:6px"><span style="flex:1">'+esc(r.nm)+'</span>'
+        +'<span class="mono">'+n2(r.pct,1)+'%</span>'+(showChg&&r.chg!=null?'<span class="mono '+cls+'">'+(r.chg>0?'+':'')+r.chg+'%</span>':'')+'</div>'}).join('')
+        :'<div class="sub">—</div>')+'</div>';
+  }
+  return '<h4 style="margin:14px 0 6px;font-size:12.5px">ไตรมาสล่าสุดซื้อขายอะไร <span class="sub">'
+    +(m.chgFrom?thaiDate(m.chgFrom)+' → '+thaiDate(m.period):'')+' · % = สัดส่วนในพอร์ต · ± = จำนวนหุ้นเปลี่ยน</span></h4>'
+    +'<div style="display:flex;gap:16px;flex-wrap:wrap">'
+    +col('🟢 ซื้อใหม่','up',C.neu)+col('➕ เพิ่ม','up',C.add,1)+col('➖ ลด','dn',C.cut,1)+col('🔴 ขายหมด','dn',C.sold)
+    +'</div>';
+}
 function drawMgr(){
   var L=document.getElementById('mgrList');
   if(!F13||!F13.managers){ L.innerHTML='<div class="ld">ยังไม่มีไฟล์ f13.json<br>'
     +'<span class="sub">ไฟล์นี้สร้างจากงานอัตโนมัติ "ดึง 13F จาก SEC" ทุกวันจันทร์</span></div>';
     document.getElementById('fBody').innerHTML=''; return }
-  document.getElementById('fMeta').textContent='ดึงเมื่อ '+thaiDate(F13.generated);
-  L.innerHTML=F13.managers.map(function(m,i){
+  document.getElementById('fMeta').textContent='ดึงเมื่อ '+thaiDate(F13.generated)+' · อันดับตามผลตอบแทน/ปีจาก 13F (ไม่ใช่ผลจริงของกองทุน)';
+  /* อันดับ 10 คน ตามผลตอบแทนต่อปีจาก 13F (ไฟล์เรียงมาแล้ว) */
+  var TOP=[]; F13.managers.forEach(function(m,i){ if(!m.err&&m.ann!=null&&TOP.length<10)TOP.push(i) });
+  if(!TOP.length) F13.managers.forEach(function(m,i){ if(!m.err&&TOP.length<10)TOP.push(i) });
+  if(CUR==null||TOP.indexOf(CUR)<0)CUR=TOP.length?TOP[0]:null;
+  L.innerHTML=TOP.map(function(i,rk){ var m=F13.managers[i];
     var bad=!!m.err;
     return '<button type="button" class="'+(bad?'bad':'')+(i===CUR?' on':'')+'" data-i="'+i+'"'
       +(bad?' disabled':'')+'><b>'+esc(m.who)+'</b>'
+      +(m.ann!=null?' <span class="mono '+(m.ann>=0?'up':'dn')+'">#'+(rk+1)+' · '+(m.ann>=0?'+':'')+m.ann+'%/ปี</span>':'')
       +'<span class="s">'+esc(m.nm)+'<br>'
-      +(bad?esc(m.err):'ข้อมูล ณ '+thaiDate(m.period)+' · '+m.positions+' รายการ')+'</span></button>';
+      +(bad?esc(m.err):'ข้อมูล ณ '+thaiDate(m.period)+' · '+m.positions+' รายการ'+(m.quarters?' · วัด '+m.quarters+' ไตรมาส':''))+'</span></button>';
   }).join('');
   L.querySelectorAll('button[data-i]').forEach(function(b){
     b.onclick=function(){ CUR=Number(b.dataset.i); drawMgr() };
   });
-  if(CUR==null){ for(var k=0;k<F13.managers.length;k++)if(!F13.managers[k].err){CUR=k;break} }
   var m=CUR==null?null:F13.managers[CUR];
   var out=document.getElementById('fBody');
   if(!m||m.err){ out.innerHTML='<div class="ld">เลือกผู้จัดการที่มีข้อมูล</div>'; return }
@@ -315,6 +333,8 @@ function drawMgr(){
     +'<a class="btn" style="margin-left:auto" href="'+esc(m.url)+'" target="_blank" rel="noopener">'
     +'ดูเอกสารต้นทางที่ SEC ↗</a></div>'
     +lagWarn
+    +chgHtml(m)
+    +'<h4 style="margin:14px 0 6px;font-size:12.5px">ถือมากสุด '+m.top.length+' อันดับ</h4>'
     +'<table><thead><tr><th>บริษัท</th><th>สัดส่วน</th><th></th><th>มูลค่า (USD)</th>'
     +'<th>จำนวนหุ้น</th></tr></thead><tbody>'
     +m.top.map(function(r){

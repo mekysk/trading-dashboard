@@ -2,8 +2,9 @@ name: ดึง 13F จาก SEC
 
 on:
   schedule:
-    # ทุกวันจันทร์ 10:00 UTC — 13F ทยอยเข้ามาตลอดช่วง 45 วันหลังสิ้นไตรมาส
-    - cron: '0 10 * * 1'
+    # วันที่ 16 ของ ก.พ./พ.ค./ส.ค./พ.ย. — หลังเส้นตาย 45 วันของ 13F
+    # (SEC มักบล็อกไอพี GitHub → ถ้าไม่ได้ ให้ Claude ดึงแทนแล้ว push f13.json)
+    - cron: '0 10 16 2,5,8,11 *'
   workflow_dispatch:
 
 permissions:
@@ -25,7 +26,7 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add f13.json f13-status.json
+          git add $(ls f13.json f13-status.json 2>/dev/null)
           if git diff --staged --quiet; then
             echo "ไม่มีอะไรเปลี่ยน"
           else
