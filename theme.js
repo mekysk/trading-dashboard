@@ -95,7 +95,7 @@
       {h:'analyze.html',n:'Analyze', i:'⚡'},]},
     {g:'เวิร์กสเปซ', items:[
       {h:'https://docs.google.com/spreadsheets/d/1Ay9xgrcKup0fbnALb0jq6_97AHXwryKVGSQo_baQDjc/edit#gid=418511816', n:'VI Portfolio (Sheet) ↗', i:'💼'},
-      {h:'journal.html',n:'Backtest Journal', i:'📓'},
+      {h:'https://claude.ai/artifact/R1yMrVAeCBkfiL4iUg3nWP', n:'Trading Log (Sheet) ↗', i:'📓'},
       {h:'botlab.html', n:'Bot Lab · ทดสอบกลยุทธ์', i:'🧪'},
       {h:'sheet-import.html',n:'นำเข้าจากชีต', i:'📥'},
       {h:'sync.html',   n:'ซิงค์ข้ามเครื่อง', i:'☁'}]}
