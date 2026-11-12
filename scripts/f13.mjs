@@ -21,8 +21,9 @@ import {fileURLToPath} from 'node:url';
 
 const HERE=dirname(fileURLToPath(import.meta.url));
 const OUT=process.env.F13_OUT||join(HERE,'..','f13.json');
-/* SEC ขอให้ระบุผู้ติดต่อใน User-Agent · ใช้อีเมล noreply ของ GitHub ไม่ใช้อีเมลส่วนตัว */
-const UA='trading-dashboard mekysk@users.noreply.github.com';
+/* SEC (Fair Access) บังคับให้ User-Agent มีชื่อ + อีเมลติดต่อจริง → ส่งผ่านตัวแปร F13_EMAIL ตอนรัน
+   ห้ามเขียนอีเมลลงไฟล์นี้ (repo สาธารณะ) */
+const UA='Mekysk Research '+(process.env.F13_EMAIL||'mekysk@users.noreply.github.com');
 const GAP=Number(process.env.F13_GAP_MS||250);
 const TOPN=Number(process.env.F13_TOP||25);
 const NQ=Number(process.env.F13_QUARTERS||13);        /* 13 รายงาน = 12 ไตรมาส = 3 ปี */
