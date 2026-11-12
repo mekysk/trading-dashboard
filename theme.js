@@ -96,9 +96,7 @@
       {h:'sentiment.html',n:'กลัว · โลภ',  i:'😨'},
       {h:'flow.html',   n:'Money Flow',    i:'⇄'}]},
     {g:'วิเคราะห์', items:[
-      {h:'scanner.html',n:'Quant Scanner',   i:'⚡'},
-      {h:'theme-matrix.html',n:'Thematic Matrix', i:'🧩'},
-      {h:'super.html',  n:'Super Investor',   i:'⚖'},
+      {h:'analyze.html',n:'Analyze (Scanner · Theme · Super)', i:'⚡'},
       {h:'market.html', n:'ตลาด · กราฟ · ข่าว', i:'📈'}]},
     {g:'เวิร์กสเปซ', items:[
       {h:'index.html',  n:'พอร์ต',    i:'💼'},
