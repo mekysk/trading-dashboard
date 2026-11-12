@@ -274,6 +274,13 @@ function showNoFile(why){
 /* ---------- แสดงผล ---------- */
 function statusBox(){
   if(!META)return '';
+  /* กฎ Trend (Rulebook v1.0): เปิดไม้ใหม่ได้เมื่อ % หุ้นเหนือ MA200 ≥ 50% */
+  const nb=ROWS.filter(r=>r.up200!=null).length;
+  const br=nb?ROWS.filter(r=>r.up200===true).length/nb*100:null;
+  let gate='';
+  if(br!=null) gate=br>=50
+    ?'<div class="infobox" style="border-color:var(--up)">✅ <b>Breadth '+br.toFixed(0)+'%</b> (หุ้นเหนือ MA200) ≥ 50% → <b>เปิดไม้ Trend ใหม่ได้</b></div>'
+    :'<div class="warnbox" style="border-color:var(--dn)">⛔ <b>Breadth '+br.toFixed(0)+'%</b> (หุ้นเหนือ MA200) ต่ำกว่า 50% → <b>ห้ามเปิดไม้ Trend ใหม่</b> ตาม Rulebook</div>';
   const age=(Date.now()-new Date(META.generated).getTime())/36e5;
   let s='';
   if(SRC==='browser'){
@@ -293,10 +300,34 @@ function statusBox(){
     +(fail?' · ดึงไม่ได้ '+fail+' ตัว':'')
     +(stale?' · <span style="color:var(--warn)">ข้อมูลค้างไม่ทันวันล่าสุด '+stale+' ตัว</span>':'')
     +'</div>';
-  return s;
+  return gate+s;
+}
+/* VI (Rulebook v1.0 ข้อ 3) — หุ้นซ้ำกับ VI ต้องบันทึกแยก */
+const VI=new Set('NVDA LLY TSM GOOGL O PLTR ABBV META AVGO SCHG ARM TSLA HIMS'.split(' '));
+/* ไม้ paper: ทุน $1,000 · เสี่ยง 1% = $10 · stop −8% (ถ้าใต้ฐานใกล้กว่าให้ใช้ใต้ฐาน) · เพดาน $250/ตัว */
+const PAPER={cap:1000,risk:10,stopPct:0.08,max:250};
+function plan(r){
+  if(r.c==null)return null;
+  const e=(r.pv!=null&&r.c<r.pv)?r.pv:r.c;          /* ยังไม่ถึง pivot → เข้าที่ pivot */
+  const st=e*(1-PAPER.stopPct);
+  let q=PAPER.risk/(e-st); q=Math.min(q,PAPER.max/e);
+  return {e:e,st:st,q:q,v:q*e};
+}
+function paperList(){try{return JSON.parse(localStorage.getItem('paper_trades_v1')||'[]');}catch(e){return [];}}
+function jl(sym){
+  const r=ROWS.find(x=>x.s===sym), P=plan(r); if(!P)return;
+  const d=new Date().toISOString().slice(0,10);
+  const txt='jl Trend paper '+sym+' · เข้า (pivot) $'+P.e.toFixed(2)+' · stop $'+P.st.toFixed(2)+' (−8%)'
+    +' · '+P.q.toFixed(2)+' หุ้น ≈ $'+P.v.toFixed(0)+' · RS '+(r.rs==null?'—':r.rs)
+    +' · TT '+(r.ttk?r.ttp+'/'+r.ttk:'—')+(VI.has(sym)?' · ⚠️ ซ้ำ VI บันทึกแยก':'')+' · เหตุผล: ';
+  try{navigator.clipboard.writeText(txt);}catch(e){}
+  const L=paperList(); if(!L.some(x=>x.s===sym&&x.d===d)){L.push({s:sym,d:d});
+    try{localStorage.setItem('paper_trades_v1',JSON.stringify(L));}catch(e){}}
+  const m=document.getElementById('msg'); if(m)m.textContent='คัดลอกแล้ว → วางในแชต IDEA · paper '+L.length+'/20';
+  render();
 }
 const COLS=[
-  {k:'s',  t:'หุ้น',    f:r=>'<b>'+esc(r.s)+'</b>'},
+  {k:'s',  t:'หุ้น',    f:r=>'<b>'+esc(r.s)+'</b>'+(VI.has(r.s)?' <span class="tag" title="อยู่ในพอร์ต VI — บันทึกแยก" style="background:rgba(52,194,125,.18);color:var(--up)">VI</span>':'')},
   {k:'rs', t:'RS',     f:r=>r.rs==null?'<span class="fl">—</span>'
       :r.rs+'<span class="bar"><i style="width:'+r.rs+'%"></i></span>'},
   {k:'c',  t:'ราคา',   f:r=>'<span class="mono">'+nm(r.c)+'</span>'},
@@ -311,6 +342,10 @@ const COLS=[
   {k:'rsi',t:'RSI',    f:r=>'<span class="mono '+(r.rsi==null?'fl':r.rsi<30?'dn':r.rsi>70?'up':'fl')
       +'">'+(r.rsi==null?'—':r.rsi.toFixed(0))+'</span>'},
   {k:'tp', t:'ถึง pivot',f:r=>'<span class="mono '+cl2(r.tp)+'">'+pc(r.tp)+'</span>'},
+  {k:'_plan',t:'ไม้ paper (เสี่ยง $10)',f:r=>{const P=plan(r); if(!P)return '—';
+    return '<span class="mono" title="เข้า · stop −8% · จำนวนหุ้น · มูลค่า">$'+P.e.toFixed(2)
+      +' <span class="dn">↓$'+P.st.toFixed(2)+'</span> · '+P.q.toFixed(2)+' หุ้น ≈ $'+P.v.toFixed(0)+'</span>';}},
+  {k:'_jl',t:'',f:r=>'<button class="btn" style="padding:2px 8px" onclick="jl(\''+esc(r.s)+'\')">📋 jl</button>'},
   {k:'_tag',t:'สัญญาณ',f:r=>{
     const T=[];
     if(r.f.bo)T.push('<span class="tag t-bo">เบรก</span>');
@@ -360,7 +395,9 @@ function render(){
     : '<div class="ld">ไม่มีตัวไหนผ่านเงื่อนไขนี้<br><span class="sub">ลองถอดตัวกรองออกบ้าง — '
       +'ไม่เจอเลยก็เป็นข้อมูลอย่างหนึ่ง แปลว่าตลาดตอนนี้ไม่มีของแบบที่กำลังหา</span></div>';
   document.getElementById('foot').innerHTML=
-    '<b>TT</b> = Trend Template ของ Minervini 8 ข้อ (ผ่าน/ที่คำนวณได้) · '
+    '<b>📋 paper Trend: '+paperList().length+'/20 ไม้</b> (นับจากปุ่ม jl ในเบราว์เซอร์นี้ · ตัวจริงคือแท็บ Journal) · '
+    +'<b>ไม้ paper</b> = เข้าที่ pivot (ถ้าเบรกแล้วใช้ราคาปิด) · stop −8% · ถ้าใต้ฐานใกล้กว่าให้ใช้ใต้ฐาน แล้วขนาดจะใหญ่ขึ้นได้ถึง $250<br>'
+    +'<b>TT</b> = Trend Template ของ Minervini 8 ข้อ (ผ่าน/ที่คำนวณได้) · '
     +'<b>วอลุ่ม</b> = เทียบค่าเฉลี่ย 50 วันก่อนหน้า ไม่รวมวันนี้ · '
     +'<b>RS</b> = อันดับ 1-99 เทียบเฉพาะหุ้นในชุดที่สแกน ต้องมีราคาครบ 1 ปีจึงจะมีอันดับ · '
     +'<b>pivot</b> = จุดสูงสุด 30 วันก่อนหน้า<br>'
