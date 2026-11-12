@@ -85,20 +85,13 @@
      เมนูด้านซ้าย
      ============================================================ */
   var PAGES=[
-    {g:'เนื้อหา', items:[
+    {g:'', items:[
       {h:'agents.html', n:'ทีม AI Agent',  i:'🤖'},
       {h:'brief.html',  n:'Morning Brief', i:'☀'},
-      {h:'weekly.html', n:'Market Weekly', i:'📅'}]},
-    {g:'ตลาด', items:[
-      {h:'overview.html',n:'Macroeconomics', i:'🧭'},,,,]},
-    {g:'วิเคราะห์', items:[
-      {h:'analyze.html',n:'Analyze', i:'⚡'},]},
-    {g:'เวิร์กสเปซ', items:[
-      {h:'https://docs.google.com/spreadsheets/d/1SyV2Ui6xF454p96AngoxNFMUPF0TnLyTovqx2J7v-kk/edit#gid=1629886240', n:'VI Portfolio (Sheet) ↗', i:'💼'},
-      {h:'https://docs.google.com/spreadsheets/d/1SyV2Ui6xF454p96AngoxNFMUPF0TnLyTovqx2J7v-kk/edit#gid=38686137', n:'Trading Log (Sheet) ↗', i:'📓'},
-      {h:'botlab.html', n:'Bot Lab · ทดสอบกลยุทธ์', i:'🧪'},
-      {h:'sheet-import.html',n:'นำเข้าจากชีต', i:'📥'},
-      {h:'sync.html',   n:'ซิงค์ข้ามเครื่อง', i:'☁'}]}
+      {h:'weekly.html', n:'Market Weekly', i:'📅'},
+      {h:'overview.html',n:'Macroeconomics', i:'🧭'},
+      {h:'analyze.html',n:'Analyze', i:'⚡'},
+      {h:'https://docs.google.com/spreadsheets/d/1SyV2Ui6xF454p96AngoxNFMUPF0TnLyTovqx2J7v-kk/edit#gid=1629886240', n:'VI Portfolio ↗', i:'💼'}]}
   ];
   function curPage(){
     var f=(location.pathname.split('/').pop()||'index.html').toLowerCase();
@@ -129,7 +122,7 @@
     aside.id='sidenav';
     aside.innerHTML='<div class="sbrand">'+brandHtml+'</div>'
       +PAGES.map(function(g){
-        return '<div class="sgrp">'+g.g+'</div>'
+        return (g.g?'<div class="sgrp">'+g.g+'</div>':'')
           +g.items.map(function(it){
             var on=(it.h===cur)||(cur===''&&it.h==='index.html');
             return '<a href="'+it.h+'"'+(on?' class="on"':'')+(/^https?:/.test(it.h)?' target="_blank" rel="noopener"':'')+'>'
