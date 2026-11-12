@@ -87,6 +87,7 @@
   var PAGES=[
     {g:'ใช้ทุกวัน', items:[
       {h:'brief.html',   n:'Morning Brief', i:'☀'},
+      {h:'weekly.html',  n:'Market Weekly', i:'📅'},
       {h:'overview.html',n:'ภาพรวมตลาด',   i:'📊'},
       {h:'events.html',  n:'ปฏิทินเหตุการณ์',i:'📅'},
       {h:'scanner.html', n:'Quant Scanner', i:'⚡'},
@@ -97,7 +98,7 @@
       {h:'sync.html',   n:'ซิงค์ข้ามเครื่อง', i:'☁'}]}
   ];
   /* หน้าที่ไม่อยู่ในเมนู (ไฟล์ยังอยู่ เปิดตรงได้ · ตัดออก 12 พ.ย. 2026 ตาม Rulebook v1.0):
-     index · plan · journal · weekly · macro · market · super · theme-matrix
+     index · plan · journal · macro · market · super · theme-matrix
      heatmap · breadth · sentiment · flow → รวมเป็นแท็บใน overview.html */
   function curPage(){
     var f=(location.pathname.split('/').pop()||'index.html').toLowerCase();
