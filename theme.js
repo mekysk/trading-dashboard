@@ -85,30 +85,20 @@
      เมนูด้านซ้าย
      ============================================================ */
   var PAGES=[
-    {g:'เนื้อหา', items:[
-      {h:'agents.html', n:'ทีม AI Agent',  i:'🤖'},
-      {h:'brief.html',  n:'Morning Brief', i:'☀'},
-      {h:'weekly.html', n:'Market Weekly', i:'📅'}]},
-    {g:'ตลาด', items:[
-      {h:'heatmap.html',n:'Heat Map',       i:'🔥'},
-      {h:'breadth.html',n:'Market Breadth', i:'📊'},
-      {h:'sentiment.html',n:'กลัว · โลภ',  i:'😨'},
-      {h:'flow.html',   n:'Money Flow',    i:'⇄'},
-      {h:'events.html', n:'ปฏิทินเหตุการณ์',i:'📅'}]},
-    {g:'วิเคราะห์', items:[
-      {h:'scanner.html',n:'Quant Scanner',   i:'⚡'},
-      {h:'theme-matrix.html',n:'Thematic Matrix', i:'🧩'},
-      {h:'super.html',  n:'Super Investor',   i:'⚖'},
-      {h:'macro.html',  n:'Macro Scorecard', i:'🧭'},
-      {h:'market.html', n:'ตลาด · กราฟ · ข่าว', i:'📈'}]},
-    {g:'เวิร์กสเปซ', items:[
-      {h:'index.html',  n:'พอร์ต',    i:'💼'},
-      {h:'plan.html',   n:'แผนลงทุน · ปรับสมดุล', i:'🧭'},
-      {h:'journal.html',n:'Backtest Journal', i:'📓'},
-      {h:'botlab.html', n:'Bot Lab · ทดสอบกลยุทธ์', i:'🧪'},
+    {g:'ใช้ทุกวัน', items:[
+      {h:'brief.html',   n:'Morning Brief', i:'☀'},
+      {h:'overview.html',n:'ภาพรวมตลาด',   i:'📊'},
+      {h:'events.html',  n:'ปฏิทินเหตุการณ์',i:'📅'},
+      {h:'scanner.html', n:'Quant Scanner', i:'⚡'},
+      {h:'botlab.html',  n:'Bot Lab · A/B', i:'🧪'},
+      {h:'agents.html',  n:'ทีม AI Agent',  i:'🤖'}]},
+    {g:'เครื่องมือ', items:[
       {h:'sheet-import.html',n:'นำเข้าจากชีต', i:'📥'},
       {h:'sync.html',   n:'ซิงค์ข้ามเครื่อง', i:'☁'}]}
   ];
+  /* หน้าที่ไม่อยู่ในเมนู (ไฟล์ยังอยู่ เปิดตรงได้ · ตัดออก 12 พ.ย. 2026 ตาม Rulebook v1.0):
+     index · plan · journal · weekly · macro · market · super · theme-matrix
+     heatmap · breadth · sentiment · flow → รวมเป็นแท็บใน overview.html */
   function curPage(){
     var f=(location.pathname.split('/').pop()||'index.html').toLowerCase();
     if(!f||f==='/')f='index.html';
@@ -116,6 +106,13 @@
   }
   function buildNav(){
     if(document.getElementById('sidenav'))return;
+    /* เปิดอยู่ในแท็บของ overview.html → ซ่อนหัวและเมนู */
+    if(window.self!==window.top){
+      var st=document.createElement('style');
+      st.textContent='body>header{display:none!important}';
+      document.head.appendChild(st);
+      return;
+    }
     var hbar=document.querySelector('.hbar');
     if(!hbar)return;
     var cur=curPage();

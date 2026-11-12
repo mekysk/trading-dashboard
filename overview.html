@@ -1,0 +1,49 @@
+<!DOCTYPE html><html lang="th"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ภาพรวมตลาด — Trading Dashboard</title>
+<style>
+:root{--bg:#0a0d13;--bg2:#10151e;--bg3:#161d29;--line:#222c3d;--tx:#e8eef8;
+--tx2:#96a3b8;--tx3:#5c6a80;--accent:#f5b942;--glow:245,185,66;--acc:#3b82f6}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-size:14px;line-height:1.55;
+font-family:-apple-system,'Segoe UI','Leelawadee UI','Noto Sans Thai',Tahoma,sans-serif}
+button{font-family:inherit;cursor:pointer}a{color:var(--acc);text-decoration:none}
+header{position:sticky;top:0;z-index:50;background:rgba(10,13,19,.96);
+backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.hbar{display:flex;align-items:center;gap:12px;padding:9px 16px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:15px}.logo span{color:var(--accent)}
+.btn{background:var(--bg3);border:1px solid var(--line);color:var(--tx2);
+padding:5px 11px;border-radius:7px;font-size:12px}
+.btn:hover{color:var(--tx)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-left:6px}
+.tabs .btn.on{background:rgba(var(--glow),.16);border-color:var(--accent);color:var(--accent);font-weight:600}
+.right{margin-left:auto;margin-right:10px;font-size:11px;color:var(--tx3)}
+iframe{display:block;width:100%;border:0;height:calc(100vh - 54px);background:var(--bg)}
+</style></head><body>
+<header><div class="hbar">
+  <div class="logo">TRADING <span>DASHBOARD</span></div>
+  <div class="tabs" id="tabs">
+    <button class="btn" data-p="breadth.html">📊 Breadth</button>
+    <button class="btn" data-p="heatmap.html">🔥 Heat Map</button>
+    <button class="btn" data-p="sentiment.html">😨 กลัว · โลภ</button>
+    <button class="btn" data-p="flow.html">⇄ Money Flow</button>
+  </div>
+  <div class="right" id="open"></div>
+</div></header>
+<iframe id="fr" title="ภาพรวมตลาด"></iframe>
+<script>
+(function(){
+  var tabs=document.querySelectorAll('#tabs .btn'), fr=document.getElementById('fr');
+  function show(p){
+    tabs.forEach(function(b){ b.classList.toggle('on', b.dataset.p===p); });
+    if(fr.getAttribute('src')!==p) fr.setAttribute('src', p);
+    document.getElementById('open').innerHTML='<a href="'+p+'" target="_blank">เปิดเต็มหน้า ↗</a>';
+    if(location.hash.slice(1)!==p) history.replaceState(null,'','#'+p);
+  }
+  tabs.forEach(function(b){ b.onclick=function(){ show(b.dataset.p); }; });
+  var h=location.hash.slice(1), ok=[].some.call(tabs,function(b){return b.dataset.p===h;});
+  show(ok?h:'breadth.html');
+})();
+</script>
+<script src="theme.js"></script>
+</body></html>
