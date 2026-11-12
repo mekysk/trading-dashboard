@@ -94,8 +94,7 @@
     {g:'วิเคราะห์', items:[
       {h:'analyze.html',n:'Analyze', i:'⚡'},]},
     {g:'เวิร์กสเปซ', items:[
-      {h:'index.html',  n:'พอร์ต',    i:'💼'},
-      {h:'plan.html',   n:'แผนลงทุน · ปรับสมดุล', i:'🧭'},
+      {h:'https://docs.google.com/spreadsheets/d/1Ay9xgrcKup0fbnALb0jq6_97AHXwryKVGSQo_baQDjc/edit#gid=418511816', n:'VI Portfolio (Sheet) ↗', i:'💼'},
       {h:'journal.html',n:'Backtest Journal', i:'📓'},
       {h:'botlab.html', n:'Bot Lab · ทดสอบกลยุทธ์', i:'🧪'},
       {h:'sheet-import.html',n:'นำเข้าจากชีต', i:'📥'},
@@ -133,7 +132,7 @@
         return '<div class="sgrp">'+g.g+'</div>'
           +g.items.map(function(it){
             var on=(it.h===cur)||(cur===''&&it.h==='index.html');
-            return '<a href="'+it.h+'"'+(on?' class="on"':'')+'>'
+            return '<a href="'+it.h+'"'+(on?' class="on"':'')+(/^https?:/.test(it.h)?' target="_blank" rel="noopener"':'')+'>'
               +'<i>'+it.i+'</i>'+it.n+'</a>';
           }).join('');
       }).join('');
