@@ -106,10 +106,10 @@
   }
   function buildNav(){
     if(document.getElementById('sidenav'))return;
-    /* เปิดอยู่ในแท็บของ overview.html → ซ่อนหัวและเมนู */
+    /* เปิดอยู่ใน overview.html → ซ่อนโลโก้/เมนู แต่เก็บปุ่มโหลดข้อมูลไว้ */
     if(window.self!==window.top){
       var st=document.createElement('style');
-      st.textContent='body>header{display:none!important}';
+      st.textContent='body>header{position:static!important}body>header .logo,body>header nav{display:none!important}';
       document.head.appendChild(st);
       return;
     }

@@ -15,35 +15,49 @@ backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
 .btn{background:var(--bg3);border:1px solid var(--line);color:var(--tx2);
 padding:5px 11px;border-radius:7px;font-size:12px}
 .btn:hover{color:var(--tx)}
-.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-left:6px}
-.tabs .btn.on{background:rgba(var(--glow),.16);border-color:var(--accent);color:var(--accent);font-weight:600}
+.jump{display:flex;gap:6px;flex-wrap:wrap;margin-left:6px}
 .right{margin-left:auto;margin-right:10px;font-size:11px;color:var(--tx3)}
-iframe{display:block;width:100%;border:0;height:calc(100vh - 54px);background:var(--bg)}
+section{border-bottom:1px solid var(--line)}
+iframe{display:block;width:100%;border:0;height:600px;background:var(--bg);overflow:hidden}
 </style></head><body>
 <header><div class="hbar">
   <div class="logo">TRADING <span>DASHBOARD</span></div>
-  <div class="tabs" id="tabs">
-    <button class="btn" data-p="breadth.html">📊 Breadth</button>
-    <button class="btn" data-p="heatmap.html">🔥 Heat Map</button>
-    <button class="btn" data-p="sentiment.html">😨 กลัว · โลภ</button>
-    <button class="btn" data-p="flow.html">⇄ Money Flow</button>
+  <div class="jump">
+    <a class="btn" href="#s-breadth">📊 Breadth</a>
+    <a class="btn" href="#s-heatmap">🔥 Heat Map</a>
+    <a class="btn" href="#s-sentiment">😨 กลัว · โลภ</a>
+    <a class="btn" href="#s-flow">⇄ Money Flow</a>
   </div>
-  <div class="right" id="open"></div>
+  <div class="right"><button class="btn" id="bAll" style="color:var(--accent);border-color:var(--accent)">↻ ดึงข้อมูลทั้ง 4 ส่วน</button></div>
 </div></header>
-<iframe id="fr" title="ภาพรวมตลาด"></iframe>
+<section id="s-breadth"><iframe src="breadth.html" scrolling="no" title="Market Breadth"></iframe></section>
+<section id="s-heatmap"><iframe src="heatmap.html" scrolling="no" title="Heat Map"></iframe></section>
+<section id="s-sentiment"><iframe src="sentiment.html" scrolling="no" title="กลัว · โลภ"></iframe></section>
+<section id="s-flow"><iframe src="flow.html" scrolling="no" title="Money Flow"></iframe></section>
 <script>
-(function(){
-  var tabs=document.querySelectorAll('#tabs .btn'), fr=document.getElementById('fr');
-  function show(p){
-    tabs.forEach(function(b){ b.classList.toggle('on', b.dataset.p===p); });
-    if(fr.getAttribute('src')!==p) fr.setAttribute('src', p);
-    document.getElementById('open').innerHTML='<a href="'+p+'" target="_blank">เปิดเต็มหน้า ↗</a>';
-    if(location.hash.slice(1)!==p) history.replaceState(null,'','#'+p);
+/* ให้แต่ละส่วนสูงเท่าเนื้อหาจริง → เลื่อนทั้งหน้าเป็นหน้าเดียว */
+document.querySelectorAll('section iframe').forEach(function(fr){
+  function fit(){
+    try{ var d=fr.contentDocument; if(!d||!d.body)return;
+      var h=Math.max(d.body.scrollHeight,d.documentElement.scrollHeight);
+      if(h>0)fr.style.height=h+'px'; }catch(e){}
   }
-  tabs.forEach(function(b){ b.onclick=function(){ show(b.dataset.p); }; });
-  var h=location.hash.slice(1), ok=[].some.call(tabs,function(b){return b.dataset.p===h;});
-  show(ok?h:'breadth.html');
-})();
+  fr.addEventListener('load',function(){
+    fit();
+    try{ new ResizeObserver(fit).observe(fr.contentDocument.body); }catch(e){}
+    setTimeout(fit,1500); setTimeout(fit,5000);
+  });
+});
+document.getElementById('bAll').onclick=function(){
+  document.querySelectorAll('section iframe').forEach(function(fr){
+    try{ var b=fr.contentDocument.getElementById('bLoad'); if(b)b.click(); }catch(e){}
+  });
+};
+document.querySelectorAll('.jump a').forEach(function(a){
+  a.onclick=function(e){ e.preventDefault();
+    var t=document.querySelector(a.getAttribute('href'));
+    window.scrollTo({top:t.offsetTop-56,behavior:'smooth'}); };
+});
 </script>
 <script src="theme.js"></script>
 </body></html>
