@@ -90,14 +90,9 @@
       {h:'brief.html',  n:'Morning Brief', i:'☀'},
       {h:'weekly.html', n:'Market Weekly', i:'📅'}]},
     {g:'ตลาด', items:[
-      {h:'overview.html',n:'ภาพรวมตลาด (รวม 4)', i:'🧭'},
-      {h:'heatmap.html',n:'Heat Map',       i:'🔥'},
-      {h:'breadth.html',n:'Market Breadth', i:'📊'},
-      {h:'sentiment.html',n:'กลัว · โลภ',  i:'😨'},
-      {h:'flow.html',   n:'Money Flow',    i:'⇄'}]},
+      {h:'overview.html',n:'Macroeconomics', i:'🧭'},,,,]},
     {g:'วิเคราะห์', items:[
-      {h:'analyze.html',n:'Analyze (Scanner · Theme · Super)', i:'⚡'},
-      {h:'market.html', n:'ตลาด · กราฟ · ข่าว', i:'📈'}]},
+      {h:'analyze.html',n:'Analyze', i:'⚡'},]},
     {g:'เวิร์กสเปซ', items:[
       {h:'index.html',  n:'พอร์ต',    i:'💼'},
       {h:'plan.html',   n:'แผนลงทุน · ปรับสมดุล', i:'🧭'},
@@ -116,8 +111,12 @@
     /* เปิดอยู่ใน overview.html → ซ่อนโลโก้/เมนู แต่เก็บปุ่มโหลดข้อมูลไว้ */
     if(window.self!==window.top){
       var st=document.createElement('style');
-      st.textContent='body>header{position:static!important}body>header .logo,body>header nav{display:none!important}';
+      st.textContent='body>header{position:static!important}body>header .logo,body>header nav.sitelinks{display:none!important}';
       document.head.appendChild(st);
+      /* ซ่อนเฉพาะ nav ที่เป็นลิงก์ข้ามหน้า — nav ของ market.html เป็นแท็บภายใน ต้องเห็น */
+      document.querySelectorAll('header nav').forEach(function(n){
+        if(n.querySelectorAll('a[href$=".html"]').length>=2)n.classList.add('sitelinks');
+      });
       return;
     }
     var hbar=document.querySelector('.hbar');
