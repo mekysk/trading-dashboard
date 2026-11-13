@@ -12,7 +12,7 @@ const HERE=dirname(fileURLToPath(import.meta.url));
 const ROOT=join(HERE,'..');
 const OUT=process.env.SCAN_OUT||join(ROOT,'scan.json');
 const WORKERS=Number(process.env.SCAN_WORKERS||8);
-const RETRY=2;
+const RETRY=3;   /* 13 พ.ย. 2026: 2 -> 3 เพราะ 403 คือโดนจำกัดอัตรา ต้องให้โอกาสมากกว่าเดิม */
 
 /* ---- งบเวลา ----
    รอบ 2026-10-04 ถูก GitHub ตัดทิ้งตอนครบ 30 นาทีพอดี คือสแกนไม่เสร็จในเวลา
@@ -125,7 +125,10 @@ async function fetchOne(src,sym,budget){
     }catch(e){
       const m=String(e&&(e.message||e.name)||e);
       if(a===RETRY||/หมดเวลา/.test(m))throw e;
-      const back=Math.min(700*(a+1),Math.max(0,budget-Date.now()-1500));
+      /* 403 / โดนจำกัดอัตรา = ต้องถอยนานกว่า error ทั่วไป ไม่งั้นยิงซ้ำก็โดนซ้ำ */
+      const slow=/HTTP 403|HTTP 429|จำกัดอัตรา/.test(m);
+      const base=slow?2500:700;
+      const back=Math.min(base*(a+1),Math.max(0,budget-Date.now()-1500));
       if(back<=0)throw e;
       await new Promise(r=>setTimeout(r,back));
     }
@@ -144,10 +147,11 @@ async function getCsv(sym){
       return bars;
     }catch(e){
       last=e;
-      /* Yahoo ตอบ 403/404 = "ไม่มีสัญลักษณ์นี้" ซึ่งเป็นสัญญาณที่เชื่อถือได้
-         ต้องจำไว้ตรงนี้ ไม่งั้นจะถูกข้อความของแหล่งถัดไปกลบ
-         (เจอตอนทดสอบ: Stooq ตอบทีหลังว่า "ไม่ใช่ไฟล์ CSV" เลยนับ 403 ไม่ได้เลย) */
-      if((src==='yahoo'||src==='yahoo2')&&/HTTP (403|404)/.test(String(e.message||e)))
+      /* แก้ 13 พ.ย. 2026: เดิมนับ 403 ว่า "ไม่มีสัญลักษณ์นี้" ซึ่งผิด
+         403 = ถูกปฏิเสธ/โดนจำกัดอัตรา (Yahoo บล็อก IP ของ GitHub Actions เป็นประจำ)
+         404 = ไม่มีสัญลักษณ์จริง  ← มีแต่อันนี้ที่เชื่อถือได้
+         ผลของบั๊กเดิม: หุ้นจริงอย่าง BK MMC K FI DFS ถูกติดป้ายว่าเลิกซื้อขาย */
+      if((src==='yahoo'||src==='yahoo2')&&/HTTP 404/.test(String(e.message||e)))
         notFound=true;
       if(/หมดเวลา/.test(String(e.message||e)))break;
     }
@@ -155,7 +159,7 @@ async function getCsv(sym){
   const err=last||new Error('ไม่มีแหล่งข้อมูลที่ใช้ได้');
   if(notFound){
     err.notFound=true;
-    err.message='ไม่พบสัญลักษณ์นี้ที่ Yahoo (403/404) · แหล่งสำรองก็ไม่ได้: '+err.message;
+    err.message='ไม่พบสัญลักษณ์นี้ที่ Yahoo (404) · แหล่งสำรองก็ไม่ได้: '+err.message;
   }
   return Promise.reject(err);
 }
