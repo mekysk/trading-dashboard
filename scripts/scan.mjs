@@ -353,7 +353,7 @@ const rows=done.map(m=>({
   up200:m.ma200up, ttp:m.ttPass, ttk:m.ttKnown, ttf:m.ttFull,
   vs:round(m.volSpike), dv:m.avgDollarVol50==null?null:Math.round(m.avgDollarVol50),
   obv:round(m.obv,3), rsi:round(m.rsi,1),
-  pv:round(m.pivot), tp:round(m.toPivot),
+  pv:round(m.pivot), tp:round(m.toPivot), bl:round(m.baseLow),
   f:{vcp:m.vcp,vdu:m.vdu,ppbp:m.ppbp,np:m.nearPivot,bo:m.breakout,
      os:m.oversold,bc:m.bounce,vd:m.volDry,vu:m.volSurge}
 }));

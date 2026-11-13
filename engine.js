@@ -158,6 +158,8 @@ function metrics(bars){
 
   /* --- pivot = จุดสูงสุด 30 วันก่อนหน้า (ไม่รวมวันนี้) --- */
   m.pivot=n>=31?maxOf(h,n-31,n-2):null;
+  /* ก้นฐาน = จุดต่ำสุดของหน้าต่างเดียวกับ pivot — ใช้คำนวณ stop ตาม Rulebook ข้อ 2 */
+  m.baseLow=n>=31?minOf(lo,n-31,n-2):null;
   m.toPivot=(m.pivot&&m.pivot>0)?(last.c/m.pivot-1)*100:null;
   m.nearPivot=(m.toPivot!=null&&m.toPivot<=0&&m.toPivot>=-4);
   m.breakout=(m.toPivot!=null&&m.toPivot>0&&m.volSpike!=null&&m.volSpike>=1.5);
