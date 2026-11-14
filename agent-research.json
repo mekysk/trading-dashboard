@@ -1,0 +1,31 @@
+{
+  "agent": "research-scout",
+  "generated": "2026-11-14T11:28:44Z",
+  "status": "ok",
+  "headline": "หามา 7 เปิดอ่านครบ — เข้าเกณฑ์ใช้ 3 ชิ้น: ต้นทุนถือข้ามคืน · กฎ rebalance · เกณฑ์ t วิกฤตตอนคัดสัญญาณ",
+  "found": 7,
+  "items": [
+    {
+      "t": "What Is the True Cost of Trading in FX Markets? (CME Group, 17 มี.ค. 2026)",
+      "s": "ok",
+      "d": "ใช้ — บน CFD ต้นทุนถือข้าม 1 วัน $12.59 สูงกว่า spread ทั้งไม้ $8.71 ราว 1.4 เท่า · doc spread ของเรายังไม่มีช่อง swap เลย วัดเพิ่มได้สัปดาห์นี้ (CME เป็นตลาด futures = มีผลประโยชน์ทางการค้า) · https://www.cmegroup.com/articles/2026/what-is-the-true-cost-of-trading-in-fx-markets.html"
+    },
+    {
+      "t": "Best Practices for Portfolio Rebalancing (Jaconetti, Kinniry, Zilbering — Vanguard, ก.ค. 2010)",
+      "s": "ok",
+      "d": "ใช้ — 60/40 ปี 1926–2009: รายปี/กรอบ 5% เทรด 28 ครั้ง vs รายเดือน/กรอบ 1% เทรด 389 ครั้ง ผลต่างกัน 0.1pp ผันผวนต่างกัน 0.3pp · เขียนกฎ rebalance ลง Rulebook ได้ · https://indexacapital.com/bundles/unaiadvisor/docs/papers/2010-Vanguard-Best-practices-for-portfolio-rebalancing.pdf"
+    },
+    {
+      "t": "Backtesting Strategies Based on Multiple Signals (Robert Novy-Marx — NBER w21329, ก.ค. 2015)",
+      "s": "ok",
+      "d": "ใช้ — คัด 3 จาก 20 สัญญาณ ลำเอียงเท่ากับเลือกชิ้นดีสุดจาก ~1,250 ตัวเลือก ต้องตั้งเกณฑ์ t ประมาณ 5 ไม่ใช่ 2 · ใส่ลง SPEC ทดสอบได้เลย ไม่ใช่การล่า edge · https://www.nber.org/papers/w21329.pdf"
+    }
+  ],
+  "extra": [
+    "เก็บ — Mind the Gap 2025 (Morningstar): ช่องว่าง 1.2pp/ปี หรือ ~15% ของผลรวม ทศวรรษจบ 31 ธ.ค. 2024 · วัดจากกระแสเงินกองทุน ไม่ใช่วินัยเทรดเดอร์ CFD · หน้า Morningstar ต้นฉบับดึงมาได้เป็นหน้าเปล่า อ่านผ่านรายงานของ WealthManagement (David Bodamer, 13 ส.ค. 2025) · https://www.wealthmanagement.com/investing-strategies/morningstar-investors-miss-out-on-15-of-fund-total-returns",
+    "เก็บ — On Kelly Betting: Some Limitations (Hsieh & Barmish, arXiv:1710.01787v1, 2017): ที่ K*≈0.6667 expected max drawdown ≈ 0.903 · ใส่ข้อจำกัด E[D]≤0.2 สัดส่วนลดเหลือ ~0.1 · แต่เป็นโมเดลโยนเหรียญ และการจัดขนาดล็อกใน Rulebook v1.0 ถึง 25 ธ.ค. · https://arxiv.org/pdf/1710.01787",
+    "ทิ้ง — The Deflated Sharpe Ratio (Bailey & López de Prado, JPM 40(5), 2014): หน้า SSRN ให้แต่บทคัดย่อ อ่านตัวเลขและสูตรไม่ได้ และหัวข้อซ้ำกับ Novy-Marx · https://papers.ssrn.com/abstract=2460551",
+    "ทิ้ง — FCA multi-firm review: CFD providers' provision of price and value (13 พ.ย. 2025): ตรงขอบเขตที่สุดแต่ไม่ให้ตัวเลขเลยแม้ตัวเดียว บอกแค่ว่าเห็นความต่างกว้างของอัตราใน overnight funding · https://www.fca.org.uk/publications/multi-firm-reviews/contracts-difference-providers-provision-price-and-value"
+  ],
+  "note": "ไม่มีชิ้นไหนเสนอกลยุทธ์ สัญญาณ หรือพารามิเตอร์ใหม่ (ปิดการล่า edge ถึง 25 ธ.ค. 2026) · 3 ชิ้นที่ได้ป้ายใช้ ต้องย้ายเข้า 32_Literature ใน 2BRAIN เองตอนปิดสัปดาห์วันศุกร์ · เนื้อหาต้นทุน ค่าธรรมเนียม และภาษีเป็นข้อมูล ไม่ใช่คำปรึกษาวิชาชีพ"
+}
