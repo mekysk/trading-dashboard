@@ -1,31 +1,33 @@
 {
   "agent": "research-scout",
-  "generated": "2026-11-14T11:28:44Z",
+  "generated": "2026-11-15T11:26:54Z",
   "status": "ok",
-  "headline": "หามา 7 เปิดอ่านครบ — เข้าเกณฑ์ใช้ 3 ชิ้น: ต้นทุนถือข้ามคืน · กฎ rebalance · เกณฑ์ t วิกฤตตอนคัดสัญญาณ",
-  "found": 7,
+  "headline": "หามา 9 คัดเหลือ 3 — ใช้ 2 ชิ้น (ช่องว่างพฤติกรรมแปรตามความผันผวน + เกณฑ์ PBO) และมีงานโต้ตัวเลข 1.2% ของเมื่อวาน",
+  "found": 9,
   "items": [
     {
-      "t": "What Is the True Cost of Trading in FX Markets? (CME Group, 17 มี.ค. 2026)",
+      "t": "Mind the Gap 2026 (Ptak, Morningstar, ส.ค. 2026)",
       "s": "ok",
-      "d": "ใช้ — บน CFD ต้นทุนถือข้าม 1 วัน $12.59 สูงกว่า spread ทั้งไม้ $8.71 ราว 1.4 เท่า · doc spread ของเรายังไม่มีช่อง swap เลย วัดเพิ่มได้สัปดาห์นี้ (CME เป็นตลาด futures = มีผลประโยชน์ทางการค้า) · https://www.cmegroup.com/articles/2026/what-is-the-true-cost-of-trading-in-fx-markets.html"
+      "d": "ใช้ — เปิดรายงานจริง ช่องว่าง -1.2 จุด/ปี 10 ปีถึง ธ.ค. 2025 ตัวขับคือความผันผวน (-0.4 ถึง -2.1 จุด) ไม่ใช่ค่าธรรมเนียม (-1.0 เทียบ -1.2) · https://www.morningstar.com/content/cs-assets/v3/assets/blt9415ea4cc4157833/blt852a4301adc2f5db/6a7373d51f7b5ae2da78e1e8/US_Mind_the_Gap_2026.pdf"
     },
     {
-      "t": "Best Practices for Portfolio Rebalancing (Jaconetti, Kinniry, Zilbering — Vanguard, ก.ค. 2010)",
+      "t": "The Probability of Backtest Overfitting (Bailey, Borwein, López de Prado & Zhu, 2017)",
       "s": "ok",
-      "d": "ใช้ — 60/40 ปี 1926–2009: รายปี/กรอบ 5% เทรด 28 ครั้ง vs รายเดือน/กรอบ 1% เทรด 389 ครั้ง ผลต่างกัน 0.1pp ผันผวนต่างกัน 0.3pp · เขียนกฎ rebalance ลง Rulebook ได้ · https://indexacapital.com/bundles/unaiadvisor/docs/papers/2010-Vanguard-Best-practices-for-portfolio-rebalancing.pdf"
+      "d": "ใช้ — ได้เกณฑ์ตัด PBO > 0.05 ทิ้งโมเดล รันกับผลทดสอบในคลังได้เลย ตัวอย่าง random walk ได้ Sharpe 1.27 แต่ PBO 55% · https://escholarship.org/content/qt4w1110bb/qt4w1110bb.pdf"
     },
     {
-      "t": "Backtesting Strategies Based on Multiple Signals (Robert Novy-Marx — NBER w21329, ก.ค. 2015)",
-      "s": "ok",
-      "d": "ใช้ — คัด 3 จาก 20 สัญญาณ ลำเอียงเท่ากับเลือกชิ้นดีสุดจาก ~1,250 ตัวเลือก ต้องตั้งเกณฑ์ t ประมาณ 5 ไม่ใช่ 2 · ใส่ลง SPEC ทดสอบได้เลย ไม่ใช่การล่า edge · https://www.nber.org/papers/w21329.pdf"
+      "t": "Fulkerson, Jordan, Riley & Yan — ตรวจซ้ำ Return Gap (Financial Analysts Journal 2026)",
+      "s": "info",
+      "d": "เก็บ — โต้ว่าต้นทุนจับจังหวะจริงราว 0.10%/ปี ไม่ใช่ 1.2% แต่อ่านได้แค่บทสรุปของ Walton ยังไม่ได้เปิด paper จึงตรวจเลขไม่ได้ · https://walton.uark.edu/insights/posts/do_investors_really_lose_fund_returns_to_bad_timing.php"
     }
   ],
   "extra": [
-    "เก็บ — Mind the Gap 2025 (Morningstar): ช่องว่าง 1.2pp/ปี หรือ ~15% ของผลรวม ทศวรรษจบ 31 ธ.ค. 2024 · วัดจากกระแสเงินกองทุน ไม่ใช่วินัยเทรดเดอร์ CFD · หน้า Morningstar ต้นฉบับดึงมาได้เป็นหน้าเปล่า อ่านผ่านรายงานของ WealthManagement (David Bodamer, 13 ส.ค. 2025) · https://www.wealthmanagement.com/investing-strategies/morningstar-investors-miss-out-on-15-of-fund-total-returns",
-    "เก็บ — On Kelly Betting: Some Limitations (Hsieh & Barmish, arXiv:1710.01787v1, 2017): ที่ K*≈0.6667 expected max drawdown ≈ 0.903 · ใส่ข้อจำกัด E[D]≤0.2 สัดส่วนลดเหลือ ~0.1 · แต่เป็นโมเดลโยนเหรียญ และการจัดขนาดล็อกใน Rulebook v1.0 ถึง 25 ธ.ค. · https://arxiv.org/pdf/1710.01787",
-    "ทิ้ง — The Deflated Sharpe Ratio (Bailey & López de Prado, JPM 40(5), 2014): หน้า SSRN ให้แต่บทคัดย่อ อ่านตัวเลขและสูตรไม่ได้ และหัวข้อซ้ำกับ Novy-Marx · https://papers.ssrn.com/abstract=2460551",
-    "ทิ้ง — FCA multi-firm review: CFD providers' provision of price and value (13 พ.ย. 2025): ตรงขอบเขตที่สุดแต่ไม่ให้ตัวเลขเลยแม้ตัวเดียว บอกแค่ว่าเห็นความต่างกว้างของอัตราใน overnight funding · https://www.fca.org.uk/publications/multi-firm-reviews/contracts-difference-providers-provision-price-and-value"
+    "Vanguard — cost averaging vs lump sum (lump sum ชนะ 61.6-73.7% ของรอบ 1 ปี, ชนะกลาง +2.2% ที่หุ้น 100%) · คุณภาพพอป้ายใช้ แต่เป็นหัวข้อ 5 ไม่เร่งสัปดาห์นี้ · https://vanguard.co.uk/professional/vanguard-365/financial-planning/financial-well-being/cost-averaging",
+    "Deep, Deep & Lamptey (2025) walk-forward validation framework · ขัดกันเอง บอกปรับ multiple testing แต่หัวข้อ 3.7 เขียนว่าไม่ปรับ, p=0.34 กำลังทดสอบ ~12% · https://arxiv.org/pdf/2512.12924",
+    "Frazzini, Israel & Moskowitz — trading costs of asset pricing anomalies · อ่านแค่บทรีวิว Alpha Architect ยังไม่เปิด paper และเป็นสเกลสถาบัน (ขนาดกองคุ้มทุนโมเมนตัม $52bn) · https://alphaarchitect.com/surprise-the-size-value-and-momentum-anomalies-survive-after-trading-costs/",
+    "Wysocki (2025) Sizing the Risk: Kelly, VIX, Hybrid ใน put-writing · อ่านตัวเลขผลลัพธ์ไม่ได้ หน้าถูกตัดก่อนหัวข้อ 5-6 และนอกขอบเขต · https://arxiv.org/html/2508.16598v1",
+    "TradingPlatforms.co.uk อัตราขาดทุนบัญชี CFD อังกฤษ ผ่าน Pound Sterling Live · ไม่บอกช่วงเวลาและวิธีวัด (IG/CMC ~68%, Plus500 76%, Swissquote >81%) · https://www.poundsterlinglive.com/news/23132-even-at-major-uk-brokers-most-cfd-accounts-lost-money-report-finds",
+    "Mind the Gap: ETF Investors Missed $3.8 Trillion (Advisor Perspectives) · เปิดไม่ได้ เว็บคืน client_error · https://www.advisorperspectives.com/commentaries/2026/08/07/mind-the-gap-etf-investors-missed-3-8-trillion"
   ],
-  "note": "ไม่มีชิ้นไหนเสนอกลยุทธ์ สัญญาณ หรือพารามิเตอร์ใหม่ (ปิดการล่า edge ถึง 25 ธ.ค. 2026) · 3 ชิ้นที่ได้ป้ายใช้ ต้องย้ายเข้า 32_Literature ใน 2BRAIN เองตอนปิดสัปดาห์วันศุกร์ · เนื้อหาต้นทุน ค่าธรรมเนียม และภาษีเป็นข้อมูล ไม่ใช่คำปรึกษาวิชาชีพ"
+  "note": "ชิ้นป้ายใช้ 2 ชิ้นต้องย้ายเข้า 2BRAIN/32_Literature เองตอนปิดสัปดาห์วันศุกร์ · ไม่มีการเสนอกลยุทธ์ สัญญาณ หรือพารามิเตอร์ใหม่ (ล็อกการล่า edge ถึง 25 ธ.ค. 2026) · เนื้อหากองทุน/ภาษี/การเงินส่วนบุคคลเป็นข้อมูลจากงานวิจัย ไม่ใช่คำปรึกษาวิชาชีพ"
 }
