@@ -1,115 +1,115 @@
 {
-  "generated": "2026-10-25T20:00:00+07:00",
+  "generated": "2026-11-15T20:00:00+07:00",
   "earnings": [
     {
       "sym": "V",
       "period": "Q4 FY26",
       "date": "2026-10-27",
       "when": "amc",
-      "eps": null,
+      "eps": 3.48,
       "epsEst": 3.44,
-      "rev": null,
+      "rev": 12100,
       "revEst": 12090,
-      "src": "https://news.alphastreet.com/visa-q4-2026-earnings-preview-october-27-street-expects-3-44-eps/amp/"
+      "src": "https://www.zacks.com/stock/news/3017346/visa-q4-earnings-beat-estimates-on-strong-payment-volumes"
     },
     {
       "sym": "MSFT",
       "period": "Q1 FY27",
       "date": "2026-10-28",
       "when": "amc",
-      "eps": null,
+      "eps": 4.92,
       "epsEst": 4.72,
-      "rev": null,
-      "revEst": 90700,
-      "src": "https://www.marketbeat.com/earnings/reports/2026-10-28-microsoft-co-stock/"
+      "rev": 92280,
+      "revEst": 90640,
+      "src": "https://stockstory.org/us/stocks/nasdaq/msft/news/earnings/microsoft-nasdaqmsft-posts-better-than-expected-sales-in-q3-cy2026"
     },
     {
       "sym": "GOOGL",
       "period": "Q3 2026",
       "date": "2026-10-28",
       "when": "amc",
-      "eps": null,
+      "eps": 2.12,
       "epsEst": 3.03,
-      "rev": null,
+      "rev": 127580,
       "revEst": 127920,
-      "src": "https://www.marketbeat.com/earnings/reports/2026-10-28-alphabet-inc-stock/"
+      "src": "https://www.zacks.com/stock/news/3018973/googl-q3-earnings-miss-estimates-cloud-search-aid-top-line-growth"
     },
     {
       "sym": "AMZN",
       "period": "Q3 2026",
       "date": "2026-10-29",
       "when": "amc",
-      "eps": null,
-      "epsEst": 1.96,
-      "rev": null,
+      "eps": 1.89,
+      "epsEst": 1.97,
+      "rev": 201900,
       "revEst": 202200,
-      "src": "https://www.stocktitan.net/news/AMZN/amazon-com-to-webcast-third-quarter-2026-financial-results-kc6pmgy0vv91.html"
+      "src": "https://www.newsquawk.com/headlines/amazoncom-inc-amzn-q3-2026-usd-eps-189-exp-197-sales-2019bln-exp-2022bln"
     },
     {
       "sym": "MA",
       "period": "Q3 2026",
       "date": "2026-10-29",
       "when": "bmo",
-      "eps": null,
+      "eps": 5.31,
       "epsEst": 5.16,
-      "rev": null,
+      "rev": 9800,
       "revEst": 9660,
-      "src": "https://www.marketbeat.com/earnings/reports/2026-10-29-mastercard-incorporated-stock/"
+      "src": "https://www.zacks.com/stock/news/3018925/mastercard-beats-q3-earnings-on-higher-cross-border-volumes-pricing"
     },
     {
       "sym": "LLY",
       "period": "Q3 FY26",
       "date": "2026-10-29",
       "when": "bmo",
-      "eps": null,
-      "epsEst": 5.70,
-      "rev": null,
-      "revEst": 22580,
-      "src": "https://www.marketbeat.com/earnings/reports/2026-10-29-eli-lilly-and-company-stock/"
+      "eps": 7.48,
+      "epsEst": 7.11,
+      "rev": 24400,
+      "revEst": 22110,
+      "src": "https://www.earningswhispers.com/article/LLY/r839"
     },
     {
       "sym": "XOM",
       "period": "Q3 FY26",
       "date": "2026-10-30",
       "when": "bmo",
-      "eps": null,
-      "epsEst": 4.10,
-      "rev": null,
-      "revEst": 105430,
-      "src": "https://www.marketbeat.com/earnings/reports/2026-10-30-exxon-mobil-co-stock/"
+      "eps": 4.23,
+      "epsEst": 3.9,
+      "rev": 113160,
+      "revEst": 103000,
+      "src": "https://www.zacks.com/stock/news/3019753/xom-q3-earnings-&-revenues-beat-estimates-on-strong-refining-margins"
     },
     {
       "sym": "AAPL",
       "period": "Q4 FY26",
       "date": "2026-11-02",
       "when": "amc",
-      "eps": null,
+      "eps": 2.1,
       "epsEst": 1.99,
-      "rev": null,
-      "revEst": 113300,
-      "src": "https://www.macrumors.com/2026/10/06/apple-q4-2026-earnings-nov-2/"
+      "rev": 114500,
+      "revEst": 113400,
+      "src": "https://www.newsquawk.com/headlines/apple-aapl-q4-2026-usd-eps-210-exp-199-revenue-1145bln-exp-1134bln-net-income-307bln-exp-29bln-operating-income-356bln-exp-346bln-operating-expenses-192bln"
     },
     {
       "sym": "AMD",
       "period": "Q3 2026",
       "date": "2026-11-03",
       "when": "amc",
-      "eps": null,
-      "epsEst": 1.94,
-      "rev": null,
-      "revEst": 13060,
-      "src": "https://www.marketbeat.com/earnings/reports/2026-11-3-advanced-micro-devices-inc-stock/"
+      "eps": 2.09,
+      "epsEst": 1.95,
+      "rev": 13400,
+      "revEst": 13100,
+      "src": "https://www.newsquawk.com/headlines/advanced-micro-devices-inc-amd-q3-2026-usd-adj-eps-209-exp-195-revenue-134bln-exp-131bln"
     },
     {
       "sym": "NVDA",
       "period": "Q3 FY27",
-      "date": "2026-11-18",
+      "date": "2026-11-17",
       "when": "amc",
       "eps": null,
       "epsEst": 2.49,
       "rev": null,
-      "revEst": 108800,
-      "src": "https://www.marketbeat.com/earnings/reports/2026-11-18-nvidia-co-stock/"
+      "revEst": 108700,
+      "src": "https://therighttrader.com/earnings-calendar/nvda"
     },
     {
       "sym": "WMT",
@@ -119,74 +119,41 @@
       "eps": null,
       "epsEst": 0.64,
       "rev": null,
-      "revEst": 188700,
-      "src": "https://www.marketbeat.com/instant-alerts/walmart-nasdaqwmt-issues-q3-2027-earnings-guidance-2026-08-20/"
+      "revEst": 187200,
+      "src": "https://therighttrader.com/earnings-calendar/wmt"
     },
     {
       "sym": "CRM",
       "period": "Q3 FY27",
       "date": "2026-12-02",
+      "when": "",
+      "eps": null,
+      "epsEst": 3.43,
+      "rev": null,
+      "revEst": 11460,
+      "src": "https://sg.finance.yahoo.com/news/salesforce-crm-surpasses-market-returns-214502634.html"
+    },
+    {
+      "sym": "AVGO",
+      "period": "Q4 FY26",
+      "date": "2026-12-09",
       "when": "amc",
       "eps": null,
       "epsEst": 3.45,
       "rev": null,
-      "revEst": 11500,
-      "src": "https://www.marketbeat.com/stocks/NYSE/CRM/earnings/"
+      "revEst": 34900,
+      "src": "https://therighttrader.com/earnings-calendar/avgo"
     },
     {
-      "sym": "UNH",
-      "period": "Q3 FY26",
-      "date": "2026-10-13",
-      "when": "bmo",
-      "eps": 4.69,
-      "epsEst": 4.14,
-      "rev": 112700,
-      "revEst": 111310,
-      "src": "https://finance.yahoo.com/healthcare/articles/unh-tops-q3-earnings-lower-160600320.html"
-    },
-    {
-      "sym": "JPM",
-      "period": "Q3 2026",
-      "date": "2026-10-13",
-      "when": "bmo",
-      "eps": 5.75,
-      "epsEst": 5.93,
+      "sym": "COST",
+      "period": "Q1 FY27",
+      "date": "2026-12-10",
+      "when": "amc",
+      "eps": null,
+      "epsEst": 4.91,
       "rev": null,
-      "revEst": null,
-      "src": "https://www.investing.com/analysis/bank-earnings-q3-2026-goldman-30-beat-jpmorgan-misses-revenue-200689491"
-    },
-    {
-      "sym": "NFLX",
-      "period": "Q3 2026",
-      "date": "2026-10-20",
-      "when": "amc",
-      "eps": 0.87,
-      "epsEst": 0.82,
-      "rev": 12870,
-      "revEst": 12870,
-      "src": "https://www.stocktitan.net/news/NFLX/netflix-q3-2026-earnings-revenue-12-billion-35pct-margin.html"
-    },
-    {
-      "sym": "META",
-      "period": "Q3 2026",
-      "date": "2026-10-21",
-      "when": "amc",
-      "eps": 3.83,
-      "epsEst": 3.57,
-      "rev": 64600,
-      "revEst": 63340,
-      "src": "https://www.cnbc.com/2026/10/21/meta-earnings-q3-2026-live-updates.html"
-    },
-    {
-      "sym": "TSLA",
-      "period": "Q3 2026",
-      "date": "2026-10-21",
-      "when": "amc",
-      "eps": 0.48,
-      "epsEst": 0.45,
-      "rev": 28050,
-      "revEst": null,
-      "src": "https://electrek.co/2026/10/21/tesla-tsla-q3-2026-financial-results/"
+      "revEst": 74350,
+      "src": "https://www.tipranks.com/news/costco-heads-into-q1-2027-earnings-heres-why-bernstein-expects-an-uneventful-quarter"
     }
   ],
   "events": [
@@ -261,18 +228,25 @@
       "src": "https://fintechlaw.ai/blog/vaneck-jitosol-etf-the-sec-just-spent-its-last-extension"
     },
     {
+      "date": "2026-11-18",
+      "cat": "macro",
+      "title": "เฟดเผยแพร่รายงานการประชุม FOMC (ต.ค.)",
+      "impact": "med",
+      "src": "https://www.federalreserve.gov/newsevents/2026-november.htm"
+    },
+    {
       "date": "2026-11-25",
       "cat": "macro",
       "title": "เงินเฟ้อ PCE เดือน ต.ค. (ดัชนีที่เฟดใช้อ้างอิง)",
       "impact": "high",
-      "src": "https://www.financecalendar.com/event/us-personal-income-and-outlays-pce-november-2026/"
+      "src": "https://www.bea.gov/index.php/news/schedule/full"
     },
     {
       "date": "2026-11-25",
       "cat": "macro",
       "title": "GDP สหรัฐฯ Q3 2026 (ประมาณการครั้งที่สอง)",
       "impact": "med",
-      "src": "https://www.bea.gov/news/schedule/full"
+      "src": "https://www.bea.gov/index.php/news/schedule/full"
     },
     {
       "date": "2026-11-27",
@@ -286,7 +260,70 @@
       "cat": "macro",
       "title": "ตัวเลขจ้างงานนอกภาคเกษตรสหรัฐฯ (NFP) เดือน พ.ย.",
       "impact": "high",
-      "src": "https://www.financecalendar.com/us-jobs-report/"
+      "src": "https://www.bls.gov/schedule/2026/12_sched_list.htm"
+    },
+    {
+      "date": "2026-12-09",
+      "cat": "macro",
+      "title": "FOMC ประกาศดอกเบี้ย + แถลงข่าว (พร้อม dot plot)",
+      "impact": "high",
+      "src": "https://www.federalreserve.gov/newsevents/2026-december.htm"
+    },
+    {
+      "date": "2026-12-10",
+      "cat": "macro",
+      "title": "เงินเฟ้อสหรัฐฯ CPI เดือน พ.ย.",
+      "impact": "high",
+      "src": "https://www.bls.gov/schedule/2026/12_sched_list.htm"
+    },
+    {
+      "date": "2026-12-15",
+      "cat": "macro",
+      "title": "ดัชนีราคาผู้ผลิตสหรัฐฯ (PPI) เดือน พ.ย.",
+      "impact": "med",
+      "src": "https://www.bls.gov/schedule/2026/12_sched_list.htm"
+    },
+    {
+      "date": "2026-12-17",
+      "cat": "macro",
+      "title": "ธนาคารกลางอังกฤษ (BOE) ประกาศดอกเบี้ย",
+      "impact": "med",
+      "src": "https://www.financecalendar.com/events/category/central-banks-monetary-policy/2026-12/"
+    },
+    {
+      "date": "2026-12-17",
+      "cat": "macro",
+      "title": "ECB ประชุมประกาศดอกเบี้ย",
+      "impact": "med",
+      "src": "https://www.financecalendar.com/events/category/central-banks-monetary-policy/2026-12/"
+    },
+    {
+      "date": "2026-12-18",
+      "cat": "macro",
+      "title": "ธนาคารกลางญี่ปุ่น (BOJ) ประกาศนโยบาย",
+      "impact": "med",
+      "src": "https://www.financecalendar.com/events/category/central-banks-monetary-policy/2026-12/"
+    },
+    {
+      "date": "2026-12-23",
+      "cat": "macro",
+      "title": "เงินเฟ้อ PCE เดือน พ.ย. (ดัชนีที่เฟดใช้อ้างอิง)",
+      "impact": "high",
+      "src": "https://www.bea.gov/index.php/news/schedule/full"
+    },
+    {
+      "date": "2026-12-23",
+      "cat": "macro",
+      "title": "GDP สหรัฐฯ Q3 2026 (ประมาณการครั้งที่สาม)",
+      "impact": "low",
+      "src": "https://www.bea.gov/index.php/news/schedule/full"
+    },
+    {
+      "date": "2026-12-25",
+      "cat": "crypto",
+      "title": "วันหมดอายุออปชัน Bitcoin รายไตรมาส/สิ้นปี (Deribit)",
+      "impact": "med",
+      "src": "https://cryptoticker.io/en/bitcoin-price-prediction-year-end-expiry-25-december-2026/"
     }
   ]
 }
