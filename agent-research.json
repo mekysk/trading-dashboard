@@ -1,33 +1,31 @@
 {
   "agent": "research-scout",
-  "generated": "2026-11-15T11:26:54Z",
+  "generated": "2026-11-16T11:30:28Z",
   "status": "ok",
-  "headline": "หามา 9 คัดเหลือ 3 — ใช้ 2 ชิ้น (ช่องว่างพฤติกรรมแปรตามความผันผวน + เกณฑ์ PBO) และมีงานโต้ตัวเลข 1.2% ของเมื่อวาน",
-  "found": 9,
+  "headline": "หามา 7 คัดเหลือ 3 — ใช้ 3 ชิ้น: ตัวเลข data snooping ที่ p ดิบหลอกได้ถึง 85 เท่า, lump sum ชนะทยอยลง 68%, และต้นทุน rebalance เป็น bp ให้เทียบ Rulebook",
+  "found": 7,
   "items": [
     {
-      "t": "Mind the Gap 2026 (Ptak, Morningstar, ส.ค. 2026)",
+      "t": "Data-Snooping, Technical Trading Rule Performance, and the Bootstrap (Sullivan, Timmermann & White, Journal of Finance 1999)",
       "s": "ok",
-      "d": "ใช้ — เปิดรายงานจริง ช่องว่าง -1.2 จุด/ปี 10 ปีถึง ธ.ค. 2025 ตัวขับคือความผันผวน (-0.4 ถึง -2.1 จุด) ไม่ใช่ค่าธรรมเนียม (-1.0 เทียบ -1.2) · https://www.morningstar.com/content/cs-assets/v3/assets/blt9415ea4cc4157833/blt852a4301adc2f5db/6a7373d51f7b5ae2da78e1e8/US_Mind_the_Gap_2026.pdf"
+      "d": "ใช้ — ค้น 7,846 กฎบน DJIA 1897-1996 ช่วง OOS 1987-1996 p ดิบ 0.004 แต่ Reality Check p 0.341 (S&P futures 0.042 → 0.908) ใช้เป็นเกณฑ์ตัดสินผล OOS ต่อยอดจาก PBO ของเมื่อวาน · จุดคุ้มต้นทุน 0.27%/รอบ · https://www.kevinsheppard.com/files/teaching/mfe/advanced-econometrics/Sullivan_Timmermann_White.pdf"
     },
     {
-      "t": "The Probability of Backtest Overfitting (Bailey, Borwein, López de Prado & Zhu, 2017)",
+      "t": "Cost averaging: Invest now or temporarily hold your cash? (Finlay & Zorn, Vanguard research ก.พ. 2023)",
       "s": "ok",
-      "d": "ใช้ — ได้เกณฑ์ตัด PBO > 0.05 ทิ้งโมเดล รันกับผลทดสอบในคลังได้เลย ตัวอย่าง random walk ได้ Sharpe 1.27 แต่ PBO 55% · https://escholarship.org/content/qt4w1110bb/qt4w1110bb.pdf"
+      "d": "ใช้ — MSCI World 1976-2022 rolling 1 ปี: ลงทีเดียวชนะทยอยลง 68% (เหลือ 65% ถ้าเงินสดได้ดอกเบี้ย T-bill) ส่วนต่างกลาง 2.2% หุ้นล้วน / 1.8% 60-40 / 1.2% 40-60 · แพ้เฉพาะเปอร์เซ็นไทล์ 5 (82,947 vs 85,906) · https://corporate.vanguard.com/content/dam/corp/research/pdf/cost_averaging_invest_now_or_temporarily_hold_your_cash.pdf"
     },
     {
-      "t": "Fulkerson, Jordan, Riley & Yan — ตรวจซ้ำ Return Gap (Financial Analysts Journal 2026)",
-      "s": "info",
-      "d": "เก็บ — โต้ว่าต้นทุนจับจังหวะจริงราว 0.10%/ปี ไม่ใช่ 1.2% แต่อ่านได้แค่บทสรุปของ Walton ยังไม่ได้เปิด paper จึงตรวจเลขไม่ได้ · https://walton.uark.edu/insights/posts/do_investors_really_lose_fund_returns_to_bad_timing.php"
+      "t": "Optimal Rebalancing for Institutional Portfolios (Sun, Fan, Chen, Schouwenaars & Albota, Journal of Portfolio Management Winter 2006)",
+      "s": "ok",
+      "d": "ใช้ — แปลงความถี่ rebalance เป็น bp/ปี: รายเดือน 12.92 vs รายไตรมาส 7.51 vs รายปี 3.97 vs แถบ 5% 3.81 (สองสินทรัพย์) และไม่ rebalance เลย 30.18 (ห้าสินทรัพย์) เอามาตรวจกติกาใน Rulebook-3พอร์ต · สมมติต้นทุนซื้อขาย 30-60 bp · https://people.csail.mit.edu/fan/papers/JPM_Winter2006_opt_rebalancing.pdf"
     }
   ],
   "extra": [
-    "Vanguard — cost averaging vs lump sum (lump sum ชนะ 61.6-73.7% ของรอบ 1 ปี, ชนะกลาง +2.2% ที่หุ้น 100%) · คุณภาพพอป้ายใช้ แต่เป็นหัวข้อ 5 ไม่เร่งสัปดาห์นี้ · https://vanguard.co.uk/professional/vanguard-365/financial-planning/financial-well-being/cost-averaging",
-    "Deep, Deep & Lamptey (2025) walk-forward validation framework · ขัดกันเอง บอกปรับ multiple testing แต่หัวข้อ 3.7 เขียนว่าไม่ปรับ, p=0.34 กำลังทดสอบ ~12% · https://arxiv.org/pdf/2512.12924",
-    "Frazzini, Israel & Moskowitz — trading costs of asset pricing anomalies · อ่านแค่บทรีวิว Alpha Architect ยังไม่เปิด paper และเป็นสเกลสถาบัน (ขนาดกองคุ้มทุนโมเมนตัม $52bn) · https://alphaarchitect.com/surprise-the-size-value-and-momentum-anomalies-survive-after-trading-costs/",
-    "Wysocki (2025) Sizing the Risk: Kelly, VIX, Hybrid ใน put-writing · อ่านตัวเลขผลลัพธ์ไม่ได้ หน้าถูกตัดก่อนหัวข้อ 5-6 และนอกขอบเขต · https://arxiv.org/html/2508.16598v1",
-    "TradingPlatforms.co.uk อัตราขาดทุนบัญชี CFD อังกฤษ ผ่าน Pound Sterling Live · ไม่บอกช่วงเวลาและวิธีวัด (IG/CMC ~68%, Plus500 76%, Swissquote >81%) · https://www.poundsterlinglive.com/news/23132-even-at-major-uk-brokers-most-cfd-accounts-lost-money-report-finds",
-    "Mind the Gap: ETF Investors Missed $3.8 Trillion (Advisor Perspectives) · เปิดไม่ได้ เว็บคืน client_error · https://www.advisorperspectives.com/commentaries/2026/08/07/mind-the-gap-etf-investors-missed-3-8-trillion"
+    "เก็บ — FX Financing Costs: CFDs vs futures (Burbau, CME Group 14 ก.พ. 2026) · เทรดตัวอย่างครั้งเดียว EUR/USD 37 วัน swap กินกำไร 0.353pp (gross +1.227% → net +0.874%) · ตัดเพราะ n=1 และ CME ขาย futures เอง · https://www.cmegroup.com/articles/2026/fx-financing-costs-understanding-the-difference-between-cfds-and-futures-pricing.html",
+    "เก็บ — Managing position size depending on asset price characteristics (Scholz, Journal of Applied Operational Research 2014) · SMA(38) f-25 max DD 10.97% vs f-125 54.25% vs erratic 73.39% · ตัดเพราะ simulation ล้วน ไม่คิดต้นทุน ตัวเลขขัดเนื้อความเอง · https://www.hsba.de/fileadmin/user_upload/publikationen/Managing_position_size_depending_on_asset_price_characteristics_2014.pdf",
+    "เก็บ — Dollar-Cost Averaging: The Trade-Off Between Risk and Return (Cho & Kuvvet, Journal of Financial Planning 2015) · โมเดล: lump sum 8.16%/SD 19.19% vs DCA 6.08%/SD 14.91% · ตัดเพราะไม่มีข้อมูลจริงและซ้ำกับชิ้น Vanguard · https://www.financialplanningassociation.org/article/journal/OCT15-dollar-cost-averaging-trade-between-risk-and-return",
+    "ทิ้ง — The Impact of Rebalancing Strategies on ETF Portfolio Performance (Bányai, Tatay, Thalmeiner & Pataki, Journal of Risk and Financial Management 2024) · ตัดเพราะตั้งค่าธรรมเนียม 1% ต่อวัน ไม่มีเกณฑ์เทียบ buy-and-hold ข้อสรุปขัดตารางผลเอง และตัวเลขแถบ 18% อยู่ในตารางที่ถูกตัด ตรวจไม่ได้ · https://www.mdpi.com/1911-8074/17/12/533"
   ],
-  "note": "ชิ้นป้ายใช้ 2 ชิ้นต้องย้ายเข้า 2BRAIN/32_Literature เองตอนปิดสัปดาห์วันศุกร์ · ไม่มีการเสนอกลยุทธ์ สัญญาณ หรือพารามิเตอร์ใหม่ (ล็อกการล่า edge ถึง 25 ธ.ค. 2026) · เนื้อหากองทุน/ภาษี/การเงินส่วนบุคคลเป็นข้อมูลจากงานวิจัย ไม่ใช่คำปรึกษาวิชาชีพ"
+  "note": "ไม่มีชิ้นไหนเสนอกลยุทธ์ สัญญาณ หรือพารามิเตอร์ใหม่ ตามกฎปิดการล่า edge ถึง 25 ธ.ค. 2026 · ชิ้นป้ายใช้ทั้ง 3 ต้องย้ายเข้า 32_Literature เองตอนปิดสัปดาห์ศุกร์ · เนื้อหาการเงินส่วนบุคคลและภาษีเป็นข้อมูล ไม่ใช่คำปรึกษาวิชาชีพ"
 }
