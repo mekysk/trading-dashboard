@@ -1,31 +1,34 @@
 {
   "agent": "research-scout",
-  "generated": "2026-11-16T11:30:28Z",
+  "generated": "2026-11-17T11:31:17Z",
   "status": "ok",
-  "headline": "หามา 7 คัดเหลือ 3 — ใช้ 3 ชิ้น: ตัวเลข data snooping ที่ p ดิบหลอกได้ถึง 85 เท่า, lump sum ชนะทยอยลง 68%, และต้นทุน rebalance เป็น bp ให้เทียบ Rulebook",
-  "found": 7,
+  "headline": "หามา 10 คัดเหลือ 3 — ใช้ 2 ชิ้น: การกระจาย P&L รายย่อยจากข้อมูล CFTC จริง 36,538 บัญชี และเกณฑ์ Deflated Sharpe ฉบับเต็มที่ชี้ว่า Sharpe 2.5 ยังไม่ผ่านถ้าลองหลายครั้ง",
+  "found": 10,
   "items": [
     {
-      "t": "Data-Snooping, Technical Trading Rule Performance, and the Bootstrap (Sullivan, Timmermann & White, Journal of Finance 1999)",
+      "t": "Retail Traders in Futures Markets (Ferko, Mixon & Onur, CFTC Staff Paper 2023-002, ก.พ. 2024)",
       "s": "ok",
-      "d": "ใช้ — ค้น 7,846 กฎบน DJIA 1897-1996 ช่วง OOS 1987-1996 p ดิบ 0.004 แต่ Reality Check p 0.341 (S&P futures 0.042 → 0.908) ใช้เป็นเกณฑ์ตัดสินผล OOS ต่อยอดจาก PBO ของเมื่อวาน · จุดคุ้มต้นทุน 0.27%/รอบ · https://www.kevinsheppard.com/files/teaching/mfe/advanced-econometrics/Sullivan_Timmermann_White.pdf"
+      "d": "ใช้ — ข้อมูลกำกับจริง 36,538 บัญชีรายย่อย ก.พ. 2021-พ.ย. 2022: median ถือ 4 วัน (75% ไม่เกิน 9 วัน) · P&L ต่อรอบ median -95 ดอลลาร์ (คนเทรดรอบเดียว -155) เปอร์เซ็นไทล์ 10 = -2,452 vs 90 = +1,094 · median margin 3,840 ดอลลาร์ · ประสบการณ์ช่วยแค่ 3.5-5.7 ดอลลาร์ต่อรอบที่เพิ่ม แต่ยังขาดทุนเฉลี่ย · ตัวเลขยังไม่หักต้นทุนเลย เอามาวางทับ trade log ตัวเองได้ · https://www.cftc.gov/sites/default/files/2024-11/Retail_Traders_Futures_V2_new_ada.pdf"
     },
     {
-      "t": "Cost averaging: Invest now or temporarily hold your cash? (Finlay & Zorn, Vanguard research ก.พ. 2023)",
+      "t": "The Deflated Sharpe Ratio (Bailey & Lopez de Prado, Journal of Portfolio Management 2014) — ฉบับเต็ม",
       "s": "ok",
-      "d": "ใช้ — MSCI World 1976-2022 rolling 1 ปี: ลงทีเดียวชนะทยอยลง 68% (เหลือ 65% ถ้าเงินสดได้ดอกเบี้ย T-bill) ส่วนต่างกลาง 2.2% หุ้นล้วน / 1.8% 60-40 / 1.2% 40-60 · แพ้เฉพาะเปอร์เซ็นไทล์ 5 (82,947 vs 85,906) · https://corporate.vanguard.com/content/dam/corp/research/pdf/cost_averaging_invest_now_or_temporarily_hold_your_cash.pdf"
+      "d": "ใช้ — อัปเกรดจากป้ายทิ้ง 2026-11-14 ที่เปิดได้แค่บทคัดย่อ · ตัวอย่างในเปเปอร์: Sharpe รายปี 2.5 บนข้อมูลรายวัน 5 ปี (T=1250) ยังไม่ผ่านเกณฑ์ 95% (DSR ชี้โอกาสราว 90%) แต่ถ้าหยุดลองที่ N=46 ครั้ง DSR=0.9505 ผ่านพอดี · ต้องใส่ความเบ้และความโด่งด้วย ไม่ใช่แค่จำนวนครั้งที่ลอง · ผู้เขียนระบุตรงๆ ว่า holdout ไม่แก้ multiple testing · https://www.davidhbailey.com/dhbpapers/deflated-sharpe.pdf"
     },
     {
-      "t": "Optimal Rebalancing for Institutional Portfolios (Sun, Fan, Chen, Schouwenaars & Albota, Journal of Portfolio Management Winter 2006)",
-      "s": "ok",
-      "d": "ใช้ — แปลงความถี่ rebalance เป็น bp/ปี: รายเดือน 12.92 vs รายไตรมาส 7.51 vs รายปี 3.97 vs แถบ 5% 3.81 (สองสินทรัพย์) และไม่ rebalance เลย 30.18 (ห้าสินทรัพย์) เอามาตรวจกติกาใน Rulebook-3พอร์ต · สมมติต้นทุนซื้อขาย 30-60 bp · https://people.csail.mit.edu/fan/papers/JPM_Winter2006_opt_rebalancing.pdf"
+      "t": "Conditional Volatility Targeting (Bongaerts, Kang & van Dijk, Financial Analysts Journal 76(4) 2020)",
+      "s": "info",
+      "d": "เก็บ — กดเป็นเก็บเพราะเอาไปใช้ต้องทดสอบ = ล่า edge ที่ปิดถึง 25 ธ.ค. · 10 ตลาดหุ้น 1982-2019 หักต้นทุนแล้ว (futures 3-5 bp): Sharpe เพิ่มแค่ +0.04 ถึง +0.23 · ความผันผวนอดีตทำนายผลตอบแทนข้างหน้าได้เพียง -0.02 · แบบ conditional ได้ผลพอกันด้วย turnover 1.4x vs 2.1x ของแบบธรรมดา · แบบธรรมดาทำ drawdown แย่ลง 4.0-34.4% ใน 4 ตลาด · ใช้เป็นเพดานว่าผลที่สมเหตุสมผลควรใหญ่แค่ไหน · https://repub.eur.nl/pub/130215/Bongaerts-Kang-van-Dijk-Conditional-volatility-targeting-2020-FAJ.pdf"
     }
   ],
   "extra": [
-    "เก็บ — FX Financing Costs: CFDs vs futures (Burbau, CME Group 14 ก.พ. 2026) · เทรดตัวอย่างครั้งเดียว EUR/USD 37 วัน swap กินกำไร 0.353pp (gross +1.227% → net +0.874%) · ตัดเพราะ n=1 และ CME ขาย futures เอง · https://www.cmegroup.com/articles/2026/fx-financing-costs-understanding-the-difference-between-cfds-and-futures-pricing.html",
-    "เก็บ — Managing position size depending on asset price characteristics (Scholz, Journal of Applied Operational Research 2014) · SMA(38) f-25 max DD 10.97% vs f-125 54.25% vs erratic 73.39% · ตัดเพราะ simulation ล้วน ไม่คิดต้นทุน ตัวเลขขัดเนื้อความเอง · https://www.hsba.de/fileadmin/user_upload/publikationen/Managing_position_size_depending_on_asset_price_characteristics_2014.pdf",
-    "เก็บ — Dollar-Cost Averaging: The Trade-Off Between Risk and Return (Cho & Kuvvet, Journal of Financial Planning 2015) · โมเดล: lump sum 8.16%/SD 19.19% vs DCA 6.08%/SD 14.91% · ตัดเพราะไม่มีข้อมูลจริงและซ้ำกับชิ้น Vanguard · https://www.financialplanningassociation.org/article/journal/OCT15-dollar-cost-averaging-trade-between-risk-and-return",
-    "ทิ้ง — The Impact of Rebalancing Strategies on ETF Portfolio Performance (Bányai, Tatay, Thalmeiner & Pataki, Journal of Risk and Financial Management 2024) · ตัดเพราะตั้งค่าธรรมเนียม 1% ต่อวัน ไม่มีเกณฑ์เทียบ buy-and-hold ข้อสรุปขัดตารางผลเอง และตัวเลขแถบ 18% อยู่ในตารางที่ถูกตัด ตรวจไม่ได้ · https://www.mdpi.com/1911-8074/17/12/533"
+    "เก็บ — Using Robo-Advisers as Commitment Devices (Gaudeul & Giannetti, รายงานเทคนิค ธ.ค. 2020) · ทดลองเทรด 21 วัน 418 คน: บังคับใช้อัลกอลด disposition effect 0.179 (p<0.001) แต่ earnings ไม่เปลี่ยน · แบบ soft ที่ override ได้ให้ผลเป็นศูนย์ · เลือกใช้เองแค่ 36% และคนที่มี disposition effect เลือกใช้น้อยกว่า 7.6 จุด · ตัดเพราะหน่วยวัดเป็น ECU ในแลบ เทียบพอร์ตจริงไม่ได้ และตัวเลขเนื้อความขัดตารางหลายจุด · https://cepr.org/system/files/2022-08/Using%20Robo-Advisers%20as%20Commitment%20Devices%20-%20Alexia%20Gaudeul%20and%20Caterina%20Giannetti.pdf",
+    "เก็บ — Fund Fees Predict Future Success or Failure (Morningstar, ไม่ระบุผู้เขียนและวันที่ · ช่วง 2010-2015) · success ratio ตาม quintile ค่าธรรมเนียม: หุ้นสหรัฐ 62% ถูกสุด → 20% แพงสุด · ตราสารหนี้ 59% vs 17% · ตัดเพราะหน้าเว็บไม่ระบุผู้เขียนและวันที่ ตรวจแหล่งไม่ครบ และเป็นกองทุนรวมสหรัฐไม่ใช่สินทรัพย์ที่ถืออยู่ · https://www.morningstar.com/funds/fund-fees-predict-future-success-or-failure",
+    "ทิ้ง — Volatility Targeting Improves Risk-Adjusted Returns (Swedroe สรุป Harvey et al. 2018 JPM, Alpha Architect) · หุ้นสหรัฐ Sharpe 0.40 → 0.48-0.51 · ความผันผวนของความผันผวน 4.6% → 1.8% · ตัดเพราะเป็นบทรีวิว ไม่ใช่ต้นฉบับ และซ้ำหัวข้อกับชิ้นที่เปิดตัวจริงได้ · https://alphaarchitect.com/volatility-targeting-improves-risk-adjusted-returns/",
+    "ทิ้ง — FCA Says Only 12% of CFD Firms Changed Charges (Finance Magnates 27 ต.ค. 2026) · FCA สำรวจ 81 บริษัท CFD พ.ค. 2026 มีแค่ 12% บอกว่าแก้ค่าธรรมเนียม · ตัดเพราะเป็นสื่อข่าวไม่ใช่ต้นฉบับ FCA และไม่มีตัวเลขต้นทุนที่วัดได้ ตัวเลขมาร์กอัปในบทความเป็นของสื่อเอง · https://www.financemagnates.com/forex/fca-says-only-12-of-cfd-firms-changed-charges-how-does-overnight-financing-fees-work/",
+    "ทิ้ง — Multiple Testing and the Mirage of Technical Alpha: Deflated-Sharpe reassessment of retail trading rules in G10 spot FX (Mahadzva, SSRN 7430758) · เปิดไม่ได้ client_error ไม่ได้อ่านแม้บทคัดย่อ จึงไม่บันทึกเนื้อหา · หัวข้อตรงขอบเขต ควรลองเปิดซ้ำ · https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7430758",
+    "ทิ้ง — Predictive Value of Within-Strategy Permutation Tests for Forward Selection (Gatto, SSRN 6636018) · เปิดไม่ได้ client_error จึงไม่บันทึกเนื้อหา ควรลองเปิดซ้ำ · https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6636018",
+    "ทิ้ง — Analyzing CFD Retail Investors' Performance in a Post MiFID II Environment (ResearchGate 352020645) · เปิดไม่ได้ client_error ไม่ทราบผู้เขียน ปี หรือวารสาร · https://www.researchgate.net/publication/352020645_Analyzing_CFD_Retail_Investors'_Performance_in_a_Post_MiFID_II_Environment"
   ],
-  "note": "ไม่มีชิ้นไหนเสนอกลยุทธ์ สัญญาณ หรือพารามิเตอร์ใหม่ ตามกฎปิดการล่า edge ถึง 25 ธ.ค. 2026 · ชิ้นป้ายใช้ทั้ง 3 ต้องย้ายเข้า 32_Literature เองตอนปิดสัปดาห์ศุกร์ · เนื้อหาการเงินส่วนบุคคลและภาษีเป็นข้อมูล ไม่ใช่คำปรึกษาวิชาชีพ"
+  "note": "ไม่มีชิ้นไหนที่เลือกเสนอกลยุทธ์ สัญญาณ อินดิเคเตอร์ หรือพารามิเตอร์ใหม่ ตามกฎปิดการล่า edge ถึง 25 ธ.ค. 2026 · ชิ้นที่ 3 ถูกกดเป็นเก็บโดยเจตนา · วันนี้ของ 3 ใน 10 ชิ้นเปิดไม่ได้ (SSRN 2 รายการ ResearchGate 1) จึงไม่อ้างเนื้อหาเลย · ชิ้นป้ายใช้ 2 ชิ้นต้องย้ายเข้า 32_Literature เองตอนปิดสัปดาห์ศุกร์ · เนื้อหาการเงินส่วนบุคคลและภาษีเป็นข้อมูล ไม่ใช่คำปรึกษาวิชาชีพ"
 }
