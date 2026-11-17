@@ -1,39 +1,44 @@
 {
-  "ranAt": "2026-11-16T07:02:13.915Z",
+  "ranAt": "2026-11-17T08:17:05.984Z",
   "ok": true,
-  "model": "gemini-3.5-flash-lite",
+  "model": "gemini-3.8-flash",
   "grounded": false,
-  "articlesRead": 4,
+  "articlesRead": 8,
   "articlesFailed": [
+    "coindesk.com: HTTP 429",
+    "coindesk.com: HTTP 429",
+    "coindesk.com: HTTP 429",
+    "coindesk.com: HTTP 429",
+    "coindesk.com: HTTP 429",
     "coindesk.com: HTTP 429",
     "coindesk.com: HTTP 429",
     "coindesk.com: HTTP 429",
     "coindesk.com: HTTP 429"
   ],
-  "citedUrls": 4,
+  "citedUrls": 8,
   "modelsFailed": [
-    "gemini-3.8-flash+search: HTTP 429 — {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \",\n    \"status\": ",
-    "gemini-3.8-flash: This operation was aborted"
+    "gemini-3.8-flash+search: HTTP 429 — {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \",\n    \"status\": "
   ],
-  "chars": 2427,
-  "paragraphs": 5,
-  "headlines": 67,
+  "chars": 2475,
+  "paragraphs": 4,
+  "headlines": 70,
   "prices": 7,
   "qualityWarnings": [
-    "มีตัวเลขเปอร์เซ็นต์แค่ 0 ตัว ถือว่าบางไป"
+    "ไม่มีย่อหน้า \"มุมมอง:\" ที่แยกการตีความออกมา",
+    "ได้แค่ 4 ย่อหน้า"
   ],
   "feedsOk": [
-    "CNBC Markets (1)",
+    "CNBC Markets (2)",
     "CNBC Top (12)",
-    "CNBC Finance (0)",
+    "CNBC Finance (5)",
     "MarketWatch Top (10)",
     "Investing หุ้น (10)",
-    "Investing โภคภัณฑ์ (7)",
-    "Investing ค่าเงิน (2)",
-    "Investing คริปโต (7)",
-    "CoinDesk (6)",
+    "Investing โภคภัณฑ์ (10)",
+    "Investing ค่าเงิน (6)",
+    "Investing คริปโต (4)",
+    "CoinDesk (12)",
     "Federal Reserve (12)"
   ],
   "feedsFailed": [],
-  "elapsed": "74.4s"
+  "elapsed": "35.5s"
 }
