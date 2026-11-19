@@ -1,9 +1,9 @@
 {
-  "ranAt": "2026-11-18T07:49:36.959Z",
+  "ranAt": "2026-11-19T07:44:42.242Z",
   "ok": true,
-  "model": "gemini-3.8-flash",
+  "model": "gemini-3.5-flash-lite",
   "grounded": false,
-  "articlesRead": 10,
+  "articlesRead": 6,
   "articlesFailed": [
     "coindesk.com: HTTP 429",
     "coindesk.com: HTTP 429",
@@ -13,30 +13,28 @@
     "coindesk.com: HTTP 429",
     "coindesk.com: HTTP 429"
   ],
-  "citedUrls": 10,
+  "citedUrls": 6,
   "modelsFailed": [
-    "gemini-3.8-flash+search: HTTP 429 — {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \",\n    \"status\": "
+    "gemini-3.8-flash+search: HTTP 429 — {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \",\n    \"status\": ",
+    "gemini-3.8-flash: HTTP 503 — {\n  \"error\": {\n    \"code\": 503,\n    \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\",\n    \"status\": \"UNAVAILABLE\"\n  }\n}\n"
   ],
-  "chars": 342,
-  "paragraphs": 1,
+  "chars": 2548,
+  "paragraphs": 5,
   "headlines": 70,
   "prices": 7,
-  "qualityWarnings": [
-    "ไม่มีย่อหน้า \"มุมมอง:\" ที่แยกการตีความออกมา",
-    "ได้แค่ 1 ย่อหน้า"
-  ],
+  "qualityWarnings": [],
   "feedsOk": [
-    "CNBC Markets (4)",
+    "CNBC Markets (3)",
     "CNBC Top (12)",
-    "CNBC Finance (5)",
+    "CNBC Finance (6)",
     "MarketWatch Top (10)",
     "Investing หุ้น (10)",
     "Investing โภคภัณฑ์ (10)",
     "Investing ค่าเงิน (7)",
-    "Investing คริปโต (6)",
+    "Investing คริปโต (5)",
     "CoinDesk (12)",
     "Federal Reserve (12)"
   ],
   "feedsFailed": [],
-  "elapsed": "34.2s"
+  "elapsed": "13.5s"
 }
