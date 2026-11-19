@@ -1,38 +1,32 @@
 {
   "agent": "research-scout",
-  "generated": "2026-11-18T11:31:18Z",
+  "generated": "2026-11-19T18:29:29+07:00",
   "status": "ok",
-  "headline": "หามา 14 คัดเหลือ 3 — ใช้ทั้ง 3: โทษของการหมุนพอร์ต 7.1 pp/ปี, เส้นต้นทุน 20 bp ที่ฆ่ากฎเทคนิคเกือบทั้งหมด และจำนวนหุ้นที่พอสำหรับกระจายความเสี่ยง 23/49 ตัวเทียบพอร์ต 22 ตัวที่ถืออยู่",
-  "found": 14,
+  "headline": "หามา 8 เปิดอ่านได้ทั้ง 8 · เข้าเกณฑ์ใช้ 3 ชิ้น — วัดราคาที่ได้จริงเทียบ midpoint · สูตรปิดความน่าจะเป็น drawdown · ตรวจบั๊กต้นทุนใน engine backtest",
+  "found": 8,
   "items": [
     {
-      "t": "Trading Is Hazardous to Your Wealth (Barber & Odean, Journal of Finance 55(2) 2000)",
+      "t": "Schwarz, Barber, Huang, Jorion & Odean (2022 WP) — The \"Actual Retail Price\" of Equity Trades",
       "s": "ok",
-      "d": "ใช้ — ครัวเรือน 66,465 บัญชี ม.ค. 1991-พ.ย. 1996 · หมุนพอร์ตเฉลี่ยเกิน 75%/ปี · ก่อนต้นทุน 18.7% หลังต้นทุน 16.4% ขณะดัชนีให้ 17.9% · แบ่ง 5 กลุ่มตามอัตราหมุน: กลุ่มสูงสุด (21.49%/เดือน) สุทธิ 11.4%/ปี vs กลุ่มต่ำสุด 18.5% ต่างกัน 7.1 pp แต่ผลก่อนต้นทุนเกาะกันหมด 18.5-18.7% คือต้นทุนเป็นตัวแยก ไม่ใช่ฝีมือเลือกหุ้น · spread 0.31% ซื้อ 0.69% ขาย · ค่าคอม 1.5-3%/ขาเป็นโครงสร้างยุค 1990s เทียบตรงไม่ได้ ตัวที่เทียบได้คือส่วนต่าง 7.1 pp · https://faculty.haas.berkeley.edu/odean/Papers%20current%20versions/Individual_Investor_Performance_Final.pdf"
+      "d": "ใช้ — 74,801 คำสั่งเหมือนกันที่ 5 โบรกเกอร์ ต้นทุนไป-กลับเทียบ midpoint ต่างกัน 7.2 bp ถึง 46.2 bp · price improvement 18.8–47.2% ของ spread · ของจริงที่ต้องวัดคือราคาที่ได้เทียบ midpoint ไม่ใช่ spread บนหน้าจอ · https://microstructure.exchange/papers/Schwartz_et_al_,_2022_WP,_The_'Actual_Retail_Price'_of_Equity_Trades.pdf"
     },
     {
-      "t": "The predictive ability of technical trading rules (Rink, Financial Markets and Portfolio Management 37, 2023)",
+      "t": "Chin & Ingenoso (2006) — Risk Formulæ for Proportional Betting",
       "s": "ok",
-      "d": "ใช้ — ทดสอบ 6,406 กฎ บน 23 ตลาดพัฒนาแล้ว + 18 ตลาดเกิดใหม่ ด้วย stepwise SPA (Hsu et al. 2010 ต่อยอด Hansen 2005) · ที่ต้นทุนขาเดียวตั้งแต่ 20 bp เหลือแค่ 5/23 ตลาดพัฒนาแล้วที่ยังมีกฎชนะ · นอกกลุ่มตัวอย่างที่ 50 bp ส่วนต่าง Sharpe -0.315 (พัฒนาแล้ว) / -0.507 (เกิดใหม่) / -0.385 (รวม) ติดลบอย่างมีนัยสำคัญ · ไม่มีตลาดพัฒนาแล้วตลาดไหนทำนายได้เลยช่วง 2009-2016 · เอา 20 bp ไปทับ spread Exness ที่วัดไว้แล้วได้ · ข้อจำกัด: ใช้ข้อมูลดัชนีที่เทรดตรงไม่ได้ · ไม่รายงาน p ดิบ · https://link.springer.com/content/pdf/10.1007/s11408-023-00433-2.pdf"
+      "d": "ใช้ — สูตรปิด P(ร่วงถึง a) = a^(2/k−1) ไม่ขึ้นกับ edge เลย · โอกาสร่วงเหลือครึ่งทุน: Kelly เต็ม 0.50 · ครึ่ง Kelly 0.12 · หนึ่งในสี่ 0.01 · เอาขนาดไม้ที่ใช้อยู่ไปคำนวณได้ทันที ไม่ใช่ข้อเสนอเปลี่ยนค่า · https://condor.depaul.edu/wchin/riskpaper.pdf"
     },
     {
-      "t": "Equity Portfolio Diversification: How Many Stocks are Enough? (Alexeev & Tapon, UTAS Discussion Paper 2013-16)",
+      "t": "Yin, Miki, Lesnichenko & Gural (2026) — Implementation Risk in Portfolio Backtesting",
       "s": "ok",
-      "d": "ใช้ — 5 ตลาดพัฒนาแล้ว ข้อมูลรายวัน 1975-2011 · สหรัฐต้องมี 23 ตัวโดยเฉลี่ย แต่ 49 ตัวถ้าต้องการความมั่นใจ 90% (วัดด้วย SD) · ES1% คือ 16 ตัวเฉลี่ย / 52 ตัวที่ความมั่นใจ 90% · ช่วงตลาดพัง 1987/1989/2008 ค่าเฉลี่ยลดเหลือ 16-17 ตัวเพราะสหสัมพันธ์พุ่ง แต่ค่าที่ความมั่นใจ 90% ของ ES1% พุ่งเป็น 71-113 ตัว · พอร์ต US ถืออยู่ 22 ตัว คืออยู่แถวค่าเฉลี่ยพอดีแต่ไม่ถึงครึ่งของระดับมั่นใจ 90% · ข้อจำกัดใหญ่: ตัวเลขทั้งหมดมาจากพอร์ตถ่วงน้ำหนักเท่ากันและสุ่มเลือกหุ้น ขณะที่พอร์ตจริงตัวบนสุด 19.8% ต่อเป้า 5.0% · ไม่ใช่ peer review · https://utas-prod-web.squiz.cloud/__data/assets/pdf_file/0020/436511/2013-16_Alexeev-and-Tapon-Equity-portfolio-diversification.pdf"
+      "d": "ใช้ — 15 กลยุทธ์บน 5 engine: ที่ต้นทุน 0 ตรงกันเป๊ะ 0.0000% ทุกคู่ แต่พอใส่ต้นทุนเริ่มเพี้ยน (ρ=0.93) สูงสุด 3.71% · Backtrader หารอัตราค่าคอมด้วย 100 ตามค่าตั้งต้น · ใช้เป็นเกณฑ์ตรวจบั๊ก: รันที่ต้นทุน 0 ต้องตรงกันเป๊ะ · https://arxiv.org/pdf/2603.20319"
     }
   ],
   "extra": [
-    "เก็บ · Quantifying Adviser's Alpha UK (Kinniry et al., Vanguard มิ.ย. 2025) — คุมต้นทุน 0-100 bp · ปรับสมดุล <=12 bp (80/20 ปรับรายปี 9.69% vs ปล่อยไหล 9.57% ปี 1960-2023) · ตัดเพราะ coaching 0->200 bp ไม่บอกวิธีคำนวณ และตัวเลขในเนื้อหาขัดตารางเอง · https://www.vanguard.co.uk/content/dam/intl/europe/documents/en/quantifying-vanguards-advisers-alpha.pdf",
-    "เก็บ · จดหมาย Huang & Schwarz ถึง SEC เรื่องตลาดออปชัน (File 4-887, เม.ย. 2026) — ~7,000 คำสั่ง 6 โบรกเกอร์ ราคาที่ได้ต่างกันเกือบเท่า spread ทั้งก้อน 89% · price improvement vs PFOF corr -0.91 · ตัดเพราะเป็นออปชันและเป็นจดหมายความเห็น · https://www.sec.gov/comments/4-887/4887-753447-2321514.pdf",
-    "ทิ้ง · The 'Actual Retail Price' of Equity Trades (Schwarz, Barber, Huang, Jorion & Odean, JF 2025) — เปิดไม่ได้ทั้ง Wiley และ SSRN (client_error) จึงยังไม่ได้อ่าน · ตัวเต็งรอบหน้า · https://onlinelibrary.wiley.com/doi/full/10.1111/jofi.13467",
-    "ทิ้ง · Retail Investors' Disposition Effect and Order Choices (De Winne, Luong & Palan 2022) — ในเอกสารระบุเองว่าเป็นฉบับร่างที่ห้ามอ้างอิง · กลุ่มทดลองเป็นนักศึกษา 213 คน · https://research.dial.uclouvain.be/bitstreams/274b84da-36e1-4906-985c-d005f5cac37c/download",
-    "ทิ้ง · Re-Examining Technical Analysis with Reality Check and SPA (ไฟล์บนโฮสต์ mql5) — ไม่ได้เปิดอ่าน ซ้ำหัวข้อกับ Sullivan/Timmermann/White 16 พ.ย. และ Rink 2023 ครอบคลุมแล้ว",
-    "ทิ้ง · Diversify, but Not Too Much (Morningstar) — ไม่ได้เปิดอ่าน เป็นบทความทั่วไป และ Alexeev & Tapon ให้ตัวเลขเรื่องเดียวกันพร้อมวิธีวัด · https://www.morningstar.com/funds/diversify-not-too-much",
-    "ทิ้ง · The Real Cost of a CFD Trade (Lunaro) — ไม่ได้เปิดอ่าน เป็นเนื้อหาการตลาดของผู้ให้บริการ · https://lunaro.com/insight-hub/briefings/real-cost-of-a-cfd-trade/",
-    "ทิ้ง · Honest Backtesting of Swing Strategies on Index CFDs (MQL5) — ไม่ได้เปิดอ่าน เป็นบล็อกแพลตฟอร์มเทรด · https://www.mql5.com/en/articles/23469",
-    "ทิ้ง · Drawdown-based position sizing (วิทยานิพนธ์ KTH / R-bloggers) — ไม่ได้เปิดอ่าน ซ้ำหัวข้อกับ Scholz 2014 ที่เก็บไว้ 16 พ.ย. · https://www.math.kth.se/matstat/seminarier/reports/M-exjobb12/121105.pdf",
-    "ทิ้ง · Purged / combinatorial cross-validation — ที่ค้นเจอเป็น Wikipedia เอกสารไลบรารีและบล็อก ไม่ใช่งานต้นฉบับ · หัวข้อ CSCV มี Bailey et al. เก็บไว้แล้ว 15 พ.ย.",
-    "ทิ้ง · Frontiers in Behavioral Economics 2024 เรื่อง disposition effect — ไม่ได้เปิดอ่าน โควตาวันนี้เต็มและมี Gaudeul & Giannetti เก็บไว้แล้ว 17 พ.ย. · ตัวเต็งรอบหน้า · https://www.frontiersin.org/journals/behavioral-economics/articles/10.3389/frbhe.2024.1345875/full"
+    "เก็บ · Busseti, Ryu & Boyd (2016) Risk-Constrained Kelly Gambling — Kelly เต็มเสี่ยง drawdown 0.397 vs RCK 0.073 แต่ต้องเขียน convex optimization · สมมติ IID ไม่คิดต้นทุน · https://web.stanford.edu/~boyd/papers/pdf/kelly.pdf",
+    "เก็บ · Cha, Lee, Schrab & Kim (2026) More Permutations Do Not Always Increase Power — เลือกจำนวน permutation ให้ (B+1)α เป็นจำนวนเต็ม (B=19/199/1999 ที่ α=0.05) · เป็นสถิติทั่วไป ไม่ใช่การเงิน · https://arxiv.org/pdf/2605.03886",
+    "เก็บ · Vanguard (2025) Principles for Behavioral Design — ข้อความเชิงเข้าใจผู้ลงทุนดันอัตราการลงทุน 24%→29% แต่ตัวเลขอื่นเป็นผลภายในที่ไม่บอกขนาดตัวอย่างหรือวิธีวัด · https://corporate.vanguard.com/content/dam/corp/research/pdf/principles_for_behavioral_design_nudging_for_better_investor_outcomes.pdf",
+    "เก็บ · Vanguard (2024) Considerations for Index Fund Investing — ค่าธรรมเนียมค่ากลาง index 6 bp vs active 65 bp · หุ้น Russell 3000 ชนะดัชนีแค่ 17% ในสิบปีถึงสิ้นปี 2023 · ไม่คำนวณผลทบต้น · ซ้อนกับ Morningstar fee study ที่เก็บไว้แล้ว · https://corporate.vanguard.com/content/dam/corp/research/pdf/considerations_for_index_fund_investing.pdf",
+    "เก็บ · Bogousslavsky & Muravyev (2024) An Anatomy of Retail Option Trading — spread ออปชัน 5–10% แต่คำสั่งเฉลี่ยขาดทุนแค่ ~0.9% ผู้เขียนตีความว่าใช้ limit order แต่ไม่ได้วัดประเภทคำสั่งจริง · สินค้าไม่ตรงกับที่เราเทรด · https://www.lsu.edu/business/files/event-files/2025-finance-mardi-gras/retail_option_trading_v2.pdf"
   ],
-  "note": "เปิดอ่านจริง 6 ชิ้น ที่เหลือตัดจากคุณภาพแหล่งหรือซ้ำหัวข้อโดยไม่อ้างเนื้อหาข้างใน · ไม่มีชิ้นไหนเสนอกลยุทธ์ สัญญาณ หรือพารามิเตอร์ใหม่ ตามกฎปิดการล่า edge ถึง 25 ธ.ค. 2026 · ป้ายใช้ 3 ชิ้นต้องย้ายเข้า 2BRAIN 32_Literature เองตอนปิดสัปดาห์วันศุกร์"
+  "note": "ไม่มีชิ้นไหนได้ป้ายทิ้งรอบนี้ — เปิดอ่านได้จริงทั้ง 8 ชิ้นและบอกวิธีวัดของตัวเองครบ · ไม่มีชิ้นไหนเสนอกลยุทธ์ สัญญาณ หรือค่าพารามิเตอร์ใหม่ (ล็อกการล่า edge ถึง 25 ธ.ค. 2026) · โน้ตฉบับเต็ม: trading-private/research/2026-11-19.md"
 }
