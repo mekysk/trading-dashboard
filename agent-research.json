@@ -1,32 +1,31 @@
 {
   "agent": "research-scout",
-  "generated": "2026-11-19T18:29:29+07:00",
+  "generated": "2026-11-20T11:31:15Z",
   "status": "ok",
-  "headline": "หามา 8 เปิดอ่านได้ทั้ง 8 · เข้าเกณฑ์ใช้ 3 ชิ้น — วัดราคาที่ได้จริงเทียบ midpoint · สูตรปิดความน่าจะเป็น drawdown · ตรวจบั๊กต้นทุนใน engine backtest",
-  "found": 8,
+  "headline": "หามาได้ 7 ชิ้น เลือก 3 · ป้ายใช้ 2 ชิ้น: วิธีหัก Sharpe ตามจำนวนครั้งที่ลอง และโครงสร้างขาดทุนรายย่อยที่เป็นต้นทุน 66%",
+  "found": 7,
   "items": [
     {
-      "t": "Schwarz, Barber, Huang, Jorion & Odean (2022 WP) — The \"Actual Retail Price\" of Equity Trades",
+      "t": "Backtesting — Harvey & Liu (2015, Journal of Portfolio Management)",
       "s": "ok",
-      "d": "ใช้ — 74,801 คำสั่งเหมือนกันที่ 5 โบรกเกอร์ ต้นทุนไป-กลับเทียบ midpoint ต่างกัน 7.2 bp ถึง 46.2 bp · price improvement 18.8–47.2% ของ spread · ของจริงที่ต้องวัดคือราคาที่ได้เทียบ midpoint ไม่ใช่ spread บนหน้าจอ · https://microstructure.exchange/papers/Schwartz_et_al_,_2022_WP,_The_'Actual_Retail_Price'_of_Equity_Trades.pdf"
+      "d": "ใช้ — หัก Sharpe ของ backtest เดิมตามจำนวนกลยุทธ์ที่เคยลอง: SR 0.75 บน 240 เดือน ที่ลองมา 200 แบบ เหลือ 0.32 · SR ต่ำกว่า 0.4 ถูกหักเกิน 50% แทบทุกกรณี · https://people.duke.edu/~charvey/Research/Published_Papers/P120_Backtesting.PDF"
     },
     {
-      "t": "Chin & Ingenoso (2006) — Risk Formulæ for Proportional Betting",
+      "t": "Just How Much Do Individual Investors Lose by Trading? — Barber, Lee, Liu & Odean (2009, Review of Financial Studies)",
       "s": "ok",
-      "d": "ใช้ — สูตรปิด P(ร่วงถึง a) = a^(2/k−1) ไม่ขึ้นกับ edge เลย · โอกาสร่วงเหลือครึ่งทุน: Kelly เต็ม 0.50 · ครึ่ง Kelly 0.12 · หนึ่งในสี่ 0.01 · เอาขนาดไม้ที่ใช้อยู่ไปคำนวณได้ทันที ไม่ใช่ข้อเสนอเปลี่ยนค่า · https://condor.depaul.edu/wchin/riskpaper.pdf"
+      "d": "ใช้ — ไต้หวันทั้งตลาด 1995-1999: ขาดทุนรายย่อย NT$935,000 ลบ. = 2.2% ของ GDP · เป็นต้นทุน 66% (คอม 32 + ภาษี 34) ฝีมือแค่ 34% · ที่ขอบเขต 1 วัน คำสั่งตั้งรอ +71.5 แต่คำสั่งเคาะเข้า −100.9 NT$ลบ./วัน · https://faculty.haas.berkeley.edu/odean/papers%20current%20versions/justhowmuchdoindividualinvestorslose_rfs_2009.pdf"
     },
     {
-      "t": "Yin, Miki, Lesnichenko & Gural (2026) — Implementation Risk in Portfolio Backtesting",
-      "s": "ok",
-      "d": "ใช้ — 15 กลยุทธ์บน 5 engine: ที่ต้นทุน 0 ตรงกันเป๊ะ 0.0000% ทุกคู่ แต่พอใส่ต้นทุนเริ่มเพี้ยน (ρ=0.93) สูงสุด 3.71% · Backtrader หารอัตราค่าคอมด้วย 100 ตามค่าตั้งต้น · ใช้เป็นเกณฑ์ตรวจบั๊ก: รันที่ต้นทุน 0 ต้องตรงกันเป๊ะ · https://arxiv.org/pdf/2603.20319"
+      "t": "Stepwise Multiple Testing as Formalized Data Snooping — Romano & Wolf (2003)",
+      "s": "info",
+      "d": "เก็บ — บอกได้ว่ากลยุทธ์ตัวไหนชนะเส้นฐาน ไม่ใช่แค่ว่ามีตัวชนะไหมอย่าง Reality Check ที่ใช้อยู่ แต่ตัวเลขผลทดลองอยู่ในส่วนที่สกัดข้อความไม่ได้ ยังไม่มีเลขให้เทียบ · https://econ-papers.upf.edu/papers/712.pdf"
     }
   ],
   "extra": [
-    "เก็บ · Busseti, Ryu & Boyd (2016) Risk-Constrained Kelly Gambling — Kelly เต็มเสี่ยง drawdown 0.397 vs RCK 0.073 แต่ต้องเขียน convex optimization · สมมติ IID ไม่คิดต้นทุน · https://web.stanford.edu/~boyd/papers/pdf/kelly.pdf",
-    "เก็บ · Cha, Lee, Schrab & Kim (2026) More Permutations Do Not Always Increase Power — เลือกจำนวน permutation ให้ (B+1)α เป็นจำนวนเต็ม (B=19/199/1999 ที่ α=0.05) · เป็นสถิติทั่วไป ไม่ใช่การเงิน · https://arxiv.org/pdf/2605.03886",
-    "เก็บ · Vanguard (2025) Principles for Behavioral Design — ข้อความเชิงเข้าใจผู้ลงทุนดันอัตราการลงทุน 24%→29% แต่ตัวเลขอื่นเป็นผลภายในที่ไม่บอกขนาดตัวอย่างหรือวิธีวัด · https://corporate.vanguard.com/content/dam/corp/research/pdf/principles_for_behavioral_design_nudging_for_better_investor_outcomes.pdf",
-    "เก็บ · Vanguard (2024) Considerations for Index Fund Investing — ค่าธรรมเนียมค่ากลาง index 6 bp vs active 65 bp · หุ้น Russell 3000 ชนะดัชนีแค่ 17% ในสิบปีถึงสิ้นปี 2023 · ไม่คำนวณผลทบต้น · ซ้อนกับ Morningstar fee study ที่เก็บไว้แล้ว · https://corporate.vanguard.com/content/dam/corp/research/pdf/considerations_for_index_fund_investing.pdf",
-    "เก็บ · Bogousslavsky & Muravyev (2024) An Anatomy of Retail Option Trading — spread ออปชัน 5–10% แต่คำสั่งเฉลี่ยขาดทุนแค่ ~0.9% ผู้เขียนตีความว่าใช้ limit order แต่ไม่ได้วัดประเภทคำสั่งจริง · สินค้าไม่ตรงกับที่เราเทรด · https://www.lsu.edu/business/files/event-files/2025-finance-mardi-gras/retail_option_trading_v2.pdf"
+    "Maximum Drawdown — Magdon-Ismail & Atiya (Risk Magazine vol.17 no.10, ต.ค. 2004) · ทิ้ง: เปิดได้แค่บทคัดย่อ ไม่มีสูตรไม่มีตัวเลข · ตัวเต็งรอบหน้าถ้าเจอ PDF เต็ม · https://papers.ssrn.com/abstract=874069",
+    "Investor Bulletin: How Fees and Expenses Affect Your Investment Portfolio — SEC (Pub. No. 164, 2/14) · ทิ้ง: ตัวอย่างมีแต่กรอบ (100,000 ดอลลาร์ 4% 20 ปี เทียบ 0.25/0.50/1%) แต่มูลค่าปลายทางอยู่ในกราฟที่สกัดเป็นข้อความไม่ได้ · https://www.sec.gov/investor/alerts/ib_fees_expenses.pdf",
+    "Day Trading Skill — Barber, Lee, Liu & Odean · ไม่เลือก: ยังไม่ได้เปิดอ่าน และซ้ำทีมผู้เขียนกับชิ้นที่เลือกแล้ววันนี้ · ตัวเต็งรอบหน้า เพราะแยกผลของกลุ่ม day trader ที่เปเปอร์ RFS 2009 ไม่ตอบ · https://faculty.haas.berkeley.edu/odean/papers/day%20traders/Day%20Trading%20Skill%20110523.pdf",
+    "คำสั่งกรมสรรพากร ป.161/2566 เงินได้จากแหล่งต่างประเทศ (สรุปโดย PwC / KPMG ไทย) · ไม่เลือก: เป็นเอกสารปี 2566 ยังไม่ตรวจว่ามีประกาศใหม่ทับ และควรอ่านจากหน้ากรมสรรพากรเอง · เป็นข้อมูล ไม่ใช่คำปรึกษาภาษี · https://www.pwc.com/th/en/pwc-tax-news-flash/2023/eng/tax-news-flash-06_2023.pdf"
   ],
-  "note": "ไม่มีชิ้นไหนได้ป้ายทิ้งรอบนี้ — เปิดอ่านได้จริงทั้ง 8 ชิ้นและบอกวิธีวัดของตัวเองครบ · ไม่มีชิ้นไหนเสนอกลยุทธ์ สัญญาณ หรือค่าพารามิเตอร์ใหม่ (ล็อกการล่า edge ถึง 25 ธ.ค. 2026) · โน้ตฉบับเต็ม: trading-private/research/2026-11-19.md"
+  "note": "ไม่มีชิ้นไหนเสนอกลยุทธ์ สัญญาณ หรือพารามิเตอร์ใหม่ — การปิดการล่า edge ถึง 25 ธ.ค. 2026 ยังอยู่ครบ · ชิ้นป้ายใช้ 2 ชิ้นต้องย้ายเข้า 2BRAIN 32_Literature เองตอนปิดสัปดาห์ศุกร์"
 }
