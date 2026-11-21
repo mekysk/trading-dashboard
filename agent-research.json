@@ -1,31 +1,31 @@
 {
   "agent": "research-scout",
-  "generated": "2026-11-20T11:31:15Z",
+  "generated": "2026-11-21T11:33:25Z",
   "status": "ok",
-  "headline": "หามาได้ 7 ชิ้น เลือก 3 · ป้ายใช้ 2 ชิ้น: วิธีหัก Sharpe ตามจำนวนครั้งที่ลอง และโครงสร้างขาดทุนรายย่อยที่เป็นต้นทุน 66%",
+  "headline": "หามา 7 เปิดอ่านจริง 6 · ใช้ 3 ชิ้น: วัด PGR/PLR ของตัวเอง · ช่องว่าง DW vs TW · สถิติฐานนักเทรด CFD 49,696 บัญชี",
   "found": 7,
   "items": [
     {
-      "t": "Backtesting — Harvey & Liu (2015, Journal of Portfolio Management)",
+      "t": "Odean (1998 JF) Are Investors Reluctant to Realize Their Losses?",
       "s": "ok",
-      "d": "ใช้ — หัก Sharpe ของ backtest เดิมตามจำนวนกลยุทธ์ที่เคยลอง: SR 0.75 บน 240 เดือน ที่ลองมา 200 แบบ เหลือ 0.32 · SR ต่ำกว่า 0.4 ถูกหักเกิน 50% แทบทุกกรณี · https://people.duke.edu/~charvey/Research/Published_Papers/P120_Backtesting.PDF"
+      "d": "ใช้ — สูตรวัดนิสัยขายกำไรเร็ว/ดองขาดทุน คำนวณจาก log ตัวเองได้ · PGR 0.148 vs PLR 0.098 (1.51 เท่า) · ระดับบัญชี 0.57/0.36 · https://faculty.haas.berkeley.edu/odean/papers/disposition/disposit.pdf"
     },
     {
-      "t": "Just How Much Do Individual Investors Lose by Trading? — Barber, Lee, Liu & Odean (2009, Review of Financial Studies)",
+      "t": "Padmanabhan, Panis & Tardiff (2017) Ability of Investors to Time Purchases and Sales of Mutual Funds",
       "s": "ok",
-      "d": "ใช้ — ไต้หวันทั้งตลาด 1995-1999: ขาดทุนรายย่อย NT$935,000 ลบ. = 2.2% ของ GDP · เป็นต้นทุน 66% (คอม 32 + ภาษี 34) ฝีมือแค่ 34% · ที่ขอบเขต 1 วัน คำสั่งตั้งรอ +71.5 แต่คำสั่งเคาะเข้า −100.9 NT$ลบ./วัน · https://faculty.haas.berkeley.edu/odean/papers%20current%20versions/justhowmuchdoindividualinvestorslose_rfs_2009.pdf"
+      "d": "ใช้ — ช่องว่างถ่วงเวลาลบถ่วงเงิน หุ้นสหรัฐ 2007-2016 1.01 pp/ปี · load 1.80 vs no-load 0.69 · กองเป้าหมายวันเกษียณกลับเครื่องหมาย −0.60 pp · https://dol.gov/sites/dolgov/files/ebsa/pdf_files/the-ability-of-investors-to-time-purchases-and-sales-of-mutual-funds.pdf"
     },
     {
-      "t": "Stepwise Multiple Testing as Formalized Data Snooping — Romano & Wolf (2003)",
-      "s": "info",
-      "d": "เก็บ — บอกได้ว่ากลยุทธ์ตัวไหนชนะเส้นฐาน ไม่ใช่แค่ว่ามีตัวชนะไหมอย่าง Reality Check ที่ใช้อยู่ แต่ตัวเลขผลทดลองอยู่ในส่วนที่สกัดข้อความไม่ได้ ยังไม่มีเลขให้เทียบ · https://econ-papers.upf.edu/papers/712.pdf"
+      "t": "Pelster (2022 rev 2024, TAF WP 65) The Leverage Substitution",
+      "s": "ok",
+      "d": "ใช้ — สถิติฐาน CFD รายย่อย 49,696 บัญชี 2.1 ล้านธุรกรรม · เลเวอเรจ 6.5→4.6 หลังเพดาน ESMA · ขนาดไม้ 15.66% ของบัญชี · ผลต่อไม้เฉลี่ย −3.4% ค่ากลาง +0.81% · https://en.wiwi.uni-paderborn.de/fileadmin-wiwi/cetar/TAF_Working_Paper_Series/TAF_WP_065_Pelster2024_rev.pdf"
     }
   ],
   "extra": [
-    "Maximum Drawdown — Magdon-Ismail & Atiya (Risk Magazine vol.17 no.10, ต.ค. 2004) · ทิ้ง: เปิดได้แค่บทคัดย่อ ไม่มีสูตรไม่มีตัวเลข · ตัวเต็งรอบหน้าถ้าเจอ PDF เต็ม · https://papers.ssrn.com/abstract=874069",
-    "Investor Bulletin: How Fees and Expenses Affect Your Investment Portfolio — SEC (Pub. No. 164, 2/14) · ทิ้ง: ตัวอย่างมีแต่กรอบ (100,000 ดอลลาร์ 4% 20 ปี เทียบ 0.25/0.50/1%) แต่มูลค่าปลายทางอยู่ในกราฟที่สกัดเป็นข้อความไม่ได้ · https://www.sec.gov/investor/alerts/ib_fees_expenses.pdf",
-    "Day Trading Skill — Barber, Lee, Liu & Odean · ไม่เลือก: ยังไม่ได้เปิดอ่าน และซ้ำทีมผู้เขียนกับชิ้นที่เลือกแล้ววันนี้ · ตัวเต็งรอบหน้า เพราะแยกผลของกลุ่ม day trader ที่เปเปอร์ RFS 2009 ไม่ตอบ · https://faculty.haas.berkeley.edu/odean/papers/day%20traders/Day%20Trading%20Skill%20110523.pdf",
-    "คำสั่งกรมสรรพากร ป.161/2566 เงินได้จากแหล่งต่างประเทศ (สรุปโดย PwC / KPMG ไทย) · ไม่เลือก: เป็นเอกสารปี 2566 ยังไม่ตรวจว่ามีประกาศใหม่ทับ และควรอ่านจากหน้ากรมสรรพากรเอง · เป็นข้อมูล ไม่ใช่คำปรึกษาภาษี · https://www.pwc.com/th/en/pwc-tax-news-flash/2023/eng/tax-news-flash-06_2023.pdf"
+    "เก็บ · Bergstresser & Poterba (2000, NBER w7595) Do After-Tax Returns Affect Mutual Fund Inflows? — ภาระภาษี 3.0%/ปี · turnover +20pp → +14 bp · ตัดเพราะเป็นภาษีกองทุนรวมสหรัฐ เทียบพอร์ตไทย/CFD ตรงๆ ไม่ได้ · https://www.nber.org/papers/w7595.pdf",
+    "เก็บ · Dichev & Zheng (2019 WP) The Volatility of Investor Returns — ผลตอบแทนถ่วงเงินต่ำกว่าถือเฉยๆ 18/19 ประเทศ · ตัดเพราะหน้าแรกเขียน Very Preliminary เอง และข้อสรุปเป็นระดับตลาด · https://www.stern.nyu.edu/sites/default/files/assets/documents/Ilia%20Dichev.pdf",
+    "เก็บ · Goldberg & Mahmoud (2014, arXiv 1404.7493) On a Convex Measure of Drawdown Risk — CED หุ้นสหรัฐ 1 ปี 51% · ตัดเพราะไม่มีสูตรปิด ต้องเขียน LP เอง ไม่คิดต้นทุน ซ้อนกับ Chin & Ingenoso · https://arxiv.org/pdf/1404.7493",
+    "ทิ้ง · Retail limit orders (Review of Finance 30(2) น.459) — เปิดไม่ได้ client_error ไม่ได้อ่านจึงไม่อ้างเนื้อหา · ตัวเต็งรอบหน้า · https://academic.oup.com/rof/article-pdf/30/2/459/64541530/rfaf049.pdf"
   ],
-  "note": "ไม่มีชิ้นไหนเสนอกลยุทธ์ สัญญาณ หรือพารามิเตอร์ใหม่ — การปิดการล่า edge ถึง 25 ธ.ค. 2026 ยังอยู่ครบ · ชิ้นป้ายใช้ 2 ชิ้นต้องย้ายเข้า 2BRAIN 32_Literature เองตอนปิดสัปดาห์ศุกร์"
+  "note": "ขอบเขตวันนี้: ช่องว่างพฤติกรรม 2 ชิ้น + การจัดขนาดและความเสี่ยง 1 ชิ้น · ไม่มีการหากลยุทธ์/สัญญาณ/พารามิเตอร์ใหม่ (ปิดการล่า edge ถึง 25 ธ.ค. 2026) · Pelster: ค่าสัมประสิทธิ์ DID สกัดไม่ได้แบบ verbatim จึงไม่อ้าง · เรื่องภาษีเป็นข้อมูลจากงานวิจัย ไม่ใช่คำปรึกษาวิชาชีพ"
 }
