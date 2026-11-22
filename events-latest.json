@@ -1,83 +1,6 @@
 {
-  "generated": "2026-11-15T20:00:00+07:00",
+  "generated": "2026-11-22T20:00:00+07:00",
   "earnings": [
-    {
-      "sym": "V",
-      "period": "Q4 FY26",
-      "date": "2026-10-27",
-      "when": "amc",
-      "eps": 3.48,
-      "epsEst": 3.44,
-      "rev": 12100,
-      "revEst": 12090,
-      "src": "https://www.zacks.com/stock/news/3017346/visa-q4-earnings-beat-estimates-on-strong-payment-volumes"
-    },
-    {
-      "sym": "MSFT",
-      "period": "Q1 FY27",
-      "date": "2026-10-28",
-      "when": "amc",
-      "eps": 4.92,
-      "epsEst": 4.72,
-      "rev": 92280,
-      "revEst": 90640,
-      "src": "https://stockstory.org/us/stocks/nasdaq/msft/news/earnings/microsoft-nasdaqmsft-posts-better-than-expected-sales-in-q3-cy2026"
-    },
-    {
-      "sym": "GOOGL",
-      "period": "Q3 2026",
-      "date": "2026-10-28",
-      "when": "amc",
-      "eps": 2.12,
-      "epsEst": 3.03,
-      "rev": 127580,
-      "revEst": 127920,
-      "src": "https://www.zacks.com/stock/news/3018973/googl-q3-earnings-miss-estimates-cloud-search-aid-top-line-growth"
-    },
-    {
-      "sym": "AMZN",
-      "period": "Q3 2026",
-      "date": "2026-10-29",
-      "when": "amc",
-      "eps": 1.89,
-      "epsEst": 1.97,
-      "rev": 201900,
-      "revEst": 202200,
-      "src": "https://www.newsquawk.com/headlines/amazoncom-inc-amzn-q3-2026-usd-eps-189-exp-197-sales-2019bln-exp-2022bln"
-    },
-    {
-      "sym": "MA",
-      "period": "Q3 2026",
-      "date": "2026-10-29",
-      "when": "bmo",
-      "eps": 5.31,
-      "epsEst": 5.16,
-      "rev": 9800,
-      "revEst": 9660,
-      "src": "https://www.zacks.com/stock/news/3018925/mastercard-beats-q3-earnings-on-higher-cross-border-volumes-pricing"
-    },
-    {
-      "sym": "LLY",
-      "period": "Q3 FY26",
-      "date": "2026-10-29",
-      "when": "bmo",
-      "eps": 7.48,
-      "epsEst": 7.11,
-      "rev": 24400,
-      "revEst": 22110,
-      "src": "https://www.earningswhispers.com/article/LLY/r839"
-    },
-    {
-      "sym": "XOM",
-      "period": "Q3 FY26",
-      "date": "2026-10-30",
-      "when": "bmo",
-      "eps": 4.23,
-      "epsEst": 3.9,
-      "rev": 113160,
-      "revEst": 103000,
-      "src": "https://www.zacks.com/stock/news/3019753/xom-q3-earnings-&-revenues-beat-estimates-on-strong-refining-margins"
-    },
     {
       "sym": "AAPL",
       "period": "Q4 FY26",
@@ -105,28 +28,28 @@
       "period": "Q3 FY27",
       "date": "2026-11-17",
       "when": "amc",
-      "eps": null,
-      "epsEst": 2.49,
-      "rev": null,
-      "revEst": 108700,
-      "src": "https://therighttrader.com/earnings-calendar/nvda"
+      "eps": 2.68,
+      "epsEst": 2.48,
+      "rev": 115800,
+      "revEst": 109000,
+      "src": "https://www.newsquawk.com/headlines/nvidia-corporation-nvda-q3-fy27-usd-adj-eps-268-exp-248-revenue-1158bln-exp-109bln"
     },
     {
       "sym": "WMT",
       "period": "Q3 FY27",
       "date": "2026-11-19",
       "when": "bmo",
-      "eps": null,
+      "eps": 0.65,
       "epsEst": 0.64,
-      "rev": null,
-      "revEst": 187200,
-      "src": "https://therighttrader.com/earnings-calendar/wmt"
+      "rev": 188800,
+      "revEst": 187250,
+      "src": "https://stocktwits.com/news-articles/markets/equity/walmart-raises-fy-27-outlook-after-q3-sales-beat-global-e-commerce-sales-rise-17/cNbi9L1R907"
     },
     {
       "sym": "CRM",
       "period": "Q3 FY27",
       "date": "2026-12-02",
-      "when": "",
+      "when": "amc",
       "eps": null,
       "epsEst": 3.43,
       "rev": null,
@@ -150,48 +73,13 @@
       "date": "2026-12-10",
       "when": "amc",
       "eps": null,
-      "epsEst": 4.91,
+      "epsEst": 4.89,
       "rev": null,
-      "revEst": 74350,
-      "src": "https://www.tipranks.com/news/costco-heads-into-q1-2027-earnings-heres-why-bernstein-expects-an-uneventful-quarter"
+      "revEst": 74440,
+      "src": "https://www.earningswhispers.com/stocks/COST"
     }
   ],
   "events": [
-    {
-      "date": "2026-10-28",
-      "cat": "macro",
-      "title": "FOMC ประกาศดอกเบี้ย + แถลงข่าว",
-      "impact": "high",
-      "src": "https://www.cmegroup.com/knowledge-hub/fomc-meeting-fed-decision-day/"
-    },
-    {
-      "date": "2026-10-29",
-      "cat": "macro",
-      "title": "ECB ประชุมประกาศดอกเบี้ย",
-      "impact": "med",
-      "src": "https://www.financecalendar.com/event/ecb-rate-decision-october-2026/"
-    },
-    {
-      "date": "2026-10-29",
-      "cat": "macro",
-      "title": "GDP สหรัฐฯ Q3 2026 (ประมาณการครั้งแรก)",
-      "impact": "med",
-      "src": "https://www.bea.gov/news/schedule/full"
-    },
-    {
-      "date": "2026-10-30",
-      "cat": "macro",
-      "title": "ธนาคารกลางญี่ปุ่น (BOJ) ประชุมประกาศนโยบาย",
-      "impact": "med",
-      "src": "https://www.financecalendar.com/bank-of-japan-rate-decisions/"
-    },
-    {
-      "date": "2026-10-30",
-      "cat": "crypto",
-      "title": "วันหมดอายุออปชัน Bitcoin รายเดือน (Deribit)",
-      "impact": "low",
-      "src": "https://blog.e8markets.com/article/deribits-644b-bitcoin-options-expiry-what-traders-should-expect-around-80k"
-    },
     {
       "date": "2026-11-05",
       "cat": "macro",
