@@ -1,39 +1,32 @@
 {
   "agent": "research-scout",
-  "generated": "2026-11-22T11:29:22Z",
+  "generated": "2026-11-23T11:40:00Z",
   "status": "ok",
-  "headline": "หามา 12 เปิดอ่านจริง 5 เข้าเกณฑ์ใช้ 2 ชิ้น — ทั้งคู่วัดว่าต้นทุนกินผลไปเท่าไร ไม่ใช่ฝีมือ",
-  "found": 12,
+  "headline": "หามา 8 เปิดอ่านจริง 8 เข้าเกณฑ์ใช้ 3 ชิ้น — วัด overfit ของชุดทดสอบ · วัดช่องว่างพฤติกรรมของตัวเอง · แปลง turnover เป็นต้นทุน",
+  "found": 8,
   "items": [
     {
-      "t": "Do Day Traders Rationally Learn about Their Ability? (Barber, Lee, Liu, Odean & Zhang 2017)",
+      "t": "The Probability of Backtest Overfitting (Bailey, Borwein, López de Prado & Zhu 2014)",
       "s": "ok",
-      "d": "ใช้ — ก่อนต้นทุน −7 bps/วัน หลังต้นทุน −23.9 bps คือต้นทุนกินไป ~71% ของการขาดทุน · อยู่รอด 1/2/3 ปี 44/24/15% · คนที่ขาดทุนมาก่อนยังกลับมาเทรด 95.3% · เทียบ gross vs net bps ของตัวเองได้ทันที · https://faculty.haas.berkeley.edu/odean/papers/Day%20Traders/Day%20Trading%20and%20Learning%20110217.pdf"
+      "d": "ใช้ — เกณฑ์ PBO>0.05 ให้ปฏิเสธโมเดล · ค้นช่องพารามิเตอร์ 8,800 ชุดบนราคาสุ่มล้วนได้ Sharpe 1.27 และผ่าน PSRStat 2.83 แต่ PBO 55% · กลยุทธ์จริงตัวอย่าง PBO 74% และ Sharpe นอกกลุ่มติดลบ 78% · ฉากทัศน์ overfit เต็มขั้น PBO→1 แม้เพิ่มข้อมูลหรือจำนวนการทดสอบเป็นสองเท่า · คำนวณจาก log ที่มีอยู่แล้วได้ทันที · https://carmamaths.org/jon/backtest2.pdf"
     },
     {
-      "t": "The cross-section of speculator skill (Barber, Lee, Liu & Odean 2014, JFM 18:1-24)",
+      "t": "Mind the Gap 2026 US (Ptak et al., Morningstar ส.ค. 2026)",
       "s": "ok",
-      "d": "ใช้ — กลุ่มเก่งสุด 500 คน ก่อนต้นทุน 61.3 bps/วัน เหลือสุทธิ 37.9 ที่ค่าคอม 5 bps แต่เหลือ 24.1 ที่ 14.25 bps · ค่าคอมเพิ่มแค่ 9.25 bps กินส่วนต่างสุทธิ 36% · เกณฑ์ว่าควรทดสอบด้วยสมมติฐานต้นทุนสองระดับ · https://faculty.haas.berkeley.edu/odean/papers/day%20traders/The%20Cross-Section%20of%20Speculator%20Skill.pdf"
+      "d": "ใช้ — 10 ปีถึงสิ้นปี 2025 เกือบ 23,000 กอง · ช่องว่างรวม 1.2 จุด/ปี (คนได้ 8.7 vs ของทำได้ 9.9) ≈ 12% ของผลตอบแทน · แบ่งตามความผันผวน น้อยสุดเสีย 0.4 จุด มากสุดเสีย 2.1 จุด · ค่าธรรมเนียมไม่เป็นขั้น · วิธีคำนวณเดียวกับที่คิดของตัวเองได้ (dollar-weighted เทียบ time-weighted) · https://www.morningstar.com/content/cs-assets/v3/assets/blt9415ea4cc4157833/blt852a4301adc2f5db/6a7373d51f7b5ae2da78e1e8/US_Mind_the_Gap_2026.pdf"
     },
     {
-      "t": "Optimal Rebalancing Frequencies for Multidimensional Portfolios (Ekren, Liu & Muhle-Karbe 2017)",
-      "s": "info",
-      "d": "เก็บ — สูตรปิด คาบ = ε^(2/3)×A* เสียบ spread กับความผันผวนของตัวเองได้ · ที่ต้นทุน 1% ได้คาบ 2.23 ปี (10 สินทรัพย์ 3.48 ปี) ยาวกว่าที่คนทำกันมาก · ผลตอบแทนคาดหวังไม่เข้าพจน์นำ · เป็นการตั้งพารามิเตอร์ จึงรอหลัง 25 ธ.ค. และเป็นทฤษฎีที่ ε→0 ไม่มีต้นทุนคงที่ · https://arxiv.org/pdf/1510.05097"
+      "t": "A Taxonomy of Anomalies and their Trading Costs (Novy-Marx & Velikov 2015)",
+      "s": "ok",
+      "d": "ใช้ — กฎนิ้วโป้ง: ต้นทุนต่อเดือนเกิน 1% ของอัตราหมุนพอร์ตขาเดียวต่อเดือน (หมุน 20% → หัก ≥20 bps) · ไป-กลับทั่วไปเกิน 50 bps · ถ่วงเท่ากันทุกตัวแพงกว่า 2-3 เท่า · UMD หมุน 24.6%/ปี ต้นทุน 48.4 bps/เดือน เทียบ SMB 5.66 และ HML 5.45 · กลยุทธ์ที่หมุนเกิน 50%/เดือน รอดแค่ 2 ตัวจากทั้งงาน · เทคนิคลดต้นทุนในงานเป็นการตั้งพารามิเตอร์ จึงยังไม่เสนอทดลองก่อน 25 ธ.ค. · https://mysimon.rochester.edu/novy-marx/research/ToAatTC.pdf"
     }
   ],
   "extra": [
-    "เก็บ-ไม่เลือก · Xue (2026) How Execution Assumptions Change Short-Horizon Sharpe Rankings — tau_b ร่วงเหลือ 0.21 เมื่อเปลี่ยนสมมติฐานการส่งคำสั่ง · ช่องว่าง Sharpe แคบ ↔ ลำดับไม่นิ่ง r=0.75 · ตัดเพราะข้อมูลสังเคราะห์ล้วน เป็น preprint คนเขียนคนเดียว และซ้ำหัวข้อ Yin et al. 2026 ที่ติดป้ายใช้แล้ว · https://arxiv.org/pdf/2610.05077",
-    "เก็บ-ไม่เลือก · Zhang, Ahluwalia, Daga & Zi (Vanguard ธ.ค. 2024) The rebalancing edge — ต้นทุน 10 ปี 5.1 vs 22.1 vs 18.3 bps · ตัดเพราะเป็นการจำลอง VCMM ไม่ใช่ผลจริง สเกลกองทุนเป้าหมายวันเกษียณ ไม่พูดภาษี และเสนอค่าพารามิเตอร์ตรงๆ · https://corporate.vanguard.com/content/dam/corp/research/pdf/the_rebalancing_edge_optimizing_target_date_fund_rebalancing_through_threshold_based_strategies.pdf",
-    "ทิ้ง-เปิดไม่ได้ · Davidson — The Retail FX Trader: Random Trading and the Negative Sum Game (client_error) · ตัวเต็งรอบหน้า ตรงขอบเขตที่สุดในรอบนี้ · https://irep.ntu.ac.uk/id/eprint/26837/1/PubSub4119_Davidson.pdf",
-    "ทิ้ง-ยังไม่เปิด · Davison — The Retail FX Trader: Rising Above Random (ชิ้นต่อเนื่อง โดเมนเดียวกับที่ล้ม) · https://irep.ntu.ac.uk/id/eprint/28348/1/5881_Davison.pdf",
-    "ทิ้ง-เปิดไม่ได้ · Peterson — Developing & Backtesting Systematic Trading Strategies (เซิร์ฟเวอร์วน redirect https↔http) · http://braverock.com/brian/strat_dev_process.pdf",
-    "ทิ้ง-เปิดไม่ได้ · Day Trading for a Living? (SSRN 3423101 client_error · ไม่ยืนยันผู้เขียน ไม่อ้างตัวเลข 97% ที่ลอยในบล็อก) · https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3423101",
-    "ไม่เปิดรอบนี้ · The GT-Score: A Robust Objective Function for Reducing Overfitting (arXiv 2602.00080) — เสนอฟังก์ชันคัดกลยุทธ์ใหม่ เข้าใกล้เส้นที่ล็อกไว้ เลื่อนไปหลัง 25 ธ.ค. · https://arxiv.org/pdf/2602.00080",
-    "ไม่เปิดได้ · When Commitment Fails: Evidence from a Field Experiment (Management Science อยู่หลังกำแพงค่าสมาชิก) · https://pubsonline.informs.org/doi/10.1287/mnsc.2018.3236",
-    "ไม่เปิดรอบนี้ · BFI Working Paper 2023-17 (U Chicago) ยังไม่ยืนยันว่าตรงขอบเขต · ตัวเต็งรอบหน้า · https://bfi.uchicago.edu/wp-content/uploads/2023/02/BFI_WP_2023-17.pdf",
-    "ไม่เปิดรอบนี้ · Artificial Intelligence and Retail Investing (OSC / BI Team 2024) หัวข้อห่างจากช่องว่างพฤติกรรมที่เราวัด · ตัวเต็งรอบหน้า · https://www.bi.team/wp-content/uploads/2024/09/Artificial-Intelligence-and-Retail-Investing-Use-Cases-and-Experimental-Research-Final-Report.pdf",
-    "ตัดจากหน้าผลค้นหา · บทความ swap/overnight financing จากเว็บโบรกเกอร์ (lunaro, northstonecapital, cfd.guide, techcavern, laverlane, fxnx, mql5) — ไม่บอกวิธีวัด เป็นเนื้อหานำไปเปิดบัญชี",
-    "ตัดจากหน้าผลค้นหา · บทความ x% ของเทรดเดอร์ขาดทุน จากเว็บสอนเทรดและ Medium (enlightenedstocktrading, thortradecopier, trademomentum, bananafarmer, tradicted, arxum) — อ้างต่อจากงานที่ไม่ได้เปิด เป็นการขายคอร์ส"
+    "เก็บ-ไม่เลือก · PwC Thailand Thai Tax 2026/27 Booklet (กฎหมาย ณ 15 ต.ค. 2026) — ขั้นภาษีบุคคล 0-35% · ยกเว้นกำไรหุ้นเฉพาะที่ขายในตลาดหลักทรัพย์ · ขาดทุนหักกลบกำไรไม่ได้ · ปันผล 10% ดอกเบี้ย 15% คริปโต 15% · เงินได้ต่างประเทศที่เกิดตั้งแต่ 1 ม.ค. 2024 นับเป็นเงินได้ในปีที่นำเข้าไทย · ตัดเพราะเป็นคู่มือที่ปรึกษาไม่ใช่งานวิจัย ส่วนภาษีธุรกิจเฉพาะกับอากรแสตมป์อ่านได้แค่สรุปอัตโนมัติ และไม่ครอบคลุม CFD · เป็นข้อมูล ไม่ใช่คำปรึกษาภาษีวิชาชีพ · https://www.pwc.com/th/en/tax/assets/thai-tax/2026-2027/thai-tax-booklet-2026-27.pdf",
+    "เก็บ-ไม่เลือก · Li, Lambe & Adegbite (พ.ค. 2017, MPRA 88559) New Bid-Ask Spread Estimators from Daily High and Low Prices — เสนอ BHL/SHL2 เทียบ Roll, Corwin-Schultz, Abdi-Ranaldo · ตัดเพราะตารางผลทั้งหมดอยู่นอกส่วนที่อ่านได้ (ตัดที่ 39,900 จาก 119,000 อักษร) ไม่มีตัวเลขความแม่นที่ยืนยันได้แม้ตัวเดียว · ตัวเต็งรอบหน้า · https://mpra.ub.uni-muenchen.de/88559/9/MPRA_paper_88559.pdf",
+    "เก็บ-ไม่เลือก · Dewan (Vanguard Canada มิ.ย. 2024) A deep dive into Canadian home bias — แคนาดาเป็น 2.6% ของตลาดหุ้นโลกแต่นักลงทุนถือ 50% เกินน้ำหนักกว่า 18 เท่า · สัดส่วนผันผวนต่ำสุดในอดีต 30/70 · ช่วงเหมาะสมข้ามภูมิภาค 25-60% · ตัดเพราะตัวเลขเทียบทั้งชุดเป็นของแคนาดา ค่าความผันผวนรายสัดส่วนเป็นภาพอ่านไม่ได้ และเป็นเอกสารของผู้ขายที่ใช้การจำลอง VCMM · https://www.vanguard.ca/content/dam/intl/americas/canada/en/documents/HOBI_052024_V14_secure.pdf",
+    "ทิ้ง · Burbau (CME Group 5 มิ.ย. 2026) FX Swap Fees: Spotting Inconsistencies — swap EUR/USD ของโบรกเกอร์ไม่ระบุชื่อ ฝั่ง long −11.5 ถึง −9.0 ดอลลาร์ต่อลอต · ทิ้งเพราะไม่บอกวิธีวัดเลย อ้างสหสัมพันธ์โดยไม่มีค่า ท้ายหน้าเขียนเองว่าตัวอย่างเป็นสถานการณ์สมมติซึ่งขัดกับเนื้อหา เป็นเนื้อหาการตลาด และซ้ำหัวข้อบทความ CME ที่เก็บไว้แล้ว 2026-11-16 · https://www.cmegroup.com/articles/2026/fx-swap-fees-spotting-inconsistencies.html",
+    "ทิ้ง · ESMA (12 มี.ค. 2026) Report on Call for Evidence: retail investor journey — สรุปความเห็น 96 ราย · ทิ้งเพราะไม่มีตัวเลขเรื่องต้นทุน การขาดทุนบน CFD หรือสัดส่วนบัญชีที่ขาดทุนเลย ตัวเลขที่มีเป็นคำกล่าวของผู้ตอบที่ไม่บอกวิธีวัดและไม่บอกขนาดตัวอย่าง และตัวเอกสารระบุเองว่าไม่ใช่จุดยืนสุดท้าย · https://www.esma.europa.eu/sites/default/files/2026-03/ESMA35-243228190-7410_-_Report_CfE_on_retail_investor_journey.pdf"
   ],
-  "note": "เข้าเกณฑ์ใช้ 2 ชิ้น ไม่ถึง 3 และไม่ดันของอ่อนขึ้นมาเติม · จุดอ่อนของรอบนี้คือทั้งสองชิ้นที่ได้ป้ายใช้มาจากชุดข้อมูลตลาดไต้หวันชุดเดียวกัน และเป็นชุดเดียวกับ Barber-Lee-Liu-Odean 2009 RFS ที่ติดป้ายใช้ไปแล้ว 2026-11-20 จึงไม่ใช่หลักฐานอิสระจากกัน · คำค้นเรื่องต้นทุนถือข้ามคืน (swap) ซึ่งเป็นหัวข้อสำคัญอันดับหนึ่งในขอบเขต ไม่ได้แหล่งวิชาการแม้แต่ชิ้นเดียว ได้แต่บล็อกโบรกเกอร์ รอบหน้าควรเปลี่ยนมุมคำค้น (carry trade financing cost, futures roll vs CFD financing) และหาทางเข้า NTU IRep กับ SSRN ที่ไม่ใช่ WebFetch ตรง · ไม่มีชิ้นไหนในรอบนี้เสนอกลยุทธ์ สัญญาณ หรืออินดิเคเตอร์ใหม่ ชิ้นที่พ่วงพารามิเตอร์มาถูกกดลงเป็นเก็บทั้งหมด · ชิ้นที่ได้ป้ายใช้ 2 ชิ้นต้องย้ายเข้า 32_Literature ด้วยมือตอนปิดสัปดาห์วันศุกร์"
+  "note": "ขอบเขตรอบนี้: ระเบียบวิธีทดสอบ · ช่องว่างพฤติกรรม · ต้นทุนและการส่งคำสั่ง · โครงพอร์ตระยะยาว — ไม่มีชิ้นไหนเสนอกลยุทธ์ สัญญาณ หรืออินดิเคเตอร์ใหม่ (ปิดการล่า edge ถึง 25 ธ.ค. 2026) · เอกสารหลายชิ้นยาวเกินที่ตัวดึงข้อความจะคืนได้หมด โน้ตฉบับเต็มกำกับทุกตัวเลขว่าอ่านจากต้นฉบับโดยตรงหรือมาจากสรุปอัตโนมัติที่ยังไม่ยืนยัน"
 }
