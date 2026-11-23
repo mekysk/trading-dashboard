@@ -1,23 +1,23 @@
 {
   "agent": "system-watcher",
-  "generated": "2026-11-22T01:12:00Z",
+  "generated": "2026-11-23T01:14:00Z",
   "status": "attention",
   "headline": "ไม่มีงานล้ม · ข้อมูลสแกน/ข่าวเช้าสด · ยังเข้า github.io จาก cloud ไม่ได้",
   "items": [
-    {"t": "เปิดเว็บ mekysk.github.io จาก cloud ไม่ได้ (ยังเป็นอยู่ เตือนมา 12 รอบแล้ว)", "s": "warn",
-     "d": "Tunnel connection failed: 403 Forbidden (agent proxy: no rule or network setting allows this host) — ข้อ 1, 3, 5 ตรวจจากไฟล์ใน repo branch main แทน · pages build ล่าสุด success 21 พ.ย. 11:33 UTC"},
-    {"t": "agent-coach / agent-morning ไม่อัปเดตตั้งแต่ 20–21 ต.ค. (ยังเป็นอยู่ 8 รอบ)", "s": "warn",
+    {"t": "เปิดเว็บ mekysk.github.io จาก cloud ไม่ได้ (ยังเป็นอยู่ เตือนมา 13 รอบแล้ว)", "s": "warn",
+     "d": "Tunnel connection failed: 403 Forbidden (agent proxy: no rule or network setting allows this host) — ข้อ 1, 3, 5 ตรวจจากไฟล์ใน repo branch main แทน · pages build ล่าสุด success 22 พ.ย. 12:48 UTC"},
+    {"t": "agent-coach / agent-morning ไม่อัปเดตตั้งแต่ 20–21 ต.ค. (ยังเป็นอยู่ 9 รอบ)", "s": "warn",
      "d": "commit ล่าสุด coach 20 ต.ค. 14:49 UTC · morning 21 ต.ค. 15:00 UTC — ไม่อยู่ในรายการรอบรันที่กำหนด แจ้งไว้เผื่อยังตั้งใจใช้อยู่"},
     {"t": "งานอัตโนมัติบน GitHub ไม่มีตัวล้ม", "s": "ok",
-     "d": "สแกนรายคืน success 21 พ.ย. 03:49 UTC · ข่าวเช้า success 20 พ.ย. 07:36 UTC (วันทำการล่าสุด) · pages build 14 รอบล่าสุด success (cancelled 1 รอบ 20 พ.ย. 07:38 มีรอบคู่ success แล้ว)"},
+     "d": "สแกนรายคืน success 21 พ.ย. 03:49 UTC (ไม่เกิน 2 วัน) · ข่าวเช้า success 20 พ.ย. 07:36 UTC · pages build 14 รอบล่าสุด success (cancelled 1 รอบ 20 พ.ย. 07:38 มีรอบคู่ success แล้ว)"},
     {"t": "ข้อมูลสแกนสด (จาก repo)", "s": "ok",
-     "d": "asof 2026-11-20 (ศุกร์ = วันทำการล่าสุด) · scanned 526/546 = 96.3%"},
+     "d": "asof 2026-11-20 (ศุกร์ = วันทำการล่าสุดก่อนวันนี้) · scanned 526/546 = 96.3%"},
     {"t": "บทสรุปข่าวเช้าปกติ", "s": "ok",
-     "d": "ranAt 20 พ.ย. 07:38 UTC · ok=true · qualityWarnings ว่าง · 5 ย่อหน้า 1,517 ตัวอักษร · หมายเหตุ: gemini-3.8-flash ติด 429 (quota) เลยใช้ gemini-3.5-flash-lite (grounded=false) และ coindesk.com ตอบ 429 ทั้ง 7 บทความ"},
+     "d": "ranAt 20 พ.ย. 07:38 UTC (รอบจันทร์ยังไม่ถึงเวลา) · ok=true · qualityWarnings ว่าง"},
     {"t": "ไฟล์ที่หน้าเว็บใช้ครบ (ใน repo)", "s": "ok",
      "d": "scan.json, styles.json, px/list.json, px/idx-spx.json, brief-latest.json, brief-status.json มีครบและ parse ได้"},
     {"t": "ผลงานเอเจนต์ทันรอบ", "s": "ok",
-     "d": "scan 20 พ.ย. 23:29 UTC · risk 23:44 UTC · bot 21 พ.ย. 00:23 UTC · research 21 พ.ย. 11:33 UTC · events 15 พ.ย. 12:06 UTC · port 15 พ.ย. 12:49 UTC (รอบอาทิตย์นี้ยังไม่ถึงเวลา)"}
+     "d": "scan 20 พ.ย. 23:29 UTC · risk 23:44 UTC · bot 21 พ.ย. 00:23 UTC · research 22 พ.ย. 11:35 UTC · events 22 พ.ย. 11:54 UTC · port 22 พ.ย. 12:48 UTC (รอบอาทิตย์ครบ)"}
   ],
   "note": "ตรวจได้เต็ม 2 จาก 5 ข้อ (2, 4) · ข้อ 1, 3, 5 ตรวจจาก repo แทนเว็บเพราะเข้า github.io ไม่ได้"
 }
