@@ -1,39 +1,43 @@
 {
-  "ranAt": "2026-11-23T07:58:52.286Z",
+  "ranAt": "2026-11-24T10:14:56.276Z",
   "ok": true,
-  "model": "gemini-3.5-flash-lite",
+  "model": "gemini-flash-lite-latest",
   "grounded": false,
-  "articlesRead": 9,
+  "articlesRead": 5,
   "articlesFailed": [
+    "coindesk.com: HTTP 429",
     "coindesk.com: HTTP 429",
     "coindesk.com: HTTP 429",
     "coindesk.com: HTTP 429",
     "coindesk.com: HTTP 429"
   ],
-  "citedUrls": 9,
+  "citedUrls": 5,
   "modelsFailed": [
     "gemini-3.8-flash+search: HTTP 429 — {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \",\n    \"status\": ",
-    "gemini-3.8-flash: HTTP 503 — {\n  \"error\": {\n    \"code\": 503,\n    \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\",\n    \"status\": \"UNAVAILABLE\"\n  }\n}\n"
+    "gemini-3.8-flash: HTTP 503 — {\n  \"error\": {\n    \"code\": 503,\n    \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\",\n    \"status\": \"UNAVAILABLE\"\n  }\n}\n",
+    "gemini-3.5-flash-lite: HTTP 503 — {\n  \"error\": {\n    \"code\": 503,\n    \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\",\n    \"status\": \"UNAVAILABLE\"\n  }\n}\n",
+    "gemini-flash-latest: This operation was aborted"
   ],
-  "chars": 1697,
-  "paragraphs": 5,
-  "headlines": 64,
+  "chars": 1804,
+  "paragraphs": 4,
+  "headlines": 70,
   "prices": 7,
   "qualityWarnings": [
-    "มีตัวเลขเปอร์เซ็นต์แค่ 0 ตัว ถือว่าบางไป"
+    "ได้แค่ 4 ย่อหน้า",
+    "มีตัวอักษรต่างภาษาหลุดมา 2 ตัว: 美元"
   ],
   "feedsOk": [
-    "CNBC Markets (0)",
+    "CNBC Markets (2)",
     "CNBC Top (12)",
-    "CNBC Finance (1)",
+    "CNBC Finance (4)",
     "MarketWatch Top (10)",
     "Investing หุ้น (10)",
-    "Investing โภคภัณฑ์ (9)",
-    "Investing ค่าเงิน (1)",
-    "Investing คริปโต (2)",
-    "CoinDesk (7)",
+    "Investing โภคภัณฑ์ (10)",
+    "Investing ค่าเงิน (10)",
+    "Investing คริปโต (8)",
+    "CoinDesk (12)",
     "Federal Reserve (12)"
   ],
   "feedsFailed": [],
-  "elapsed": "3.9s"
+  "elapsed": "79.2s"
 }
