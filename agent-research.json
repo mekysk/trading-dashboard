@@ -1,32 +1,33 @@
 {
   "agent": "research-scout",
-  "generated": "2026-11-23T11:40:00Z",
+  "generated": "2026-11-24T11:35:00Z",
   "status": "ok",
-  "headline": "หามา 8 เปิดอ่านจริง 8 เข้าเกณฑ์ใช้ 3 ชิ้น — วัด overfit ของชุดทดสอบ · วัดช่องว่างพฤติกรรมของตัวเอง · แปลง turnover เป็นต้นทุน",
-  "found": 8,
+  "headline": "หามา 9 เปิดอ่านได้จริง 5 เข้าเกณฑ์ใช้ 3 ชิ้น — แปลงจำนวนชุดที่ลองเป็นความยาวข้อมูลขั้นต่ำ · เส้นฐานสุ่มที่หัก spread แล้ว · ต้นทุน limit vs market order",
+  "found": 9,
   "items": [
     {
-      "t": "The Probability of Backtest Overfitting (Bailey, Borwein, López de Prado & Zhu 2014)",
+      "t": "Pseudo-Mathematics and Financial Charlatanism (Bailey, Borwein, Lopez de Prado & Zhu 2014)",
       "s": "ok",
-      "d": "ใช้ — เกณฑ์ PBO>0.05 ให้ปฏิเสธโมเดล · ค้นช่องพารามิเตอร์ 8,800 ชุดบนราคาสุ่มล้วนได้ Sharpe 1.27 และผ่าน PSRStat 2.83 แต่ PBO 55% · กลยุทธ์จริงตัวอย่าง PBO 74% และ Sharpe นอกกลุ่มติดลบ 78% · ฉากทัศน์ overfit เต็มขั้น PBO→1 แม้เพิ่มข้อมูลหรือจำนวนการทดสอบเป็นสองเท่า · คำนวณจาก log ที่มีอยู่แล้วได้ทันที · https://carmamaths.org/jon/backtest2.pdf"
+      "d": "ใช้ — สูตร MinBTL แปลงจำนวนชุดที่ลองเป็นความยาวข้อมูลขั้นต่ำ: ข้อมูล 5 ปี ลองได้ไม่เกิน 45 ชุดอิสระ · N=10 ให้ Sharpe ในชุด 1.57 แต่นอกชุด 0 · 7 พารามิเตอร์สองค่าเป็น N=128 ต้องการ Sharpe เกิน 2.6 · เป็นเครื่องวัดชุดทดสอบที่มีอยู่ ไม่ใช่การปรับค่า · https://carmamaths.org/jon/backtest.pdf"
     },
     {
-      "t": "Mind the Gap 2026 US (Ptak et al., Morningstar ส.ค. 2026)",
+      "t": "The Retail FX Trader: Random Trading and the Negative Sum Game (Davison 2016)",
       "s": "ok",
-      "d": "ใช้ — 10 ปีถึงสิ้นปี 2025 เกือบ 23,000 กอง · ช่องว่างรวม 1.2 จุด/ปี (คนได้ 8.7 vs ของทำได้ 9.9) ≈ 12% ของผลตอบแทน · แบ่งตามความผันผวน น้อยสุดเสีย 0.4 จุด มากสุดเสีย 2.1 จุด · ค่าธรรมเนียมไม่เป็นขั้น · วิธีคำนวณเดียวกับที่คิดของตัวเองได้ (dollar-weighted เทียบ time-weighted) · https://www.morningstar.com/content/cs-assets/v3/assets/blt9415ea4cc4157833/blt852a4301adc2f5db/6a7373d51f7b5ae2da78e1e8/US_Mind_the_Gap_2026.pdf"
+      "d": "ใช้ — ผู้ค้าสุ่มที่จ่าย spread ได้ผลเกือบเท่าผู้ค้าจริง: มีกำไร 13.47% vs 17.80% · −$5.79 vs −$5.49 ต่อเทรด · ต้นทุน spread $6.248/เทรด เทียบขาดทุนจริง −$6.20 · ผลจริงสอดคล้องอัตราชนะแค่ ~50.5% · เทียบกับ spread Exness ที่วัดไว้แล้วได้ตรง · ไม่คิด swap · https://c.mql5.com/forextsd/forum/205/SSRN-id2711214.pdf"
     },
     {
-      "t": "A Taxonomy of Anomalies and their Trading Costs (Novy-Marx & Velikov 2015)",
+      "t": "Retail Limit Orders (ฉบับ ธ.ค. 2024 · ชื่อผู้เขียนไม่ปรากฏในไฟล์)",
       "s": "ok",
-      "d": "ใช้ — กฎนิ้วโป้ง: ต้นทุนต่อเดือนเกิน 1% ของอัตราหมุนพอร์ตขาเดียวต่อเดือน (หมุน 20% → หัก ≥20 bps) · ไป-กลับทั่วไปเกิน 50 bps · ถ่วงเท่ากันทุกตัวแพงกว่า 2-3 เท่า · UMD หมุน 24.6%/ปี ต้นทุน 48.4 bps/เดือน เทียบ SMB 5.66 และ HML 5.45 · กลยุทธ์ที่หมุนเกิน 50%/เดือน รอดแค่ 2 ตัวจากทั้งงาน · เทคนิคลดต้นทุนในงานเป็นการตั้งพารามิเตอร์ จึงยังไม่เสนอทดลองก่อน 25 ธ.ค. · https://mysimon.rochester.edu/novy-marx/research/ToAatTC.pdf"
+      "d": "ใช้ — limit ถูกกว่า market order 9-10 bp วัดด้วย implementation shortfall ที่รวมไม้ไม่ฟิลล์แล้ว (−8 bp vs +1.1 bp) แต่ฟิลล์เหลือ ~65% จากเกือบ 100% · ยิ่งวางไกล quote ยิ่งถูกยิ่งไม่ได้ของ (ไกลกว่า 5x spread ได้ 22 bp ฟิลล์ 50%) · หุ้นสหรัฐ พ.ค. 2020 เดือนเดียว เทียบ CFD ได้แค่ทิศทาง · https://portal.northernfinanceassociation.org/viewp.php?n=2240186032"
     }
   ],
   "extra": [
-    "เก็บ-ไม่เลือก · PwC Thailand Thai Tax 2026/27 Booklet (กฎหมาย ณ 15 ต.ค. 2026) — ขั้นภาษีบุคคล 0-35% · ยกเว้นกำไรหุ้นเฉพาะที่ขายในตลาดหลักทรัพย์ · ขาดทุนหักกลบกำไรไม่ได้ · ปันผล 10% ดอกเบี้ย 15% คริปโต 15% · เงินได้ต่างประเทศที่เกิดตั้งแต่ 1 ม.ค. 2024 นับเป็นเงินได้ในปีที่นำเข้าไทย · ตัดเพราะเป็นคู่มือที่ปรึกษาไม่ใช่งานวิจัย ส่วนภาษีธุรกิจเฉพาะกับอากรแสตมป์อ่านได้แค่สรุปอัตโนมัติ และไม่ครอบคลุม CFD · เป็นข้อมูล ไม่ใช่คำปรึกษาภาษีวิชาชีพ · https://www.pwc.com/th/en/tax/assets/thai-tax/2026-2027/thai-tax-booklet-2026-27.pdf",
-    "เก็บ-ไม่เลือก · Li, Lambe & Adegbite (พ.ค. 2017, MPRA 88559) New Bid-Ask Spread Estimators from Daily High and Low Prices — เสนอ BHL/SHL2 เทียบ Roll, Corwin-Schultz, Abdi-Ranaldo · ตัดเพราะตารางผลทั้งหมดอยู่นอกส่วนที่อ่านได้ (ตัดที่ 39,900 จาก 119,000 อักษร) ไม่มีตัวเลขความแม่นที่ยืนยันได้แม้ตัวเดียว · ตัวเต็งรอบหน้า · https://mpra.ub.uni-muenchen.de/88559/9/MPRA_paper_88559.pdf",
-    "เก็บ-ไม่เลือก · Dewan (Vanguard Canada มิ.ย. 2024) A deep dive into Canadian home bias — แคนาดาเป็น 2.6% ของตลาดหุ้นโลกแต่นักลงทุนถือ 50% เกินน้ำหนักกว่า 18 เท่า · สัดส่วนผันผวนต่ำสุดในอดีต 30/70 · ช่วงเหมาะสมข้ามภูมิภาค 25-60% · ตัดเพราะตัวเลขเทียบทั้งชุดเป็นของแคนาดา ค่าความผันผวนรายสัดส่วนเป็นภาพอ่านไม่ได้ และเป็นเอกสารของผู้ขายที่ใช้การจำลอง VCMM · https://www.vanguard.ca/content/dam/intl/americas/canada/en/documents/HOBI_052024_V14_secure.pdf",
-    "ทิ้ง · Burbau (CME Group 5 มิ.ย. 2026) FX Swap Fees: Spotting Inconsistencies — swap EUR/USD ของโบรกเกอร์ไม่ระบุชื่อ ฝั่ง long −11.5 ถึง −9.0 ดอลลาร์ต่อลอต · ทิ้งเพราะไม่บอกวิธีวัดเลย อ้างสหสัมพันธ์โดยไม่มีค่า ท้ายหน้าเขียนเองว่าตัวอย่างเป็นสถานการณ์สมมติซึ่งขัดกับเนื้อหา เป็นเนื้อหาการตลาด และซ้ำหัวข้อบทความ CME ที่เก็บไว้แล้ว 2026-11-16 · https://www.cmegroup.com/articles/2026/fx-swap-fees-spotting-inconsistencies.html",
-    "ทิ้ง · ESMA (12 มี.ค. 2026) Report on Call for Evidence: retail investor journey — สรุปความเห็น 96 ราย · ทิ้งเพราะไม่มีตัวเลขเรื่องต้นทุน การขาดทุนบน CFD หรือสัดส่วนบัญชีที่ขาดทุนเลย ตัวเลขที่มีเป็นคำกล่าวของผู้ตอบที่ไม่บอกวิธีวัดและไม่บอกขนาดตัวอย่าง และตัวเอกสารระบุเองว่าไม่ใช่จุดยืนสุดท้าย · https://www.esma.europa.eu/sites/default/files/2026-03/ESMA35-243228190-7410_-_Report_CfE_on_retail_investor_journey.pdf"
+    "เก็บ — Guillén, Jarner, Nielsen & Pérez-Marín (2014) Risk-Adjusted Impact of Administrative Costs on Terminal Wealth: ค่าธรรมเนียมกินผลตอบแทนราว 2 เท่าของตัวมันเองที่ 40 ปี (β 1.974 ถึง 4.487) · ตัดเพราะเป็นโมเดลจำลองล้วน ไม่มีข้อมูลจริง · https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4144173/",
+    "เก็บ — Li, Wang & Wei (2026, Journal of Empirical Finance 87:101709) What drives retail investors' overconfidence: Post = −1.233 (t −2.87) บน 1.8 ล้านรายการ 77,037 บัญชี · ตัดเพราะไม่มีตัวเลขผลตอบแทนสุทธิและไม่แยกต้นทุนออกจากฝีมือ · https://ira.lib.polyu.edu.hk/bitstream/10397/118416/1/1-s2.0-S0927539826000241-main.pdf",
+    "ทิ้ง — Magdon-Ismail & Atiya (2004) Maximum Drawdown: เปิดได้แค่บทคัดย่อเป็นครั้งที่สอง (ครั้งแรก 2026-11-20) · เลิกตามทาง web · https://papers.ssrn.com/abstract=874069",
+    "ทิ้ง — Disposed to Be Overconfident (Gödker, Odean & Smeets ตามผลค้น): client_error เปิดไม่ได้ ไม่ได้อ่าน · ตัวเต็งรอบหน้า · https://as.nyu.edu/content/dam/nyu-as/econ/documents/Odean%20Paper.pdf",
+    "ทิ้ง — Overconfidence, Competence and Trading Activity (Yeoh & Wood ตามผลค้น): client_error เปิดไม่ได้ ไม่ได้อ่าน · https://www.citystgeorges.ac.uk/__data/assets/pdf_file/0006/79152/Wood.pdf",
+    "ทิ้ง — Petroni & Rotundo (arXiv 2007) Effectiveness of measures of performance during speculative bubbles: เจอโดยไม่ตั้งใจ คนละหัวข้อ ไม่ได้ประเมินเป็นชิ้นเต็ม · https://arxiv.org/pdf/0709.2423"
   ],
-  "note": "ขอบเขตรอบนี้: ระเบียบวิธีทดสอบ · ช่องว่างพฤติกรรม · ต้นทุนและการส่งคำสั่ง · โครงพอร์ตระยะยาว — ไม่มีชิ้นไหนเสนอกลยุทธ์ สัญญาณ หรืออินดิเคเตอร์ใหม่ (ปิดการล่า edge ถึง 25 ธ.ค. 2026) · เอกสารหลายชิ้นยาวเกินที่ตัวดึงข้อความจะคืนได้หมด โน้ตฉบับเต็มกำกับทุกตัวเลขว่าอ่านจากต้นฉบับโดยตรงหรือมาจากสรุปอัตโนมัติที่ยังไม่ยืนยัน"
+  "note": "ชิ้นที่ 2 และ 3 เป็นการอัปเกรดจากป้ายทิ้งเดิม (11-22 และ 11-21) ที่เปิดไฟล์ไม่ได้ · ชิ้นที่ 1 เติมช่องว่าง MinBTL ที่โน้ต 11-23 ระบุเองว่าไม่มีในไฟล์ PBO · ชิ้นที่ 3 อ่านต้นฉบับได้ ~40% ตัวเลขจากส่วนสรุปอัตโนมัติไม่นำมาอ้าง และชื่อผู้เขียนยืนยันจากไฟล์ไม่ได้ · การเปลี่ยนประเภทคำสั่งถ้าตีเป็นการปรับพารามิเตอร์ ให้รอหลัง 25 ธ.ค. รอบนี้ใช้เป็นเครื่องวัดฟิลล์เท่านั้น · ต้องย้าย 3 ชิ้นป้ายใช้เข้า 32_Literature เองตอนปิดสัปดาห์วันศุกร์"
 }
