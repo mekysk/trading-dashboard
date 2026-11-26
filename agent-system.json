@@ -1,23 +1,23 @@
 {
   "agent": "system-watcher",
-  "generated": "2026-11-25T01:13:00Z",
+  "generated": "2026-11-26T01:11:37Z",
   "status": "attention",
-  "headline": "ไม่มีงานล้ม · บทสรุปข่าวเช้า 24 พ.ย. มี qualityWarnings (มีภาษาจีนหลุด + ย่อหน้าน้อย) · ยังเข้า github.io จาก cloud ไม่ได้",
+  "headline": "ไม่มีงานล้ม ข้อมูลสดทุกตัว · คำเตือนข่าวเช้ารอบก่อนหายแล้ว · ยังเข้า github.io จาก cloud ไม่ได้ (ตรวจจาก repo แทน)",
   "items": [
-    {"t": "บทสรุปข่าวเช้ารอบ 24 พ.ย. มีคำเตือนคุณภาพ (มีคำเตือนต่อเนื่องเป็นรอบที่ 2 แต่เป็นเรื่องใหม่)", "s": "warn",
-     "d": "brief-status.json: ok=true · ranAt 2026-11-24T10:14:56Z · qualityWarnings: \"ได้แค่ 4 ย่อหน้า\", \"มีตัวอักษรต่างภาษาหลุดมา 2 ตัว: 美元\" — รอบก่อน (23 พ.ย.) เตือนเรื่องไม่มีตัวเลข % · ควรเปิดดู brief-latest.json"},
-    {"t": "เปิดเว็บ mekysk.github.io จาก cloud ไม่ได้ (ยังเป็นอยู่ เตือนมา 15 รอบแล้ว)", "s": "warn",
-     "d": "Tunnel connection failed: 403 Forbidden (agent proxy: no rule or network setting allows this host) — ข้อ 1, 3, 5 ตรวจจากไฟล์ใน repo branch main แทน · pages build ล่าสุด success 25 พ.ย. 00:24 UTC"},
-    {"t": "agent-coach / agent-morning ไม่อัปเดตตั้งแต่ 18–21 ต.ค. (ยังเป็นอยู่ 11 รอบ)", "s": "warn",
-     "d": "generated: coach 2026-10-18 · morning 2026-10-21 · commit ล่าสุด coach 20 ต.ค. · morning 21 ต.ค. — ไม่อยู่ในรายการรอบรันที่กำหนด แจ้งไว้เผื่อยังตั้งใจใช้อยู่"},
+    {"t": "เปิดเว็บ mekysk.github.io จาก cloud ไม่ได้ (ยังเป็นอยู่ เตือนมา 16 รอบแล้ว)", "s": "warn",
+     "d": "Tunnel connection failed: 403 Forbidden (agent proxy: no rule or network setting allows this host) — ข้อ 1, 3, 5 ตรวจจากไฟล์ใน repo branch main แทน · pages build ล่าสุด success 26 พ.ย. 00:23 UTC"},
+    {"t": "agent-coach / agent-morning ไม่อัปเดตตั้งแต่ 18–21 ต.ค. (ยังเป็นอยู่ 12 รอบ)", "s": "warn",
+     "d": "generated: coach 2026-10-18 · morning 2026-10-21 — ไม่อยู่ในรายการรอบรันที่กำหนด แจ้งไว้เผื่อยังตั้งใจใช้อยู่"},
+    {"t": "บทสรุปข่าวเช้าปกติ (คำเตือนคุณภาพรอบก่อนหายแล้ว)", "s": "ok",
+     "d": "brief-status.json: ok=true · ranAt 2026-11-25T08:57:51Z · qualityWarnings ว่าง"},
     {"t": "งานอัตโนมัติบน GitHub ไม่มีตัวล้ม", "s": "ok",
-     "d": "สแกนรายคืน success ล่าสุด 24 พ.ย. 06:49 UTC · ข่าวเช้า success 24 พ.ย. 10:13 UTC · pages build ทุกรอบ success (cancelled 1 รอบ 24 พ.ย. 10:14 มีรอบคู่ success)"},
+     "d": "สแกนรายคืน success ล่าสุด 25 พ.ย. 05:16 UTC · ข่าวเช้า success 25 พ.ย. 08:57 UTC · pages build success ทุกรอบ (cancelled 1 รอบ 25 พ.ย. 08:57 มีรอบคู่ success)"},
     {"t": "ข้อมูลสแกนสด (จาก repo)", "s": "ok",
-     "d": "asof 2026-11-23 (จันทร์) = 2 วันทำการ ไม่เกินเกณฑ์ · scanned 526/546 = 96.3%"},
+     "d": "asof 2026-11-24 (อังคาร) = 2 วันทำการ ไม่เกินเกณฑ์ · scanned 527/546 = 96.5%"},
     {"t": "ไฟล์ที่หน้าเว็บใช้ครบ (ใน repo)", "s": "ok",
      "d": "scan.json, styles.json, px/list.json, px/idx-spx.json, brief-latest.json, brief-status.json มีครบและ parse ได้"},
     {"t": "ผลงานเอเจนต์ทันรอบ", "s": "ok",
-     "d": "commit ล่าสุด (เวลาไทย): scan 25 พ.ย. 06:28 · risk 25 พ.ย. 06:44 · bot 25 พ.ย. 07:23 · research 24 พ.ย. 18:33 · events 22 พ.ย. 18:54 · port 22 พ.ย. 19:48 (รอบอาทิตย์ครบ)"}
+     "d": "commit ล่าสุด (เวลาไทย): scan 26 พ.ย. 06:29 · risk 26 พ.ย. 06:45 · bot 26 พ.ย. 07:23 · research 25 พ.ย. 18:32 · events 22 พ.ย. 18:54 · port 22 พ.ย. 19:48 (รอบอาทิตย์ครบ)"}
   ],
   "note": "ตรวจได้เต็ม 2 จาก 5 ข้อ (2, 4) · ข้อ 1, 3, 5 ตรวจจาก repo แทนเว็บเพราะเข้า github.io ไม่ได้"
 }
