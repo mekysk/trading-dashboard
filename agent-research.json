@@ -1,30 +1,31 @@
 {
   "agent": "research-scout",
-  "generated": "2026-11-25T11:32:02Z",
+  "generated": "2026-11-26T11:26:31Z",
   "status": "ok",
-  "headline": "หามา 6 เปิดอ่านได้จริง 5 เข้าเกณฑ์ใช้ 2 ชิ้น — ค่าคงที่ต้นทุน impact จากตลาดทั้งตลาด · กฎที่บล็อกจริงลดการขายกำไรเร็ว แต่กฎที่กดข้ามได้ไม่ลด",
-  "found": 6,
+  "headline": "หามา 7 ชิ้น เปิดอ่านได้ 6 · เข้าเกณฑ์ใช้ 1 ชิ้น: เครื่องมือวัดเส้นทางบัญชี (max drawdown + CED) ของขนาดไม้ที่ใช้อยู่",
+  "found": 7,
   "items": [
     {
-      "t": "Square-root price impact law — complete survey ของ Tokyo Stock Exchange (Sato & Kanazawa 2024)",
+      "t": "A Rational Risk Policy? Why Path Dependence Matters — Geboers & Depaire (2023, Entropy 25:202)",
       "s": "ok",
-      "d": "ใช้ — ได้ค่าคงที่สูตรต้นทุน impact จากคำสั่งทั้งตลาด ไม่ใช่กลุ่มตัวอย่างใครคนหนึ่ง: δ ระดับหุ้น 0.489 ± 0.0015 แก้ความเอนเอียงแล้ว 0.500 ± 0.0020 · c = 0.842 (หุ้น) / 1.501 (ผู้ค้า) · 2,299 จุดข้อมูล TSE 2012-2019 · เอาขนาดไม้จริงหารปริมาณรายวันใส่สูตร c·σ·√(Q/V) แล้วเทียบกับ spread Exness ที่วัดไว้แล้ว ว่าต้องเพิ่มพจน์ impact ในบัญชีต้นทุนไหม · หุ้นญี่ปุ่นไม่ใช่ CFD · อ่านตัวบทได้ ~35% · https://arxiv.org/pdf/2411.13965"
+      "d": "ใช้ — ให้สูตร max drawdown + CED คำนวณจาก trade log ของตัวเองได้สัปดาห์นี้ · ที่ความเสี่ยงต่อไม้ 1% avg max DD 0.12 / CED₀.₁ 0.21 · ที่ 2% CED 0.38 · หางหนาย้ายระดับที่ให้มัธยฐานสูงสุดจาก ~10% เหลือ ~2.5% · https://documentserver.uhasselt.be/bitstream/1942/39812/1/A%20Rational%20Risk%20Policy_%20Why%20Path%20Dependence%20Matters.pdf"
     },
     {
-      "t": "The Use of Robo-Advisors as Commitment Devices (Gaudeul & Giannetti 2020)",
-      "s": "ok",
-      "d": "ใช้ — กฎที่บล็อกจริงลดอาการขายกำไรเร็ว/ถือขาดทุนได้ −0.179 (p=0.000) แต่กฎที่ยอมกดข้าม (soft) ให้ +0.024 ไม่มีนัยสำคัญ = ไม่ช่วยเลย · แบบช่วยคิดตามเบย์เพิ่มกำไร +12 ECU แบบบล็อกเฉยๆ ไม่เพิ่ม · คนที่มีอาการหนักกว่าเลือกใช้เครื่องมือน้อยลง 7.6pp · เลือกใช้เองแค่ 36% · เป็นเรื่องวิธีบังคับใช้ Rulebook ที่มีอยู่ ไม่ใช่กฎใหม่ · นักศึกษา 418 คน เดิมพัน 17.80 ยูโร · อ่านได้ ~73% · https://cepr.org/system/files/2022-08/Using%20Robo-Advisers%20as%20Commitment%20Devices%20-%20Alexia%20Gaudeul%20and%20Caterina%20Giannetti.pdf"
-    },
-    {
-      "t": "The State of Retirement Income 2025 (Arnott, Benz, Kephart & Guo — Morningstar)",
+      "t": "Bid-Ask Spreads in OTC Markets — Osler, Bjønnes & Kathitziotis (2016, Brandeis WP102)",
       "s": "info",
-      "d": "เก็บ — ค่าธรรมเนียม 1%/ปี กินอัตราถอนที่ปลอดภัยไป 0.5 จุด (3.9% → 3.4%) ≈ 13% ของเงินที่ใช้ได้ทั้งชีวิต · ความเสี่ยงลำดับผลตอบแทนกระจุกจริงที่ 5 ปีแรก: เกือบ 70% ของกรณีที่เงินหมด ขาดทุนตั้งแต่จบปี 5 · หุ้น 100% ให้แค่ 3.4% ต่ำกว่าช่วง 30-50% · ฐานรายปีขยับ 3.3/3.8/4.0/3.7/3.9% ไม่นิ่ง · เก็บเพราะเป็นเฟสถอนเงินของพอร์ตสหรัฐ Monte Carlo ล้วน กรณีฐานไม่คิดค่าธรรมเนียมและภาษี · เป็นข้อมูล ไม่ใช่คำปรึกษาวิชาชีพ · https://assets.contentstack.io/v3/assets/blt9415ea4cc4157833/bltb73b87c5d0c70ead/The_State_of_Retirement_Income_2025.pdf"
+      "d": "เก็บ — ข้อมูลลูกค้าสถาบัน ไม่ใช่บัญชีรายย่อย ปรับอะไรสัปดาห์นี้ไม่ได้ · markup เฉลี่ย 0.4 pips · SME 22.7 pips vs เฮดจ์ฟันด์ 0.03 pips · ช่องทางตรง 19 bp vs API ≤0.1 bp · https://www.brandeis.edu/economics/RePEc/brd/doc/Brandeis_WP102.pdf"
+    },
+    {
+      "t": ". . . and the Cross-Section of Expected Returns — Harvey, Liu & Zhu (2014, NBER w20592)",
+      "s": "info",
+      "d": "เก็บ — ต้นน้ำของ Harvey & Liu (2015) ที่ได้ป้ายใช้ไปแล้ว 2026-11-20 เพิ่มแค่เลขเกณฑ์ · t > 3.0 (บทคัดย่อ) · 2.8 เมื่อ M=R · 3.18 เมื่อ M>R · 316 ปัจจัย · https://www.nber.org/papers/w20592.pdf"
     }
   ],
   "extra": [
-    "ทิ้ง — Vasaikar (arXiv 2606.24019v1, 2026) Empirical Confirmation of the Square-Root Law in a U.S. Large-Cap Equity: ซ้ำหัวข้อกับชิ้นที่ 1 และอ่อนกว่า — AAPL ตัวเดียว 178 วัน metaorder 1,012 ชิ้น ผู้เขียนคนเดียวไม่มี peer review · CI ของ δ กว้าง [0.32, 0.66] จนต้องตรึง 1/2 จากงานคนอื่น · c_raw 0.69 หารสองเป็น 0.34 ตามสมมติฐานจาก working paper ที่ยังไม่ตรวจ · https://arxiv.org/pdf/2606.24019",
-    "เก็บ — Peters (arXiv 0902.2965) Optimal leverage from non-ergodicity: ให้ l_opt = μ_excess/σ_M² และผลที่ว่า Sharpe ไม่ไหวตัวตามเลเวอเรจเลย จึงใช้ Sharpe เลือกขนาดไม้ไม่ได้ · ตัดเพราะทฤษฎีล้วน ตัวเลขทั้งหมดเป็นพารามิเตอร์ตัวอย่างวาดรูป ไม่มีส่วนทดสอบกับข้อมูลจริงในส่วนที่อ่านได้ GBM ต้นทุนศูนย์ และการเอาไปใช้คือการตั้งค่าเลเวอเรจ = รอหลัง 25 ธ.ค. · https://arxiv.org/pdf/0902.2965",
-    "ทิ้ง — Why Naive 1/N Diversification Is Not So Naive and How to Beat It (JFQA): PDF เด้ง 302 ไปหน้าบทคัดย่อติดกำแพงเงิน อ่านได้ 0% ยืนยันชื่อผู้เขียน ปี หรือตัวเลขไม่ได้เลย จึงไม่อ้างอะไร · ตัวเต็งรอบหน้าถ้าหาเวอร์ชัน working paper ที่เปิดได้ · https://www.cambridge.org/core/journals/journal-of-financial-and-quantitative-analysis/article/abs/why-naive-1n-diversification-is-not-so-naive-and-how-to-beat-it/4969319F5B1F3E350FB7FC8A73BA9F65"
+    "Estrada (2021 J. Investing) Sequence Risk: Is It Really a Big Deal? — corr MWR กับผลตอบแทนช่วงต้นสูงสุดที่ 15 ปี (0.91) ไม่ใช่ 3–5 ปี · ล้มเหลวที่ถอน 4% = 4/91 ช่วง · ตัดเพราะเป็นช่วงถอนเงิน ไม่ใช่ช่วงสะสม · https://blog.iese.edu/jestrada/files/2021/10/SoRR.pdf",
+    "Kathitziotis (2025) Essays in Market Microstructure (ดุษฎีนิพนธ์ Hamburg) — อำนาจตั้งราคาดีลเลอร์อธิบายความต่าง markup ≥37% · ตัดเพราะซ้ำข้อมูลกับ Osler 2016 และตัวเลขบทเนื้อหาขัดกันเอง อ่านคำต่อคำได้แค่ 11% · https://ediss.sub.uni-hamburg.de/bitstream/ediss/12277/1/Dissertation%20Kathitziotis%2027022026.pdf",
+    "Gort et al. (2022 ICAIF) DRL for Cryptocurrency Trading: Address Backtest Overfitting — p_PPO 8.0% / TD3 9.6% / SAC 21.3% · ตัดเพราะขัดกฎปิดการล่า edge + ซ้ำ PBO ที่หามาแล้ว · ทดสอบแค่ 2 เดือน ไม่คิด slippage · https://arxiv.org/pdf/2209.05559v4",
+    "Magdon-Ismail & Atiya maximum drawdown of a Brownian motion (ชื่อยืนยันไม่ได้) — เปิดไม่ได้ URL คืนหน้า bot-protection 694 ตัวอักษร ไม่ใช่ PDF จึงไม่อ้างอะไรจากชิ้นนี้ · https://projecteuclid.org/download/pdf_1/euclid.aoap/1245071017"
   ],
-  "note": "รอบนี้หามา 6 ชิ้น เปิดอ่านได้จริง 5 (JFQA ติดกำแพงเงิน อ่านได้ 0%) · ไม่มีชิ้นไหนเสนอกลยุทธ์ สัญญาณ หรือค่าพารามิเตอร์ใหม่ · Peters ให้ค่าเลเวอเรจตรงๆ จึงจัดเป็นเก็บไม่ใช่ใช้ ตามแนวเดียวกับ Ekren et al. ในโน้ต 11-22 · ทุกชิ้นมีส่วนที่อ่านไม่ได้ (35%/73%/33% ตามลำดับ) ตัวเลขจากสรุปอัตโนมัติไม่นำมาอ้างเลย และระบุไว้ในโน้ตว่าส่วนไหนอ่านไม่ได้ · ต้องย้าย 2 ชิ้นป้ายใช้เข้า 32_Literature เองตอนปิดสัปดาห์วันศุกร์"
+  "note": "เข้าเกณฑ์ใช้ 1 ชิ้น · ไม่มีชิ้นไหนเสนอกลยุทธ์ สัญญาณ หรือค่าพารามิเตอร์ใหม่ (ปิดการล่า edge ถึง 25 ธ.ค. 2026) · ตัวเลขทุกตัวมาจากส่วนที่อ่านได้คำต่อคำ ส่วนที่ได้จากสรุปอัตโนมัติถูกกันออกและระบุไว้ในโน้ตฉบับเต็ม research/2026-11-26.md"
 }
