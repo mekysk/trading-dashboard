@@ -1,31 +1,38 @@
 {
   "agent": "research-scout",
-  "generated": "2026-11-26T11:26:31Z",
+  "generated": "2026-11-27T18:32:22+07:00",
   "status": "ok",
-  "headline": "หามา 7 ชิ้น เปิดอ่านได้ 6 · เข้าเกณฑ์ใช้ 1 ชิ้น: เครื่องมือวัดเส้นทางบัญชี (max drawdown + CED) ของขนาดไม้ที่ใช้อยู่",
-  "found": 7,
+  "headline": "หามาได้ 6 ชิ้น เปิดอ่านครบ · ป้ายใช้ 3 ชิ้น: MinTRL บอกว่า track record ยาวพอยังไม่พอ · ต้นทุน leverage แยกเป็นสามก้อน · ดูผลถี่ทำให้กล้าลงน้อยลงและได้เงินน้อยลง",
+  "found": 6,
   "items": [
     {
-      "t": "A Rational Risk Policy? Why Path Dependence Matters — Geboers & Depaire (2023, Entropy 25:202)",
+      "t": "Bailey & López de Prado (2012) — The Sharpe Ratio Efficient Frontier: PSR + Minimum Track Record Length",
       "s": "ok",
-      "d": "ใช้ — ให้สูตร max drawdown + CED คำนวณจาก trade log ของตัวเองได้สัปดาห์นี้ · ที่ความเสี่ยงต่อไม้ 1% avg max DD 0.12 / CED₀.₁ 0.21 · ที่ 2% CED 0.38 · หางหนาย้ายระดับที่ให้มัธยฐานสูงสุดจาก ~10% เหลือ ~2.5% · https://documentserver.uhasselt.be/bitstream/1942/39812/1/A%20Rational%20Risk%20Policy_%20Why%20Path%20Dependence%20Matters.pdf"
+      "d": "ใช้ — คำนวณได้ทันทีว่าผลที่มีอยู่ยาวพอจะสรุปอะไรได้ยัง Sharpe 2 vs 1 ที่ 95% ต้องการรายวัน 2.73 ปี รายเดือน 3.24 ปี และ 4.99 ปีถ้าหางอ้วนจริง · ไม่จัดการ serial correlation · https://www.davidhbailey.com/dhbpapers/sharpe-frontier.pdf"
     },
     {
-      "t": "Bid-Ask Spreads in OTC Markets — Osler, Bjønnes & Kathitziotis (2016, Brandeis WP102)",
-      "s": "info",
-      "d": "เก็บ — ข้อมูลลูกค้าสถาบัน ไม่ใช่บัญชีรายย่อย ปรับอะไรสัปดาห์นี้ไม่ได้ · markup เฉลี่ย 0.4 pips · SME 22.7 pips vs เฮดจ์ฟันด์ 0.03 pips · ช่องทางตรง 19 bp vs API ≤0.1 bp · https://www.brandeis.edu/economics/RePEc/brd/doc/Brandeis_WP102.pdf"
+      "t": "Murray & Sammon (2026, HBS) — The Costs and Benefits of Leveraged ETFs",
+      "s": "ok",
+      "d": "ใช้ — ต้นทุนรวมต่อปีแยกสามก้อน 2x ดัชนี 5.39% vs หุ้นตัวเดียว 11.92% พร้อมตารางจุดคุ้มทุนตามความผันผวนรายวัน (2x ที่ vol 3%/วัน ต้องได้ 32.6%) · เป็น ETF ไม่ใช่ CFD และยังไม่ peer review · https://arxiv.org/html/2611.01392"
     },
     {
-      "t": ". . . and the Cross-Section of Expected Returns — Harvey, Liu & Zhu (2014, NBER w20592)",
-      "s": "info",
-      "d": "เก็บ — ต้นน้ำของ Harvey & Liu (2015) ที่ได้ป้ายใช้ไปแล้ว 2026-11-20 เพิ่มแค่เลขเกณฑ์ · t > 3.0 (บทคัดย่อ) · 2.8 เมื่อ M=R · 3.18 เมื่อ M>R · 316 ปัจจัย · https://www.nber.org/papers/w20592.pdf"
+      "t": "Gneezy & Potters (1997 QJE) — An Experiment on Risk Taking and Evaluation Periods",
+      "s": "ok",
+      "d": "ใช้ — กลุ่มเห็นผลทุกรอบเดิมพัน 50.5% ของเงิน กลุ่มเห็นผลเป็นก้อนสามรอบ 67.4% (p=0.002) และได้เงินกลับบ้าน 1,822 vs 2,134 (p=0.038) เปลี่ยนความถี่ที่ดูผลได้สัปดาห์นี้ ไม่แตะกฎเข้าออก · 84 คนในห้องแลป 40 นาที และกลุ่ม L ต่างสองเรื่องพร้อมกัน · https://rady.ucsd.edu/_files/faculty-research/uri-gneezy/risk-taking.pdf"
     }
   ],
   "extra": [
-    "Estrada (2021 J. Investing) Sequence Risk: Is It Really a Big Deal? — corr MWR กับผลตอบแทนช่วงต้นสูงสุดที่ 15 ปี (0.91) ไม่ใช่ 3–5 ปี · ล้มเหลวที่ถอน 4% = 4/91 ช่วง · ตัดเพราะเป็นช่วงถอนเงิน ไม่ใช่ช่วงสะสม · https://blog.iese.edu/jestrada/files/2021/10/SoRR.pdf",
-    "Kathitziotis (2025) Essays in Market Microstructure (ดุษฎีนิพนธ์ Hamburg) — อำนาจตั้งราคาดีลเลอร์อธิบายความต่าง markup ≥37% · ตัดเพราะซ้ำข้อมูลกับ Osler 2016 และตัวเลขบทเนื้อหาขัดกันเอง อ่านคำต่อคำได้แค่ 11% · https://ediss.sub.uni-hamburg.de/bitstream/ediss/12277/1/Dissertation%20Kathitziotis%2027022026.pdf",
-    "Gort et al. (2022 ICAIF) DRL for Cryptocurrency Trading: Address Backtest Overfitting — p_PPO 8.0% / TD3 9.6% / SAC 21.3% · ตัดเพราะขัดกฎปิดการล่า edge + ซ้ำ PBO ที่หามาแล้ว · ทดสอบแค่ 2 เดือน ไม่คิด slippage · https://arxiv.org/pdf/2209.05559v4",
-    "Magdon-Ismail & Atiya maximum drawdown of a Brownian motion (ชื่อยืนยันไม่ได้) — เปิดไม่ได้ URL คืนหน้า bot-protection 694 ตัวอักษร ไม่ใช่ PDF จึงไม่อ้างอะไรจากชิ้นนี้ · https://projecteuclid.org/download/pdf_1/euclid.aoap/1245071017"
+    "เก็บ — Hsieh, Chang & Chen (arXiv 2504.20116, เม.ย. 2025) Compounding Effects in Leveraged ETFs: Beyond the Volatility Drag Paradigm · ตัด เพราะหัวข้อ 3.2.4 ของงานเองบอก α+β ครอบงำและผล autocorrelation ลดทอน ขัดกับบทคัดย่อ และไม่มีตัวเลขจุดคุ้มทุน · https://arxiv.org/pdf/2504.20116",
+    "เก็บ — McNamee, Paradise & Bruno (Vanguard, © 2022) Getting back on track: A guide to smart rebalancing · ตัด เพราะยืนยันของเดิมจาก Vanguard 2010 ที่รับไปแล้ว แต่ตัวเลขดี: ไม่ rebalance เลยได้ 8.74%/Sharpe 0.46 หุ้นลอยไป 85% vs รายปี band 10% ได้ 8.20%/0.50 ด้วย 14 เหตุการณ์ · https://www.vanguardsouthamerica.com/content/dam/intl/americas/documents/latam/en/sa-2123766-getting-back-on-track.pdf",
+    "ทิ้ง — Santoni, Jouanne & Scullin (arXiv 2608.23808v2, ส.ค. 2026, Minerva) MinervaScore · ตัด เพราะเป็นคะแนนของผู้ขายเครื่องมือ การทดสอบตลาดจริงที่ลงทะเบียนเองได้ ρs=0.013 p=0.40 ไม่ผ่าน และบนข้อมูลสังเคราะห์เกือบเสมอ DSR เดี่ยวที่รับไปแล้ว · https://arxiv.org/pdf/2608.23808",
+    "ไม่ได้เปิดอ่าน (คิวถัดไป) — Benartzi & Thaler, Myopic Loss Aversion and the Equity Premium Puzzle, NBER w4369 · https://www.nber.org/system/files/working_papers/w4369/w4369.pdf",
+    "ไม่ได้เปิดอ่าน (คิวถัดไป) — Thaler, Tversky, Kahneman & Schwartz, The Effect of Myopia and Loss Aversion on Risk Taking · https://faculty.chicagobooth.edu/-/media/faculty/richard-thaler/assets/files/the-effect-of-myopia-and-loss-aversion-on-risk-taking-an-experimental-test.pdf",
+    "ไม่ได้เปิดอ่าน (คิวถัดไป) — Gneezy, Kapteyn & Potters, Evaluation Periods and Asset Prices in a Market Experiment · https://rady.ucsd.edu/_files/faculty-research/uri-gneezy/evaluation-periods.pdf",
+    "ไม่ได้เปิดอ่าน (ติด paywall) — Myopic loss aversion and stock investments: An empirical study of private investors · https://www.sciencedirect.com/science/article/abs/pii/S0378426616300401",
+    "ไม่ได้เปิดอ่าน (หา PDF ต้นฉบับไม่เจอ เจอแต่หน้ารวมลิงก์) — Politis & Romano, The Stationary Bootstrap",
+    "ไม่เปิด (เอกสารการตลาดของผู้บริหารสินทรัพย์ ต่ำกว่าเกณฑ์แหล่ง) — Bernstein Private Wealth, Taxes: What a Drag · https://www.bernstein.com/content/dam/bernstein/us/en/pdf/whitepaper/TaxesWhatADrag.pdf",
+    "ไม่เปิด (ขายของ ไม่บอกวิธีวัด) — ผลค้นเรื่อง swap/ต้นทุนถือข้ามคืนของโบรกเกอร์รายย่อย: GCC Brokers, ShowMyTrades, PropFirmScan, FXNX, LowSpreadBroker",
+    "ไม่เปิด (ซ้ำกับที่อ่านแล้ว 2026-11-16) — CME, FX Financing Costs: CFDs vs Futures · https://www.cmegroup.com/articles/2026/fx-financing-costs-understanding-the-difference-between-cfds-and-futures-pricing.html"
   ],
-  "note": "เข้าเกณฑ์ใช้ 1 ชิ้น · ไม่มีชิ้นไหนเสนอกลยุทธ์ สัญญาณ หรือค่าพารามิเตอร์ใหม่ (ปิดการล่า edge ถึง 25 ธ.ค. 2026) · ตัวเลขทุกตัวมาจากส่วนที่อ่านได้คำต่อคำ ส่วนที่ได้จากสรุปอัตโนมัติถูกกันออกและระบุไว้ในโน้ตฉบับเต็ม research/2026-11-26.md"
+  "note": "ป้ายใช้ 3 ชิ้นต้องย้ายเข้า 2BRAIN 32_Literature เองตอนปิดสัปดาห์วันศุกร์ (agent เข้า vault บนเครื่องไม่ได้) · ไม่มีการเสนอกลยุทธ์ สัญญาณ หรือพารามิเตอร์ใหม่ ตามกฎปิดการล่า edge ถึง 25 ธ.ค. 2026 · เนื้อหาภาษีและการเงินส่วนบุคคลเป็นข้อมูล ไม่ใช่คำปรึกษาวิชาชีพ"
 }
