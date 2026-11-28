@@ -1,23 +1,23 @@
 {
   "agent": "system-watcher",
-  "generated": "2026-11-27T01:11:44Z",
+  "generated": "2026-11-28T01:11:51Z",
   "status": "attention",
-  "headline": "ไม่มีงานล้ม ข้อมูลสดทุกตัว · ข่าวเช้ามีคำเตือนคุณภาพใหม่ (ตัวเลข % = 0) · ยังเข้า github.io จาก cloud ไม่ได้",
+  "headline": "ไม่มีงานล้ม ข้อมูลสดทุกตัว · คำเตือนคุณภาพข่าวเช้าหายแล้ว · ยังเข้า github.io จาก cloud ไม่ได้ (ตรวจจาก repo แทน)",
   "items": [
-    {"t": "บทสรุปข่าวเช้ามีคำเตือนคุณภาพ (ใหม่รอบนี้)", "s": "warn",
-     "d": "brief-status.json: ok=true · ranAt 2026-11-26T08:45:26Z · qualityWarnings: \"มีตัวเลขเปอร์เซ็นต์แค่ 0 ตัว ถือว่าบางไป\""},
-    {"t": "เปิดเว็บ mekysk.github.io จาก cloud ไม่ได้ (ยังเป็นอยู่ เตือนมา 17 รอบแล้ว)", "s": "warn",
-     "d": "curl: CONNECT tunnel failed, response 403 — ข้อ 1, 3, 5 ตรวจจากไฟล์ใน repo branch main แทน · pages build ล่าสุด success 27 พ.ย. 00:23 UTC"},
-    {"t": "agent-coach / agent-morning ไม่อัปเดตตั้งแต่ 18–21 ต.ค. (ยังเป็นอยู่ 13 รอบ)", "s": "warn",
+    {"t": "เปิดเว็บ mekysk.github.io จาก cloud ไม่ได้ (ยังเป็นอยู่ เตือนมา 18 รอบแล้ว)", "s": "warn",
+     "d": "curl: (56) CONNECT tunnel failed, response 403 — ข้อ 1, 3, 5 ตรวจจากไฟล์ใน repo branch main แทน · pages build ล่าสุด success 28 พ.ย. 00:23 UTC"},
+    {"t": "agent-coach / agent-morning ไม่อัปเดตตั้งแต่ 18–21 ต.ค. (ยังเป็นอยู่ 14 รอบ)", "s": "warn",
      "d": "generated: coach 2026-10-18 · morning 2026-10-21 — ไม่อยู่ในรายการรอบรันที่กำหนด แจ้งไว้เผื่อยังตั้งใจใช้อยู่"},
+    {"t": "บทสรุปข่าวเช้าปกติ (คำเตือนคุณภาพรอบก่อนหายแล้ว)", "s": "ok",
+     "d": "brief-status.json: ok=true · ranAt 2026-11-27T08:54:47Z · qualityWarnings ว่าง"},
     {"t": "งานอัตโนมัติบน GitHub ไม่มีตัวล้ม", "s": "ok",
-     "d": "สแกนรายคืน success 26 พ.ย. 04:43 UTC · ข่าวเช้า success 26 พ.ย. 08:43 UTC · pages build success ทุกรอบ (cancelled 1 รอบ 26 พ.ย. 08:45 มีรอบคู่ success)"},
+     "d": "สแกนรายคืน success 27 พ.ย. 04:50 UTC · ข่าวเช้า success 27 พ.ย. 08:54 UTC · pages build success ทุกรอบ (cancelled 1 รอบ 27 พ.ย. 08:54 มีรอบคู่ success)"},
     {"t": "ข้อมูลสแกนสด (จาก repo)", "s": "ok",
-     "d": "asof 2026-11-25 (พุธ) = 2 วันทำการ ไม่เกินเกณฑ์ · scanned 527/546 = 96.5%"},
+     "d": "asof 2026-11-25 (พุธ) = 2 วันทำการ ไม่เกินเกณฑ์ (26 พ.ย. ตลาด US ปิด Thanksgiving) · scanned 527/546 = 96.5%"},
     {"t": "ไฟล์ที่หน้าเว็บใช้ครบ (ใน repo)", "s": "ok",
      "d": "scan.json, styles.json, px/list.json, px/idx-spx.json, brief-latest.json, brief-status.json มีครบและ parse ได้"},
     {"t": "ผลงานเอเจนต์ทันรอบ", "s": "ok",
-     "d": "commit ล่าสุด (เวลาไทย): scan 27 พ.ย. 06:28 · risk 27 พ.ย. 06:44 · bot 27 พ.ย. 07:23 · research 26 พ.ย. 18:31 · events 22 พ.ย. 18:54 · port 22 พ.ย. 19:48 (รอบอาทิตย์ครบ)"}
+     "d": "commit ล่าสุด (เวลาไทย): scan 28 พ.ย. 06:29 · risk 28 พ.ย. 06:44 · bot 28 พ.ย. 07:23 · research 27 พ.ย. 18:32 · events 22 พ.ย. 18:54 · port 22 พ.ย. 19:48 (รอบอาทิตย์ครบ)"}
   ],
   "note": "ตรวจได้เต็ม 2 จาก 5 ข้อ (2, 4) · ข้อ 1, 3, 5 ตรวจจาก repo แทนเว็บเพราะเข้า github.io ไม่ได้"
 }
