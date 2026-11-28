@@ -1,38 +1,31 @@
 {
   "agent": "research-scout",
-  "generated": "2026-11-27T18:32:22+07:00",
+  "generated": "2026-11-28T18:29:55+07:00",
   "status": "ok",
-  "headline": "หามาได้ 6 ชิ้น เปิดอ่านครบ · ป้ายใช้ 3 ชิ้น: MinTRL บอกว่า track record ยาวพอยังไม่พอ · ต้นทุน leverage แยกเป็นสามก้อน · ดูผลถี่ทำให้กล้าลงน้อยลงและได้เงินน้อยลง",
-  "found": 6,
+  "headline": "หามา 7 เปิดอ่านได้ 4 เลือก 3 — ใช้ 2 (ช่องทางส่งคำสั่งจากมือถือ · double out-of-sample) เก็บ 1 (กฎหยุดขาดทุน)",
+  "found": 7,
   "items": [
     {
-      "t": "Bailey & López de Prado (2012) — The Sharpe Ratio Efficient Frontier: PSR + Minimum Track Record Length",
+      "t": "Smart(Phone) Investing? (Kalda, Loos, Previtero & Hackethal, Dec 2024)",
       "s": "ok",
-      "d": "ใช้ — คำนวณได้ทันทีว่าผลที่มีอยู่ยาวพอจะสรุปอะไรได้ยัง Sharpe 2 vs 1 ที่ 95% ต้องการรายวัน 2.73 ปี รายเดือน 3.24 ปี และ 4.99 ปีถ้าหางอ้วนจริง · ไม่จัดการ serial correlation · https://www.davidhbailey.com/dhbpapers/sharpe-frontier.pdf"
+      "d": "ใช้ — คนเดียวกันเดือนเดียวกัน คำสั่งที่กดจากมือถือซื้อของผันผวนกว่า +7.4pp (33.4% ของค่าเฉลี่ย) ของหวย +5.6pp (46.7%) ของที่ไม่กระจาย +40.6pp (62.5%) Sharpe 0.39 vs 0.54 · เทียบกับ trade log ของตัวเองได้ทันทีโดยไม่แตะกลยุทธ์ · https://www.aleprevitero.com/wp-content/uploads/2024/12/Smartphone_Investing_202412-9.pdf"
     },
     {
-      "t": "Murray & Sammon (2026, HBS) — The Costs and Benefits of Leveraged ETFs",
+      "t": "Double out-of-sample + walk-forward (Mroziewicz & Slepaczuk, arXiv 2602.10785v1, 11 ก.พ. 2026)",
       "s": "ok",
-      "d": "ใช้ — ต้นทุนรวมต่อปีแยกสามก้อน 2x ดัชนี 5.39% vs หุ้นตัวเดียว 11.92% พร้อมตารางจุดคุ้มทุนตามความผันผวนรายวัน (2x ที่ vol 3%/วัน ต้องได้ 32.6%) · เป็น ETF ไม่ใช่ CFD และยังไม่ peer review · https://arxiv.org/html/2611.01392"
+      "d": "ใช้ — ช่วงฝึกชุดหน้าต่างชนะ Buy-and-Hold ทุกชุด แต่ช่วงที่ไม่เคยแตะไม่ชนะ Sharpe เลยในทุกสินทรัพย์ · Sharpe ตกราว 20% · ต้นทุนจุดคุ้มทุนราว 0.4%/รายการ · เอาระเบียบวิธีมาใช้ได้ ตัวกลยุทธ์ EMA อยู่นอกขอบเขต · https://arxiv.org/pdf/2602.10785"
     },
     {
-      "t": "Gneezy & Potters (1997 QJE) — An Experiment on Risk Taking and Evaluation Periods",
-      "s": "ok",
-      "d": "ใช้ — กลุ่มเห็นผลทุกรอบเดิมพัน 50.5% ของเงิน กลุ่มเห็นผลเป็นก้อนสามรอบ 67.4% (p=0.002) และได้เงินกลับบ้าน 1,822 vs 2,134 (p=0.038) เปลี่ยนความถี่ที่ดูผลได้สัปดาห์นี้ ไม่แตะกฎเข้าออก · 84 คนในห้องแลป 40 นาที และกลุ่ม L ต่างสองเรื่องพร้อมกัน · https://rady.ucsd.edu/_files/faculty-research/uri-gneezy/risk-taking.pdf"
+      "t": "When Do Stop-Loss Rules Stop Losses? (Kaminski & Lo, JFM 18, มี.ค. 2014, น.234-254)",
+      "s": "info",
+      "d": "เก็บ — ถ้าราคาเป็น random walk stopping premium ติดลบเสมอ · คาลิเบรตคาบรายเดือน +1.5% ผลตอบแทน ลด vol 5% Sharpe +20% แต่ตั้งต้นทุนเป็นศูนย์ (κ=0) · เพิ่มกฎตัดขาดทุนคือกฎออกตัวใหม่ ขัดคำสั่งปิดการล่า edge ถึง 25 ธ.ค. 2026 · https://dspace.mit.edu/bitstream/handle/1721.1/114876/Lo_When%20Do%20Stop-Loss.pdf"
     }
   ],
   "extra": [
-    "เก็บ — Hsieh, Chang & Chen (arXiv 2504.20116, เม.ย. 2025) Compounding Effects in Leveraged ETFs: Beyond the Volatility Drag Paradigm · ตัด เพราะหัวข้อ 3.2.4 ของงานเองบอก α+β ครอบงำและผล autocorrelation ลดทอน ขัดกับบทคัดย่อ และไม่มีตัวเลขจุดคุ้มทุน · https://arxiv.org/pdf/2504.20116",
-    "เก็บ — McNamee, Paradise & Bruno (Vanguard, © 2022) Getting back on track: A guide to smart rebalancing · ตัด เพราะยืนยันของเดิมจาก Vanguard 2010 ที่รับไปแล้ว แต่ตัวเลขดี: ไม่ rebalance เลยได้ 8.74%/Sharpe 0.46 หุ้นลอยไป 85% vs รายปี band 10% ได้ 8.20%/0.50 ด้วย 14 เหตุการณ์ · https://www.vanguardsouthamerica.com/content/dam/intl/americas/documents/latam/en/sa-2123766-getting-back-on-track.pdf",
-    "ทิ้ง — Santoni, Jouanne & Scullin (arXiv 2608.23808v2, ส.ค. 2026, Minerva) MinervaScore · ตัด เพราะเป็นคะแนนของผู้ขายเครื่องมือ การทดสอบตลาดจริงที่ลงทะเบียนเองได้ ρs=0.013 p=0.40 ไม่ผ่าน และบนข้อมูลสังเคราะห์เกือบเสมอ DSR เดี่ยวที่รับไปแล้ว · https://arxiv.org/pdf/2608.23808",
-    "ไม่ได้เปิดอ่าน (คิวถัดไป) — Benartzi & Thaler, Myopic Loss Aversion and the Equity Premium Puzzle, NBER w4369 · https://www.nber.org/system/files/working_papers/w4369/w4369.pdf",
-    "ไม่ได้เปิดอ่าน (คิวถัดไป) — Thaler, Tversky, Kahneman & Schwartz, The Effect of Myopia and Loss Aversion on Risk Taking · https://faculty.chicagobooth.edu/-/media/faculty/richard-thaler/assets/files/the-effect-of-myopia-and-loss-aversion-on-risk-taking-an-experimental-test.pdf",
-    "ไม่ได้เปิดอ่าน (คิวถัดไป) — Gneezy, Kapteyn & Potters, Evaluation Periods and Asset Prices in a Market Experiment · https://rady.ucsd.edu/_files/faculty-research/uri-gneezy/evaluation-periods.pdf",
-    "ไม่ได้เปิดอ่าน (ติด paywall) — Myopic loss aversion and stock investments: An empirical study of private investors · https://www.sciencedirect.com/science/article/abs/pii/S0378426616300401",
-    "ไม่ได้เปิดอ่าน (หา PDF ต้นฉบับไม่เจอ เจอแต่หน้ารวมลิงก์) — Politis & Romano, The Stationary Bootstrap",
-    "ไม่เปิด (เอกสารการตลาดของผู้บริหารสินทรัพย์ ต่ำกว่าเกณฑ์แหล่ง) — Bernstein Private Wealth, Taxes: What a Drag · https://www.bernstein.com/content/dam/bernstein/us/en/pdf/whitepaper/TaxesWhatADrag.pdf",
-    "ไม่เปิด (ขายของ ไม่บอกวิธีวัด) — ผลค้นเรื่อง swap/ต้นทุนถือข้ามคืนของโบรกเกอร์รายย่อย: GCC Brokers, ShowMyTrades, PropFirmScan, FXNX, LowSpreadBroker",
-    "ไม่เปิด (ซ้ำกับที่อ่านแล้ว 2026-11-16) — CME, FX Financing Costs: CFDs vs Futures · https://www.cmegroup.com/articles/2026/fx-financing-costs-understanding-the-difference-between-cfds-and-futures-pricing.html"
+    "Roberts, Bosse, Donaldson & Tufano (Vanguard ส.ค. 2018) The portfolio currency-hedging decision — เปิดอ่านจริง มีตัวเลข (US 60/40 hedge 30% ลด vol 18bps · แคนาดา hedge 100% เพิ่ม vol 2.16%) แต่ไม่มีมุมเงินบาท ยกมาใช้ตรงๆ ไม่ได้ · https://passiveinvestingaustralia.com/wp-content/uploads/downloads/ISGPCH.pdf",
+    "Tradable Risk Factors for Institutional and Retail Investors (Review of Finance 29(1):103) — เปิดไม่ได้ client_error ไม่ได้อ่าน · https://academic.oup.com/rof/article-pdf/29/1/103/59636582/rfae034.pdf",
+    "The risk of falling short: implementation shortfall variance in portfolio construction (European Journal of Finance, DOI 10.1080/1351847X.2025.2558117) — เปิดไม่ได้ client_error · ตัวเต็งรอบหน้าถ้าหาฉบับเปิดอ่านได้ · https://www.tandfonline.com/doi/full/10.1080/1351847X.2025.2558117",
+    "Meyer — Luck Favors the Prepared Especially Those Who Placed Stop-Loss Orders (SSRN 1921383) — เปิดไม่ได้ client_error ไม่ได้อ่านแม้บทคัดย่อ · https://papers.ssrn.com/sol3/papers.cfm?abstract_id=1921383"
   ],
-  "note": "ป้ายใช้ 3 ชิ้นต้องย้ายเข้า 2BRAIN 32_Literature เองตอนปิดสัปดาห์วันศุกร์ (agent เข้า vault บนเครื่องไม่ได้) · ไม่มีการเสนอกลยุทธ์ สัญญาณ หรือพารามิเตอร์ใหม่ ตามกฎปิดการล่า edge ถึง 25 ธ.ค. 2026 · เนื้อหาภาษีและการเงินส่วนบุคคลเป็นข้อมูล ไม่ใช่คำปรึกษาวิชาชีพ"
+  "note": "3 ใน 7 ชิ้นเปิดไม่ได้ (client_error) จึงไม่อ้างตัวเลขจากชิ้นเหล่านั้น · ตัวเลขบางส่วนของชิ้นที่เลือกมาจากช่วงท้ายไฟล์ที่ดึงข้อความไม่ครบ ระบุไว้ในโน้ตว่ายังไม่ยืนยันจากตาราง · ป้ายใช้ 2 ชิ้นต้องย้ายเข้า 32_Literature เองตอนปิดสัปดาห์วันศุกร์"
 }
